@@ -1,0 +1,51 @@
+name: mvp-launch
+description: "Lancement d'un MVP de A à Z — de la vision produit au déploiement"
+trigger: /mvp
+output_dir: "{cohesium_output}/mvp_{timestamp}"
+steps:
+  - step: 1
+    agent: pm
+    action: "Définir la vision produit, les user stories et le scope MVP"
+    outputs: [product-brief.md, user-stories.md]
+  - step: 2
+    agent: architect
+    action: "Concevoir l'architecture technique du MVP"
+    inputs: [01-pm/product-brief.md]
+    outputs: [architecture-decision.md, tech-stack.md]
+    depends_on: [1]
+  - step: 3
+    agent: ux
+    action: "Créer les wireframes des écrans clés"
+    inputs: [01-pm/product-brief.md, 01-pm/user-stories.md]
+    outputs: [wireframes.md, user-flows.md]
+    depends_on: [1]
+  - step: 4
+    agent: db
+    action: "Concevoir le schéma de données"
+    inputs: [02-architect/architecture-decision.md, 01-pm/user-stories.md]
+    outputs: [schema.md, migrations.md]
+    depends_on: [2]
+  - step: 5
+    agent: dev-backend
+    action: "Développer l'API et la logique métier"
+    inputs: [02-architect/architecture-decision.md, 02-architect/tech-stack.md, 04-db/schema.md]
+    outputs: [api-spec.md, endpoints.md]
+    depends_on: [2, 4]
+  - step: 6
+    agent: dev-frontend
+    action: "Développer l'interface utilisateur"
+    inputs: [03-ux/wireframes.md, 03-ux/user-flows.md, 05-dev-backend/api-spec.md, 05-dev-backend/endpoints.md]
+    outputs: [components.md, pages.md]
+    depends_on: [3, 5]
+  - step: 7
+    agent: qa
+    action: "Tester le MVP end-to-end"
+    inputs: [05-dev-backend/api-spec.md, 06-dev-frontend/components.md, 01-pm/user-stories.md]
+    outputs: [test-plan.md, test-report.md]
+    depends_on: [5, 6]
+  - step: 8
+    agent: devops
+    action: "Mettre en place le CI/CD et le déploiement"
+    inputs: [02-architect/tech-stack.md, 07-qa/test-report.md]
+    outputs: [deployment-guide.md, ci-cd-config.md]
+    depends_on: [7]
