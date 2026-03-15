@@ -1,0 +1,138 @@
+# Cohesium AI — Définition des équipes
+# Les équipes regroupent les agents par domaine fonctionnel
+# Utilisable via /team-<group> pour afficher un sous-groupe
+
+teams:
+  dev:
+    name: "Équipe Développement"
+    description: "Développeurs, architecte et DBA"
+    lead: architect
+    members:
+      - agent: architect
+        role: "Architecte Système"
+        marvel: "Tony Stark"
+      - agent: dev-backend
+        role: "Développeur Backend"
+        marvel: "Bruce Banner"
+      - agent: dev-frontend
+        role: "Développeur Frontend"
+        marvel: "Spider-Man"
+      - agent: dev-fullstack
+        role: "Développeur Fullstack"
+        marvel: "Mr. Fantastic"
+      - agent: dev-mobile
+        role: "Développeur Mobile"
+        marvel: "Ant-Man"
+      - agent: db
+        role: "Architecte Base de Données"
+        marvel: "Doctor Strange"
+
+  ops:
+    name: "Équipe Ops & Qualité"
+    description: "DevOps, QA, Sécurité, Automation"
+    lead: devops
+    members:
+      - agent: devops
+        role: "DevOps / SRE"
+        marvel: "Thor"
+      - agent: qa
+        role: "QA / Testing"
+        marvel: "Hawkeye"
+      - agent: security
+        role: "Sécurité / InfoSec"
+        marvel: "Punisher"
+      - agent: automation
+        role: "Automation"
+        marvel: "Quicksilver"
+
+  product:
+    name: "Équipe Produit & Stratégie"
+    description: "Product Management, Business Analysis, Scrum"
+    lead: pm
+    members:
+      - agent: pm
+        role: "Product Manager"
+        marvel: "Professor X"
+      - agent: analyst
+        role: "Business Analyst"
+        marvel: "Nick Fury"
+      - agent: scrum
+        role: "Scrum Master"
+        marvel: "Captain America"
+      - agent: legal
+        role: "Legal / Compliance"
+        marvel: "She-Hulk"
+
+  marketing:
+    name: "Équipe Marketing & Growth"
+    description: "Marketing, Ads, Growth, SEO"
+    lead: marketing
+    members:
+      - agent: marketing
+        role: "Marketing Manager"
+        marvel: "Star-Lord"
+      - agent: growth
+        role: "Growth Hacker"
+        marvel: "Rocket Raccoon"
+      - agent: ads
+        role: "Paid Media"
+        marvel: "Gamora"
+      - agent: seo
+        role: "SEO Technique"
+        marvel: "Black Widow"
+      - agent: content-seo
+        role: "Content SEO"
+        marvel: "Storm"
+      - agent: geo-aio
+        role: "GEO / AIO"
+        marvel: "Jean Grey"
+
+  content:
+    name: "Équipe Contenu & Communication"
+    description: "Copywriting, Brand, Storytelling, Social Media"
+    lead: brand
+    members:
+      - agent: copywriter
+        role: "Copywriter"
+        marvel: "Loki"
+      - agent: brand
+        role: "Brand Strategist"
+        marvel: "Black Panther"
+      - agent: storytelling
+        role: "Storytelling"
+        marvel: "Silver Surfer"
+      - agent: social
+        role: "Social Media Manager"
+        marvel: "Ms. Marvel"
+
+  data:
+    name: "Équipe Data & IA"
+    description: "Data Analysis, AI Engineering"
+    lead: ai-engineer
+    members:
+      - agent: data
+        role: "Data Analyst"
+        marvel: "Beast"
+      - agent: ai-engineer
+        role: "AI Engineer"
+        marvel: "Vision"
+
+  design:
+    name: "Équipe Design"
+    description: "UX/UI Design"
+    lead: ux
+    members:
+      - agent: ux
+        role: "UX/UI Designer"
+        marvel: "Invisible Woman"
+
+  meta:
+    name: "Agents Transversaux"
+    description: "Agents de support et de challenge"
+    members:
+      - agent: contrarian
+        role: "Devil's Advocate"
+        marvel: "Deadpool"
+      - agent: jarvis
+        role: "Orchestrateur"
+        marvel: "Jarvis"

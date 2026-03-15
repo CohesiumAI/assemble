@@ -1,0 +1,36 @@
+{
+  "name": "create-cohesium-agents",
+  "version": "1.0.0",
+  "description": "Cohesium AI — Agent Workflow System. Installe 28 agents IA spécialisés dans votre projet.",
+  "author": "CohesiumAI <renald@cohesium.ai>",
+  "license": "MIT",
+  "keywords": [
+    "ai-agents",
+    "workflow",
+    "cursor",
+    "windsurf",
+    "cline",
+    "claude-code",
+    "copilot",
+    "ide",
+    "cli",
+    "cohesium"
+  ],
+  "bin": {
+    "create-cohesium-agents": "./bin/cli.js"
+  },
+  "files": [
+    "bin/",
+    "generator/",
+    "src/"
+  ],
+  "scripts": {
+    "install-agents": "node bin/cli.js",
+    "generate": "node generator/generate.js",
+    "validate": "node generator/generate.js --validate"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

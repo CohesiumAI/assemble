@@ -1,0 +1,39 @@
+name: marketing-campaign
+description: "Lancement de campagne marketing — de la stratégie à l'exécution multi-canal"
+trigger: /marketing
+output_dir: "{cohesium_output}/marketing_{timestamp}"
+steps:
+  - step: 1
+    agent: marketing
+    action: "Définir la stratégie de campagne et identifier l'audience cible"
+    outputs: [campaign-strategy.md, target-audience.md]
+  - step: 2
+    agent: brand
+    action: "Établir les directives de marque et le positionnement du message"
+    inputs: [01-marketing/campaign-strategy.md, 01-marketing/target-audience.md]
+    outputs: [brand-guidelines.md, messaging.md]
+    depends_on: [1]
+  - step: 3
+    agent: copywriter
+    action: "Rédiger les assets textuels pour tous les canaux de la campagne"
+    inputs: [02-brand/brand-guidelines.md, 02-brand/messaging.md, 01-marketing/target-audience.md]
+    outputs: [copy-assets.md, tone-of-voice.md]
+    depends_on: [2]
+  - step: 4
+    agent: ads
+    action: "Configurer les campagnes publicitaires et définir le budget"
+    inputs: [01-marketing/campaign-strategy.md, 01-marketing/target-audience.md, 03-copywriter/copy-assets.md]
+    outputs: [ad-setup.md, budget-plan.md]
+    depends_on: [3]
+  - step: 5
+    agent: social
+    action: "Planifier le calendrier éditorial et le contenu des réseaux sociaux"
+    inputs: [03-copywriter/copy-assets.md, 02-brand/brand-guidelines.md, 01-marketing/campaign-strategy.md]
+    outputs: [social-calendar.md, content-plan.md]
+    depends_on: [3]
+  - step: 6
+    agent: growth
+    action: "Définir les métriques de croissance et les expérimentations"
+    inputs: [04-ads/ad-setup.md, 04-ads/budget-plan.md, 05-social/social-calendar.md, 01-marketing/campaign-strategy.md]
+    outputs: [growth-metrics.md, experiment-plan.md]
+    depends_on: [4, 5]

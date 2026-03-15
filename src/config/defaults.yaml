@@ -1,0 +1,137 @@
+# Cohesium AI — Configuration par défaut
+# Ce fichier définit les valeurs par défaut du système
+# L'installateur génère un .cohesium.yaml par projet qui surcharge ces valeurs
+
+version: "1.0.0"
+
+# Langues par défaut
+i18n:
+  langue_equipe: "français"
+  langue_output: "français"
+  instruction_template: |
+    ## Langue de travail
+    Tu communiques et rédiges tous tes livrables en {langue_equipe}.
+    Les fichiers que tu produis sont rédigés en {langue_output}.
+    Les termes techniques et le code restent en anglais.
+
+# Répertoire de sortie des livrables
+output:
+  dir: "./cohesium-output"
+  structure: "{workflow_name}_{timestamp}"
+  manifest_file: "_manifest.yaml"
+  summary_file: "_summary.md"
+  timestamp_format: "%Y%m%d_%H%M%S"
+
+# Agents activés par défaut
+agents:
+  default: all
+  available:
+    - pm
+    - architect
+    - analyst
+    - dev-backend
+    - dev-frontend
+    - dev-fullstack
+    - dev-mobile
+    - db
+    - devops
+    - security
+    - legal
+    - qa
+    - scrum
+    - automation
+    - ai-engineer
+    - ux
+    - ads
+    - marketing
+    - growth
+    - seo
+    - content-seo
+    - geo-aio
+    - copywriter
+    - brand
+    - storytelling
+    - social
+    - data
+    - contrarian
+
+# Workflows activés par défaut
+workflows:
+  default: all
+  available:
+    - mvp-launch
+    - feature-development
+    - bug-fix
+    - code-review-pipeline
+    - security-audit
+    - seo-content-pipeline
+    - marketing-campaign
+    - sprint-cycle
+    - tech-debt-reduction
+    - onboarding-project
+    - release-cycle
+
+# Plateformes supportées
+platforms:
+  ide:
+    - name: cursor
+      config_files: [".cursorrules", ".cursor/agents/"]
+      description: "Cursor AI IDE"
+    - name: windsurf
+      config_files: [".windsurfrules", ".windsurf/workflows/"]
+      description: "Windsurf AI IDE"
+    - name: cline
+      config_files: [".clinerules", ".cline/"]
+      description: "Cline (VS Code extension)"
+    - name: roocode
+      config_files: [".roo/rules-*", ".roomodes"]
+      description: "Roo Code"
+    - name: copilot
+      config_files: [".github/copilot-instructions.md", ".github/copilot/agents/"]
+      description: "GitHub Copilot"
+    - name: kiro
+      config_files: [".kiro/agents/", ".kiro/skills/"]
+      description: "Kiro IDE"
+    - name: trae
+      config_files: [".trae/rules/", ".trae/agents/"]
+      description: "Trae IDE"
+    - name: antigravity
+      config_files: [".antigravity/agents/"]
+      description: "Google Antigravity"
+    - name: codebuddy
+      config_files: [".codebuddy/agents/"]
+      description: "CodeBuddy"
+    - name: crush
+      config_files: [".crush/agents/"]
+      description: "Crush IDE"
+    - name: iflow
+      config_files: [".iflow/agents/"]
+      description: "iFlow IDE"
+    - name: kilocoder
+      config_files: [".kilocoder/agents/"]
+      description: "KiloCoder"
+    - name: opencode
+      config_files: ["opencode.yaml", ".opencode/agents/"]
+      description: "OpenCode"
+    - name: qwencoder
+      config_files: [".qwencoder/agents/"]
+      description: "QwenCoder"
+    - name: rovodev
+      config_files: [".rovo/agents/"]
+      description: "Rovo Dev"
+  cli:
+    - name: claude-code
+      config_files: ["CLAUDE.md", ".claude/commands/", ".claude/agents/"]
+      description: "Claude Code CLI"
+    - name: codex
+      config_files: ["codex.md", "AGENTS.md"]
+      description: "Codex CLI (OpenAI)"
+    - name: gemini-cli
+      config_files: ["GEMINI.md"]
+      description: "Gemini CLI (Google)"
+    - name: auggie
+      config_files: [".auggie/agents/"]
+      description: "Auggie CLI"
+    - name: pi
+      config_files: [".pi/agents/"]
+      description: "Pi CLI"

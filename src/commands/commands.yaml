@@ -1,0 +1,516 @@
+# Cohesium AI — Registre des commandes
+# Toutes les /commandes disponibles dans le système
+
+commands:
+
+  # ═══════════════════════════════════════════
+  # COMMANDES D'AGENTS (invocation directe)
+  # ═══════════════════════════════════════════
+
+  # --- Équipe Produit & Stratégie ---
+  - name: /agent-pm
+    type: agent
+    agent: pm
+    description: "Invoquer Professor X — Product Manager Senior"
+    category: product
+
+  - name: /agent-analyst
+    type: agent
+    agent: analyst
+    description: "Invoquer Nick Fury — Business Analyst Senior"
+    category: product
+
+  - name: /agent-scrum
+    type: agent
+    agent: scrum
+    description: "Invoquer Captain America — Scrum Master Senior"
+    category: product
+
+  - name: /agent-legal
+    type: agent
+    agent: legal
+    description: "Invoquer She-Hulk — Expert Legal/Compliance"
+    category: product
+
+  # --- Équipe Développement ---
+  - name: /agent-architect
+    type: agent
+    agent: architect
+    description: "Invoquer Tony Stark — Architecte Système Senior"
+    category: dev
+
+  - name: /agent-backend
+    type: agent
+    agent: dev-backend
+    description: "Invoquer Bruce Banner — Développeur Backend Senior"
+    category: dev
+
+  - name: /agent-frontend
+    type: agent
+    agent: dev-frontend
+    description: "Invoquer Spider-Man — Développeur Frontend Senior"
+    category: dev
+
+  - name: /agent-fullstack
+    type: agent
+    agent: dev-fullstack
+    description: "Invoquer Mr. Fantastic — Développeur Fullstack Senior"
+    category: dev
+
+  - name: /agent-mobile
+    type: agent
+    agent: dev-mobile
+    description: "Invoquer Ant-Man — Développeur Mobile Senior"
+    category: dev
+
+  - name: /agent-db
+    type: agent
+    agent: db
+    description: "Invoquer Doctor Strange — Architecte BDD Senior"
+    category: dev
+
+  # --- Équipe Ops & Qualité ---
+  - name: /agent-devops
+    type: agent
+    agent: devops
+    description: "Invoquer Thor — DevOps / SRE Senior"
+    category: ops
+
+  - name: /agent-qa
+    type: agent
+    agent: qa
+    description: "Invoquer Hawkeye — QA / Testing Senior"
+    category: ops
+
+  - name: /agent-security
+    type: agent
+    agent: security
+    description: "Invoquer Punisher — Expert Sécurité Senior"
+    category: ops
+
+  - name: /agent-automation
+    type: agent
+    agent: automation
+    description: "Invoquer Quicksilver — Expert Automation Senior"
+    category: ops
+
+  # --- Équipe Data & IA ---
+  - name: /agent-ai
+    type: agent
+    agent: ai-engineer
+    description: "Invoquer Vision — AI Engineer Senior"
+    category: data
+
+  - name: /agent-data
+    type: agent
+    agent: data
+    description: "Invoquer Beast — Data Analyst Senior"
+    category: data
+
+  # --- Équipe Marketing & Growth ---
+  - name: /agent-marketing
+    type: agent
+    agent: marketing
+    description: "Invoquer Star-Lord — Marketing Manager Senior"
+    category: marketing
+
+  - name: /agent-ads
+    type: agent
+    agent: ads
+    description: "Invoquer Gamora — Expert Paid Media Senior"
+    category: marketing
+
+  - name: /agent-growth
+    type: agent
+    agent: growth
+    description: "Invoquer Rocket Raccoon — Growth Hacker Senior"
+    category: marketing
+
+  - name: /agent-seo
+    type: agent
+    agent: seo
+    description: "Invoquer Black Widow — Expert SEO Technique Senior"
+    category: marketing
+
+  - name: /agent-content-seo
+    type: agent
+    agent: content-seo
+    description: "Invoquer Storm — Expert Content SEO Senior"
+    category: marketing
+
+  - name: /agent-geo
+    type: agent
+    agent: geo-aio
+    description: "Invoquer Jean Grey — Expert GEO/AIO Senior"
+    category: marketing
+
+  # --- Équipe Contenu & Communication ---
+  - name: /agent-copywriter
+    type: agent
+    agent: copywriter
+    description: "Invoquer Loki — Copywriter Senior"
+    category: content
+
+  - name: /agent-brand
+    type: agent
+    agent: brand
+    description: "Invoquer Black Panther — Brand Strategist Senior"
+    category: content
+
+  - name: /agent-storytelling
+    type: agent
+    agent: storytelling
+    description: "Invoquer Silver Surfer — Expert Storytelling Senior"
+    category: content
+
+  - name: /agent-social
+    type: agent
+    agent: social
+    description: "Invoquer Ms. Marvel — Social Media Manager Senior"
+    category: content
+
+  # --- Équipe Design ---
+  - name: /agent-ux
+    type: agent
+    agent: ux
+    description: "Invoquer Invisible Woman — UX/UI Designer Senior"
+    category: design
+
+  # --- Agent Transversal ---
+  - name: /agent-contrarian
+    type: agent
+    agent: contrarian
+    description: "Invoquer Deadpool — Devil's Advocate"
+    category: meta
+
+  # ═══════════════════════════════════════════
+  # COMMANDES DE WORKFLOWS
+  # ═══════════════════════════════════════════
+
+  - name: /mvp
+    type: workflow
+    workflow: mvp-launch
+    description: "Lancer le workflow MVP complet (PM → Architect → UX → DB → Backend → Frontend → QA → DevOps)"
+    category: workflow
+
+  - name: /feature
+    type: workflow
+    workflow: feature-development
+    description: "Lancer le workflow développement de feature (PM → Analyst → Architect → Dev → QA)"
+    category: workflow
+
+  - name: /bugfix
+    type: workflow
+    workflow: bug-fix
+    description: "Lancer le workflow correction de bug (QA → Dev → QA)"
+    category: workflow
+
+  - name: /review-pipeline
+    type: workflow
+    workflow: code-review-pipeline
+    description: "Lancer le pipeline de revue de code (Dev → QA → Security → Contrarian)"
+    category: workflow
+
+  - name: /audit-security
+    type: workflow
+    workflow: security-audit
+    description: "Lancer l'audit de sécurité complet (Security → Backend → DevOps → Legal)"
+    category: workflow
+
+  - name: /seo-pipeline
+    type: workflow
+    workflow: seo-content-pipeline
+    description: "Lancer le pipeline SEO/contenu (SEO → Content-SEO → Copywriter → GEO)"
+    category: workflow
+
+  - name: /campaign
+    type: workflow
+    workflow: marketing-campaign
+    description: "Lancer le workflow campagne marketing (Marketing → Brand → Copy → Ads → Social → Growth)"
+    category: workflow
+
+  - name: /sprint
+    type: workflow
+    workflow: sprint-cycle
+    description: "Lancer le cycle de sprint (Scrum → PM → Dev → QA → DevOps)"
+    category: workflow
+
+  - name: /tech-debt
+    type: workflow
+    workflow: tech-debt-reduction
+    description: "Lancer la réduction de dette technique (Architect → Dev → QA → DevOps)"
+    category: workflow
+
+  - name: /onboard
+    type: workflow
+    workflow: onboarding-project
+    description: "Lancer l'onboarding projet (PM → Analyst → Architect → Scrum)"
+    category: workflow
+
+  - name: /release
+    type: workflow
+    workflow: release-cycle
+    description: "Lancer le cycle de release (Scrum → QA → Security → DevOps → Marketing)"
+    category: workflow
+
+  # ═══════════════════════════════════════════
+  # COMMANDES DE SKILLS PARTAGÉES
+  # ═══════════════════════════════════════════
+
+  - name: /review
+    type: skill
+    skill: code-review
+    description: "Lancer une revue de code structurée"
+    category: skill-shared
+
+  - name: /git
+    type: skill
+    skill: git-workflow
+    description: "Gestion du workflow Git"
+    category: skill-shared
+
+  - name: /doc
+    type: skill
+    skill: documentation
+    description: "Générer de la documentation"
+    category: skill-shared
+
+  - name: /test
+    type: skill
+    skill: testing
+    description: "Lancer une stratégie de tests"
+    category: skill-shared
+
+  - name: /sec-check
+    type: skill
+    skill: security-check
+    description: "Vérification de sécurité rapide"
+    category: skill-shared
+
+  - name: /perf
+    type: skill
+    skill: performance-audit
+    description: "Audit de performance"
+    category: skill-shared
+
+  - name: /api
+    type: skill
+    skill: api-design
+    description: "Conception d'API"
+    category: skill-shared
+
+  - name: /db
+    type: skill
+    skill: database-query
+    description: "Optimisation base de données"
+    category: skill-shared
+
+  - name: /cicd
+    type: skill
+    skill: ci-cd
+    description: "Configuration CI/CD"
+    category: skill-shared
+
+  - name: /monitor
+    type: skill
+    skill: monitoring
+    description: "Mise en place du monitoring"
+    category: skill-shared
+
+  - name: /seo
+    type: skill
+    skill: seo-audit
+    description: "Audit SEO technique"
+    category: skill-shared
+
+  - name: /brief
+    type: skill
+    skill: content-brief
+    description: "Créer un brief de contenu"
+    category: skill-shared
+
+  - name: /benchmark
+    type: skill
+    skill: competitive-analysis
+    description: "Analyse concurrentielle"
+    category: skill-shared
+
+  - name: /report
+    type: skill
+    skill: reporting
+    description: "Générer un rapport"
+    category: skill-shared
+
+  # ═══════════════════════════════════════════
+  # COMMANDES DE SKILLS SPÉCIFIQUES
+  # ═══════════════════════════════════════════
+
+  - name: /scaffold-api
+    type: skill
+    skill: backend-api-scaffold
+    description: "Scaffolder une API backend complète"
+    category: skill-specific
+
+  - name: /component
+    type: skill
+    skill: frontend-component
+    description: "Créer un composant React/Next.js"
+    category: skill-specific
+
+  - name: /screen
+    type: skill
+    skill: mobile-screen
+    description: "Créer un écran mobile"
+    category: skill-specific
+
+  - name: /migrate
+    type: skill
+    skill: db-migration
+    description: "Créer une migration de base de données"
+    category: skill-specific
+
+  - name: /pipeline
+    type: skill
+    skill: devops-pipeline
+    description: "Créer un pipeline CI/CD"
+    category: skill-specific
+
+  - name: /pentest
+    type: skill
+    skill: pentest-scan
+    description: "Lancer un scan de sécurité"
+    category: skill-specific
+
+  - name: /compliance
+    type: skill
+    skill: legal-compliance-check
+    description: "Vérification conformité RGPD/AI Act"
+    category: skill-specific
+
+  - name: /ad-setup
+    type: skill
+    skill: ad-campaign-setup
+    description: "Configurer une campagne publicitaire"
+    category: skill-specific
+
+  - name: /experiment
+    type: skill
+    skill: growth-experiment
+    description: "Designer une expérience growth"
+    category: skill-specific
+
+  - name: /wireframe
+    type: skill
+    skill: ux-wireframe
+    description: "Créer des wireframes"
+    category: skill-specific
+
+  - name: /sprint-plan
+    type: skill
+    skill: sprint-planning
+    description: "Planifier un sprint"
+    category: skill-specific
+
+  - name: /test-plan
+    type: skill
+    skill: qa-test-plan
+    description: "Créer un plan de test"
+    category: skill-specific
+
+  - name: /automate
+    type: skill
+    skill: automation-workflow
+    description: "Concevoir un workflow d'automatisation"
+    category: skill-specific
+
+  # ═══════════════════════════════════════════
+  # COMMANDES MÉTA
+  # ═══════════════════════════════════════════
+
+  - name: /team
+    type: meta
+    description: "Afficher l'équipe complète avec rôles et statuts"
+    category: meta
+
+  - name: /team-dev
+    type: meta
+    team: dev
+    description: "Afficher l'équipe Développement"
+    category: meta
+
+  - name: /team-ops
+    type: meta
+    team: ops
+    description: "Afficher l'équipe Ops & Qualité"
+    category: meta
+
+  - name: /team-product
+    type: meta
+    team: product
+    description: "Afficher l'équipe Produit & Stratégie"
+    category: meta
+
+  - name: /team-marketing
+    type: meta
+    team: marketing
+    description: "Afficher l'équipe Marketing & Growth"
+    category: meta
+
+  - name: /team-content
+    type: meta
+    team: content
+    description: "Afficher l'équipe Contenu & Communication"
+    category: meta
+
+  - name: /team-data
+    type: meta
+    team: data
+    description: "Afficher l'équipe Data & IA"
+    category: meta
+
+  - name: /team-design
+    type: meta
+    team: design
+    description: "Afficher l'équipe Design"
+    category: meta
+
+  - name: /status
+    type: meta
+    description: "Afficher l'état du workflow en cours"
+    category: meta
+
+  - name: /handoff
+    type: meta
+    description: "Passer le relais manuellement à un agent spécifique"
+    usage: "/handoff <agent-name>"
+    category: meta
+
+  - name: /agents
+    type: meta
+    description: "Lister tous les agents disponibles"
+    category: meta
+
+  - name: /skills
+    type: meta
+    description: "Lister toutes les skills disponibles"
+    category: meta
+
+  - name: /workflows
+    type: meta
+    description: "Lister tous les workflows disponibles"
+    category: meta
+
+  - name: /help
+    type: meta
+    description: "Afficher l'aide et le catalogue des commandes"
+    category: meta
+
+  - name: /update
+    type: meta
+    description: "Régénérer les fichiers à partir de la config .cohesium.yaml existante"
+    category: meta
+
+  - name: /reconfigure
+    type: meta
+    description: "Relancer l'assistant de configuration"
+    category: meta
