@@ -1,7 +1,7 @@
 name: security-audit
 description: "Audit de sécurité complet — détection des vulnérabilités, remédiation et conformité"
-trigger: /security-audit
-output_dir: "{cohesium_output}/security-audit_{timestamp}"
+trigger: /security
+output_dir: "{cohesium_output}/security_{timestamp}"
 steps:
   - step: 1
     agent: security

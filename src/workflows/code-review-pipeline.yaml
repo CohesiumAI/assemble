@@ -1,7 +1,7 @@
 name: code-review-pipeline
 description: "Pipeline de revue de code complète — analyse qualité, sécurité et regard critique"
-trigger: /review-pipeline
-output_dir: "{cohesium_output}/code-review_{timestamp}"
+trigger: /review
+output_dir: "{cohesium_output}/review_{timestamp}"
 steps:
   - step: 1
     agent: dev-fullstack

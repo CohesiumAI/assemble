@@ -1,7 +1,7 @@
 name: tech-debt-reduction
 description: "Réduction de la dette technique — inventaire, refactoring et validation"
-trigger: /tech-debt
-output_dir: "{cohesium_output}/tech-debt_{timestamp}"
+trigger: /refactor
+output_dir: "{cohesium_output}/refactor_{timestamp}"
 steps:
   - step: 1
     agent: architect

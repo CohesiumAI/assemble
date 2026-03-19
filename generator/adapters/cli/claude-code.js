@@ -2,15 +2,25 @@
  * Cohesium AI — Claude Code Adapter
  *
  * Generates the correct file structure for Claude Code:
- *   CLAUDE.md                              — concise project instructions (< 200 lines) with @imports
+ *   CLAUDE.md                              — concise project instructions (< 30 lines) with @imports
  *   .claude/agents/{marvel-slug}/AGENT.md  — one directory per agent with AGENT.md inside
- *   .claude/skills/{skill-slug}/SKILL.md   — one directory per skill/workflow with SKILL.md inside
- *   .claude/rules/*.md                     — orchestrator and team definitions
+ *   .claude/skills/{skill-slug}/SKILL.md   — 10 skill directories (go, party, dismiss, help, review, bugfix, feature, sprint, release, mvp)
+ *   .claude/rules/*.md                     — orchestrator, teams, and routing rules
  */
 
 const fs = require('fs');
 const path = require('path');
-const { prepareAgent, renderOrchestrator } = require('../../lib/template-engine');
+const {
+  prepareAgent,
+  renderOrchestrator,
+  renderRoutingRules,
+  renderCompactHelp,
+  agentId,
+  marvelSlug,
+  marvelDisplayName,
+  workflowSlug,
+  workflowField,
+} = require('../../lib/template-engine');
 
 module.exports = {
   name: 'claude-code',
@@ -19,46 +29,21 @@ module.exports = {
 
   // ─── Helpers ────────────────────────────────────────────────────────────────
 
-  /**
-   * Extract the functional agent ID from the source filename.
-   * AGENT-pm.md → pm, AGENT-dev-backend.md → dev-backend
-   */
   _agentId(agent) {
     return agent.fileName.replace(/^AGENT-/, '').replace(/\.md$/, '');
   },
 
-  /**
-   * Return the Marvel slug from meta.name (already lowercase with hyphens).
-   * professor-x, tony-stark, bruce-banner, etc.
-   */
   _marvelSlug(agent) {
     return (agent.meta.name || this._agentId(agent))
       .toLowerCase()
       .replace(/\s+/g, '-');
   },
 
-  /**
-   * Extract a short Marvel display name from meta.marvel.
-   * "Professor X (Charles Xavier) — vision stratégique..." → "Professor X"
-   */
   _marvelDisplayName(agent) {
     const raw = agent.meta.marvel || agent.meta.name || '';
     return raw.split('—')[0].split('(')[0].trim();
   },
 
-  /**
-   * Extract the slug for a skill from its metadata.
-   */
-  _skillSlug(skill) {
-    const trigger = (skill.meta.trigger || '').replace(/^\//, '');
-    return (trigger || skill.meta.name || skill.fileName.replace('.md', ''))
-      .toLowerCase()
-      .replace(/\s+/g, '-');
-  },
-
-  /**
-   * Extract the slug for a workflow from its raw YAML.
-   */
   _workflowSlug(workflow) {
     const triggerMatch = workflow.raw.match(/trigger:\s*\/?([\w-]+)/);
     return triggerMatch
@@ -66,9 +51,6 @@ module.exports = {
       : workflow.fileName.replace(/\.(yaml|yml)$/, '');
   },
 
-  /**
-   * Extract a field value from raw YAML.
-   */
   _yamlField(raw, field) {
     const match = raw.match(new RegExp(`${field}:\\s*"?([^"\\n]+)"?`));
     return match ? match[1].trim() : '';
@@ -76,11 +58,12 @@ module.exports = {
 
   // ─── Output paths (used by validator) ───────────────────────────────────────
 
-  getOutputPaths(projectDir, { agents = [], skills = {}, workflows = [] } = {}) {
+  getOutputPaths(projectDir, { agents = [], workflows = [] } = {}) {
     const paths = [
       path.join(projectDir, 'CLAUDE.md'),
       path.join(projectDir, '.claude', 'rules', 'orchestrator.md'),
       path.join(projectDir, '.claude', 'rules', 'teams.md'),
+      path.join(projectDir, '.claude', 'rules', 'routing.md'),
     ];
 
     for (const agent of agents) {
@@ -88,14 +71,9 @@ module.exports = {
       paths.push(path.join(projectDir, '.claude', 'agents', slug, 'AGENT.md'));
     }
 
-    const allSkills = [...(skills.shared || []), ...(skills.specific || [])];
-    for (const skill of allSkills) {
-      const slug = this._skillSlug(skill);
-      paths.push(path.join(projectDir, '.claude', 'skills', slug, 'SKILL.md'));
-    }
-
-    for (const workflow of workflows) {
-      const slug = this._workflowSlug(workflow);
+    // 10 skills only
+    const skillSlugs = ['go', 'party', 'dismiss', 'help', 'review', 'bugfix', 'feature', 'sprint', 'release', 'mvp'];
+    for (const slug of skillSlugs) {
       paths.push(path.join(projectDir, '.claude', 'skills', slug, 'SKILL.md'));
     }
 
@@ -128,18 +106,17 @@ module.exports = {
 
     for (const agent of agents) {
       const prepared   = prepareAgent(agent, config);
-      const marvelSlug = this._marvelSlug(agent);
-      const agentId    = this._agentId(agent);
+      const slug       = this._marvelSlug(agent);
+      const id         = this._agentId(agent);
       const displayName = this._marvelDisplayName(agent);
       const description = agent.meta.description || '';
 
-      const agentDir = path.join(agentsDir, marvelSlug);
+      const agentDir = path.join(agentsDir, slug);
       fs.mkdirSync(agentDir, { recursive: true });
 
-      // Build Claude Code compliant frontmatter
       let content = '---\n';
-      content += `name: ${marvelSlug}\n`;
-      content += `description: "${displayName} — ${agentId}. ${description.replace(/"/g, '\\"')}"\n`;
+      content += `name: ${slug}\n`;
+      content += `description: "${displayName} — ${id}. ${description.replace(/"/g, '\\"')}"\n`;
       content += `model: inherit\n`;
       content += '---\n\n';
       content += prepared.content;
@@ -147,229 +124,119 @@ module.exports = {
       fs.writeFileSync(path.join(agentDir, 'AGENT.md'), content, 'utf-8');
     }
 
-    // ── 2. .claude/skills/{skill-slug}/SKILL.md ───────────────────────────────
+    // ── 2. Generate exactly 10 SKILL.md files ─────────────────────────────────
 
-    const allSkills = [...(skills.shared || []), ...(skills.specific || [])];
-    for (const skill of allSkills) {
-      const prepared = prepareAgent(skill, config);
-      const slug     = this._skillSlug(skill);
-      const description = skill.meta.description || '';
-
-      const skillDir = path.join(skillsDir, slug);
-      fs.mkdirSync(skillDir, { recursive: true });
-
+    // 2a. /go — routing entry point
+    {
+      const dir = path.join(skillsDir, 'go');
+      fs.mkdirSync(dir, { recursive: true });
       let content = '---\n';
-      content += `name: ${slug}\n`;
-      content += `description: "${description.replace(/"/g, '\\"')}"\n`;
-      content += `user-invocable: true\n`;
+      content += 'name: go\n';
+      content += 'description: "Jarvis routes — assesses complexity, selects agents, applies methodology"\n';
+      content += 'user-invocable: true\n';
       content += '---\n\n';
-      content += prepared.content;
-
-      fs.writeFileSync(path.join(skillDir, 'SKILL.md'), content, 'utf-8');
+      content += '# /go — Jarvis Smart Routing\n\n';
+      content += 'Read and apply the routing rules from `.claude/rules/routing.md`.\n\n';
+      content += '1. Assess complexity of the request (TRIVIAL / MODERATE / COMPLEX)\n';
+      content += '2. Select the appropriate agent(s) or workflow\n';
+      content += '3. For COMPLEX tasks, apply the Spec-Driven Methodology (SPECIFY → PLAN → TASKS → IMPLEMENT)\n';
+      content += '4. Execute with full agent context from `.claude/agents/`\n\n';
+      content += 'User request: $ARGUMENTS\n';
+      fs.writeFileSync(path.join(dir, 'SKILL.md'), content, 'utf-8');
     }
 
-    // ── 3. Workflows → .claude/skills/{workflow-slug}/SKILL.md ────────────────
+    // 2b. /party — from party-mode.md
+    {
+      const partySkill = (skills.specific || []).find(s => s.meta.name === 'party-mode' || (s.meta.trigger || '').includes('party'));
+      const dir = path.join(skillsDir, 'party');
+      fs.mkdirSync(dir, { recursive: true });
+      let content = '---\n';
+      content += 'name: party\n';
+      content += 'description: "Persistent multi-agent collaborative session"\n';
+      content += 'user-invocable: true\n';
+      content += '---\n\n';
+      if (partySkill) {
+        const prepared = prepareAgent(partySkill, config);
+        content += prepared.content;
+      } else {
+        content += '# Party Mode\n\nOpen a persistent multi-agent session. Jarvis selects relevant agents.\n\n$ARGUMENTS\n';
+      }
+      fs.writeFileSync(path.join(dir, 'SKILL.md'), content, 'utf-8');
+    }
 
-    for (const workflow of workflows) {
-      const slug         = this._workflowSlug(workflow);
-      const workflowName = this._yamlField(workflow.raw, 'name') || slug;
-      const workflowDesc = this._yamlField(workflow.raw, 'description');
+    // 2c. /dismiss
+    {
+      const dir = path.join(skillsDir, 'dismiss');
+      fs.mkdirSync(dir, { recursive: true });
+      let content = '---\n';
+      content += 'name: dismiss\n';
+      content += 'description: "End the current agent or party session"\n';
+      content += 'user-invocable: true\n';
+      content += '---\n\n';
+      content += 'If an agent name is provided, remove that agent from the session and update the footer.\n';
+      content += 'If no argument is provided, close the entire session — all agents leave and the footer is removed.\n\n';
+      content += '$ARGUMENTS\n';
+      fs.writeFileSync(path.join(dir, 'SKILL.md'), content, 'utf-8');
+    }
 
-      const skillDir = path.join(skillsDir, slug);
-      fs.mkdirSync(skillDir, { recursive: true });
+    // 2d. /help — compact catalog
+    {
+      const dir = path.join(skillsDir, 'help');
+      fs.mkdirSync(dir, { recursive: true });
+      let content = '---\n';
+      content += 'name: help\n';
+      content += 'description: "Show the complete command catalog"\n';
+      content += 'user-invocable: true\n';
+      content += '---\n\n';
+      content += renderCompactHelp(agents, workflows);
+      fs.writeFileSync(path.join(dir, 'SKILL.md'), content, 'utf-8');
+    }
+
+    // 2e-2j. Workflow shortcut skills
+    const workflowShortcuts = {
+      'review': 'code-review-pipeline',
+      'bugfix': 'bug-fix',
+      'feature': 'feature-development',
+      'sprint': 'sprint-cycle',
+      'release': 'release-cycle',
+      'mvp': 'mvp-launch',
+    };
+
+    for (const [cmdSlug, workflowFileName] of Object.entries(workflowShortcuts)) {
+      const wf = workflows.find(w => {
+        const fn = (w.fileName || '').replace(/\.(yaml|yml)$/, '');
+        return fn === workflowFileName;
+      });
+
+      const dir = path.join(skillsDir, cmdSlug);
+      fs.mkdirSync(dir, { recursive: true });
+
+      const workflowName = wf ? (this._yamlField(wf.raw, 'name') || cmdSlug) : cmdSlug;
+      const workflowDesc = wf ? this._yamlField(wf.raw, 'description') : '';
 
       let content = '---\n';
-      content += `name: ${slug}\n`;
-      content += `description: "${workflowDesc.replace(/"/g, '\\"')}"\n`;
-      content += `user-invocable: true\n`;
+      content += `name: ${cmdSlug}\n`;
+      content += `description: "${(workflowDesc || `Launch ${workflowName} workflow`).replace(/"/g, '\\"')}"\n`;
+      content += 'user-invocable: true\n';
       content += '---\n\n';
       content += `# Workflow : ${workflowName}\n\n`;
-      content += `${workflowDesc}\n\n`;
-      content += this._renderWorkflowInstructions(workflow, agentLookup, config);
+      if (workflowDesc) content += `${workflowDesc}\n\n`;
 
-      fs.writeFileSync(path.join(skillDir, 'SKILL.md'), content, 'utf-8');
+      if (wf) {
+        content += this._renderWorkflowInstructions(wf, agentLookup, config);
+      }
+
+      content += '\nApply this workflow to: $ARGUMENTS\n';
+
+      fs.writeFileSync(path.join(dir, 'SKILL.md'), content, 'utf-8');
     }
 
-    // ── 4. Agent invocation skills (.claude/skills/agent-{id}/SKILL.md) ──────
+    // ── 3. .claude/rules/routing.md ───────────────────────────────────────────
 
-    for (const agent of agents) {
-      const id = this._agentId(agent);
-      const marvelSlug = this._marvelSlug(agent);
-      const displayName = this._marvelDisplayName(agent);
-      const desc = agent.meta.description || '';
+    const routingContent = renderRoutingRules(agents, workflows);
+    fs.writeFileSync(path.join(rulesDir, 'routing.md'), routingContent, 'utf-8');
 
-      const skillDir = path.join(skillsDir, `agent-${id}`);
-      fs.mkdirSync(skillDir, { recursive: true });
-
-      let content = '---\n';
-      content += `name: agent-${id}\n`;
-      content += `description: "Invoke ${displayName} — ${desc.replace(/"/g, '\\"')}"\n`;
-      content += `user-invocable: true\n`;
-      content += '---\n\n';
-      content += `Read and adopt the full role defined in \`.claude/agents/${marvelSlug}/AGENT.md\`.\n\n`;
-      content += `You are **${displayName}**. Respond in character with this agent's expertise, posture, frameworks, and output format.\n\n`;
-      content += `## Persistence\n\n`;
-      content += `Once invoked, you MUST stay in character as **${displayName}** for ALL subsequent messages until the user types \`/dismiss\`.\n`;
-      content += `At the end of EVERY response while active, display this footer:\n\n`;
-      content += '```\n';
-      content += `─────────────────────────────────────────────────────────\n`;
-      content += `🎭 Active: ${displayName} (@${marvelSlug})\n`;
-      content += `💡 /summon <agent> to add · /dismiss to end\n`;
-      content += `─────────────────────────────────────────────────────────\n`;
-      content += '```\n\n';
-      content += `If another agent is summoned via \`/summon\`, switch to party mode with both agents active.\n\n`;
-      content += `Apply this role to the following request:\n\n`;
-      content += `$ARGUMENTS\n`;
-
-      fs.writeFileSync(path.join(skillDir, 'SKILL.md'), content, 'utf-8');
-    }
-
-    // ── 5. Session command skills ─────────────────────────────────────────
-
-    const sessionCommands = {
-      summon: {
-        desc: 'Add an agent or team to the current party mode session',
-        body: 'Add the specified agent or team to the current active session.\n\nThe agent joins the conversation and can see the full history. Update the session footer.\n\nAgent or team to add: $ARGUMENTS',
-      },
-      dismiss: {
-        desc: 'Remove an agent from session, or close the entire session',
-        body: 'If an agent name is provided, remove that agent from the session and update the footer.\nIf no argument is provided, close the entire session — all agents leave and the footer is removed.\n\n$ARGUMENTS',
-      },
-      who: {
-        desc: 'Display all agents currently active in the session',
-        body: 'Display a detailed table of all agents currently in the active party mode session, including their Marvel name, role, and when they joined.',
-      },
-    };
-
-    for (const [cmd, info] of Object.entries(sessionCommands)) {
-      const skillDir = path.join(skillsDir, cmd);
-      fs.mkdirSync(skillDir, { recursive: true });
-      let content = '---\n';
-      content += `name: ${cmd}\n`;
-      content += `description: "${info.desc}"\n`;
-      content += `user-invocable: true\n`;
-      content += '---\n\n';
-      content += info.body + '\n';
-      fs.writeFileSync(path.join(skillDir, 'SKILL.md'), content, 'utf-8');
-    }
-
-    // ── 6. Meta command skills ────────────────────────────────────────────
-
-    const metaCommands = {
-      team: { desc: 'Display the full Cohesium AI team roster', body: '' },
-      'team-dev': { desc: 'Display the Dev team', body: '' },
-      'team-ops': { desc: 'Display the Ops & Quality team', body: '' },
-      'team-product': { desc: 'Display the Product & Strategy team', body: '' },
-      'team-marketing': { desc: 'Display the Marketing & Growth team', body: '' },
-      'team-content': { desc: 'Display the Content & Communication team', body: '' },
-      'team-data': { desc: 'Display the Data & AI team', body: '' },
-      'team-business': { desc: 'Display the Business & Operations team', body: '' },
-      'team-design': { desc: 'Display the Design team', body: '' },
-      status: { desc: 'Show current workflow or session status', body: 'Display the status of the current workflow or party mode session. If no workflow/session is active, say so.' },
-      help: { desc: 'Show the complete command catalog', body: '' },
-      agents: { desc: 'List all available agents', body: '' },
-      skills: { desc: 'List all available skills', body: '' },
-      workflows: { desc: 'List all available workflows', body: '' },
-      handoff: { desc: 'Manual handoff to a specific agent', body: 'Transfer the current task to the specified agent. Read their definition and continue the work in their persona.\n\nAgent: $ARGUMENTS' },
-    };
-
-    // Build team roster for team commands
-    let teamRoster = '# Cohesium AI — Team Roster\n\n';
-    teamRoster += 'Display the following team roster:\n\n';
-    for (const agent of agents) {
-      const slug = this._marvelSlug(agent);
-      const display = this._marvelDisplayName(agent);
-      const id = this._agentId(agent);
-      const desc = (agent.meta.description || '').split('—')[0].trim();
-      teamRoster += `- **${display}** (\`@${slug}\` / \`/agent-${id}\`) — ${desc}\n`;
-    }
-
-    // Build command catalog for /help
-    let helpContent = '# Cohesium AI — Command Catalog\n\n';
-    helpContent += 'Display this complete command reference to the user:\n\n';
-    helpContent += '## Agent Commands (31)\n\n';
-    for (const agent of agents) {
-      const id = this._agentId(agent);
-      const display = this._marvelDisplayName(agent);
-      helpContent += `- \`/agent-${id}\` — ${display}\n`;
-    }
-    helpContent += '\n## Workflow Commands (15)\n\n';
-    for (const workflow of workflows) {
-      const slug = this._workflowSlug(workflow);
-      const desc = this._yamlField(workflow.raw, 'description');
-      helpContent += `- \`/${slug}\` — ${desc}\n`;
-    }
-    helpContent += '\n## Skill Commands\n\n';
-    for (const skill of allSkills) {
-      const slug = this._skillSlug(skill);
-      const desc = (skill.meta.description || '').split('—')[0].trim();
-      helpContent += `- \`/${slug}\` — ${desc}\n`;
-    }
-    helpContent += '\n## Session Commands\n\n';
-    helpContent += '- `/party <request>` — Open multi-agent session\n';
-    helpContent += '- `/summon <agent>` — Add agent to session\n';
-    helpContent += '- `/dismiss [agent]` — Remove agent or close session\n';
-    helpContent += '- `/who` — Show active agents\n';
-    helpContent += '\n## Meta Commands\n\n';
-    helpContent += '- `/team` — Full roster · `/team-<name>` — Specific team\n';
-    helpContent += '- `/status` — Workflow status · `/help` — This catalog\n';
-    helpContent += '- `/agents` · `/skills` · `/workflows` — List available items\n';
-    helpContent += '- `/handoff <agent>` — Transfer task to agent\n';
-
-    // Agent listing for /agents
-    let agentsListContent = '# Available Agents\n\nDisplay this list:\n\n';
-    for (const agent of agents) {
-      const slug = this._marvelSlug(agent);
-      const display = this._marvelDisplayName(agent);
-      const id = this._agentId(agent);
-      const desc = (agent.meta.description || '').split('—')[0].trim();
-      agentsListContent += `- **${display}** (\`@${slug}\`) — ${id} — ${desc}\n`;
-    }
-
-    // Skills listing for /skills
-    let skillsListContent = '# Available Skills\n\nDisplay this list:\n\n';
-    for (const skill of allSkills) {
-      const slug = this._skillSlug(skill);
-      const desc = (skill.meta.description || '').split('—')[0].trim();
-      skillsListContent += `- \`/${slug}\` — ${desc}\n`;
-    }
-
-    // Workflows listing for /workflows
-    let workflowsListContent = '# Available Workflows\n\nDisplay this list:\n\n';
-    for (const workflow of workflows) {
-      const slug = this._workflowSlug(workflow);
-      const desc = this._yamlField(workflow.raw, 'description');
-      workflowsListContent += `- \`/${slug}\` — ${desc}\n`;
-    }
-
-    // Assign specific content to meta commands
-    metaCommands.team.body = teamRoster;
-    metaCommands['team-dev'].body = teamRoster + '\nFilter: show only Dev team agents (architect, dev-backend, dev-frontend, dev-fullstack, dev-mobile, db).';
-    metaCommands['team-ops'].body = teamRoster + '\nFilter: show only Ops team agents (devops, qa, security, automation).';
-    metaCommands['team-product'].body = teamRoster + '\nFilter: show only Product team agents (pm, analyst, scrum, legal).';
-    metaCommands['team-marketing'].body = teamRoster + '\nFilter: show only Marketing team agents (marketing, growth, ads, seo, content-seo, geo-aio).';
-    metaCommands['team-content'].body = teamRoster + '\nFilter: show only Content team agents (copywriter, brand, storytelling, social).';
-    metaCommands['team-data'].body = teamRoster + '\nFilter: show only Data team agents (data, ai-engineer).';
-    metaCommands['team-business'].body = teamRoster + '\nFilter: show only Business team agents (customer-success, finance, pr-comms).';
-    metaCommands['team-design'].body = teamRoster + '\nFilter: show only Design team agents (ux).';
-    metaCommands.help.body = helpContent;
-    metaCommands.agents.body = agentsListContent;
-    metaCommands.skills.body = skillsListContent;
-    metaCommands.workflows.body = workflowsListContent;
-
-    for (const [cmd, info] of Object.entries(metaCommands)) {
-      const skillDir = path.join(skillsDir, cmd);
-      fs.mkdirSync(skillDir, { recursive: true });
-      let content = '---\n';
-      content += `name: ${cmd}\n`;
-      content += `description: "${info.desc}"\n`;
-      content += `user-invocable: true\n`;
-      content += '---\n\n';
-      content += info.body + '\n';
-      fs.writeFileSync(path.join(skillDir, 'SKILL.md'), content, 'utf-8');
-    }
-
-    // ── 7. .claude/rules/orchestrator.md ──────────────────────────────────────
+    // ── 4. .claude/rules/orchestrator.md ──────────────────────────────────────
 
     if (orchestrator) {
       const orchestratorContent = renderOrchestrator(orchestrator, config);
@@ -382,70 +249,33 @@ module.exports = {
     teamsContent += 'Répertoire des agents disponibles. Chaque agent est invocable via `@nom-agent`.\n\n';
 
     for (const agent of agents) {
-      const marvelSlug  = this._marvelSlug(agent);
+      const slug  = this._marvelSlug(agent);
       const displayName = this._marvelDisplayName(agent);
-      const agentId     = this._agentId(agent);
+      const id     = this._agentId(agent);
       const desc = (agent.meta.description || '').split('—')[0].trim();
-      teamsContent += `- **${displayName}** (\`@${marvelSlug}\`) — ${agentId} — ${desc}\n`;
+      teamsContent += `- **${displayName}** (\`@${slug}\`) — ${id} — ${desc}\n`;
     }
 
     fs.writeFileSync(path.join(rulesDir, 'teams.md'), teamsContent, 'utf-8');
 
-    // ── 6. CLAUDE.md — concise, with @imports ─────────────────────────────────
+    // ── 6. CLAUDE.md — compact, with @imports ─────────────────────────────────
 
     let claude = '# Cohesium AI\n\n';
-    claude += 'This project uses the Cohesium AI multi-agent system.\n\n';
-
-    claude += '## Agent Persistence\n\n';
-    claude += 'When a user invokes an agent via `/agent-<name>` or `@agent-name`, stay in character as that agent for ALL subsequent messages until `/dismiss` is used.\n';
-    claude += 'Always display the session footer at the end of every response while an agent is active.\n';
-    claude += 'When `/summon <agent>` is used, add the agent to the active session.\n';
-    claude += 'Only `/dismiss` ends the session.\n\n';
-
-    claude += '@.claude/rules/orchestrator.md\n';
-    claude += '@.claude/rules/teams.md\n\n';
-
-    claude += '## Agents disponibles\n\n';
-    claude += 'Invoque un agent avec `@nom-agent` dans le prompt.\n\n';
-
-    for (const agent of agents) {
-      const marvelSlug  = this._marvelSlug(agent);
-      const displayName = this._marvelDisplayName(agent);
-      const agentId     = this._agentId(agent);
-      const desc = (agent.meta.description || '').split('—')[0].trim();
-      claude += `- **${displayName}** (\`@${marvelSlug}\`) — ${desc}\n`;
-    }
-
-    claude += '\n## Skills disponibles\n\n';
-    claude += 'Invoque une skill avec `/nom-skill`.\n\n';
-
-    for (const skill of allSkills) {
-      const slug = this._skillSlug(skill);
-      const desc = (skill.meta.description || '').split('—')[0].trim();
-      claude += `- \`/${slug}\` — ${desc}\n`;
-    }
-
-    claude += '\n## Workflows disponibles\n\n';
-    claude += 'Lance un workflow avec `/nom-workflow`.\n\n';
-
-    for (const workflow of workflows) {
-      const slug = this._workflowSlug(workflow);
-      const desc = this._yamlField(workflow.raw, 'description');
-      claude += `- \`/${slug}\` — ${desc}\n`;
-    }
-
-    claude += `\n## Répertoire de sortie\n\n`;
-    claude += `Les livrables sont produits dans : \`${config.output_dir || './cohesium-output'}\`\n`;
+    claude += 'You are Jarvis, orchestrator of a 31-agent AI team.\n\n';
+    claude += '@.claude/rules/routing.md\n';
+    claude += '@.claude/rules/teams.md\n';
+    claude += '@.claude/rules/orchestrator.md\n\n';
+    claude += '## Commands\n\n';
+    claude += '/go — describe what you need, Jarvis routes (primary)\n';
+    claude += '/party — multi-agent session | /dismiss — end session | /help — catalog\n';
+    claude += 'Shortcuts: /review /bugfix /feature /sprint /release /mvp\n';
+    claude += 'Agents: use @marvel-name for direct access\n';
 
     fs.writeFileSync(path.join(projectDir, 'CLAUDE.md'), claude, 'utf-8');
   },
 
   // ─── Workflow → actionable instructions ─────────────────────────────────────
 
-  /**
-   * Parse workflow steps from raw YAML and render them as actionable
-   * instructions that Claude Code can execute step-by-step.
-   */
   _renderWorkflowInstructions(workflow, agentLookup, config) {
     const steps = this._parseWorkflowSteps(workflow.raw);
     const outputDir = config.output_dir || './cohesium-output';
@@ -456,7 +286,6 @@ module.exports = {
     out += 'Pour chaque étape, adopte le rôle de l\'agent indiqué en lisant sa définition dans `.claude/agents/`.\n\n';
 
     if (steps.length === 0) {
-      // Fallback : inclure le YAML brut si le parsing échoue
       out += '```yaml\n' + workflow.raw + '\n```\n';
       return out;
     }
@@ -488,9 +317,6 @@ module.exports = {
     return out;
   },
 
-  /**
-   * Parse steps from a raw YAML workflow string.
-   */
   _parseWorkflowSteps(raw) {
     const steps = [];
     const blocks = raw.split(/(?=- step:)/);
@@ -544,8 +370,19 @@ module.exports = {
         errors.push('CLAUDE.md est vide');
       }
       const lineCount = content.split('\n').length;
-      if (lineCount > 200) {
-        errors.push(`CLAUDE.md trop long (${lineCount} lignes, recommandé < 200)`);
+      if (lineCount > 30) {
+        errors.push(`CLAUDE.md trop long (${lineCount} lignes, recommandé < 30)`);
+      }
+    }
+
+    // Check routing.md exists
+    const routingPath = path.join(projectDir, '.claude', 'rules', 'routing.md');
+    if (!fs.existsSync(routingPath)) {
+      errors.push('.claude/rules/routing.md manquant');
+    } else {
+      const content = fs.readFileSync(routingPath, 'utf-8');
+      if (content.trim().length === 0) {
+        errors.push('.claude/rules/routing.md est vide');
       }
     }
 

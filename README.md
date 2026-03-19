@@ -1,6 +1,6 @@
 # Cohesium AI — Agent Workflow System
 
-> Transform any IDE or CLI into a full interdisciplinary team of **31 specialized AI agents**, organized in **9 teams**, with **15 automated workflows**, **27 skills**, and **85+ commands** — deployable across **20 platforms** (15 IDE + 5 CLI).
+> Transform any IDE or CLI into a full interdisciplinary team of **31 specialized AI agents**, organized in **9 teams**, with **15 automated workflows**, **28 skills**, and **10 commands** — deployable across **20 platforms** (15 IDE + 5 CLI). Powered by Jarvis smart routing and spec-driven methodology.
 
 ## What is Cohesium AI?
 
@@ -8,7 +8,7 @@ Cohesium AI is a multi-agent orchestration system that turns your development en
 
 The system uses an **adapter pattern**: agent definitions, skills, and workflows are maintained as platform-agnostic source files, then a generator produces the correct configuration files for each target platform — Cursor rules, Claude Code commands, GitHub Copilot agents, and 17 others.
 
-An orchestrator named **Jarvis** serves as the single entry point. It analyzes incoming requests, classifies them, matches or composes workflows, and delegates work to the appropriate agents in sequence.
+An orchestrator named **Jarvis** serves as the single entry point. Use `/go <request>` and Jarvis assesses complexity (trivial/moderate/complex), selects the right agents, and for complex tasks applies a spec-driven methodology with gated phases (SPECIFY → PLAN → TASKS → IMPLEMENT). All 31 agents remain accessible via `@marvel-name` mentions.
 
 ---
 
@@ -63,12 +63,7 @@ npx create-cohesium-agents --update
 
 The `--update` flag re-generates all platform configuration files from your existing `.cohesium.yaml` without re-running the interactive setup. Your agent selection, language settings, and output directory are preserved.
 
-You can also use the in-session commands:
-
-| Command | Description |
-|---------|-------------|
-| `/update` | Regenerate files from the existing `.cohesium.yaml` |
-| `/reconfigure` | Relaunch the interactive configuration assistant |
+You can also use `/go update my config` to trigger regeneration from within a session.
 
 ---
 
@@ -76,80 +71,80 @@ You can also use the in-session commands:
 
 ### Dev Team (6 agents)
 
-| Agent ID | Marvel Name | Role | Command |
-|----------|-------------|------|---------|
-| `architect` | Tony Stark | System Architect | `/agent-architect` |
-| `dev-backend` | Bruce Banner | Backend Developer | `/agent-backend` |
-| `dev-frontend` | Spider-Man | Frontend Developer | `/agent-frontend` |
-| `dev-fullstack` | Mr. Fantastic | Fullstack Developer | `/agent-fullstack` |
-| `dev-mobile` | Ant-Man | Mobile Developer | `/agent-mobile` |
-| `db` | Doctor Strange | Database Architect | `/agent-db` |
+| Agent ID | Marvel Name | Role | @mention |
+|----------|-------------|------|----------|
+| `architect` | Tony Stark | System Architect | `@tony-stark` |
+| `dev-backend` | Bruce Banner | Backend Developer | `@bruce-banner` |
+| `dev-frontend` | Spider-Man | Frontend Developer | `@spider-man` |
+| `dev-fullstack` | Mr. Fantastic | Fullstack Developer | `@mr-fantastic` |
+| `dev-mobile` | Ant-Man | Mobile Developer | `@ant-man` |
+| `db` | Doctor Strange | Database Architect | `@doctor-strange` |
 
 ### Ops & Quality Team (4 agents)
 
-| Agent ID | Marvel Name | Role | Command |
-|----------|-------------|------|---------|
-| `devops` | Thor | DevOps / SRE | `/agent-devops` |
-| `qa` | Hawkeye | QA / Testing | `/agent-qa` |
-| `security` | Punisher | Security / InfoSec | `/agent-security` |
-| `automation` | Quicksilver | Automation | `/agent-automation` |
+| Agent ID | Marvel Name | Role | @mention |
+|----------|-------------|------|----------|
+| `devops` | Thor | DevOps / SRE | `@thor` |
+| `qa` | Hawkeye | QA / Testing | `@hawkeye` |
+| `security` | Punisher | Security / InfoSec | `@punisher` |
+| `automation` | Quicksilver | Automation | `@quicksilver` |
 
 ### Product & Strategy Team (4 agents)
 
-| Agent ID | Marvel Name | Role | Command |
-|----------|-------------|------|---------|
-| `pm` | Professor X | Product Manager | `/agent-pm` |
-| `analyst` | Nick Fury | Business Analyst | `/agent-analyst` |
-| `scrum` | Captain America | Scrum Master | `/agent-scrum` |
-| `legal` | She-Hulk | Legal / Compliance | `/agent-legal` |
+| Agent ID | Marvel Name | Role | @mention |
+|----------|-------------|------|----------|
+| `pm` | Professor X | Product Manager | `@professor-x` |
+| `analyst` | Nick Fury | Business Analyst | `@nick-fury` |
+| `scrum` | Captain America | Scrum Master | `@captain-america` |
+| `legal` | She-Hulk | Legal / Compliance | `@she-hulk` |
 
 ### Marketing & Growth Team (6 agents)
 
-| Agent ID | Marvel Name | Role | Command |
-|----------|-------------|------|---------|
-| `marketing` | Star-Lord | Marketing Manager | `/agent-marketing` |
-| `growth` | Rocket Raccoon | Growth Hacker | `/agent-growth` |
-| `ads` | Gamora | Paid Media | `/agent-ads` |
-| `seo` | Black Widow | Technical SEO | `/agent-seo` |
-| `content-seo` | Storm | Content SEO | `/agent-content-seo` |
-| `geo-aio` | Jean Grey | GEO / AIO | `/agent-geo` |
+| Agent ID | Marvel Name | Role | @mention |
+|----------|-------------|------|----------|
+| `marketing` | Star-Lord | Marketing Manager | `@star-lord` |
+| `growth` | Rocket Raccoon | Growth Hacker | `@rocket-raccoon` |
+| `ads` | Gamora | Paid Media | `@gamora` |
+| `seo` | Black Widow | Technical SEO | `@black-widow` |
+| `content-seo` | Storm | Content SEO | `@storm` |
+| `geo-aio` | Jean Grey | GEO / AIO | `@jean-grey` |
 
 ### Content & Communication Team (4 agents)
 
-| Agent ID | Marvel Name | Role | Command |
-|----------|-------------|------|---------|
-| `copywriter` | Loki | Copywriter | `/agent-copywriter` |
-| `brand` | Black Panther | Brand Strategist | `/agent-brand` |
-| `storytelling` | Silver Surfer | Storytelling | `/agent-storytelling` |
-| `social` | Ms. Marvel | Social Media Manager | `/agent-social` |
+| Agent ID | Marvel Name | Role | @mention |
+|----------|-------------|------|----------|
+| `copywriter` | Loki | Copywriter | `@loki` |
+| `brand` | Black Panther | Brand Strategist | `@black-panther` |
+| `storytelling` | Silver Surfer | Storytelling | `@silver-surfer` |
+| `social` | Ms. Marvel | Social Media Manager | `@ms-marvel` |
 
 ### Data & AI Team (2 agents)
 
-| Agent ID | Marvel Name | Role | Command |
-|----------|-------------|------|---------|
-| `data` | Beast | Data Analyst | `/agent-data` |
-| `ai-engineer` | Vision | AI Engineer | `/agent-ai` |
+| Agent ID | Marvel Name | Role | @mention |
+|----------|-------------|------|----------|
+| `data` | Beast | Data Analyst | `@beast` |
+| `ai-engineer` | Vision | AI Engineer | `@vision` |
 
 ### Design Team (1 agent)
 
-| Agent ID | Marvel Name | Role | Command |
-|----------|-------------|------|---------|
-| `ux` | Invisible Woman | UX/UI Designer | `/agent-ux` |
+| Agent ID | Marvel Name | Role | @mention |
+|----------|-------------|------|----------|
+| `ux` | Invisible Woman | UX/UI Designer | `@invisible-woman` |
 
 ### Business & Operations Team (3 agents)
 
-| Agent ID | Marvel Name | Role | Command |
-|----------|-------------|------|---------|
-| `customer-success` | Pepper Potts | Customer Success Manager | `/agent-cs` |
-| `finance` | Iron Fist | CFO / Finance Director | `/agent-finance` |
-| `pr-comms` | Phil Coulson | PR / Communications Director | `/agent-pr` |
+| Agent ID | Marvel Name | Role | @mention |
+|----------|-------------|------|----------|
+| `customer-success` | Pepper Potts | Customer Success Manager | `@pepper-potts` |
+| `finance` | Iron Fist | CFO / Finance Director | `@iron-fist` |
+| `pr-comms` | Phil Coulson | PR / Communications Director | `@phil-coulson` |
 
 ### Meta (2 agents)
 
-| Agent ID | Marvel Name | Role | Command |
-|----------|-------------|------|---------|
-| `contrarian` | Deadpool | Devil's Advocate | `/agent-contrarian` |
-| `jarvis` | Jarvis | Orchestrator | *(automatic)* |
+| Agent ID | Marvel Name | Role | @mention |
+|----------|-------------|------|----------|
+| `contrarian` | Deadpool | Devil's Advocate | `@deadpool` |
+| `jarvis` | Jarvis | Orchestrator | *(automatic — responds to /go)* |
 
 ---
 
@@ -162,22 +157,22 @@ Workflows are pre-configured agent chains that orchestrate a sequence of special
 | 1 | MVP Launch | `/mvp` | PM, Architect, UX, DB, Backend, Frontend, QA, DevOps | Full MVP from product vision to deployment |
 | 2 | Feature Development | `/feature` | PM, Analyst, Architect, Backend, Frontend, QA | End-to-end feature from spec to validation |
 | 3 | Bug Fix | `/bugfix` | QA, Dev, QA | Structured bug analysis, fix, and regression test |
-| 4 | Code Review Pipeline | `/review-pipeline` | Fullstack, QA, Security, Contrarian | Multi-perspective code review with devil's advocate |
-| 5 | Security Audit | `/audit-security` | Security, Backend, DevOps, Legal | Full security audit with remediation and compliance |
-| 6 | SEO Content Pipeline | `/seo-pipeline` | SEO, Content-SEO, Copywriter, GEO/AIO | SEO-optimized content from keyword research to GEO |
+| 4 | Code Review Pipeline | `/review` | Fullstack, QA, Security, Contrarian | Multi-perspective code review with devil's advocate |
+| 5 | Security Audit | `/security` | Security, Backend, DevOps, Legal | Full security audit with remediation and compliance |
+| 6 | SEO Content Pipeline | `/seo` | SEO, Content-SEO, Copywriter, GEO/AIO | SEO-optimized content from keyword research to GEO |
 | 7 | Marketing Campaign | `/campaign` | Marketing, Finance, Brand, Copywriter, Ads + Social + PR, Growth | Multi-channel campaign with budget validation and PR |
 | 8 | Sprint Cycle | `/sprint` | Scrum, PM, Fullstack, QA, DevOps | Complete agile sprint from planning to release |
-| 9 | Tech Debt Reduction | `/tech-debt` | Architect, Fullstack, QA, DevOps | Debt inventory, refactoring, and rollback strategy |
+| 9 | Tech Debt Reduction | `/refactor` | Architect, Fullstack, QA, DevOps | Debt inventory, refactoring, and rollback strategy |
 | 10 | Project Onboarding | `/onboard` | PM, Analyst, Architect, Scrum | New project scoping and team setup |
 | 11 | Release Cycle | `/release` | Scrum, QA, Security, Legal, DevOps, Marketing, PR, CS | Full release with legal, PR, and customer communication |
 | 12 | Hotfix Release | `/hotfix` | QA, Security, Fullstack, QA, DevOps | Emergency production fix with minimal validation |
-| 13 | Dependency Upgrade | `/upgrade-deps` | Architect, Security, Fullstack, QA, DevOps | Dependency updates with CVE check and compatibility tests |
-| 14 | Documentation Sprint | `/doc-sprint` | Analyst, Architect, Fullstack, Copywriter, DevOps | Documentation inventory, writing, editing, and publishing |
-| 15 | Experimentation | `/experiment-cycle` | PM, Data, Fullstack, QA, Growth | A/B experiment from hypothesis to statistical decision |
+| 13 | Dependency Upgrade | `/upgrade` | Architect, Security, Fullstack, QA, DevOps | Dependency updates with CVE check and compatibility tests |
+| 14 | Documentation Sprint | `/docs` | Analyst, Architect, Fullstack, Copywriter, DevOps | Documentation inventory, writing, editing, and publishing |
+| 15 | Experimentation | `/experiment` | PM, Data, Fullstack, QA, Growth | A/B experiment from hypothesis to statistical decision |
 
 ---
 
-## Skills (27)
+## Skills (28)
 
 Skills are reusable capabilities that agents can invoke via commands. They provide structured, step-by-step processes for specific tasks.
 
@@ -273,7 +268,7 @@ cohesium-ai/
       defaults.yaml     # Default configuration
       teams.yaml        # Team definitions (9 teams)
     commands/
-      commands.yaml     # Registry of all 85+ commands
+      commands.yaml     # Registry of 10 primary commands + hidden shortcuts + internal skills
   generator/            # Platform-specific file generator
   bin/                  # CLI entry point (npx create-cohesium-agents)
   install.sh            # Bash installer
@@ -285,29 +280,30 @@ cohesium-ai/
 ### Execution Flow
 
 ```
-User Request
+User types /go <request>
       |
       v
   Jarvis (Orchestrator)
       |
-      +-- Classify the request
-      +-- Match a workflow (or compose an ad-hoc chain)
-      +-- Initialize workspace (cohesium-output/)
-      +-- Create _manifest.yaml
+      +-- Assess complexity (TRIVIAL / MODERATE / COMPLEX)
+      +-- Match a workflow or select agents
+      |
+      +── TRIVIAL → single agent, direct answer
+      +── MODERATE → 2-3 agents, sequential execution
+      +── COMPLEX → Spec-Driven Methodology:
+      |     1. SPECIFY (@professor-x) → spec.md → user validates
+      |     2. PLAN (@tony-stark) → plan.md → user validates
+      |     3. TASKS (@captain-america) → tasks.md → user validates
+      |     4. IMPLEMENT (Dev agents) → code + tests
       |
       v
   Sequential Execution
       |
       +-- Agent 1 --> deliverables --> _manifest.yaml updated
-      +-- Agent 2 --> deliverables --> _manifest.yaml updated
-      +-- ...
       +-- Agent N --> deliverables --> _manifest.yaml updated
       |
       v
-  Consolidation
-      |
-      +-- _summary.md (workflow summary)
-      +-- Report to user
+  Consolidation → _summary.md → Report to user
 ```
 
 ---
@@ -344,7 +340,7 @@ workflows:
 | [Skills Reference](docs/SKILLS.md) | 27 skills (14 shared + 13 specific) with detailed processes |
 | [Workflow Guide](docs/WORKFLOWS.md) | 15 workflows with agent chains, inputs/outputs, and dependency graphs |
 | [Platform Support](docs/PLATFORMS.md) | Platform-specific setup guides and file structure details |
-| [Command Reference](docs/COMMANDS.md) | Full reference for all 85+ commands |
+| [Command Reference](docs/COMMANDS.md) | Full reference for 10 commands + hidden shortcuts |
 
 ---
 

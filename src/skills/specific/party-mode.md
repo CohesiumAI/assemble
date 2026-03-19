@@ -1,6 +1,6 @@
 ---
 name: party-mode
-description: Party Mode — persistent collaborative multi-agent session. Agents stay in the room until dismissed. Use /party to start, /summon to add, /dismiss to remove, /who to check.
+description: Party Mode — persistent collaborative multi-agent session. Agents stay in the room until dismissed. Use /party to start, say "add [agent]" to add, /dismiss to end.
 agents: [all]
 trigger: /party
 ---
@@ -13,7 +13,7 @@ Open a **persistent collaborative session** where multiple specialized agents ar
 
 ## CRITICAL RULE — Session Persistence
 
-Once a session is opened (via `/party`, `/summon`, or single agent invocation like `@tony-stark`):
+Once a session is opened (via `/party` or single agent invocation like `@tony-stark`):
 - **The convoked agents STAY ACTIVE** for every subsequent message
 - **Every response MUST end with the session footer** showing who is present
 - **Agents respond to follow-up messages** without needing to be re-invoked
@@ -27,11 +27,12 @@ Once a session is opened (via `/party`, `/summon`, or single agent invocation li
 | `/party <request>` | Open session — Jarvis auto-selects relevant agents + Deadpool |
 | `/party <team> <request>` | Open session with specific team(s): dev, ops, product, marketing, content, data, design, business |
 | `/party all <request>` | Open session with all 31 agents |
-| `/summon <agent>` | Add an agent to the current session (e.g., `/summon she-hulk`) |
-| `/summon <team>` | Add an entire team to the current session |
 | `/dismiss <agent>` | Remove a specific agent from the session |
 | `/dismiss` | Close the session — all agents leave |
-| `/who` | Display who is currently in the session |
+
+**Natural language commands (no slash needed):**
+- Say **"add [agent]"** or **"summon [agent]"** to add an agent to the session
+- Say **"who's here?"** or **"who"** to see who is currently in the session
 
 ## Session Lifecycle
 
@@ -48,7 +49,7 @@ When `/party <request>` is invoked:
 ### During an active session
 
 For EVERY subsequent user message while a session is active:
-1. Check if the message is a session command (`/summon`, `/dismiss`, `/who`)
+1. Check if the message is a session command (`/dismiss`) or natural language session request ("add [agent]", "who's here?")
 2. If not a command, the **currently active agents** respond to it
 3. Not all agents need to speak on every turn — only those relevant to the follow-up
 4. Jarvis decides which agents should contribute based on the message content
@@ -56,7 +57,7 @@ For EVERY subsequent user message while a session is active:
 
 ### Adding agents mid-session
 
-When `/summon <agent>` is used:
+When the user says "add [agent]" or "summon [agent]":
 - Announce: "**[Marvel Name]** joins the session."
 - The new agent can see the full conversation history
 - They contribute from the next message onward
@@ -83,7 +84,7 @@ This footer MUST appear at the end of EVERY response while a session is active:
 ```
 ─────────────────────────────────────────────────────────
 🎭 In session: [Agent1], [Agent2], [Agent3], [Deadpool]
-💡 /summon <agent> · /dismiss <agent> · /dismiss to end
+💡 Say "add [agent]" · /dismiss to end
 ─────────────────────────────────────────────────────────
 ```
 
@@ -91,11 +92,11 @@ Example:
 ```
 ─────────────────────────────────────────────────────────
 🎭 In session: Professor X, Iron Fist, Star-Lord, Deadpool
-💡 /summon <agent> · /dismiss <agent> · /dismiss to end
+💡 Say "add [agent]" · /dismiss to end
 ─────────────────────────────────────────────────────────
 ```
 
-When `/who` is used, display a detailed view:
+When the user asks "who's here?" or "who", display a detailed view:
 ```
 ## 🎭 Current Session
 
@@ -107,7 +108,7 @@ When `/who` is used, display a detailed view:
 | contrarian | Deadpool | Devil's Advocate | always present |
 
 Session opened on: [topic]
-/summon <agent> to add · /dismiss <agent> to remove · /dismiss to end
+Say "add [agent]" to add · /dismiss <agent> to remove · /dismiss to end
 ```
 
 ## Agent Classification Matrix
@@ -209,7 +210,7 @@ ALWAYS ADD: Deadpool (contrarian)
 
 ─────────────────────────────────────────────────────────
 🎭 In session: [agents list]
-💡 /summon <agent> · /dismiss <agent> · /dismiss to end
+💡 Say "add [agent]" · /dismiss to end
 ─────────────────────────────────────────────────────────
 ```
 
@@ -229,7 +230,7 @@ On follow-up messages, the format is lighter — no need to repeat the full head
 
 ─────────────────────────────────────────────────────────
 🎭 In session: [agents list]
-💡 /summon <agent> · /dismiss <agent> · /dismiss to end
+💡 Say "add [agent]" · /dismiss to end
 ─────────────────────────────────────────────────────────
 ```
 

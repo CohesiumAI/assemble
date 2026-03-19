@@ -13,6 +13,7 @@
  *   4. Validation passes for all platforms (adapter.validate())
  *   5. --update mode preserves config and regenerates correctly
  *   6. Agent/workflow filtering works
+ *   7. Claude Code produces exactly 10 SKILL.md + routing.md + compact CLAUDE.md
  */
 
 const { execFileSync } = require('child_process');
@@ -64,6 +65,16 @@ function countFiles(dir, ext) {
     } else if (!ext || entry.name.endsWith(ext)) {
       count++;
     }
+  }
+  return count;
+}
+
+function countDirs(dir) {
+  if (!fs.existsSync(dir)) return 0;
+  let count = 0;
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    if (entry.isDirectory()) count++;
   }
   return count;
 }
@@ -295,6 +306,63 @@ console.log('\nTest 6: Agent/workflow filtering');
   test('--update fails without .cohesium.yaml', () => {
     const result = run(['--project', dir, '--update'], true);
     assert(result === false, 'Should fail without .cohesium.yaml');
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 7: Claude Code 10-command architecture ──────────────────────────────
+
+console.log('\nTest 7: Claude Code 10-command architecture');
+{
+  const dir = createTmpDir();
+  run(['--project', dir, '--platforms', 'claude-code', '--lang-team', 'english', '--lang-output', 'english']);
+
+  test('Exactly 10 SKILL.md directories', () => {
+    const skillsDir = path.join(dir, '.claude', 'skills');
+    const dirCount = countDirs(skillsDir);
+    assert(dirCount === 10, `Expected exactly 10 skill directories, got ${dirCount}`);
+  });
+
+  test('Expected skill directories exist', () => {
+    const expectedSkills = ['go', 'party', 'dismiss', 'help', 'review', 'bugfix', 'feature', 'sprint', 'release', 'mvp'];
+    const skillsDir = path.join(dir, '.claude', 'skills');
+    for (const slug of expectedSkills) {
+      const skillMd = path.join(skillsDir, slug, 'SKILL.md');
+      assert(fs.existsSync(skillMd), `Missing SKILL.md for /${slug}`);
+    }
+  });
+
+  test('.claude/rules/routing.md exists and non-empty', () => {
+    const routingPath = path.join(dir, '.claude', 'rules', 'routing.md');
+    assert(fs.existsSync(routingPath), 'routing.md missing');
+    const content = fs.readFileSync(routingPath, 'utf-8');
+    assert(content.trim().length > 0, 'routing.md is empty');
+    assert(content.includes('Complexity Assessment'), 'routing.md should contain complexity assessment');
+  });
+
+  test('CLAUDE.md under 30 lines', () => {
+    const claudeMd = path.join(dir, 'CLAUDE.md');
+    const content = fs.readFileSync(claudeMd, 'utf-8');
+    const lineCount = content.split('\n').length;
+    assert(lineCount <= 30, `CLAUDE.md has ${lineCount} lines, expected <= 30`);
+  });
+
+  test('31 agent directories exist', () => {
+    const agentsDir = path.join(dir, '.claude', 'agents');
+    const dirCount = countDirs(agentsDir);
+    assert(dirCount >= 31, `Expected >= 31 agent directories, got ${dirCount}`);
+  });
+
+  test('/go SKILL.md references routing and $ARGUMENTS', () => {
+    const goSkill = fs.readFileSync(path.join(dir, '.claude', 'skills', 'go', 'SKILL.md'), 'utf-8');
+    assert(goSkill.includes('routing'), '/go should reference routing');
+    assert(goSkill.includes('$ARGUMENTS'), '/go should contain $ARGUMENTS');
+  });
+
+  test('Shortcut SKILL.md files reference correct workflows', () => {
+    const reviewSkill = fs.readFileSync(path.join(dir, '.claude', 'skills', 'review', 'SKILL.md'), 'utf-8');
+    assert(reviewSkill.includes('code-review-pipeline') || reviewSkill.includes('Étape'), '/review should reference code review workflow');
   });
 
   cleanTmpDir();

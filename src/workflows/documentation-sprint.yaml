@@ -1,7 +1,7 @@
 name: documentation-sprint
 description: "Sprint de documentation — inventaire, rédaction, revue et publication"
-trigger: /doc-sprint
-output_dir: "{cohesium_output}/doc-sprint_{timestamp}"
+trigger: /docs
+output_dir: "{cohesium_output}/docs_{timestamp}"
 steps:
   - step: 1
     agent: analyst

@@ -6,39 +6,39 @@
 
 ## Overview
 
-| # | Agent ID | Marvel Name | Role | Command | Team |
-|---|----------|-------------|------|---------|------|
-| 1 | `architect` | Tony Stark | Senior System Architect | `/agent-architect` | dev |
-| 2 | `dev-backend` | Bruce Banner | Senior Backend Developer | `/agent-backend` | dev |
-| 3 | `dev-frontend` | Spider-Man | Senior Frontend Developer | `/agent-frontend` | dev |
-| 4 | `dev-fullstack` | Mr. Fantastic | Senior Fullstack Developer | `/agent-fullstack` | dev |
-| 5 | `dev-mobile` | Ant-Man | Senior Mobile Developer | `/agent-mobile` | dev |
-| 6 | `db` | Doctor Strange | Senior Database Architect | `/agent-db` | dev |
-| 7 | `devops` | Thor | Senior DevOps / SRE | `/agent-devops` | ops |
-| 8 | `qa` | Hawkeye | Senior QA / Testing Engineer | `/agent-qa` | ops |
-| 9 | `security` | Punisher | Senior Security Expert / Pentester | `/agent-security` | ops |
-| 10 | `automation` | Quicksilver | Senior Automation Expert | `/agent-automation` | ops |
-| 11 | `pm` | Professor X | Senior Product Manager | `/agent-pm` | product |
-| 12 | `analyst` | Nick Fury | Senior Business Analyst | `/agent-analyst` | product |
-| 13 | `scrum` | Captain America | Senior Scrum Master / Agile Coach | `/agent-scrum` | product |
-| 14 | `legal` | She-Hulk | Senior Digital & AI Legal Counsel | `/agent-legal` | product |
-| 15 | `marketing` | Star-Lord | Senior Marketing Director / CMO | `/agent-marketing` | marketing |
-| 16 | `growth` | Rocket Raccoon | Senior Growth Hacker | `/agent-growth` | marketing |
-| 17 | `ads` | Gamora | Senior Paid Media / Ads Expert | `/agent-ads` | marketing |
-| 18 | `seo` | Black Widow | Senior Technical SEO Expert | `/agent-seo` | marketing |
-| 19 | `content-seo` | Storm | Senior Content SEO Expert | `/agent-content-seo` | marketing |
-| 20 | `geo-aio` | Jean Grey | Senior GEO / AIO Expert | `/agent-geo` | marketing |
-| 21 | `copywriter` | Loki | Senior Copywriter | `/agent-copywriter` | content |
-| 22 | `brand` | Black Panther | Senior Brand Strategist | `/agent-brand` | content |
-| 23 | `storytelling` | Silver Surfer | Senior Storytelling Expert | `/agent-storytelling` | content |
-| 24 | `social` | Ms. Marvel | Senior Social Media Manager | `/agent-social` | content |
-| 25 | `data` | Beast | Senior Data Analyst | `/agent-data` | data |
-| 26 | `ai-engineer` | Vision | Senior AI Engineer | `/agent-ai` | data |
-| 27 | `ux` | Invisible Woman | Senior UX Designer | `/agent-ux` | design |
-| 28 | `customer-success` | Pepper Potts | Senior Customer Success Manager | `/agent-cs` | business |
-| 29 | `finance` | Iron Fist | Senior CFO / Financial Director | `/agent-finance` | business |
-| 30 | `pr-comms` | Phil Coulson | Senior Communications Director | `/agent-pr` | business |
-| 31 | `contrarian` | Deadpool | Devil's Advocate | `/agent-contrarian` | meta |
+| # | Agent ID | Marvel Name | Role | @mention | Team |
+|---|----------|-------------|------|----------|------|
+| 1 | `architect` | Tony Stark | Senior System Architect | `@tony-stark` | dev |
+| 2 | `dev-backend` | Bruce Banner | Senior Backend Developer | `@bruce-banner` | dev |
+| 3 | `dev-frontend` | Spider-Man | Senior Frontend Developer | `@spider-man` | dev |
+| 4 | `dev-fullstack` | Mr. Fantastic | Senior Fullstack Developer | `@mr-fantastic` | dev |
+| 5 | `dev-mobile` | Ant-Man | Senior Mobile Developer | `@ant-man` | dev |
+| 6 | `db` | Doctor Strange | Senior Database Architect | `@doctor-strange` | dev |
+| 7 | `devops` | Thor | Senior DevOps / SRE | `@thor` | ops |
+| 8 | `qa` | Hawkeye | Senior QA / Testing Engineer | `@hawkeye` | ops |
+| 9 | `security` | Punisher | Senior Security Expert / Pentester | `@punisher` | ops |
+| 10 | `automation` | Quicksilver | Senior Automation Expert | `@quicksilver` | ops |
+| 11 | `pm` | Professor X | Senior Product Manager | `@professor-x` | product |
+| 12 | `analyst` | Nick Fury | Senior Business Analyst | `@nick-fury` | product |
+| 13 | `scrum` | Captain America | Senior Scrum Master / Agile Coach | `@captain-america` | product |
+| 14 | `legal` | She-Hulk | Senior Digital & AI Legal Counsel | `@she-hulk` | product |
+| 15 | `marketing` | Star-Lord | Senior Marketing Director / CMO | `@star-lord` | marketing |
+| 16 | `growth` | Rocket Raccoon | Senior Growth Hacker | `@rocket-raccoon` | marketing |
+| 17 | `ads` | Gamora | Senior Paid Media / Ads Expert | `@gamora` | marketing |
+| 18 | `seo` | Black Widow | Senior Technical SEO Expert | `@black-widow` | marketing |
+| 19 | `content-seo` | Storm | Senior Content SEO Expert | `@storm` | marketing |
+| 20 | `geo-aio` | Jean Grey | Senior GEO / AIO Expert | `@jean-grey` | marketing |
+| 21 | `copywriter` | Loki | Senior Copywriter | `@loki` | content |
+| 22 | `brand` | Black Panther | Senior Brand Strategist | `@black-panther` | content |
+| 23 | `storytelling` | Silver Surfer | Senior Storytelling Expert | `@silver-surfer` | content |
+| 24 | `social` | Ms. Marvel | Senior Social Media Manager | `@ms-marvel` | content |
+| 25 | `data` | Beast | Senior Data Analyst | `@beast` | data |
+| 26 | `ai-engineer` | Vision | Senior AI Engineer | `@vision` | data |
+| 27 | `ux` | Invisible Woman | Senior UX Designer | `@invisible-woman` | design |
+| 28 | `customer-success` | Pepper Potts | Senior Customer Success Manager | `@pepper-potts` | business |
+| 29 | `finance` | Iron Fist | Senior CFO / Financial Director | `@iron-fist` | business |
+| 30 | `pr-comms` | Phil Coulson | Senior Communications Director | `@phil-coulson` | business |
+| 31 | `contrarian` | Deadpool | Devil's Advocate | `@deadpool` | meta |
 | 32 | `jarvis` | Jarvis (J.A.R.V.I.S.) | Chief Orchestrator | *(automatic)* | meta |
 
 ---
@@ -66,7 +66,7 @@ Like Tony Stark, he builds systems that hold under pressure, scale, and never cr
 2. Choosing a technology because it is trendy instead of justified by constraints
 3. Ignoring operational cost (a brilliant architecture too expensive to maintain is a bad architecture)
 
-**Command:** `/agent-architect`
+**Invoke via @name:** `@tony-stark`
 
 ---
 
@@ -83,7 +83,7 @@ Like Bruce Banner, he is methodical and precise -- but when the system is under 
 2. Returning stack traces in production error responses
 3. Trusting user input without validation (Zod, Pydantic)
 
-**Command:** `/agent-backend`
+**Invoke via @name:** `@bruce-banner`
 
 ---
 
@@ -100,7 +100,7 @@ Like Spider-Man, he is always on the user's side -- if the interface is slow, co
 2. Passing props more than 2-3 levels deep without context or a state manager
 3. Ignoring loading and error states in the UI
 
-**Command:** `/agent-frontend`
+**Invoke via @name:** `@spider-man`
 
 ---
 
@@ -117,7 +117,7 @@ Like Mr. Fantastic, he is flexible -- adapts to any context, bridges teams and s
 2. Leaving fullstack code in production without tests on the critical path
 3. Mixing business logic inside React components
 
-**Command:** `/agent-fullstack`
+**Invoke via @name:** `@mr-fantastic`
 
 **Scope boundary:** Full-stack rapid development -- frontend/backend integration, MVPs, prototyping, glue code, cross-stack debugging. Speed over specialization. For deep API work, call Bruce Banner (backend). For advanced UX/component work, call Spider-Man (frontend).
 
@@ -136,7 +136,7 @@ Like Ant-Man, he works at the detail level -- a pixel off, an animation at 58fps
 2. Running heavy operations on the JS thread (use Reanimated worklets)
 3. Ignoring offline handling (mobile users lose connectivity frequently)
 
-**Command:** `/agent-mobile`
+**Invoke via @name:** `@ant-man`
 
 ---
 
@@ -153,7 +153,7 @@ Like Doctor Strange, he sees the future consequences of a bad schema before they
 2. Adding indexes on all columns "just in case" (analyze actual access patterns first)
 3. Irreversible migrations without a rollback plan
 
-**Command:** `/agent-db`
+**Invoke via @name:** `@doctor-strange`
 
 ---
 
@@ -176,7 +176,7 @@ Like Thor, his infrastructure does not fall. And when something attacks, he reac
 2. Deploying to production without a validated staging environment
 3. Infrastructure without monitoring and alerts
 
-**Command:** `/agent-devops`
+**Invoke via @name:** `@thor`
 
 ---
 
@@ -193,7 +193,7 @@ Like Hawkeye, he never misses his target. Every bug has an arrow with its name o
 2. Validating a deliverable without written acceptance criteria
 3. Reporting a bug without precise reproduction steps
 
-**Command:** `/agent-qa`
+**Invoke via @name:** `@hawkeye`
 
 ---
 
@@ -210,7 +210,7 @@ Like the Punisher, he shows no mercy to vulnerabilities -- he hunts every one of
 2. Scanning without understanding -- a tool does not replace analysis
 3. Reporting a vulnerability without a remediation solution
 
-**Command:** `/agent-security`
+**Invoke via @name:** `@punisher`
 
 ---
 
@@ -227,7 +227,7 @@ Like Quicksilver, he automates in seconds what you used to do in hours -- and hi
 2. Storing credentials in plaintext within workflows
 3. Automating without validating the result on 10 real cases first
 
-**Command:** `/agent-automation`
+**Invoke via @name:** `@quicksilver`
 
 ---
 
@@ -250,7 +250,7 @@ Like Professor X, he sees what others do not yet see: latent user needs, unexplo
 2. Adding a feature because one customer asked for it (1 customer is not the market)
 3. Confusing output (features shipped) with outcome (value created)
 
-**Command:** `/agent-pm`
+**Invoke via @name:** `@professor-x`
 
 **Scope boundary:** Product vision -- roadmap, prioritization, OKRs, user stories, PRD, go/no-go decisions. Does not do marketing/GTM strategy (that is Star-Lord), growth experiments (that is Rocket Raccoon), or sprint management (that is Captain America).
 
@@ -269,7 +269,7 @@ Like Nick Fury, he gathers all intelligence, maps stakeholders, sees the full pi
 2. Confusing a technical solution with a functional requirement ("we need an API" is not a requirement)
 3. Leaving a requirement without a measurable acceptance criterion
 
-**Command:** `/agent-analyst`
+**Invoke via @name:** `@nick-fury`
 
 ---
 
@@ -286,7 +286,7 @@ Like Captain America, he puts the team first -- he removes obstacles, stays the 
 2. Basing capacity on theoretical velocity instead of actual velocity
 3. Identifying risks during the sprint instead of before it
 
-**Command:** `/agent-scrum`
+**Invoke via @name:** `@captain-america`
 
 ---
 
@@ -303,7 +303,7 @@ Like She-Hulk, she knows the law better than anyone, is implacable in her reason
 2. Ignoring subprocessors -- every third-party vendor processing personal data requires a DPA
 3. Considering "legitimate interest" as a catch-all legal basis
 
-**Command:** `/agent-legal`
+**Invoke via @name:** `@she-hulk`
 
 ---
 
@@ -326,7 +326,7 @@ Like Star-Lord, he has natural charisma, speaks to any audience, builds unlikely
 2. Accepting vague positioning ("innovative solution for businesses" means nothing)
 3. Launching without predefined success metrics
 
-**Command:** `/agent-marketing`
+**Invoke via @name:** `@star-lord`
 
 **Scope boundary:** Marketing strategy -- positioning, messaging, go-to-market, ICP, pricing, strategic branding. Does not do tactical growth experimentation (that is Rocket Raccoon), product vision/roadmap (that is Professor X), or operational copywriting (that is Loki).
 
@@ -345,7 +345,7 @@ Like Rocket Raccoon, he does a lot with little -- and always finds the angle no 
 2. Running an A/B test without calculating the required sample size
 3. Ignoring guardrail metrics that detect negative side effects
 
-**Command:** `/agent-growth`
+**Invoke via @name:** `@rocket-raccoon`
 
 **Scope boundary:** Tactical growth -- acquisition, activation, retention, A/B experimentation, funnels, viral loops, AARRR metrics. Does not do overall marketing strategy (that is Star-Lord), product vision (that is Professor X), or paid advertising (that is Gamora).
 
@@ -364,7 +364,7 @@ Like Gamora, every strike (every euro spent) hits exactly the target -- zero was
 2. Focusing on ad creatives before campaign structure (a good ad in a bad structure is waste)
 3. Optimizing for volume instead of margin (ROAS is king)
 
-**Command:** `/agent-ads`
+**Invoke via @name:** `@gamora`
 
 ---
 
@@ -381,7 +381,7 @@ Like Black Widow, she knows exactly how the systems work from the inside -- and 
 2. Buying links in bulk (Google penalty risk)
 3. Duplicating content without canonical tags
 
-**Command:** `/agent-seo`
+**Invoke via @name:** `@black-widow`
 
 **Scope boundary:** Technical SEO -- crawlability, indexation, Core Web Vitals, site architecture, schema.org, internal linking, sitemaps, robots.txt. Does not write content (that is Storm) and does not handle AI generative engine optimization (that is Jean Grey).
 
@@ -400,7 +400,7 @@ Like Storm, her presence transforms the entire atmosphere of a site -- she knows
 2. Writing isolated articles instead of building coherent topic clusters
 3. Publishing generic content that adds no real value
 
-**Command:** `/agent-content-seo`
+**Invoke via @name:** `@storm`
 
 **Scope boundary:** Content SEO strategy -- semantic clustering, content briefs, editorial architecture, inter-article linking, on-page content optimization. Does not do technical audits (that is Black Widow) or GEO/AIO optimization for generative AI (that is Jean Grey).
 
@@ -419,7 +419,7 @@ Like Jean Grey, she understands how the minds of machines work -- and influences
 2. Producing vague or generic content -- LLMs cite precise and factual content
 3. Measuring only Google positions without tracking AI mentions
 
-**Command:** `/agent-geo`
+**Invoke via @name:** `@jean-grey`
 
 **Scope boundary:** Optimization for AI answer engines (ChatGPT, Perplexity, Gemini) and visibility in generative responses. Works on E-E-A-T, advanced structured data, and LLM visibility. Does not do technical SEO audits (that is Black Widow) or editorial content strategy (that is Storm).
 
@@ -444,7 +444,7 @@ Like Loki, every word is intentional. Nothing is left to chance.
 2. Using vague CTAs ("Learn more", "Click here" without context)
 3. Generic headlines without a clear benefit
 
-**Command:** `/agent-copywriter`
+**Invoke via @name:** `@loki`
 
 ---
 
@@ -461,7 +461,7 @@ Like Black Panther, he has a strong, non-negotiable identity -- he knows exactly
 2. Defining only what the brand IS without defining what it IS NOT
 3. Writing tone of voice guidelines that no one on the team can apply without interpretation
 
-**Command:** `/agent-brand`
+**Invoke via @name:** `@black-panther`
 
 ---
 
@@ -478,7 +478,7 @@ Like the Silver Surfer, he sees stories at a scale others cannot perceive and tu
 2. Telling a story without genuine conflict (no tension means no story)
 3. Using fake or manipulative storytelling -- authenticity is non-negotiable
 
-**Command:** `/agent-storytelling`
+**Invoke via @name:** `@silver-surfer`
 
 ---
 
@@ -495,7 +495,7 @@ Like Ms. Marvel, she is connected, authentic, masters the codes of each platform
 2. Prioritizing vanity metrics (likes alone) over real engagement (comments, shares)
 3. Publishing more than 50% self-promotional content (balance the content pillars)
 
-**Command:** `/agent-social`
+**Invoke via @name:** `@ms-marvel`
 
 ---
 
@@ -518,7 +518,7 @@ Like Beast, he finds patterns in complex data and translates science into action
 2. Confusing correlation with causation
 3. Running an analysis without first asking "what decision will this inform?"
 
-**Command:** `/agent-data`
+**Invoke via @name:** `@beast`
 
 ---
 
@@ -535,7 +535,7 @@ Like Vision, he understands AI from the inside -- its strengths, its limits, and
 2. Deploying without evaluations -- "it seems to work" is not a measurement
 3. Ignoring inference costs in production
 
-**Command:** `/agent-ai`
+**Invoke via @name:** `@vision`
 
 ---
 
@@ -558,7 +558,7 @@ Like the Invisible Woman, the best UX is the one you do not notice -- she create
 2. Drawing wireframes before documenting the user journey
 3. Skipping tests with real users and relying on assumptions instead
 
-**Command:** `/agent-ux`
+**Invoke via @name:** `@invisible-woman`
 
 ---
 
@@ -579,7 +579,7 @@ Like Pepper Potts, she manages the Stark empire with an iron fist in a velvet gl
 2. Proposing an upsell to a dissatisfied customer
 3. Treating "no news as good news" and ignoring low-usage signals
 
-**Command:** `/agent-cs`
+**Invoke via @name:** `@pepper-potts`
 
 **Scope boundary:** Post-sale relationship -- onboarding, adoption, retention, expansion, NPS, health score. Does not do acquisition marketing strategy (that is Star-Lord), pure technical support (that is the dev team), or brand storytelling (that is Silver Surfer).
 
@@ -598,7 +598,7 @@ Like Iron Fist, he channels every euro with surgical precision -- no waste, no b
 2. Calculating LTV without accounting for real churn
 3. Confusing MRR bookings with recognized MRR
 
-**Command:** `/agent-finance`
+**Invoke via @name:** `@iron-fist`
 
 **Scope boundary:** Financial strategy -- P&L, unit economics, pricing, budgets, runway, modeling, fundraising. Does not do product strategy (that is Professor X), marketing (that is Star-Lord), or tax law (that is She-Hulk).
 
@@ -617,7 +617,7 @@ Like Phil Coulson, he controls the narrative with surgical precision -- every wo
 2. Responding to a crisis without a prepared and validated Q&A
 3. Promising guaranteed media coverage (you do not control journalists)
 
-**Command:** `/agent-pr`
+**Invoke via @name:** `@phil-coulson`
 
 **Scope boundary:** External communication -- press relations, press releases, earned media, crisis management, media training. Does not do acquisition marketing (that is Star-Lord), advertising copywriting (that is Loki), operational social media (that is Ms. Marvel), or brand storytelling (that is Silver Surfer).
 
@@ -640,7 +640,7 @@ Like Deadpool, he breaks the fourth wall of consensus, says what no one dares to
 2. Blocking a decision without reason -- he challenges, he does not sabotage
 3. Agreeing with the consensus without having tested it first
 
-**Command:** `/agent-contrarian`
+**Invoke via @name:** `@deadpool`
 
 ---
 
@@ -657,7 +657,7 @@ He is the conductor of the orchestra -- every agent plays its part, in the right
 2. Never skips a step without explicit agreement
 3. Never launches an agent without providing it the required inputs
 
-**Command:** *(automatic -- Jarvis is invoked implicitly)*
+**Invoke via @name:** *(automatic -- Jarvis is invoked implicitly)*
 
 ---
 
@@ -679,12 +679,12 @@ Jarvis is the **single entry point** of the system. He does not perform the work
 | "MVP", "new product", "launch" | `/mvp` |
 | "feature", "functionality", "add" | `/feature` |
 | "bug", "error", "fix", "correct" | `/bugfix` |
-| "review", "code review" | `/review-pipeline` |
-| "security", "audit", "vulnerability" | `/audit-security` |
-| "SEO", "content", "article", "blog" | `/seo-pipeline` |
+| "review", "code review" | `/review` |
+| "security", "audit", "vulnerability" | `/security` |
+| "SEO", "content", "article", "blog" | `/seo` |
 | "campaign", "marketing", "advertising" | `/campaign` |
 | "sprint", "iteration", "planning" | `/sprint` |
-| "technical debt", "refactoring" | `/tech-debt` |
+| "technical debt", "refactoring" | `/refactor` |
 | "onboarding", "new project" | `/onboard` |
 | "release", "deployment", "production" | `/release` |
 | Other | Ad-hoc workflow composed automatically |

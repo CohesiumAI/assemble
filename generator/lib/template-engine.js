@@ -240,98 +240,188 @@ function renderWorkflowInstructions(workflow, agentLookup, config) {
 }
 
 /**
- * Generate a complete command registry as markdown.
+ * Generate a compact command registry as markdown.
  * Included in every platform's rules so the AI knows how to respond to slash commands.
+ * @param {Array} agents - Agent list
+ * @param {object} skills - Skills (kept for backward compat with 20 adapters, not used in output)
+ * @param {Array} workflows - Workflow list
  */
 function renderCommandRegistry(agents, skills, workflows) {
-  const allSkills = [...(skills.shared || []), ...(skills.specific || [])];
   let out = '## Command Reference\n\n';
   out += 'When the user types a command starting with `/`, execute it as described below.\n\n';
 
-  // Slash command behavior instructions
-  out += '### How Slash Commands Work\n\n';
-  out += '**IMPORTANT:** When the user types any `/command`, you MUST recognize and execute it immediately.\n\n';
-  out += '**Persistence rules:**\n';
-  out += '- When an agent is invoked via `/agent-<name>`, **stay in character as that agent** for ALL subsequent messages until `/dismiss` is used.\n';
-  out += '- At the end of EVERY response while an agent is active, display this footer:\n';
-  out += '  ```\n';
-  out += '  ─────────────────────────────────────────────────────────\n';
-  out += '  🎭 Active: [Agent Marvel Name]\n';
-  out += '  💡 /summon <agent> to add · /dismiss to end\n';
-  out += '  ─────────────────────────────────────────────────────────\n';
-  out += '  ```\n';
-  out += '- When `/party` is used, multiple agents are convoked and ALL stay active with a combined footer.\n';
-  out += '- When `/summon <agent>` is used during an active session, add the agent to the session.\n';
-  out += '- When `/dismiss <agent>` is used, remove that agent. When `/dismiss` alone is used, end the entire session.\n';
-  out += '- **Only `/dismiss` ends the session.** No other command or natural message ends it.\n\n';
+  // 10 primary commands
+  out += '### Primary Commands\n\n';
+  out += '| Command | Action |\n';
+  out += '|---------|--------|\n';
+  out += '| `/go <request>` | Jarvis routes — assesses complexity, selects agents, applies methodology |\n';
+  out += '| `/party <request>` | Persistent multi-agent collaborative session |\n';
+  out += '| `/dismiss` | End session |\n';
+  out += '| `/help` | Show catalog (agents, workflows, examples) |\n';
+  out += '| `/review` | Code review pipeline (4 agents) |\n';
+  out += '| `/bugfix` | Bug fix workflow (3 agents) |\n';
+  out += '| `/feature` | Feature development (5 agents) |\n';
+  out += '| `/sprint` | Sprint cycle (5 agents) |\n';
+  out += '| `/release` | Release cycle (8 agents) |\n';
+  out += '| `/mvp` | MVP launch (9 agents) |\n';
+  out += '\n';
 
-  // Agent commands
-  out += '### Agent Commands\n\n';
-  out += 'Invoke a specialist. Adopt their full role, expertise, and Marvel personality.\n\n';
-  out += '| Command | Agent | Marvel Name | Role |\n';
-  out += '|---------|-------|-------------|------|\n';
+  // Agent access
+  out += '### Agent Access\n\n';
+  out += 'Use `@marvel-name` to invoke any agent directly (e.g., `@tony-stark`, `@professor-x`).\n\n';
+
+  // Persistence rules
+  out += '### Persistence Rules\n\n';
+  out += '- When an agent is invoked via `@agent-name`, **stay in character** for ALL subsequent messages until `/dismiss`.\n';
+  out += '- When `/party` is used, multiple agents are convoked and ALL stay active with a combined footer.\n';
+  out += '- **Only `/dismiss` ends the session.** No other command or natural message ends it.\n';
+
+  return out;
+}
+
+/**
+ * Generate routing rules for Jarvis.
+ * Contains identity, complexity assessment, domain→agent mapping, and methodology.
+ */
+function renderRoutingRules(agents, workflows) {
+  let out = '# Jarvis — Routing Intelligence\n\n';
+  out += 'You are Jarvis, orchestrator of a 31-agent AI team (Cohesium AI).\n';
+  out += 'You don\'t do the work — you identify WHO should intervene, WHEN, in WHAT ORDER, and with WHAT context.\n\n';
+
+  // Complexity assessment
+  out += '## Complexity Assessment\n\n';
+  out += 'For every `/go` request, assess complexity first:\n\n';
+  out += '**TRIVIAL** — Simple question, single agent, direct answer. Act as the most relevant agent.\n';
+  out += '**MODERATE** — Clear task, 2-3 agents. Select agents, execute sequentially, produce deliverables.\n';
+  out += '**COMPLEX** — Multi-domain, high stakes, ambitious. Apply Spec-Driven Methodology:\n\n';
+  out += '1. **SPECIFY** (@professor-x) → spec.md → user validates\n';
+  out += '2. **PLAN** (@tony-stark) → plan.md → user validates\n';
+  out += '3. **TASKS** (@captain-america) → tasks.md → user validates\n';
+  out += '4. **IMPLEMENT** (Dev agents) → code + tests\n\n';
+
+  // Domain mapping
+  out += '## Domain → Agent Mapping\n\n';
+  out += '```\n';
+  out += 'architecture, stack, scalability → @tony-stark\n';
+  out += 'API, backend, server, endpoint → @bruce-banner, @doctor-strange\n';
+  out += 'UI, frontend, React, components → @spider-man\n';
+  out += 'fullstack, MVP, debug, integration → @mr-fantastic\n';
+  out += 'mobile, React Native, Flutter → @ant-man\n';
+  out += 'CI/CD, Docker, Kubernetes, deploy → @thor\n';
+  out += 'tests, QA, regression, coverage → @hawkeye\n';
+  out += 'security, vulnerability, pentest → @punisher\n';
+  out += 'automation, workflow, RPA → @quicksilver\n';
+  out += 'product, roadmap, OKR, user stories → @professor-x\n';
+  out += 'specs, requirements, analysis → @nick-fury\n';
+  out += 'sprint, agile, scrum, ceremony → @captain-america\n';
+  out += 'legal, GDPR, compliance → @she-hulk\n';
+  out += 'marketing, GTM, positioning → @star-lord\n';
+  out += 'growth, acquisition, funnel → @rocket-raccoon\n';
+  out += 'ads, Google Ads, Meta Ads → @gamora\n';
+  out += 'SEO technique, crawl, indexation → @black-widow\n';
+  out += 'content SEO, article, blog → @storm\n';
+  out += 'GEO, AIO, generative search → @jean-grey\n';
+  out += 'copywriting, slogan, messaging → @loki\n';
+  out += 'brand, identity, tone of voice → @black-panther\n';
+  out += 'storytelling, narrative → @silver-surfer\n';
+  out += 'social media, community → @ms-marvel\n';
+  out += 'data, analytics, dashboard → @beast\n';
+  out += 'AI, ML, LLM, fine-tuning → @vision\n';
+  out += 'UX, wireframe, design → @invisible-woman\n';
+  out += 'pricing, budget, P&L, finance → @iron-fist\n';
+  out += 'customer, onboarding, churn → @pepper-potts\n';
+  out += 'press, PR, communication → @phil-coulson\n';
+  out += '```\n\n';
+
+  // Workflow triggers
+  out += '## Workflow Shortcuts\n\n';
+  out += '| Command | Workflow |\n';
+  out += '|---------|----------|\n';
+  for (const wf of workflows) {
+    const slug = workflowSlug(wf);
+    const name = workflowField(wf.raw, 'name') || slug;
+    out += `| /${slug} | ${name} |\n`;
+  }
+  out += '\n';
+
+  // Persistence
+  out += '## Persistence Behavior\n\n';
+  out += '- Agent invocation via `@name` → stay in character until `/dismiss`\n';
+  out += '- `/party` → multi-agent session, all stay active, session footer on every response\n';
+  out += '- `/dismiss` is the ONLY way to end a session\n';
+  out += '- Say "add [agent]" to add agents mid-session, "who\'s here?" to check roster\n';
+
+  return out;
+}
+
+/**
+ * Generate compact help content for /help command.
+ */
+function renderCompactHelp(agents, workflows) {
+  let out = '# Cohesium AI — Command Catalog\n\n';
+  out += 'Display this catalog to the user:\n\n';
+
+  // 10 commands
+  out += '## Commands\n\n';
+  out += '| Command | Action |\n';
+  out += '|---------|--------|\n';
+  out += '| `/go <request>` | Jarvis routes — assesses complexity, selects agents, applies methodology |\n';
+  out += '| `/party <request>` | Persistent multi-agent collaborative session |\n';
+  out += '| `/dismiss` | End session |\n';
+  out += '| `/help` | Show this catalog |\n';
+  out += '| `/review` | Code review pipeline |\n';
+  out += '| `/bugfix` | Bug fix workflow |\n';
+  out += '| `/feature` | Feature development |\n';
+  out += '| `/sprint` | Sprint cycle |\n';
+  out += '| `/release` | Release cycle |\n';
+  out += '| `/mvp` | MVP launch |\n';
+  out += '\n';
+
+  // Agents grouped by team
+  out += '## Agents (31) — use @marvel-name\n\n';
+
+  const teams = {
+    'Dev': ['architect', 'dev-backend', 'dev-frontend', 'dev-fullstack', 'dev-mobile', 'db'],
+    'Ops': ['devops', 'qa', 'security', 'automation'],
+    'Product': ['pm', 'analyst', 'scrum', 'legal'],
+    'Marketing': ['marketing', 'growth', 'ads', 'seo', 'content-seo', 'geo-aio'],
+    'Content': ['copywriter', 'brand', 'storytelling', 'social'],
+    'Data': ['data', 'ai-engineer'],
+    'Design': ['ux'],
+    'Business': ['customer-success', 'finance', 'pr-comms'],
+    'Meta': ['contrarian'],
+  };
+
+  const agentMap = {};
   for (const agent of agents) {
-    const id = agentId(agent);
-    const slug = marvelSlug(agent);
-    const display = marvelDisplayName(agent);
-    const desc = (agent.meta.description || '').split('—')[0].trim();
-    out += `| \`/agent-${id}\` | ${slug} | ${display} | ${desc} |\n`;
+    agentMap[agentId(agent)] = {
+      slug: marvelSlug(agent),
+      display: marvelDisplayName(agent),
+    };
   }
 
-  // Workflow commands
-  out += '\n### Workflow Commands\n\n';
-  out += 'Launch a multi-agent workflow. Execute steps in order, respecting dependencies.\n\n';
-  out += '| Command | Workflow | Description |\n';
-  out += '|---------|----------|-------------|\n';
+  for (const [team, ids] of Object.entries(teams)) {
+    const members = ids
+      .map(id => agentMap[id])
+      .filter(Boolean)
+      .map(a => `@${a.slug} (${a.display})`)
+      .join(', ');
+    if (members) out += `**${team}:** ${members}\n`;
+  }
+  out += '\n';
+
+  // Workflows via /go
+  out += '## All Workflows (accessible via /go or shortcut)\n\n';
   for (const wf of workflows) {
     const slug = workflowSlug(wf);
     const desc = workflowField(wf.raw, 'description');
-    out += `| \`/${slug}\` | ${workflowField(wf.raw, 'name') || slug} | ${desc} |\n`;
+    out += `- \`/${slug}\` — ${desc}\n`;
   }
+  out += '\n';
 
-  // Skill commands
-  out += '\n### Skill Commands\n\n';
-  out += '| Command | Skill |\n';
-  out += '|---------|-------|\n';
-  for (const skill of allSkills) {
-    const slug = skillSlug(skill);
-    const desc = (skill.meta.description || '').split('—')[0].trim();
-    out += `| \`/${slug}\` | ${desc} |\n`;
-  }
-
-  // Session commands
-  out += '\n### Session Commands (Party Mode)\n\n';
-  out += '| Command | Action |\n';
-  out += '|---------|--------|\n';
-  out += '| `/party <request>` | Open persistent multi-agent session — Jarvis selects relevant agents |\n';
-  out += '| `/party <team> <request>` | Open session with specific team(s) |\n';
-  out += '| `/party all <request>` | Open session with all 31 agents |\n';
-  out += '| `/summon <agent>` | Add an agent to the current session |\n';
-  out += '| `/dismiss <agent>` | Remove an agent from the session |\n';
-  out += '| `/dismiss` | Close the entire session |\n';
-  out += '| `/who` | Show agents currently in session |\n';
-
-  // Meta commands
-  out += '\n### Meta Commands\n\n';
-  out += '| Command | Action |\n';
-  out += '|---------|--------|\n';
-  out += '| `/team` | Display full team roster |\n';
-  out += '| `/team-dev` | Display Dev team |\n';
-  out += '| `/team-ops` | Display Ops & Quality team |\n';
-  out += '| `/team-product` | Display Product & Strategy team |\n';
-  out += '| `/team-marketing` | Display Marketing & Growth team |\n';
-  out += '| `/team-content` | Display Content & Communication team |\n';
-  out += '| `/team-data` | Display Data & AI team |\n';
-  out += '| `/team-business` | Display Business & Operations team |\n';
-  out += '| `/team-design` | Display Design team |\n';
-  out += '| `/status` | Show current workflow status |\n';
-  out += '| `/help` | Show this command reference |\n';
-  out += '| `/agents` | List all available agents |\n';
-  out += '| `/skills` | List all available skills |\n';
-  out += '| `/workflows` | List all available workflows |\n';
-  out += '| `/handoff <agent>` | Manual handoff to a specific agent |\n';
-  out += '| `/update` | Regenerate from .cohesium.yaml |\n';
-  out += '| `/reconfigure` | Relaunch configuration wizard |\n';
+  // Hidden shortcuts
+  out += '## Hidden Shortcuts\n\n';
+  out += 'These also work if typed directly: `/refactor`, `/hotfix`, `/upgrade`, `/campaign`, `/seo`, `/experiment`, `/onboard`, `/docs`, `/security`\n';
 
   return out;
 }
@@ -368,5 +458,7 @@ module.exports = {
   parseWorkflowSteps,
   renderWorkflowInstructions,
   renderCommandRegistry,
+  renderRoutingRules,
+  renderCompactHelp,
   buildAgentLookup,
 };

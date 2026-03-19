@@ -1,6 +1,6 @@
 name: marketing-campaign
 description: "Lancement de campagne marketing — de la stratégie à l'exécution multi-canal"
-trigger: /marketing
+trigger: /campaign
 output_dir: "{cohesium_output}/marketing_{timestamp}"
 steps:
   - step: 1

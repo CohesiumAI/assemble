@@ -23,7 +23,7 @@
 | 13 | OpenCode | IDE | `.opencode/` |
 | 14 | QwenCoder | IDE | `.qwencoder/` |
 | 15 | Rovo Dev | IDE | `.rovo/` |
-| 16 | Claude Code | CLI | `CLAUDE.md` + `.claude/agents/*/AGENT.md` + `.claude/skills/*/SKILL.md` + `.claude/rules/` |
+| 16 | Claude Code | CLI | `CLAUDE.md` + `.claude/agents/*/AGENT.md` + `.claude/skills/*/SKILL.md` (10) + `.claude/rules/` (routing, orchestrator, teams) |
 | 17 | Codex | CLI | `AGENTS.md` |
 | 18 | Gemini CLI | CLI | `GEMINI.md` + `.gemini/` |
 | 19 | Auggie | CLI | `.augment/commands/*.md` |
@@ -273,20 +273,22 @@
 
 ### 16. Claude Code
 
-**Description:** Claude Code CLI (Anthropic) — The **reference platform** with the most complete adapter. Supports agents, skills, and rules as separate structured files.
+**Description:** Claude Code CLI (Anthropic) — The **reference platform** with the most complete adapter. Uses a Jarvis-first architecture with 10 commands, 31 agents via @mention, and spec-driven methodology.
 
 **Generated files:**
 
 | File / Directory | Content |
 |------------------|---------|
-| `CLAUDE.md` | Main file: Jarvis orchestrator, agent catalog, global rules |
-| `.claude/agents/*/AGENT.md` | One directory per agent, each containing an `AGENT.md` file with full agent instructions |
-| `.claude/skills/*/SKILL.md` | One directory per skill, each containing a `SKILL.md` file with skill definition |
-| `.claude/rules/` | Rule files for global and context-specific behavior |
+| `CLAUDE.md` | Compact entry point (< 30 lines) with @imports to rules |
+| `.claude/agents/*/AGENT.md` | One directory per agent (31), each containing an `AGENT.md` file |
+| `.claude/skills/*/SKILL.md` | 10 skill directories: go, party, dismiss, help, review, bugfix, feature, sprint, release, mvp |
+| `.claude/rules/routing.md` | Jarvis routing intelligence: complexity assessment, domain→agent mapping, methodology |
+| `.claude/rules/orchestrator.md` | Full orchestrator instructions |
+| `.claude/rules/teams.md` | Agent roster with @mentions |
 
 **Format:** Markdown
 
-**Notes:** `CLAUDE.md` contains the orchestrator and catalog. Each agent and skill has its own directory with a dedicated Markdown file, enabling direct invocation via `/agent-*` and skill commands. Rules provide layered behavioral configuration.
+**Notes:** `CLAUDE.md` is kept under 30 lines to minimize permanent context token usage (~400 tokens/turn instead of ~1500). Agents are accessed via `@marvel-name` mentions. The 10 SKILL.md files cover: 4 system commands (`/go`, `/party`, `/dismiss`, `/help`) and 6 workflow shortcuts (`/review`, `/bugfix`, `/feature`, `/sprint`, `/release`, `/mvp`). Hidden shortcuts like `/refactor`, `/hotfix`, `/upgrade` also work.
 
 ---
 

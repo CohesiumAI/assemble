@@ -1,6 +1,6 @@
 name: experimentation
 description: "Cycle d'expérimentation A/B — hypothèse, implémentation, mesure et décision"
-trigger: /experiment-cycle
+trigger: /experiment
 output_dir: "{cohesium_output}/experiment_{timestamp}"
 steps:
   - step: 1
