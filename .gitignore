@@ -6,5 +6,6 @@ tmp-migrate-check/
 # MCP generated files
 .assemble/mcp-server.js
 .assemble/mcp.json
-.assemble/mcp-package.json
+.assemble/package.json
+.assemble/node_modules/
 node_modules/

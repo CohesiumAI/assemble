@@ -18,6 +18,8 @@ module.exports = {
     const allSkills = [...(skills.shared || []), ...(skills.specific || [])];
     for (const skill of allSkills) paths.push(path.join(projectDir, '.iflow', 'skills', `${skillSlug(skill)}.md`));
     for (const wf of workflows) paths.push(path.join(projectDir, '.iflow', 'flows', `${workflowSlug(wf)}.md`));
+    paths.push(path.join(projectDir, '.iflow', 'commands.md'));
+    paths.push(path.join(projectDir, '.iflow', 'orchestrator.md'));
     return paths;
   },
 
@@ -57,6 +59,10 @@ module.exports = {
     for (const subdir of ['agents', 'skills', 'flows']) {
       const dir = path.join(projectDir, '.iflow', subdir);
       if (fs.existsSync(dir)) for (const file of fs.readdirSync(dir)) { const c = fs.readFileSync(path.join(dir, file), 'utf-8'); if (c.trim().length === 0) errors.push(`Empty: .iflow/${subdir}/${file}`); }
+    }
+    for (const rootFile of ['commands.md', 'orchestrator.md']) {
+      const p = path.join(projectDir, '.iflow', rootFile);
+      if (fs.existsSync(p) && fs.readFileSync(p, 'utf-8').trim().length === 0) errors.push(`Empty: .iflow/${rootFile}`);
     }
     return { valid: errors.length === 0, errors };
   }

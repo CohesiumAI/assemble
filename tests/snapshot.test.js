@@ -585,8 +585,8 @@ console.log('\nTest 13: MCP server generation');
     assert(fs.existsSync(path.join(dir, '.assemble', 'mcp.json')), 'mcp.json should exist');
   });
 
-  test('MCP: mcp-package.json generated', () => {
-    assert(fs.existsSync(path.join(dir, '.assemble', 'mcp-package.json')), 'mcp-package.json should exist');
+  test('MCP: package.json generated', () => {
+    assert(fs.existsSync(path.join(dir, '.assemble', 'package.json')), '.assemble/package.json should exist');
   });
 
   test('MCP: mcp-server.js contains agent tools', () => {
@@ -831,6 +831,96 @@ console.log('\nTest 22: Import skill validation');
       assert(false, 'Import should succeed for valid skill');
     }
     assert(fs.existsSync(path.join(dir, '.assemble', 'skills', 'test-skill.md')), 'Skill file should exist in .assemble/skills/');
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 23: Custom workflows ─────────────────────────────────────────────
+
+console.log('\nTest 23: Custom workflows');
+{
+  const dir = createTmpDir();
+  const customWfDir = path.join(dir, '.assemble', 'workflows');
+  fs.mkdirSync(customWfDir, { recursive: true });
+  fs.writeFileSync(path.join(customWfDir, 'my-custom-flow.yaml'), `name: "My Custom Flow"\ndescription: "A custom test workflow"\ntrigger: /custom-flow\nsteps:\n  - step: 1\n    agent: pm\n    action: "Custom action"\n    outputs: [custom-output.md]\n`);
+
+  run(['--project', dir, '--platforms', 'claude-code', '--lang-team', 'english', '--lang-output', 'english']);
+
+  test('Custom workflow appears in output AGENTS.md', () => {
+    const agentsMd = fs.readFileSync(path.join(dir, 'assemble-output', 'AGENTS.md'), 'utf-8');
+    assert(agentsMd.includes('My Custom Flow'), 'AGENTS.md should contain custom workflow name');
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 24: Plugin adapters ─────────────────────────────────────────────
+
+console.log('\nTest 24: Plugin adapters');
+{
+  const dir = createTmpDir();
+  const pluginDir = path.join(dir, '.assemble', 'adapters');
+  fs.mkdirSync(pluginDir, { recursive: true });
+
+  // Create a minimal plugin adapter
+  const pluginCode = `
+const fs = require('fs');
+const path = require('path');
+module.exports = {
+  name: 'test-plugin',
+  displayName: 'Test Plugin',
+  type: 'ide',
+  getOutputPaths(projectDir) {
+    return [path.join(projectDir, '.test-plugin', 'output.md')];
+  },
+  generate(projectDir, { agents, config }) {
+    const outDir = path.join(projectDir, '.test-plugin');
+    fs.mkdirSync(outDir, { recursive: true });
+    fs.writeFileSync(path.join(outDir, 'output.md'), '# Test Plugin Output\\n\\nGenerated ' + agents.length + ' agents.', 'utf-8');
+  },
+  validate(projectDir) {
+    const p = path.join(projectDir, '.test-plugin', 'output.md');
+    const fs = require('fs');
+    if (!fs.existsSync(p)) return { valid: false, errors: ['Missing output.md'] };
+    return { valid: true, errors: [] };
+  }
+};`;
+  fs.writeFileSync(path.join(pluginDir, 'test-plugin.js'), pluginCode);
+
+  // Create config that uses the plugin adapter
+  const configContent = `version: "1.0.0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [test-plugin]\nagents: all\nworkflows: all\ngovernance: "none"\ninstalled_at: "2026-03-19"\n`;
+  fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
+
+  run(['--project', dir, '--update']);
+
+  test('Plugin adapter generates output', () => {
+    const outputPath = path.join(dir, '.test-plugin', 'output.md');
+    assert(fs.existsSync(outputPath), '.test-plugin/output.md should exist');
+    const content = fs.readFileSync(outputPath, 'utf-8');
+    assert(content.includes('31 agents'), `Should contain 31 agents, got: ${content}`);
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 25: _audit.md generated for governance strict ───────────────────
+
+console.log('\nTest 25: Audit trail for governance strict');
+{
+  const dir = createTmpDir();
+  fs.mkdirSync(dir, { recursive: true });
+  const configContent = `version: "1.0.0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "strict"\ninstalled_at: "2026-03-19"\n`;
+  fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
+  run(['--project', dir, '--update']);
+
+  test('_audit.md exists when governance: strict', () => {
+    assert(fs.existsSync(path.join(dir, 'assemble-output', '_audit.md')), '_audit.md should exist');
+  });
+
+  test('_audit.md contains Approval Log', () => {
+    const content = fs.readFileSync(path.join(dir, 'assemble-output', '_audit.md'), 'utf-8');
+    assert(content.includes('Approval Log'), '_audit.md should contain Approval Log');
   });
 
   cleanTmpDir();

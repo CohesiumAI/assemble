@@ -18,6 +18,8 @@ module.exports = {
     const allSkills = [...(skills.shared || []), ...(skills.specific || [])];
     for (const skill of allSkills) paths.push(path.join(projectDir, '.trae', 'skills', `${skillSlug(skill)}.md`));
     for (const wf of workflows) paths.push(path.join(projectDir, '.trae', 'workflows', `${workflowSlug(wf)}.md`));
+    paths.push(path.join(projectDir, '.trae', 'commands.md'));
+    paths.push(path.join(projectDir, '.trae', 'rules', 'orchestrator.md'));
     return paths;
   },
 
@@ -60,6 +62,10 @@ module.exports = {
     for (const subdir of ['rules', 'agents', 'skills', 'workflows']) {
       const dir = path.join(projectDir, '.trae', subdir);
       if (fs.existsSync(dir)) for (const file of fs.readdirSync(dir)) { const c = fs.readFileSync(path.join(dir, file), 'utf-8'); if (c.trim().length === 0) errors.push(`Empty: .trae/${subdir}/${file}`); }
+    }
+    for (const rootFile of ['commands.md']) {
+      const p = path.join(projectDir, '.trae', rootFile);
+      if (fs.existsSync(p) && fs.readFileSync(p, 'utf-8').trim().length === 0) errors.push(`Empty: .trae/${rootFile}`);
     }
     return { valid: errors.length === 0, errors };
   }

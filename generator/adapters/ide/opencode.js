@@ -17,6 +17,8 @@ module.exports = {
     for (const a of agents) paths.push(path.join(projectDir, '.opencode', 'agents', `${marvelSlug(a)}.md`));
     for (const s of [...(skills.shared || []), ...(skills.specific || [])]) paths.push(path.join(projectDir, '.opencode', 'skills', `${skillSlug(s)}.md`));
     for (const w of workflows) paths.push(path.join(projectDir, '.opencode', 'workflows', `${workflowSlug(w)}.md`));
+    paths.push(path.join(projectDir, '.opencode', 'commands.md'));
+    paths.push(path.join(projectDir, '.opencode', 'orchestrator.md'));
     return paths;
   },
 
@@ -44,6 +46,10 @@ module.exports = {
     for (const subdir of ['agents', 'skills', 'workflows']) {
       const dir = path.join(projectDir, '.opencode', subdir);
       if (fs.existsSync(dir)) for (const file of fs.readdirSync(dir)) { if (fs.readFileSync(path.join(dir, file), 'utf-8').trim().length === 0) errors.push(`Empty: .opencode/${subdir}/${file}`); }
+    }
+    for (const rootFile of ['commands.md', 'orchestrator.md']) {
+      const p = path.join(projectDir, '.opencode', rootFile);
+      if (fs.existsSync(p) && fs.readFileSync(p, 'utf-8').trim().length === 0) errors.push(`Empty: .opencode/${rootFile}`);
     }
     if (!fs.existsSync(path.join(projectDir, '.opencode', 'agents'))) errors.push('Missing .opencode/agents/');
     return { valid: errors.length === 0, errors };

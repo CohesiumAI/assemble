@@ -17,17 +17,11 @@ const { validateOutput } = require('./lib/validator');
 const { resolveProfile } = require('./lib/profiles');
 const { generateMCPServer } = require('./lib/mcp-generator');
 const { generateUniversalAgentsMd } = require('./lib/agents-md-generator');
+const { loadConfig: _loadConfig, DEFAULTS: _DEFAULTS } = require('./lib/config-loader');
 
 // ─── Configuration par défaut ───────────────────────────────────────────────
 
-const DEFAULTS = {
-  langue_equipe: 'français',
-  langue_output: 'français',
-  output_dir: './assemble-output',
-  platforms: [],
-  agents: 'all',
-  workflows: 'all'
-};
+const DEFAULTS = _DEFAULTS;
 
 // ─── Résolution des chemins ──────────────────────────────────────────────────
 
@@ -83,40 +77,7 @@ function loadAdapters(projectDir) {
 
 // ─── Chargement de la configuration ──────────────────────────────────────────
 
-function loadConfig(configPath) {
-  if (!configPath || !fs.existsSync(configPath)) {
-    return { ...DEFAULTS };
-  }
-
-  const raw = fs.readFileSync(configPath, 'utf-8');
-  const config = { ...DEFAULTS };
-  const explicitKeys = new Set();
-
-  // Parse simple du YAML de config
-  for (const line of raw.split('\n')) {
-    const match = line.match(/^(\w[\w_]*):\s*(.+)$/);
-    if (!match) continue;
-
-    const [, key, value] = match;
-    explicitKeys.add(key);
-    if (value.startsWith('[')) {
-      config[key] = value.slice(1, -1).split(',').map(v => v.trim().replace(/["']/g, ''));
-    } else if (value === 'all') {
-      config[key] = 'all';
-    } else {
-      const cleaned = value.replace(/["']/g, '').trim();
-      // Parse booleans
-      if (cleaned === 'true') config[key] = true;
-      else if (cleaned === 'false') config[key] = false;
-      else config[key] = cleaned;
-    }
-  }
-
-  // Track which keys were explicitly set (used by resolveProfile)
-  config._explicitKeys = explicitKeys;
-
-  return config;
-}
+const loadConfig = _loadConfig;
 
 // ─── Parsing des arguments CLI ───────────────────────────────────────────────
 

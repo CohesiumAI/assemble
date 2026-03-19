@@ -181,26 +181,18 @@ test('without config does not append memory/metrics', () => {
 
 // ─── loadConfig ─────────────────────────────────────────────────────────
 
+// ─── loadConfig (real function, not inline copy) ────────────────────────────
+
+const { loadConfig } = require('../generator/lib/config-loader');
+
 console.log('\nloadConfig()');
 
-// We need to test loadConfig by creating a temp file
 test('loadConfig parses booleans correctly', () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'assemble-unit-'));
   const configPath = path.join(tmpDir, 'test.yaml');
   fs.writeFileSync(configPath, 'mcp: true\nmemory: false\nmetrics: true\n');
 
-  // loadConfig is not exported directly, so we test via generate.js require path
-  // Instead, we inline the parsing logic to test it
-  const raw = fs.readFileSync(configPath, 'utf-8');
-  const config = {};
-  for (const line of raw.split('\n')) {
-    const match = line.match(/^(\w[\w_]*):\s*(.+)$/);
-    if (!match) continue;
-    const cleaned = match[2].replace(/["']/g, '').trim();
-    if (cleaned === 'true') config[match[1]] = true;
-    else if (cleaned === 'false') config[match[1]] = false;
-    else config[match[1]] = cleaned;
-  }
+  const config = loadConfig(configPath);
 
   assert(config.mcp === true, `mcp should be true, got: ${config.mcp}`);
   assert(config.memory === false, `memory should be false, got: ${config.memory}`);
@@ -208,21 +200,37 @@ test('loadConfig parses booleans correctly', () => {
   fs.rmSync(tmpDir, { recursive: true, force: true });
 });
 
-test('loadConfig tracks explicit keys', () => {
+test('loadConfig tracks explicit keys via _explicitKeys', () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'assemble-unit-'));
   const configPath = path.join(tmpDir, 'test.yaml');
   fs.writeFileSync(configPath, 'agents: all\nprofile: startup\n');
 
-  const raw = fs.readFileSync(configPath, 'utf-8');
-  const explicitKeys = new Set();
-  for (const line of raw.split('\n')) {
-    const match = line.match(/^(\w[\w_]*):\s*(.+)$/);
-    if (match) explicitKeys.add(match[1]);
-  }
+  const config = loadConfig(configPath);
 
-  assert(explicitKeys.has('agents'), 'should track agents');
-  assert(explicitKeys.has('profile'), 'should track profile');
-  assert(!explicitKeys.has('workflows'), 'should not track absent workflows');
+  assert(config._explicitKeys instanceof Set, '_explicitKeys should be a Set');
+  assert(config._explicitKeys.has('agents'), 'should track agents');
+  assert(config._explicitKeys.has('profile'), 'should track profile');
+  assert(!config._explicitKeys.has('workflows'), 'should not track absent workflows');
+  fs.rmSync(tmpDir, { recursive: true, force: true });
+});
+
+test('loadConfig returns DEFAULTS when file does not exist', () => {
+  const config = loadConfig('/nonexistent/path.yaml');
+  assert(config.langue_equipe === 'français', 'should have default langue_equipe');
+  assert(config.agents === 'all', 'should have default agents');
+  assert(Array.isArray(config.platforms), 'platforms should be array');
+});
+
+test('loadConfig parses arrays correctly', () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'assemble-unit-'));
+  const configPath = path.join(tmpDir, 'test.yaml');
+  fs.writeFileSync(configPath, 'platforms: [claude-code, cursor, kiro]\n');
+
+  const config = loadConfig(configPath);
+
+  assert(Array.isArray(config.platforms), 'platforms should be array');
+  assert(config.platforms.length === 3, `expected 3 platforms, got ${config.platforms.length}`);
+  assert(config.platforms[0] === 'claude-code', `first platform should be claude-code, got ${config.platforms[0]}`);
   fs.rmSync(tmpDir, { recursive: true, force: true });
 });
 

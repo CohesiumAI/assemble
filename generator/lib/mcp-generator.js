@@ -100,14 +100,20 @@ function generateMCPServer(projectDir, { agents = [], workflows = [], config = {
  * Exposes ${agents.length} agents as MCP tools + jarvis-route for smart routing.
  * Transport: stdio
  *
- * Install: cd .assemble && npm install
- * Run:     node mcp-server.js
+ * Setup:   cd .assemble && npm install
+ * Run:     cd .assemble && node mcp-server.js
+ * Or from project root: node .assemble/mcp-server.js
  */
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { existsSync } from "node:fs";
-import { resolve } from "node:path";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+// Resolve paths relative to project root (parent of .assemble/)
+const __filename = fileURLToPath(import.meta.url);
+const PROJECT_ROOT = resolve(dirname(__filename), '..');
 
 const server = new McpServer({
   name: "assemble",
@@ -121,7 +127,7 @@ ${resolverCode}
 
 function resolveAgentPath(slug) {
   for (const pattern of AGENT_PATH_CANDIDATES) {
-    const candidate = resolve(pattern.replace(/\\{slug\\}/g, slug));
+    const candidate = resolve(PROJECT_ROOT, pattern.replace(/\\{slug\\}/g, slug));
     if (existsSync(candidate)) return candidate;
   }
   return null;
@@ -133,18 +139,55 @@ const AGENT_REGISTRY = {
 ${agents.map(a => `  "${marvelSlug(a)}": { id: "${agentId(a)}", name: "${marvelDisplayName(a).replace(/"/g, '\\"')}" }`).join(',\n')}
 };
 
+// Domain→agent keyword mapping for routing
+const DOMAIN_KEYWORDS = {
+  "tony-stark": ["architecture", "stack", "scalability", "system design"],
+  "bruce-banner": ["api", "backend", "server", "endpoint"],
+  "spider-man": ["ui", "frontend", "react", "component"],
+  "mr-fantastic": ["fullstack", "mvp", "debug", "integration"],
+  "ant-man": ["mobile", "react native", "flutter", "ios", "android"],
+  "thor": ["ci/cd", "docker", "kubernetes", "deploy", "devops"],
+  "hawkeye": ["test", "qa", "regression", "coverage"],
+  "punisher": ["security", "vulnerability", "pentest", "audit"],
+  "professor-x": ["product", "roadmap", "okr", "user story"],
+  "captain-america": ["sprint", "agile", "scrum", "ceremony"],
+  "star-lord": ["marketing", "gtm", "positioning", "campaign"],
+  "black-widow": ["seo", "crawl", "indexation", "ranking"],
+  "storm": ["content", "article", "blog", "editorial"],
+  "loki": ["copywriting", "slogan", "messaging", "headline"],
+  "beast": ["data", "analytics", "dashboard", "metrics"],
+  "vision": ["ai", "ml", "llm", "fine-tuning", "model"],
+  "invisible-woman": ["ux", "wireframe", "design", "prototype"],
+  "iron-fist": ["pricing", "budget", "p&l", "finance"],
+};
+
+function routeRequest(request) {
+  const lower = request.toLowerCase();
+  const matches = [];
+  for (const [slug, keywords] of Object.entries(DOMAIN_KEYWORDS)) {
+    const score = keywords.filter(kw => lower.includes(kw)).length;
+    if (score > 0) matches.push({ slug, score });
+  }
+  matches.sort((a, b) => b.score - a.score);
+  const agents = matches.length > 0 ? matches.slice(0, 3).map(m => m.slug) : Object.keys(AGENT_REGISTRY).slice(0, 3);
+  const complexity = matches.length === 0 ? "TRIVIAL" : matches.length <= 2 ? "MODERATE" : "COMPLEX";
+  return { agents, complexity };
+}
+
 server.tool("jarvis-route", "Jarvis smart routing — analyzes request, assesses complexity, selects agents", { request: { type: "string", description: "User request to route" } }, async ({ request }) => {
   const workflows = {
 ${workflowTriggers}
   };
-  // Return structured JSON for programmatic consumption
+  const { agents: suggestedAgents, complexity } = routeRequest(request);
   const routing = {
     request,
-    complexity: "MODERATE",
-    suggested_agents: Object.keys(AGENT_REGISTRY).slice(0, 3),
+    complexity,
+    suggested_agents: suggestedAgents,
     available_workflows: workflows,
     agent_count: Object.keys(AGENT_REGISTRY).length,
-    methodology: "Assess complexity: TRIVIAL (single agent) | MODERATE (2-3 agents) | COMPLEX (spec-driven 5 phases)",
+    methodology: complexity === "TRIVIAL" ? "Single agent, direct answer"
+      : complexity === "MODERATE" ? "2-3 agents, sequential execution"
+      : "Spec-driven: SPECIFY → PLAN → TASKS → IMPLEMENT → CLOSE",
   };
   return {
     content: [{
@@ -189,13 +232,13 @@ await server.connect(transport);
       '@modelcontextprotocol/sdk': '^1.0.0',
     },
   };
-  fs.writeFileSync(path.join(mcpDir, 'mcp-package.json'), JSON.stringify(mcpPackage, null, 2), 'utf-8');
+  fs.writeFileSync(path.join(mcpDir, 'package.json'), JSON.stringify(mcpPackage, null, 2), 'utf-8');
 
   return {
     files: [
       path.join(mcpDir, 'mcp-server.js'),
       path.join(mcpDir, 'mcp.json'),
-      path.join(mcpDir, 'mcp-package.json'),
+      path.join(mcpDir, 'package.json'),
     ],
   };
 }

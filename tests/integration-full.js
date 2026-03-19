@@ -53,7 +53,7 @@ function fileContains(filePath, text) {
 console.log('--- MCP ---');
 check('mcp-server.js exists', fs.existsSync(path.join(dir, '.assemble', 'mcp-server.js')));
 check('mcp.json exists', fs.existsSync(path.join(dir, '.assemble', 'mcp.json')));
-check('mcp-package.json exists', fs.existsSync(path.join(dir, '.assemble', 'mcp-package.json')));
+check('package.json exists', fs.existsSync(path.join(dir, '.assemble', 'package.json')));
 check('mcp.json uses forward slashes', (() => {
   const j = JSON.parse(fs.readFileSync(path.join(dir, '.assemble', 'mcp.json'), 'utf-8'));
   return !j.mcpServers.assemble.args[0].includes('\\');

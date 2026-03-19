@@ -17,6 +17,8 @@ module.exports = {
     for (const a of agents) paths.push(path.join(projectDir, '.codebuddy', 'agents', `${marvelSlug(a)}.md`));
     for (const s of [...(skills.shared || []), ...(skills.specific || [])]) paths.push(path.join(projectDir, '.codebuddy', 'skills', `${skillSlug(s)}.md`));
     for (const w of workflows) paths.push(path.join(projectDir, '.codebuddy', 'workflows', `${workflowSlug(w)}.md`));
+    paths.push(path.join(projectDir, '.codebuddy', 'commands.md'));
+    paths.push(path.join(projectDir, '.codebuddy', 'orchestrator.md'));
     return paths;
   },
 
@@ -44,6 +46,10 @@ module.exports = {
     for (const subdir of ['agents', 'skills', 'workflows']) {
       const dir = path.join(projectDir, '.codebuddy', subdir);
       if (fs.existsSync(dir)) for (const file of fs.readdirSync(dir)) { if (fs.readFileSync(path.join(dir, file), 'utf-8').trim().length === 0) errors.push(`Empty: .codebuddy/${subdir}/${file}`); }
+    }
+    for (const rootFile of ['commands.md', 'orchestrator.md']) {
+      const p = path.join(projectDir, '.codebuddy', rootFile);
+      if (fs.existsSync(p) && fs.readFileSync(p, 'utf-8').trim().length === 0) errors.push(`Empty: .codebuddy/${rootFile}`);
     }
     if (!fs.existsSync(path.join(projectDir, '.codebuddy', 'agents'))) errors.push('Missing .codebuddy/agents/');
     return { valid: errors.length === 0, errors };

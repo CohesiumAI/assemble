@@ -80,18 +80,18 @@ $ npx create-assemble
 
 🦸 Assemble — AI Agent Orchestrator
 
-▸ 1/9 — Team language
+▸ 1/11 — Team language
   Team language: english
 
-▸ 3/9 — Team profile
+▸ 3/11 — Team profile
   1) startup   2) enterprise   3) agency   4) custom
   Profile: 4
 
-▸ 4/9 — IDE/CLI selection
+▸ 4/11 — IDE/CLI selection
   Your choice: 0    # → all 20 platforms
 
 ✅ Installation complete!
-  62 tests passing | 20 platforms | 31 agents
+  149+ tests passing | 20 platforms | 31 agents
 ```
 
 ---
@@ -305,7 +305,7 @@ assemble/
     agents/             # 31 agent definition files (AGENT-*.md)
     skills/
       shared/           # 14 shared skills (multi-agent)
-      specific/         # 13 agent-specific skills
+      specific/         # 14 agent-specific skills
     workflows/          # 15 workflow definitions (YAML)
     orchestrator/       # ORCHESTRATOR.md (Jarvis)
     config/
@@ -322,13 +322,15 @@ assemble/
       template-engine.js      # Template rendering (memory, metrics, governance strict)
     adapters/           # 20 platform adapters (IDE + CLI)
   bin/
-    cli.js              # Interactive installer (9-step wizard)
+    cli.js              # Interactive installer (11-step wizard)
     doctor.js           # Health check (npx create-assemble doctor)
     diff.js             # Dry run diff (npx create-assemble diff)
     ls.js               # List active config (npx create-assemble ls)
     import.js           # Import skills (npx create-assemble import)
   tests/
-    snapshot.test.js    # 62 tests (snapshot + qualitative)
+    unit.test.js        # Unit tests for core functions
+    snapshot.test.js    # Snapshot + qualitative tests
+    integration-full.js # Full 20-platform integration tests
   .assemble/            # User extensibility (auto-detected)
     agents/             # Custom agents (AGENT-*.md)
     skills/             # Imported skills
@@ -428,7 +430,7 @@ Set `mcp: true` to generate an MCP (Model Context Protocol) server:
 # Generated in .assemble/
 mcp-server.js        # Standalone Node.js server (31+ tools)
 mcp.json             # Config for Claude Desktop / VS Code
-mcp-package.json     # Install deps: cd .assemble && npm install
+package.json         # Install deps: cd .assemble && npm install
 ```
 
 ### Cross-Session Memory (opt-in)
