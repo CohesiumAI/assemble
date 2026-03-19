@@ -469,9 +469,30 @@ commands:
   - name: /party
     type: skill
     skill: party-mode
-    description: "Party Mode — collaborative multi-agent roundtable. Usage: /party <request>, /party <team> <request>, /party all <request>"
+    description: "Party Mode — open persistent multi-agent session. Usage: /party <request>, /party <team> <request>, /party all <request>"
     usage: "/party [team1,team2] <your request or question>"
     category: skill-specific
+
+  # ═══════════════════════════════════════════
+  # SESSION MANAGEMENT COMMANDS
+  # ═══════════════════════════════════════════
+
+  - name: /summon
+    type: meta
+    description: "Add an agent or team to the current session. Usage: /summon <agent-name> or /summon <team-name>"
+    usage: "/summon <agent|team>"
+    category: session
+
+  - name: /dismiss
+    type: meta
+    description: "Remove an agent from session, or close the entire session. Usage: /dismiss <agent-name> or /dismiss (to end session)"
+    usage: "/dismiss [agent]"
+    category: session
+
+  - name: /who
+    type: meta
+    description: "Display all agents currently active in the session"
+    category: session
 
   # ═══════════════════════════════════════════
   # COMMANDES MÉTA

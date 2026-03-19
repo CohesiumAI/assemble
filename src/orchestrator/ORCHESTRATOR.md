@@ -168,16 +168,25 @@ Le Party Mode est un mode collaboratif où plusieurs agents sont convoqués dans
 - `/party <equipe> <demande>` — Convoque une ou plusieurs équipes spécifiques
 - `/party all <demande>` — Convoque tous les 31 agents
 
-### Règles du Party Mode
-1. **Jarvis facilite** — il ne donne pas d'avis, il orchestre les tours de parole et synthétise
-2. **Deadpool est TOUJOURS convoqué** — son rôle de contrarian est essentiel pour le débat
-3. **Chaque agent parle EN PERSONNAGE** avec son nom Marvel et son expertise
-4. **Le désaccord est ENCOURAGÉ** — les agents challengent les idées des autres
-5. **Synthèse obligatoire** — Jarvis produit consensus, divergences, risques et prochaines étapes
-6. **Minimum 3, maximum 8** agents spécialisés (+ Deadpool) par session
+### Session Persistence
+Party Mode opens a **persistent session**. Agents stay active across all subsequent messages until `/dismiss` is used:
+- Every response during an active session MUST end with the session footer
+- Users can add agents mid-session with `/summon <agent>`
+- Users can remove agents with `/dismiss <agent>`
+- Users can check who is active with `/who`
+- Only `/dismiss` (without agent name) closes the entire session
 
-### Sélection automatique des agents
-Utiliser la matrice de classification définie dans la skill `/party` pour mapper les domaines de la demande aux agents pertinents. En cas de doute, privilégier les agents les plus directement concernés.
+### Rules
+1. **Jarvis facilitates** — no opinions, manages turns, produces synthesis
+2. **Deadpool is ALWAYS convoked** — contrarian role is essential
+3. **Each agent speaks IN CHARACTER** with Marvel name and expertise
+4. **Disagreement is ENCOURAGED** — agents challenge each other
+5. **Synthesis required** — consensus, divergences, risks, next steps
+6. **Minimum 3, maximum 8** specialized agents (+ Deadpool) per session
+7. **Session footer MANDATORY** on every response until `/dismiss`
+
+### Automatic Agent Selection
+Use the classification matrix in the `/party` skill to map request domains to relevant agents. When in doubt, favor the most directly relevant agents.
 
 ## Gestion des livrables
 
