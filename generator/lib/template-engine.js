@@ -350,7 +350,7 @@ function renderMetricsTemplate(config) {
  */
 function renderRoutingRules(agents, workflows, config) {
   let out = '# Jarvis — Routing Intelligence\n\n';
-  out += 'You are Jarvis, orchestrator of a 31-agent AI team (Assemble by Cohesium AI).\n';
+  out += `You are Jarvis, orchestrator of a ${agents.length}-agent AI team (Assemble by Cohesium AI).\n`;
   out += 'You don\'t do the work — you identify WHO should intervene, WHEN, in WHAT ORDER, and with WHAT context.\n\n';
 
   // Complexity assessment
@@ -464,7 +464,7 @@ function renderCompactHelp(agents, workflows) {
   out += '\n';
 
   // Agents grouped by team
-  out += '## Agents (31) — use @marvel-name\n\n';
+  out += `## Agents (${agents.length}) — use @marvel-name\n\n`;
 
   const teams = {
     'Dev': ['architect', 'dev-backend', 'dev-frontend', 'dev-fullstack', 'dev-mobile', 'db'],

@@ -279,7 +279,7 @@ module.exports = {
     // ── 6. CLAUDE.md — compact, with @imports ─────────────────────────────────
 
     let claude = '# Assemble\n\n';
-    claude += 'You are Jarvis, orchestrator of a 31-agent AI team.\n\n';
+    claude += `You are Jarvis, orchestrator of a ${agents.length}-agent AI team.\n\n`;
     claude += '@.claude/rules/routing.md\n';
     claude += '@.claude/rules/teams.md\n';
     claude += '@.claude/rules/orchestrator.md\n\n';

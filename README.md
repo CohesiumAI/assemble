@@ -5,20 +5,20 @@
 <h1 align="center">Assemble</h1>
 
 <p align="center">
-  <strong>Your 31-agent AI team</strong><br>
+  <strong>Your 32-agent AI team</strong><br>
   <em>An open-source project by <a href="https://cohesium.ai">Cohesium AI</a></em>
 </p>
 
 <p align="center">
   <a href="#quick-start"><img src="https://img.shields.io/badge/npx-create--assemble-6366f1?style=flat-square" alt="npx create-assemble" /></a>
-  <img src="https://img.shields.io/badge/agents-31-8b5cf6?style=flat-square" alt="31 agents" />
+  <img src="https://img.shields.io/badge/agents-32-8b5cf6?style=flat-square" alt="31 agents" />
   <img src="https://img.shields.io/badge/platforms-20-3b82f6?style=flat-square" alt="20 platforms" />
   <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License" />
 </p>
 
 ---
 
-> Transform any IDE or CLI into a full interdisciplinary team of **31 specialized AI agents**, organized in **9 teams**, with **15 automated workflows**, **28 skills**, and **10 commands** — deployable across **20 platforms** (15 IDE + 5 CLI). Powered by Jarvis smart routing, spec-driven methodology, MCP server, cross-session memory, and enterprise governance.
+> Transform any IDE or CLI into a full interdisciplinary team of **32 specialized AI agents**, organized in **9 teams**, with **15 automated workflows**, **28 skills**, and **10 commands** — deployable across **20 platforms** (15 IDE + 5 CLI). Powered by Jarvis smart routing, spec-driven methodology, MCP server, cross-session memory, and enterprise governance.
 
 ## What is Assemble by Cohesium AI?
 
@@ -26,7 +26,7 @@ Assemble by Cohesium AI is a multi-agent orchestration system that turns your de
 
 The system uses an **adapter pattern**: agent definitions, skills, and workflows are maintained as platform-agnostic source files, then a generator produces the correct configuration files for each target platform — Cursor rules, Claude Code commands, GitHub Copilot agents, and 17 others.
 
-An orchestrator named **Jarvis** serves as the single entry point. Use `/go <request>` and Jarvis assesses complexity (trivial/moderate/complex), selects the right agents, and for complex tasks applies a spec-driven methodology with gated phases (SPECIFY → PLAN → TASKS → IMPLEMENT). All 31 agents remain accessible via `@marvel-name` mentions.
+An orchestrator named **Jarvis** serves as the single entry point. Use `/go <request>` and Jarvis assesses complexity (trivial/moderate/complex), selects the right agents, and for complex tasks applies a spec-driven methodology with gated phases (SPECIFY → PLAN → TASKS → IMPLEMENT). All 32 agents remain accessible via `@marvel-name` mentions.
 
 ### Why Marvel?
 
@@ -97,7 +97,7 @@ $ npx create-assemble
   Your choice: 0    # → all 20 platforms
 
 ✅ Installation complete!
-  149+ tests passing | 20 platforms | 31 agents
+  149+ tests passing | 20 platforms | 32 agents
 ```
 
 ---
@@ -308,7 +308,7 @@ Specialized capabilities tied to a primary agent.
 ```
 assemble/
   src/
-    agents/             # 31 agent definition files (AGENT-*.md)
+    agents/             # 32 agent definition files (AGENT-*.md)
     skills/
       shared/           # 14 shared skills (multi-agent)
       specific/         # 14 agent-specific skills
@@ -402,7 +402,7 @@ Profiles provide sensible defaults that can be overridden by explicit config:
 | Profile | Agents | Governance | Best for |
 |---------|--------|------------|----------|
 | `startup` | 12 core agents | none | Early-stage, ship fast |
-| `enterprise` | all 31 agents | strict | Regulated environments |
+| `enterprise` | all 32 agents | strict | Regulated environments |
 | `agency` | 16 marketing/content agents | none | Agencies, consultancies |
 | `custom` | your choice | your choice | Full control |
 
@@ -411,7 +411,7 @@ Profiles provide sensible defaults that can be overridden by explicit config:
 ```diff
   # .assemble.yaml
 - profile: "custom"
-- agents: all                    # 31 agents, 15 workflows
+- agents: all                    # 32 agents, 15 workflows
 + profile: "startup"
 +                                # 12 agents: pm, architect, dev-backend,
 +                                #   dev-frontend, dev-fullstack, qa, devops,
@@ -495,7 +495,7 @@ Then regenerate: `npx create-assemble --update`
 
 | Document | Contents |
 |----------|----------|
-| [Agent Catalog](docs/AGENTS.md) | Complete catalog of all 31 agents with roles, skills, and workflows |
+| [Agent Catalog](docs/AGENTS.md) | Complete catalog of all 32 agents with roles, skills, and workflows |
 | [Skills Reference](docs/SKILLS.md) | 28 skills (14 shared + 14 specific) with detailed processes |
 | [Workflow Guide](docs/WORKFLOWS.md) | 15 workflows with agent chains, inputs/outputs, and dependency graphs |
 | [Platform Support](docs/PLATFORMS.md) | Platform-specific setup guides and file structure details |
