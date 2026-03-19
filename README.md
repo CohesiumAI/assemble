@@ -314,6 +314,7 @@ User types /go <request>
       |     2. PLAN (@tony-stark) → plan.md → user validates
       |     3. TASKS (@captain-america) → tasks.md → user validates
       |     4. IMPLEMENT (Dev agents) → code + tests
+      |     5. CLOSE (Jarvis) → _quality.md (auto)
       |
       v
   Sequential Execution
@@ -323,6 +324,7 @@ User types /go <request>
       |
       v
   Consolidation → _summary.md → Report to user
+  (+ _quality.md if governance: standard)
 ```
 
 ---
@@ -340,8 +342,48 @@ output_dir: "./assemble-output"   # Output directory for deliverables
 platforms: [claude-code, cursor]  # Target platforms
 agents: all                       # Activated agents (all or list)
 workflows: all                    # Activated workflows (all or list)
+governance: "none"                # none | standard (see Governance section)
 installed_at: "2026-03-19"
 ```
+
+---
+
+## Governance (optional)
+
+Assemble includes an opt-in governance layer that adds decision gates, risk assessment, and quality checkpoints to workflows. **Disabled by default** — zero overhead when not needed.
+
+### Enabling governance
+
+Set `governance: "standard"` in `.assemble.yaml`:
+
+```yaml
+governance: "standard"
+```
+
+Then regenerate: `npx create-assemble --update`
+
+### What it adds
+
+| Layer | Description |
+|-------|-------------|
+| **Decision Gates** | TRIVIAL = agent acts freely. MODERATE = deliverable + user validation. COMPLEX = phased approval (spec → plan → tasks → implement). |
+| **Change Risk Assessment** | LOW risk (`/bugfix`, `/review`) = post-action summary. MEDIUM (`/feature`, `/sprint`) = plan required. HIGH (`/release`, `/hotfix`, `/mvp`) = risk assessment + rollback plan + approval gate. |
+| **Quality Checkpoints** | Workflows with 4+ steps produce `_quality.md`: deliverables, validations, remaining risks, lessons learned. |
+
+### Token impact
+
+| Mode | Permanent cost | On-demand cost |
+|------|---------------|----------------|
+| `governance: "none"` (default) | 0 extra tokens | 0 |
+| `governance: "standard"` | ~20 tokens (routing reference) | ~200 tokens (governance.md loaded when relevant) |
+
+### Generated files (when enabled)
+
+```
+.claude/rules/governance/governance.md   # Decision gates, risk matrix, quality checkpoints
+```
+
+This file is **not** @imported in CLAUDE.md — Jarvis loads it on-demand when the task complexity or workflow risk level requires it.
 
 ---
 

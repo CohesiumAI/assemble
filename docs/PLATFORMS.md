@@ -285,10 +285,11 @@
 | `.claude/rules/routing.md` | Jarvis routing intelligence: complexity assessment, domain→agent mapping, methodology |
 | `.claude/rules/orchestrator.md` | Full orchestrator instructions |
 | `.claude/rules/teams.md` | Agent roster with @mentions |
+| `.claude/rules/governance/governance.md` | *(optional)* Decision gates, risk assessment, quality checkpoints — generated only when `governance: "standard"` |
 
 **Format:** Markdown
 
-**Notes:** `CLAUDE.md` is kept under 30 lines to minimize permanent context token usage (~400 tokens/turn instead of ~1500). Agents are accessed via `@marvel-name` mentions. The 10 SKILL.md files cover: 4 system commands (`/go`, `/party`, `/dismiss`, `/help`) and 6 workflow shortcuts (`/review`, `/bugfix`, `/feature`, `/sprint`, `/release`, `/mvp`). Hidden shortcuts like `/refactor`, `/hotfix`, `/upgrade` also work.
+**Notes:** `CLAUDE.md` is kept under 30 lines to minimize permanent context token usage (~400 tokens/turn instead of ~1500). Agents are accessed via `@marvel-name` mentions. The 10 SKILL.md files cover: 4 system commands (`/go`, `/party`, `/dismiss`, `/help`) and 6 workflow shortcuts (`/review`, `/bugfix`, `/feature`, `/sprint`, `/release`, `/mvp`). Hidden shortcuts like `/refactor`, `/hotfix`, `/upgrade` also work. Governance rules are loaded on-demand when enabled.
 
 ---
 

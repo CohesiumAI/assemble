@@ -75,13 +75,19 @@ When you type `/go <request>`, Jarvis:
    - **MODERATE** — Clear task → 2-3 agents, sequential execution
    - **COMPLEX** — Multi-domain → Spec-Driven Methodology
 
-2. **For COMPLEX tasks, applies 4 gated phases:**
+2. **For COMPLEX tasks, applies 5 gated phases:**
    - **SPECIFY** (Professor X) → produces `spec.md` → user validates
    - **PLAN** (Tony Stark) → produces `plan.md` → user validates
    - **TASKS** (Captain America) → produces `tasks.md` → user validates
    - **IMPLEMENT** (Dev agents) → code + tests
+   - **CLOSE** (Jarvis) → produces `_quality.md` (automatic)
 
 3. **Selects and chains agents** from the 31-agent roster based on domain matching.
+
+4. **If governance is enabled** (`governance: "standard"` in `.assemble.yaml`):
+   - Applies change risk assessment (LOW/MEDIUM/HIGH) per workflow
+   - Enforces decision gates before phase transitions
+   - Produces quality checkpoints for workflows with 4+ steps
 
 ---
 
