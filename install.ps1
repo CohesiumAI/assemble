@@ -190,13 +190,13 @@ Write-Color "  ✓ Output: $projectDir/$outputDir" Green
 
 # 6. Agents
 Write-Step "6/8 — Agents to install"
-$agentChoice = Read-Prompt "Install all 28 agents? [Y/n]" "Y"
+$agentChoice = Read-Prompt "Install all 31 agents? [Y/n]" "Y"
 $selectedAgents = if ($agentChoice -match "^[YyOo]$") { "all" } else { "custom" }
 Write-Color "  ✓ Agents: $selectedAgents" Green
 
 # 7. Workflows
 Write-Step "7/8 — Workflows to enable"
-$wfChoice = Read-Prompt "Enable all 11 workflows? [Y/n]" "Y"
+$wfChoice = Read-Prompt "Enable all 15 workflows? [Y/n]" "Y"
 $selectedWorkflows = if ($wfChoice -match "^[YyOo]$") { "all" } else { "custom" }
 Write-Color "  ✓ Workflows: $selectedWorkflows" Green
 

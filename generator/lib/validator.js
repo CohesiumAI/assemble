@@ -1,92 +1,71 @@
 /**
- * Cohesium AI — Validateur de fichiers générés
- * Vérifie que les fichiers produits par le générateur sont valides
+ * Cohesium AI — Output Validator
+ * Validates generated files by delegating to each adapter's own validate() method.
  */
 
 const fs = require('fs');
 const path = require('path');
 
 /**
- * Valide un fichier agent généré
- * @param {string} filePath - Chemin du fichier
- * @param {string} platform - Nom de la plateforme
- * @returns {{ valid: boolean, errors: string[] }}
+ * Load all adapters dynamically (same logic as generate.js).
  */
-function validateAgent(filePath, platform) {
-  const errors = [];
+function loadAdapters() {
+  const adapters = {};
+  const adaptersDir = path.resolve(__dirname, '..', 'adapters');
 
-  if (!fs.existsSync(filePath)) {
-    return { valid: false, errors: [`Fichier non trouvé : ${filePath}`] };
-  }
+  for (const subdir of ['ide', 'cli']) {
+    const dir = path.join(adaptersDir, subdir);
+    if (!fs.existsSync(dir)) continue;
 
-  const content = fs.readFileSync(filePath, 'utf-8');
-
-  if (content.trim().length === 0) {
-    errors.push('Fichier vide');
-  }
-
-  if (content.length < 100) {
-    errors.push('Fichier trop court (< 100 caractères)');
-  }
-
-  // Vérifications spécifiques par plateforme
-  const platformChecks = {
-    cursor: () => {
-      if (filePath.endsWith('.cursorrules') && !content.includes('#')) {
-        errors.push('Le fichier .cursorrules devrait contenir des headers markdown');
-      }
-    },
-    'claude-code': () => {
-      if (filePath.endsWith('CLAUDE.md') && !content.includes('#')) {
-        errors.push('CLAUDE.md devrait contenir des headers markdown');
-      }
-    },
-    roocode: () => {
-      if (filePath.endsWith('.roomodes') && !content.includes('{')) {
-        errors.push('.roomodes devrait être au format JSON');
+    for (const file of fs.readdirSync(dir).filter(f => f.endsWith('.js'))) {
+      try {
+        const adapter = require(path.join(dir, file));
+        adapters[adapter.name] = adapter;
+      } catch (err) {
+        // Skip adapters that fail to load
       }
     }
-  };
-
-  if (platformChecks[platform]) {
-    platformChecks[platform]();
   }
 
-  return { valid: errors.length === 0, errors };
+  return adapters;
 }
 
 /**
- * Valide toute la sortie d'une génération
- * @param {string} outputDir - Répertoire de sortie
- * @param {string[]} platforms - Plateformes ciblées
+ * Validate the output of a generation run for the given platforms.
+ * Delegates to each adapter's validate() method.
+ *
+ * @param {string} projectDir - The project directory that was generated into
+ * @param {string[]} platforms - List of platform names to validate
  * @returns {{ valid: boolean, results: object }}
  */
-function validateOutput(outputDir, platforms) {
+function validateOutput(projectDir, platforms) {
+  const adapters = loadAdapters();
   const results = {};
   let allValid = true;
 
-  for (const platform of platforms) {
-    const platformDir = path.join(outputDir, platform);
-    if (!fs.existsSync(platformDir)) {
-      results[platform] = { valid: false, errors: ['Répertoire non trouvé'] };
+  for (const platformName of platforms) {
+    const adapter = adapters[platformName];
+
+    if (!adapter) {
+      results[platformName] = { valid: false, errors: [`Unknown adapter: ${platformName}`] };
       allValid = false;
       continue;
     }
 
-    const files = getAllFiles(platformDir);
-    results[platform] = {
-      valid: true,
-      files: files.length,
-      errors: []
-    };
+    if (typeof adapter.validate !== 'function') {
+      results[platformName] = { valid: true, errors: [], warnings: ['No validate() method — skipped'] };
+      continue;
+    }
 
-    for (const file of files) {
-      const validation = validateAgent(file, platform);
-      if (!validation.valid) {
-        results[platform].valid = false;
-        results[platform].errors.push(...validation.errors.map(e => `${path.basename(file)}: ${e}`));
+    try {
+      const result = adapter.validate(projectDir);
+      results[platformName] = result;
+      if (!result.valid) {
         allValid = false;
       }
+    } catch (err) {
+      results[platformName] = { valid: false, errors: [`Validation error: ${err.message}`] };
+      allValid = false;
     }
   }
 
@@ -94,10 +73,11 @@ function validateOutput(outputDir, platforms) {
 }
 
 /**
- * Récupère récursivement tous les fichiers d'un répertoire
+ * Recursively get all files in a directory.
  */
 function getAllFiles(dir) {
   const files = [];
+  if (!fs.existsSync(dir)) return files;
   const entries = fs.readdirSync(dir, { withFileTypes: true });
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
@@ -111,7 +91,6 @@ function getAllFiles(dir) {
 }
 
 module.exports = {
-  validateAgent,
   validateOutput,
-  getAllFiles
+  getAllFiles,
 };

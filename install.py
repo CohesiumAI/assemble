@@ -199,13 +199,13 @@ def main():
 
     # 6. Agents
     step("6/8 — Agents to install")
-    agent_choice = prompt("Install all 28 agents? [Y/n]", "Y")
+    agent_choice = prompt("Install all 31 agents? [Y/n]", "Y")
     selected_agents = "all" if agent_choice.lower() in ("y", "o", "") else "custom"
     print(colored(f"  ✓ Agents: {selected_agents}", "green"))
 
     # 7. Workflows
     step("7/8 — Workflows to enable")
-    wf_choice = prompt("Enable all 11 workflows? [Y/n]", "Y")
+    wf_choice = prompt("Enable all 15 workflows? [Y/n]", "Y")
     selected_workflows = "all" if wf_choice.lower() in ("y", "o", "") else "custom"
     print(colored(f"  ✓ Workflows: {selected_workflows}", "green"))
 

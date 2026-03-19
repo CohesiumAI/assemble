@@ -229,13 +229,33 @@ function generate() {
   // Charger les sources
   console.log('📖 Chargement des sources...');
 
-  const agents = loadAgents(AGENTS_DIR);
+  let agents = loadAgents(AGENTS_DIR);
+  // Filter agents if config specifies a subset (not "all")
+  if (config.agents && config.agents !== 'all' && typeof config.agents === 'string') {
+    const selectedIds = config.agents.split(/[\s,]+/).filter(Boolean);
+    if (selectedIds.length > 0) {
+      agents = agents.filter(a => {
+        const id = (a.fileName || '').replace(/^AGENT-/, '').replace(/\.md$/, '');
+        return selectedIds.includes(id);
+      });
+    }
+  }
   console.log(`  ✓ ${agents.length} agents chargés`);
 
   const skills = loadSkills(SKILLS_DIR);
   console.log(`  ✓ ${skills.shared.length} skills partagées, ${skills.specific.length} skills spécifiques`);
 
-  const workflows = loadWorkflows(WORKFLOWS_DIR);
+  let workflows = loadWorkflows(WORKFLOWS_DIR);
+  // Filter workflows if config specifies a subset (not "all")
+  if (config.workflows && config.workflows !== 'all' && typeof config.workflows === 'string') {
+    const selectedWfs = config.workflows.split(/[\s,]+/).filter(Boolean);
+    if (selectedWfs.length > 0) {
+      workflows = workflows.filter(w => {
+        const id = (w.fileName || '').replace(/\.(yaml|yml)$/, '');
+        return selectedWfs.includes(id);
+      });
+    }
+  }
   console.log(`  ✓ ${workflows.length} workflows chargés`);
 
   const commands = loadCommands(COMMANDS_FILE);

@@ -232,7 +232,7 @@ success "Output: $PROJECT_DIR/$OUTPUT_DIR"
 # ─── Step 7: Agent selection ────────────────────────────────────────
 
 step "6/8 — Agents to install"
-echo "Do you want to install all 28 agents?"
+echo "Do you want to install all 31 agents?"
 echo ""
 echo "  1) All agents (recommended)"
 echo "  2) Custom selection"
@@ -242,7 +242,7 @@ AGENT_CHOICE=${AGENT_CHOICE:-1}
 
 if [ "$AGENT_CHOICE" = "1" ]; then
     SELECTED_AGENTS="all"
-    success "All 28 agents will be installed"
+    success "All 31 agents will be installed"
 else
     echo ""
     echo "Select agents (space-separated numbers):"
@@ -272,7 +272,7 @@ WF_CHOICE=${WF_CHOICE:-1}
 
 if [ "$WF_CHOICE" = "1" ]; then
     SELECTED_WORKFLOWS="all"
-    success "All 11 workflows will be enabled"
+    success "All 15 workflows will be enabled"
 else
     echo ""
     echo "Select workflows:"
