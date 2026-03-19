@@ -88,6 +88,14 @@ module.exports = {
 
       fs.writeFileSync(path.join(commandsDir, `${slug}.md`), content, 'utf-8');
     }
+
+    // ── Command registry (global reference with governance) ─────────────
+    fs.writeFileSync(
+      path.join(commandsDir, '_commands.md'),
+      '---\nname: "Command Reference"\nslug: help\ndescription: "Show command catalog and methodology"\ncategory: "meta"\n---\n\n' +
+      renderCommandRegistry(agents, skills, workflows, config.governance),
+      'utf-8'
+    );
   },
 
   validate(projectDir) {

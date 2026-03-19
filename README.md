@@ -349,7 +349,7 @@ installed_at: "2026-03-19"
 
 ## Governance (optional)
 
-Assemble includes an opt-in governance layer that adds **decision gates** and **change risk assessment** to workflows. Works across all 20 supported platforms. **Disabled by default** — zero overhead when not needed.
+Assemble includes an opt-in governance layer that adds **decision gates** and **change risk assessment** to workflows. Governance rules are injected into the command registry generated for all 20 platforms. **Disabled by default** — zero overhead when not needed.
 
 > **Note:** `_quality.md` (deliverables, validations, remaining risks, lessons learned) is always produced at the end of COMPLEX workflows (4+ steps) as part of Phase 5 CLOSE — this is baseline behavior, not governance-specific. Governance adds the **gates** and **risk controls** that govern _how_ you get there.
 

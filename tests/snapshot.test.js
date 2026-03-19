@@ -416,6 +416,77 @@ console.log('\nTest 8: Governance');
   cleanTmpDir();
 }
 
+// ── Test 9: Baseline _quality.md / Phase 5 CLOSE across platforms ────────────
+
+console.log('\nTest 9: Baseline methodology across platforms (no governance)');
+{
+  const dir = createTmpDir();
+  run(['--project', dir, '--platforms', 'cursor,auggie,codex,copilot', '--lang-team', 'english', '--lang-output', 'english']);
+
+  test('Cursor: baseline includes Phase 5 CLOSE and _quality.md', () => {
+    const rules = fs.readFileSync(path.join(dir, '.cursorrules'), 'utf-8');
+    assert(rules.includes('_quality.md'), 'Cursor rules should contain _quality.md baseline');
+    assert(rules.includes('CLOSE'), 'Cursor rules should contain CLOSE phase');
+  });
+
+  test('Auggie: baseline includes _quality.md', () => {
+    const commands = fs.readFileSync(path.join(dir, '.augment', 'commands', '_commands.md'), 'utf-8');
+    assert(commands.includes('_quality.md'), 'Auggie commands should contain _quality.md baseline');
+  });
+
+  test('Codex: baseline includes _quality.md', () => {
+    const agents = fs.readFileSync(path.join(dir, 'AGENTS.md'), 'utf-8');
+    assert(agents.includes('_quality.md'), 'Codex AGENTS.md should contain _quality.md baseline');
+  });
+
+  test('Copilot: baseline includes _quality.md', () => {
+    const instructions = fs.readFileSync(path.join(dir, '.github', 'copilot-instructions.md'), 'utf-8');
+    assert(instructions.includes('_quality.md'), 'Copilot instructions should contain _quality.md baseline');
+  });
+
+  test('governance: none — no Governance section in output', () => {
+    const rules = fs.readFileSync(path.join(dir, '.cursorrules'), 'utf-8');
+    assert(!rules.includes('### Governance ('), 'Cursor should NOT have Governance section when none');
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 10: Governance propagation across platforms ─────────────────────────
+
+console.log('\nTest 10: Governance propagation (standard) across platforms');
+{
+  const dir = createTmpDir();
+  fs.mkdirSync(dir, { recursive: true });
+  const configContent = `version: "1.0.0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [cursor, auggie, codex, copilot]\nagents: all\nworkflows: all\ngovernance: "standard"\ninstalled_at: "2026-03-19"\n`;
+  fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
+  run(['--project', dir, '--update']);
+
+  test('Cursor: governance section present', () => {
+    const rules = fs.readFileSync(path.join(dir, '.cursorrules'), 'utf-8');
+    assert(rules.includes('### Governance (standard)'), 'Cursor should have Governance section');
+    assert(rules.includes('Decision Gates'), 'Cursor should have Decision Gates');
+  });
+
+  test('Auggie: governance section present', () => {
+    const commands = fs.readFileSync(path.join(dir, '.augment', 'commands', '_commands.md'), 'utf-8');
+    assert(commands.includes('Governance'), 'Auggie should have Governance section');
+    assert(commands.includes('Risk Assessment'), 'Auggie should have Risk Assessment');
+  });
+
+  test('Codex: governance section present', () => {
+    const agents = fs.readFileSync(path.join(dir, 'AGENTS.md'), 'utf-8');
+    assert(agents.includes('Governance'), 'Codex should have Governance section');
+  });
+
+  test('Copilot: governance section present', () => {
+    const instructions = fs.readFileSync(path.join(dir, '.github', 'copilot-instructions.md'), 'utf-8');
+    assert(instructions.includes('Governance'), 'Copilot should have Governance section');
+  });
+
+  cleanTmpDir();
+}
+
 // ── Summary ──────────────────────────────────────────────────────────────────
 
 console.log('');

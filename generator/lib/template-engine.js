@@ -277,20 +277,31 @@ function renderCommandRegistry(agents, skills, workflows, governance = 'none') {
   out += '- When `/party` is used, multiple agents are convoked and ALL stay active with a combined footer.\n';
   out += '- **Only `/dismiss` ends the session.** No other command or natural message ends it.\n';
 
+  // Complexity methodology (baseline — always present)
+  out += '\n### Complexity & Methodology\n\n';
+  out += 'For every `/go` request, assess complexity:\n';
+  out += '- **TRIVIAL**: single agent, direct answer\n';
+  out += '- **MODERATE**: 2-3 agents, sequential execution\n';
+  out += '- **COMPLEX**: Spec-Driven Methodology with 5 phases:\n';
+  out += '  1. SPECIFY → spec.md → user validates\n';
+  out += '  2. PLAN → plan.md → user validates\n';
+  out += '  3. TASKS → tasks.md → user validates\n';
+  out += '  4. IMPLEMENT → code + tests\n';
+  out += '  5. CLOSE → `_quality.md` (delivered, validated, risks remaining, lessons learned)\n\n';
+  out += 'Phase 5 CLOSE is automatic for all COMPLEX workflows (4+ steps).\n';
+
   // Governance (if enabled)
   if (governance && governance !== 'none') {
     out += '\n### Governance (' + governance + ')\n\n';
-    out += 'This project has governance enabled. Apply the following controls:\n\n';
+    out += 'This project has governance enabled. In addition to the baseline methodology, apply:\n\n';
     out += '**Decision Gates:**\n';
     out += '- TRIVIAL tasks: agent acts autonomously\n';
     out += '- MODERATE tasks: produce deliverable → user validates before next step\n';
-    out += '- COMPLEX tasks: phased approval (spec → plan → tasks → implement), each phase requires user approval\n\n';
+    out += '- COMPLEX tasks: phased approval — each phase requires explicit user approval before proceeding\n\n';
     out += '**Change Risk Assessment:**\n';
     out += '- LOW risk (/bugfix, /review, /docs): act, summarize post-action\n';
     out += '- MEDIUM risk (/feature, /sprint, /refactor): plan required before action\n';
-    out += '- HIGH risk (/release, /hotfix, /mvp, /upgrade): risk assessment + rollback plan + approval gate\n\n';
-    out += '**Quality Checkpoints:**\n';
-    out += '- Workflows with 4+ steps produce `_quality.md` (delivered, validated, risks remaining, lessons learned)\n';
+    out += '- HIGH risk (/release, /hotfix, /mvp, /upgrade): risk assessment + rollback plan + approval gate\n';
   }
 
   return out;
