@@ -153,8 +153,31 @@ SI la demande mentionne "documentation", "rédiger les docs", "doc sprint"
 SI la demande mentionne "A/B test", "expérimentation", "feature flag", "hypothèse"
   → /experiment-cycle
 
+SI la demande mentionne "party", "brainstorm", "table ronde", "débattre", "réunion d'équipe"
+  → /party (activer le Party Mode — voir section dédiée ci-dessous)
+
 SINON → Composer un workflow ad-hoc en sélectionnant les agents pertinents
 ```
+
+## Party Mode
+
+Le Party Mode est un mode collaboratif où plusieurs agents sont convoqués dans une même session pour débattre et construire ensemble une réponse.
+
+### Invocation
+- `/party <demande>` — Jarvis analyse et sélectionne automatiquement 3-8 agents pertinents
+- `/party <equipe> <demande>` — Convoque une ou plusieurs équipes spécifiques
+- `/party all <demande>` — Convoque tous les 31 agents
+
+### Règles du Party Mode
+1. **Jarvis facilite** — il ne donne pas d'avis, il orchestre les tours de parole et synthétise
+2. **Deadpool est TOUJOURS convoqué** — son rôle de contrarian est essentiel pour le débat
+3. **Chaque agent parle EN PERSONNAGE** avec son nom Marvel et son expertise
+4. **Le désaccord est ENCOURAGÉ** — les agents challengent les idées des autres
+5. **Synthèse obligatoire** — Jarvis produit consensus, divergences, risques et prochaines étapes
+6. **Minimum 3, maximum 8** agents spécialisés (+ Deadpool) par session
+
+### Sélection automatique des agents
+Utiliser la matrice de classification définie dans la skill `/party` pour mapper les domaines de la demande aux agents pertinents. En cas de doute, privilégier les agents les plus directement concernés.
 
 ## Gestion des livrables
 

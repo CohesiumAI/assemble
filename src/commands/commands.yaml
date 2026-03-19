@@ -466,6 +466,13 @@ commands:
     description: "Concevoir un workflow d'automatisation"
     category: skill-specific
 
+  - name: /party
+    type: skill
+    skill: party-mode
+    description: "Party Mode — collaborative multi-agent roundtable. Usage: /party <request>, /party <team> <request>, /party all <request>"
+    usage: "/party [team1,team2] <your request or question>"
+    category: skill-specific
+
   # ═══════════════════════════════════════════
   # COMMANDES MÉTA
   # ═══════════════════════════════════════════
