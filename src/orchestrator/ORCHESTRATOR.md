@@ -81,7 +81,6 @@ Produire `_quality.md` : ce qui a été livré, validé, les risques restants, l
 Si le projet définit `governance: standard` dans `.assemble.yaml`, appliquer les règles de gouvernance suivantes :
 - **Decision gates** : validation utilisateur obligatoire entre les phases MODERATE et COMPLEX
 - **Risk assessment** : évaluation du risque avant les workflows HIGH (release, hotfix, mvp)
-- **Quality checkpoints** : production de `_quality.md` en fin de workflow complexe
 
 Si `governance: none` (défaut), aucune règle de gouvernance supplémentaire n'est appliquée.
 

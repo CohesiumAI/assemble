@@ -379,8 +379,8 @@ Then regenerate: `npx create-assemble --update`
 
 ### How it works across platforms
 
-- **All 20 platforms:** Governance rules are injected into the command registry that every adapter generates. When `governance: "standard"`, the AI receives decision gates, risk assessment, and quality checkpoint instructions as part of its rules.
-- **Claude Code (additionally):** A dedicated `.claude/rules/governance/governance.md` file is generated for on-demand loading by Jarvis.
+- **19 platforms** (Cursor, Copilot, Cline, Windsurf, Kiro, Roo Code, Codex, Gemini CLI, Pi, Auggie, and all IDE adapters): Governance rules are injected into the command registry. When `governance: "standard"`, the output includes decision gates and risk assessment instructions.
+- **Claude Code:** Uses a dedicated `.claude/rules/governance/governance.md` file loaded on-demand by Jarvis, in addition to the routing rules reference.
 - **Platforms with orchestrator** (Cursor, Copilot, Cline, Windsurf, Kiro, Roo Code, Codex, Gemini CLI, Pi): Governance behavior is also embedded in the orchestrator instructions.
 
 ---
