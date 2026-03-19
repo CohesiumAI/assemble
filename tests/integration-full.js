@@ -85,7 +85,6 @@ check('/go SKILL: Agent tool', fileContains(path.join(dir, '.claude', 'skills', 
 console.log('\n--- IDE Platforms (governance strict propagation) ---');
 const ideChecks = [
   ['.cursorrules', 'Cursor'],
-  ['.windsurfrules', 'Windsurf'],
   ['.clinerules', 'Cline'],
 ];
 for (const [file, name] of ideChecks) {
@@ -96,6 +95,15 @@ for (const [file, name] of ideChecks) {
   check(name + ': Decision Gates', fileContains(p, 'Decision Gates'));
   check(name + ': Change Risk Assessment', fileContains(p, 'Change Risk Assessment'));
 }
+
+// Windsurf — governance is in .windsurf/rules/commands.md (not .windsurfrules which is a compact index)
+check('Windsurf: .windsurfrules exists', fs.existsSync(path.join(dir, '.windsurfrules')));
+check('Windsurf: .windsurfrules under 6000 chars', (() => {
+  const c = fs.readFileSync(path.join(dir, '.windsurfrules'), 'utf-8');
+  return c.length <= 6000;
+})());
+check('Windsurf: Governance (strict) in commands.md', fileContains(path.join(dir, '.windsurf', 'rules', 'commands.md'), '### Governance (strict)'));
+check('Windsurf: RBAC Notice', fileContains(path.join(dir, '.windsurf', 'rules', 'commands.md'), 'RBAC Notice'));
 
 // Copilot
 check('Copilot: instructions exist', fs.existsSync(path.join(dir, '.github', 'copilot-instructions.md')));

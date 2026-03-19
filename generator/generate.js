@@ -48,7 +48,7 @@ function loadAdapters(projectDir) {
         const adapter = require(path.join(dir, file));
         adapters[adapter.name] = adapter;
       } catch (err) {
-        console.warn(`⚠️  Impossible de charger l'adaptateur ${file}: ${err.message}`);
+        console.warn(`⚠️  Could not load adapter ${file}: ${err.message}`);
       }
     }
   }
@@ -211,22 +211,22 @@ function generate() {
   config.memory = config.memory === true || config.memory === 'true';
   config.metrics = config.metrics === true || config.metrics === 'true';
 
-  console.log('🚀 Assemble — Générateur de configurations');
-  console.log(`📁 Projet : ${projectDir}`);
-  console.log(`🌍 Langue équipe : ${config.langue_equipe}`);
-  console.log(`📝 Langue output : ${config.langue_output}`);
-  console.log(`📂 Output dir : ${config.output_dir}`);
-  console.log(`🎯 Plateformes : ${config.platforms.join(', ') || 'aucune sélectionnée'}`);
+  console.log('🚀 Assemble — Configuration Generator');
+  console.log(`📁 Project: ${projectDir}`);
+  console.log(`🌍 Team language: ${config.langue_equipe}`);
+  console.log(`📝 Output language: ${config.langue_output}`);
+  console.log(`📂 Output dir: ${config.output_dir}`);
+  console.log(`🎯 Platforms: ${config.platforms.join(', ') || 'none selected'}`);
   console.log('');
 
   // Mode validation uniquement
   if (args.validateOnly) {
-    console.log('🔍 Validation des fichiers générés...');
+    console.log('🔍 Validating generated files...');
     const validation = validateOutput(projectDir, config.platforms);
     if (validation.valid) {
-      console.log('✅ Tous les fichiers sont valides');
+      console.log('✅ All files are valid');
     } else {
-      console.log('❌ Des erreurs ont été trouvées :');
+      console.log('❌ Errors found:');
       for (const [platform, result] of Object.entries(validation.results)) {
         if (!result.valid) {
           console.log(`  ${platform}: ${result.errors.join(', ')}`);
@@ -238,12 +238,12 @@ function generate() {
 
   // Vérifier qu'il y a des plateformes
   if (!config.platforms || config.platforms.length === 0) {
-    console.error('❌ Aucune plateforme sélectionnée. Utilisez --platforms ou configurez .assemble.yaml');
+    console.error('❌ No platform selected. Use --platforms or configure .assemble.yaml');
     process.exit(1);
   }
 
-  // Charger les sources
-  console.log('📖 Chargement des sources...');
+  // Load sources
+  console.log('📖 Loading sources...');
 
   let agents = loadAgents(AGENTS_DIR);
   // Filter agents if config specifies a subset (not "all")
@@ -256,7 +256,7 @@ function generate() {
       });
     }
   }
-  console.log(`  ✓ ${agents.length} agents chargés`);
+  console.log(`  ✓ ${agents.length} agents loaded`);
 
   // Charger les custom agents depuis .assemble/agents/
   const customAgentsDir = path.join(projectDir, '.assemble', 'agents');
@@ -275,12 +275,12 @@ function generate() {
       }
     }
     if (customAgents.length > 0) {
-      console.log(`  ✓ ${customAgents.length} custom agents chargés depuis .assemble/agents/`);
+      console.log(`  ✓ ${customAgents.length} custom agents loaded from .assemble/agents/`);
     }
   }
 
   const skills = loadSkills(SKILLS_DIR);
-  console.log(`  ✓ ${skills.shared.length} skills partagées, ${skills.specific.length} skills spécifiques`);
+  console.log(`  ✓ ${skills.shared.length} shared skills, ${skills.specific.length} specific skills`);
 
   // Charger les custom skills depuis .assemble/skills/
   const customSkillsDir = path.join(projectDir, '.assemble', 'skills');
@@ -299,7 +299,7 @@ function generate() {
       skills.specific.push({ fileName: file, meta, content, raw: content, sections: {} });
     }
     if (customSkillFiles.length > 0) {
-      console.log(`  ✓ ${customSkillFiles.length} custom skills chargées depuis .assemble/skills/`);
+      console.log(`  ✓ ${customSkillFiles.length} custom skills loaded from .assemble/skills/`);
     }
   }
 
@@ -314,7 +314,7 @@ function generate() {
       });
     }
   }
-  console.log(`  ✓ ${workflows.length} workflows chargés`);
+  console.log(`  ✓ ${workflows.length} workflows loaded`);
 
   // Charger les custom workflows depuis .assemble/workflows/
   const customWorkflowsDir = path.join(projectDir, '.assemble', 'workflows');
@@ -334,22 +334,22 @@ function generate() {
       }
     }
     if (customWfFiles.length > 0) {
-      console.log(`  ✓ ${customWfFiles.length} custom workflows chargés depuis .assemble/workflows/`);
+      console.log(`  ✓ ${customWfFiles.length} custom workflows loaded from .assemble/workflows/`);
     }
   }
 
   const commands = loadCommands(COMMANDS_FILE);
-  console.log(`  ✓ Registre de commandes chargé`);
+  console.log(`  ✓ Command registry loaded`);
 
   const orchestrator = loadOrchestrator(ORCHESTRATOR_DIR);
-  console.log(`  ✓ Orchestrateur chargé`);
+  console.log(`  ✓ Orchestrator loaded`);
 
   // Préparer les agents (injection langue + output)
   const preparedAgents = agents.map(a => prepareAgent(a, config));
 
   // Charger les adaptateurs (built-in + plugins from .assemble/adapters/)
   const adapters = loadAdapters(projectDir);
-  console.log(`  ✓ ${Object.keys(adapters).length} adaptateurs disponibles`);
+  console.log(`  ✓ ${Object.keys(adapters).length} adapters available`);
   console.log('');
 
   // ─── Clean up old generated files before regeneration ────────────────────
@@ -390,12 +390,12 @@ function generate() {
   for (const platformName of config.platforms) {
     const adapter = adapters[platformName];
     if (!adapter) {
-      console.warn(`⚠️  Adaptateur inconnu : ${platformName} — ignoré`);
+      console.warn(`⚠️  Unknown adapter: ${platformName} — skipped`);
       errorCount++;
       continue;
     }
 
-    console.log(`🔧 Génération pour ${adapter.displayName || platformName}...`);
+    console.log(`🔧 Generating for ${adapter.displayName || platformName}...`);
 
     try {
       adapter.generate(projectDir, {
@@ -412,12 +412,12 @@ function generate() {
         console.log(`  ✅ ${adapter.displayName || platformName} — OK`);
         successCount++;
       } else {
-        console.log(`  ⚠️  ${adapter.displayName || platformName} — généré avec avertissements :`);
+        console.log(`  ⚠️  ${adapter.displayName || platformName} — generated with warnings:`);
         validation.errors.forEach(e => console.log(`     - ${e}`));
         successCount++;
       }
     } catch (err) {
-      console.error(`  ❌ ${adapter.displayName || platformName} — Erreur : ${err.message}`);
+      console.error(`  ❌ ${adapter.displayName || platformName} — Error: ${err.message}`);
       errorCount++;
     }
   }
@@ -427,7 +427,7 @@ function generate() {
   fs.mkdirSync(outputPath, { recursive: true });
   fs.writeFileSync(
     path.join(outputPath, '.gitkeep'),
-    '# Ce dossier contient les livrables produits par les agents Assemble by Cohesium AI\n'
+    '# This folder contains deliverables produced by Assemble by Cohesium AI agents\n'
   );
 
   // ─── MCP Server generation (opt-in) ──────────────────────────────────────
@@ -529,9 +529,9 @@ Log of all agent actions for governance compliance. Required by \`governance: st
   const assembleConfigPath = path.join(projectDir, '.assemble.yaml');
   const existingConfig = fs.existsSync(assembleConfigPath) ? loadConfig(assembleConfigPath) : {};
   const today = new Date().toISOString().split('T')[0];
-  const assembleConfig = `# Assemble — Configuration du projet
-# Mettre à jour : node generate.js --update --project .
-# Régénérer :     node generate.js --config .assemble.yaml
+  const assembleConfig = `# Assemble — Project configuration
+# Update:     npx create-assemble --update
+# Regenerate: node generate.js --config .assemble.yaml
 
 version: "1.0.0"
 profile: "${config.profile || 'custom'}"
@@ -550,15 +550,15 @@ updated_at: "${today}"
 `;
   fs.writeFileSync(assembleConfigPath, assembleConfig);
   if (args.update) {
-    console.log(`\n📄 .assemble.yaml mis à jour (${today})`);
+    console.log(`\n📄 .assemble.yaml updated (${today})`);
   } else if (!existingConfig.installed_at) {
-    console.log(`\n📄 Fichier .assemble.yaml créé`);
+    console.log(`\n📄 .assemble.yaml created`);
   }
 
-  // Résumé
+  // Summary
   console.log(`\n${'═'.repeat(50)}`);
-  console.log(`✅ Génération terminée : ${successCount} plateformes OK, ${errorCount} erreurs`);
-  console.log(`📂 Livrables → ${outputPath}`);
+  console.log(`✅ Generation complete: ${successCount} platforms OK, ${errorCount} errors`);
+  console.log(`📂 Deliverables → ${outputPath}`);
   console.log(`${'═'.repeat(50)}`);
 
   process.exit(errorCount > 0 ? 1 : 0);

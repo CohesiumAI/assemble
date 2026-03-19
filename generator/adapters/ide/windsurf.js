@@ -37,41 +37,34 @@ module.exports = {
 
     const agentLookup = buildAgentLookup(agents);
 
-    // ── .windsurfrules — compact overview (under 6000 chars) ──────────────
+    // ── .windsurfrules — compact index (must stay under 6000 chars) ────────
+    // Full details go in .windsurf/rules/. The rules file is an index only.
     let rules = '# Assemble\n\n';
-    rules += 'Système multi-agents IA spécialisés. Détails dans .windsurf/rules/.\n\n';
+    rules += 'Multi-agent AI system. Full definitions in `.windsurf/rules/`.\n\n';
 
     if (orchestrator) {
-      rules += '## Orchestrator\n\nVoir .windsurf/rules/orchestrator.md\n\n';
+      rules += '## Orchestrator\n\nSee `.windsurf/rules/orchestrator.md`\n\n';
     }
 
     rules += '## Agents\n\n';
     for (const agent of agents) {
-      const slug = marvelSlug(agent);
       const display = marvelDisplayName(agent);
-      const desc = (agent.meta.description || '').split('—')[0].trim();
-      rules += `- **${display}** — ${desc}\n`;
+      const id = agentId(agent);
+      rules += `- **${display}** (${id})\n`;
     }
+
+    rules += '\n## Commands\n\n';
+    rules += '/go — Jarvis routes | /party — multi-agent session | /dismiss — end | /help — catalog\n';
+    rules += 'Shortcuts: /review /bugfix /feature /sprint /release /mvp\n';
+    rules += 'Agents: @marvel-name for direct access\n';
+    rules += `\nFull command reference: \`.windsurf/rules/commands.md\`\n`;
+    rules += `\nDeliverables → \`${config.output_dir || './assemble-output'}\`\n`;
+    fs.writeFileSync(path.join(projectDir, '.windsurfrules'), rules, 'utf-8');
+
+    // ── Command registry in .windsurf/rules/ (not in .windsurfrules) ─────
+    fs.writeFileSync(path.join(rulesDir, 'commands.md'), renderCommandRegistry(agents, skills, workflows, config.governance), 'utf-8');
 
     const allSkills = [...(skills.shared || []), ...(skills.specific || [])];
-    rules += '\n## Skills\n\n';
-    for (const skill of allSkills) {
-      const slug = skillSlug(skill);
-      const desc = (skill.meta.description || '').split('—')[0].trim();
-      rules += `- **${slug}** — ${desc}\n`;
-    }
-
-    rules += '\n## Workflows\n\n';
-    for (const workflow of workflows) {
-      const slug = workflowSlug(workflow);
-      const desc = workflowField(workflow.raw, 'description');
-      rules += `- **${slug}** — ${desc}\n`;
-    }
-
-    rules += '\n' + renderCommandRegistry(agents, skills, workflows, config.governance);
-
-    rules += `\n## Output\n\nLivrables → \`${config.output_dir || './assemble-output'}\`\n`;
-    fs.writeFileSync(path.join(projectDir, '.windsurfrules'), rules, 'utf-8');
 
     // ── Full agent files in .windsurf/rules/ ──────────────────────────────
     for (const agent of agents) {
