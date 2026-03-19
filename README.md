@@ -207,8 +207,8 @@ Workflows are pre-configured agent chains that orchestrate a sequence of special
 | 1 | MVP Launch | `/mvp` | PM, Architect, UX, DB, Backend, Frontend, QA, DevOps | Full MVP from product vision to deployment |
 | 2 | Feature Development | `/feature` | PM, Analyst, Architect, Backend, Frontend, QA | End-to-end feature from spec to validation |
 | 3 | Bug Fix | `/bugfix` | QA, Dev, QA | Structured bug analysis, fix, and regression test |
-| 4 | Code Review Pipeline | `/review` | Fullstack, QA, Security, Contrarian | Multi-perspective code review with devil's advocate |
-| 5 | Security Audit | `/security` | Security, Backend, DevOps, Legal | Full security audit with remediation and compliance |
+| 4 | Code Review Pipeline | `/review` | Fullstack, QA, Security, Red Team, Contrarian | Multi-perspective code review with offensive testing |
+| 5 | Security Audit | `/security` | Security, Red Team, Backend, DevOps, Legal | Full security audit with red team pentest |
 | 6 | SEO Content Pipeline | `/seo` | SEO, Content-SEO, Copywriter, GEO/AIO | SEO-optimized content from keyword research to GEO |
 | 7 | Marketing Campaign | `/campaign` | Marketing, Finance, Brand, Copywriter, Ads + Social + PR, Growth | Multi-channel campaign with budget validation and PR |
 | 8 | Sprint Cycle | `/sprint` | Scrum, PM, Fullstack, QA, DevOps | Complete agile sprint from planning to release |

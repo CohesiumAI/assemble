@@ -20,8 +20,14 @@ steps:
     outputs: [security-findings.md, risk-assessment.md]
     depends_on: [2]
   - step: 4
+    agent: redteam
+    action: "Tenter d'exploiter les vulnérabilités trouvées et chercher des failles manquées par l'audit"
+    inputs: [01-dev-fullstack/code-summary.md, 03-security/security-findings.md]
+    outputs: [exploit-report.md, attack-vectors.md]
+    depends_on: [3]
+  - step: 5
     agent: contrarian
     action: "Challenger les choix techniques et proposer des alternatives"
-    inputs: [01-dev-fullstack/code-summary.md, 02-qa/quality-report.md, 03-security/security-findings.md]
+    inputs: [01-dev-fullstack/code-summary.md, 02-qa/quality-report.md, 03-security/security-findings.md, 04-redteam/exploit-report.md]
     outputs: [devil-advocate-report.md, alternative-approaches.md]
-    depends_on: [3]
+    depends_on: [4]

@@ -165,8 +165,11 @@ SI la demande mentionne "bug", "erreur", "fix", "corriger"
 SI la demande mentionne "review", "relire", "revue de code"
   → /review
 
-SI la demande mentionne "sécurité", "audit", "vulnérabilité", "pentest"
+SI la demande mentionne "sécurité", "audit", "vulnérabilité"
   → /security
+
+SI la demande mentionne "pentest", "red team", "hacking", "exploit", "injection", "attaque"
+  → /security (avec @microchip en lead au lieu de @punisher)
 
 SI la demande mentionne "SEO", "contenu", "article", "blog"
   → /seo

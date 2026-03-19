@@ -5,23 +5,29 @@ output_dir: "{assemble_output}/security_{timestamp}"
 steps:
   - step: 1
     agent: security
-    action: "Scanner et identifier les vulnérabilités dans le code et l'infrastructure"
+    action: "Scanner et identifier les vulnérabilités dans le code et l'infrastructure (blue team audit)"
     outputs: [vulnerability-report.md, threat-model.md]
   - step: 2
-    agent: dev-backend
-    action: "Élaborer le plan de remédiation pour les vulnérabilités identifiées"
+    agent: redteam
+    action: "Tester offensivement les vulnérabilités trouvées et en chercher de nouvelles (red team pentest)"
     inputs: [01-security/vulnerability-report.md, 01-security/threat-model.md]
-    outputs: [remediation-plan.md, patching-schedule.md]
+    outputs: [pentest-report.md, exploit-chains.md]
     depends_on: [1]
   - step: 3
-    agent: devops
-    action: "Renforcer la sécurité de l'infrastructure et des configurations"
-    inputs: [01-security/vulnerability-report.md, 02-dev-backend/remediation-plan.md]
-    outputs: [infrastructure-hardening.md, security-config.md]
+    agent: dev-backend
+    action: "Élaborer le plan de remédiation pour toutes les vulnérabilités identifiées"
+    inputs: [01-security/vulnerability-report.md, 02-redteam/pentest-report.md, 02-redteam/exploit-chains.md]
+    outputs: [remediation-plan.md, patching-schedule.md]
     depends_on: [2]
   - step: 4
+    agent: devops
+    action: "Renforcer la sécurité de l'infrastructure et des configurations"
+    inputs: [01-security/vulnerability-report.md, 03-dev-backend/remediation-plan.md]
+    outputs: [infrastructure-hardening.md, security-config.md]
+    depends_on: [3]
+  - step: 5
     agent: legal
     action: "Vérifier la conformité réglementaire et les obligations légales"
-    inputs: [01-security/vulnerability-report.md, 03-devops/infrastructure-hardening.md, 02-dev-backend/remediation-plan.md]
+    inputs: [01-security/vulnerability-report.md, 02-redteam/pentest-report.md, 04-devops/infrastructure-hardening.md, 03-dev-backend/remediation-plan.md]
     outputs: [compliance-check.md, regulatory-summary.md]
-    depends_on: [3]
+    depends_on: [4]
