@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — Module i18n
+ * Assemble — Module i18n
  * Gère l'injection des instructions de langue dans les agents générés
  * Approche "langue libre" : pas de fichiers de traduction, le LLM gère
  */

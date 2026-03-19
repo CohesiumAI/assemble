@@ -1,12 +1,12 @@
 @echo off
 REM ═══════════════════════════════════════════════════════════════════════
-REM Cohesium AI — Windows Installer (Batch launcher)
+REM Assemble — Windows Installer (Batch launcher)
 REM Detects Node.js or Python and launches the appropriate installer
 REM ═══════════════════════════════════════════════════════════════════════
 
 echo.
 echo ═══════════════════════════════════════════════════════
-echo    Cohesium AI — Agent Workflow System
+echo    Assemble — AI Agent Orchestrator
 echo    Windows Installer
 echo ═══════════════════════════════════════════════════════
 echo.

@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — CodeBuddy Adapter
+ * Assemble — CodeBuddy Adapter
  * Generates .codebuddy/agents/ + skills/ + workflows/
  */
 

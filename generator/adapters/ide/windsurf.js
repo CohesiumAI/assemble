@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — Windsurf Adapter
+ * Assemble — Windsurf Adapter
  * Generates .windsurfrules (compact overview, respecting 6000 char limit)
  * + .windsurf/rules/*.md for full agent/skill definitions
  * + .windsurf/workflows/ for workflow YAML files
@@ -38,7 +38,7 @@ module.exports = {
     const agentLookup = buildAgentLookup(agents);
 
     // ── .windsurfrules — compact overview (under 6000 chars) ──────────────
-    let rules = '# Cohesium AI\n\n';
+    let rules = '# Assemble\n\n';
     rules += 'Système multi-agents IA spécialisés. Détails dans .windsurf/rules/.\n\n';
 
     if (orchestrator) {
@@ -70,7 +70,7 @@ module.exports = {
 
     rules += '\n' + renderCommandRegistry(agents, skills, workflows);
 
-    rules += `\n## Output\n\nLivrables → \`${config.output_dir || './cohesium-output'}\`\n`;
+    rules += `\n## Output\n\nLivrables → \`${config.output_dir || './assemble-output'}\`\n`;
     fs.writeFileSync(path.join(projectDir, '.windsurfrules'), rules, 'utf-8');
 
     // ── Full agent files in .windsurf/rules/ ──────────────────────────────

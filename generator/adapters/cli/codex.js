@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — Codex (OpenAI) Adapter
+ * Assemble — Codex (OpenAI) Adapter
  * Generates AGENTS.md — the standard format for OpenAI Codex CLI
  * All agents, skills, workflows inlined in a single markdown file
  */
@@ -20,7 +20,7 @@ module.exports = {
   generate(projectDir, { agents = [], skills = {}, workflows = [], commands, orchestrator, config = {} }) {
     const agentLookup = buildAgentLookup(agents);
 
-    let content = '# Cohesium AI — Codex Configuration\n\n';
+    let content = '# Assemble — Codex Configuration\n\n';
 
     // Orchestrator
     if (orchestrator) {

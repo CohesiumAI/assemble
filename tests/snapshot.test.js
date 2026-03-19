@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Cohesium AI — Snapshot Tests
+ * Assemble — Snapshot Tests
  *
  * Verifies that the generator produces the expected file structure
  * for all 20 platforms. Run with: node tests/snapshot.test.js
@@ -115,7 +115,7 @@ function assert(condition, message) {
 
 console.log('');
 console.log('═══════════════════════════════════════════════════════');
-console.log('  Cohesium AI — Snapshot Tests');
+console.log('  Assemble — Snapshot Tests');
 console.log('═══════════════════════════════════════════════════════');
 console.log('');
 
@@ -135,8 +135,8 @@ console.log('Test 1: Full generation (all 20 platforms)');
     run(['--project', dir, '--platforms', platforms.join(','), '--lang-team', 'english', '--lang-output', 'english']);
   });
 
-  test('.cohesium.yaml is created', () => {
-    assert(fs.existsSync(path.join(dir, '.cohesium.yaml')), '.cohesium.yaml missing');
+  test('.assemble.yaml is created', () => {
+    assert(fs.existsSync(path.join(dir, '.assemble.yaml')), '.assemble.yaml missing');
   });
 
   cleanTmpDir();
@@ -271,8 +271,8 @@ console.log('\nTest 5: Update mode');
     run(['--project', dir, '--platforms', 'claude-code,cursor', '--lang-team', 'français', '--lang-output', 'english']);
 
     // Verify config exists
-    const configPath = path.join(dir, '.cohesium.yaml');
-    assert(fs.existsSync(configPath), '.cohesium.yaml missing after install');
+    const configPath = path.join(dir, '.assemble.yaml');
+    assert(fs.existsSync(configPath), '.assemble.yaml missing after install');
     const configBefore = fs.readFileSync(configPath, 'utf-8');
     assert(configBefore.includes('français'), 'Config should contain français');
     assert(configBefore.includes('claude-code'), 'Config should contain claude-code');
@@ -303,9 +303,9 @@ console.log('\nTest 6: Agent/workflow filtering');
 {
   const dir = createTmpDir();
 
-  test('--update fails without .cohesium.yaml', () => {
+  test('--update fails without .assemble.yaml', () => {
     const result = run(['--project', dir, '--update'], true);
-    assert(result === false, 'Should fail without .cohesium.yaml');
+    assert(result === false, 'Should fail without .assemble.yaml');
   });
 
   cleanTmpDir();

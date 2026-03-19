@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — Cline Adapter
+ * Assemble — Cline Adapter
  * Generates .clinerules (main rules) + .cline/agents/, skills/, workflows/
  */
 
@@ -38,7 +38,7 @@ module.exports = {
     const agentLookup = buildAgentLookup(agents);
 
     // ── .clinerules — overview ────────────────────────────────────────────
-    let rules = '# Cohesium AI — Cline Configuration\n\n';
+    let rules = '# Assemble — Cline Configuration\n\n';
 
     if (orchestrator) {
       rules += '## Orchestrator\n\n';
@@ -70,7 +70,7 @@ module.exports = {
 
     rules += '\n' + renderCommandRegistry(agents, skills, workflows);
 
-    rules += `\n## Répertoire de sortie\n\nLivrables → \`${config.output_dir || './cohesium-output'}\`\n`;
+    rules += `\n## Répertoire de sortie\n\nLivrables → \`${config.output_dir || './assemble-output'}\`\n`;
     fs.writeFileSync(path.join(projectDir, '.clinerules'), rules, 'utf-8');
 
     // ── Agent files ───────────────────────────────────────────────────────

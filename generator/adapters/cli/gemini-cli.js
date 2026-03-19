@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — Gemini CLI Adapter
+ * Assemble — Gemini CLI Adapter
  * Generates GEMINI.md (concise overview) + .gemini/ directory with
  * individual agent, skill, and workflow files
  */
@@ -69,8 +69,8 @@ module.exports = {
     }
 
     // ── GEMINI.md — concise overview ──────────────────────────────────────
-    let gemini = '# Cohesium AI\n\n';
-    gemini += 'Ce projet utilise le système Cohesium AI avec des agents IA spécialisés.\n\n';
+    let gemini = '# Assemble\n\n';
+    gemini += 'Ce projet utilise le système Assemble by Cohesium AI avec des agents IA spécialisés.\n\n';
 
     gemini += '## Agents disponibles\n\n';
     for (const agent of agents) {
@@ -96,7 +96,7 @@ module.exports = {
 
     gemini += '\n' + renderCommandRegistry(agents, skills, workflows);
 
-    gemini += `\n## Répertoire de sortie\n\nLes livrables sont produits dans : \`${config.output_dir || './cohesium-output'}\`\n`;
+    gemini += `\n## Répertoire de sortie\n\nLes livrables sont produits dans : \`${config.output_dir || './assemble-output'}\`\n`;
 
     fs.writeFileSync(path.join(projectDir, 'GEMINI.md'), gemini, 'utf-8');
   },

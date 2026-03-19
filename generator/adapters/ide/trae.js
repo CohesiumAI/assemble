@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — Trae Adapter
+ * Assemble — Trae Adapter
  * Generates .trae/rules/ (compact) + .trae/agents/ + .trae/skills/ + .trae/workflows/
  */
 

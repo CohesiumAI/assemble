@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Cohesium AI — CLI Installer (npx create-cohesium-agents)
+ * Assemble — CLI Installer (npx create-assemble)
  * Interactive installer for the Agent Workflow System
  */
 
@@ -58,15 +58,15 @@ function print(msg) {
 
 async function runUpdate(projectDir) {
   const fs = require('fs');
-  const configPath = path.join(projectDir, '.cohesium.yaml');
+  const configPath = path.join(projectDir, '.assemble.yaml');
   if (!fs.existsSync(configPath)) {
-    print('\x1b[31m  ✗ No installation found (.cohesium.yaml missing)\x1b[0m');
+    print('\x1b[31m  ✗ No installation found (.assemble.yaml missing)\x1b[0m');
     rl.close();
     process.exit(1);
   }
 
   print('\n\x1b[1m🔄 Updating...\x1b[0m\n');
-  print('Preserved preferences from .cohesium.yaml:');
+  print('Preserved preferences from .assemble.yaml:');
 
   const content = fs.readFileSync(configPath, 'utf-8');
   for (const line of content.split('\n')) {
@@ -112,7 +112,7 @@ async function main() {
 
   print('');
   print('\x1b[36m═══════════════════════════════════════════════════════\x1b[0m');
-  print('\x1b[1m\x1b[34m   🦸 Cohesium AI — Agent Workflow System\x1b[0m');
+  print('\x1b[1m\x1b[34m   🦸 Assemble — AI Agent Orchestrator\x1b[0m');
   print('\x1b[36m   Installation & Configuration (npx)\x1b[0m');
   print('\x1b[36m═══════════════════════════════════════════════════════\x1b[0m');
   print('');
@@ -125,8 +125,8 @@ async function main() {
     return;
   }
 
-  if (fs.existsSync('.cohesium.yaml')) {
-    print('📄 Existing installation detected: .cohesium.yaml\n');
+  if (fs.existsSync('.assemble.yaml')) {
+    print('📄 Existing installation detected: .assemble.yaml\n');
     print('  1) Update (keeps your preferences)');
     print('  2) New installation\n');
     const choice = await ask('Your choice', '1');
@@ -170,7 +170,7 @@ async function main() {
 
   // 5. Output
   print('\n\x1b[1m\x1b[34m▸ 5/6 — Output directory\x1b[0m\n');
-  const outputDir = await ask('Deliverable output directory', './cohesium-output');
+  const outputDir = await ask('Deliverable output directory', './assemble-output');
 
   // 6. Confirmation
   print('\n\x1b[1m\x1b[34m▸ 6/6 — Confirmation\x1b[0m\n');
@@ -213,7 +213,7 @@ async function main() {
   print('\x1b[32m\x1b[1m   ✅ Installation complete!\x1b[0m');
   print('\x1b[36m═══════════════════════════════════════════════════════\x1b[0m');
   print('');
-  print('To update: npx create-cohesium-agents --update');
+  print('To update: npx create-assemble --update');
   print('');
 
   rl.close();

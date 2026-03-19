@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — Google Antigravity Adapter
+ * Assemble — Google Antigravity Adapter
  * Generates .antigravity/agents/ + skills/ + workflows/
  */
 

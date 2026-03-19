@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — KiloCoder Adapter
+ * Assemble — KiloCoder Adapter
  * Generates .kilocoder/agents/ + skills/ + workflows/
  */
 

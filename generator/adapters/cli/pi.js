@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — Pi Adapter
+ * Assemble — Pi Adapter
  * Generates AGENTS.md (project guidelines) + SYSTEM.md (system prompt override)
  * Pi reads AGENTS.md from project root and SYSTEM.md for persona
  */
@@ -24,7 +24,7 @@ module.exports = {
     const agentLookup = buildAgentLookup(agents);
 
     // ── SYSTEM.md — orchestrator as system prompt ─────────────────────────
-    let system = '# Cohesium AI — System Prompt\n\n';
+    let system = '# Assemble — System Prompt\n\n';
     system += 'Tu es un orchestrateur IA qui coordonne une équipe d\'agents spécialisés.\n\n';
     if (orchestrator) {
       system += renderOrchestrator(orchestrator, config) + '\n\n';
@@ -39,7 +39,7 @@ module.exports = {
     fs.writeFileSync(path.join(projectDir, 'SYSTEM.md'), system, 'utf-8');
 
     // ── AGENTS.md — comprehensive project guidelines ──────────────────────
-    let content = '# Cohesium AI — Agents & Skills\n\n';
+    let content = '# Assemble — Agents & Skills\n\n';
 
     content += '## Agents\n\n';
     for (const agent of agents) {

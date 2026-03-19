@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — OpenCode Adapter
+ * Assemble — OpenCode Adapter
  * Generates .opencode/agents/ + skills/ + workflows/
  */
 

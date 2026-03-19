@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — QwenCoder Adapter
+ * Assemble — QwenCoder Adapter
  * Generates .qwencoder/agents/ + skills/ + workflows/
  */
 

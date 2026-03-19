@@ -366,13 +366,13 @@ To regenerate files after modifying the configuration:
 
 ```bash
 # Via Node.js
-node generator/generate.js --config .cohesium.yaml
+node generator/generate.js --config .assemble.yaml
 
 # Via Python
-python3 generator/generate.py --config .cohesium.yaml
+python3 generator/generate.py --config .assemble.yaml
 
 # Via built-in commands
-/update         # Regenerate from .cohesium.yaml
+/update         # Regenerate from .assemble.yaml
 /reconfigure    # Relaunch the configuration wizard
 ```
 

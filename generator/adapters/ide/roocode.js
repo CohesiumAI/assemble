@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — Roo Code Adapter
+ * Assemble — Roo Code Adapter
  * Generates .roomodes (JSON custom modes) + .roo/rules-*.md
  * Includes agents as modes + skills and workflows in rules
  */

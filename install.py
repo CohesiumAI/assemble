@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Cohesium AI — Interactive Installer (Python)
+Assemble — Interactive Installer (Python)
 Configures and deploys the agent system in your project
 """
 
@@ -55,7 +55,7 @@ def colored(text, color):
 def banner():
     print()
     print(colored("═" * 55, "cyan"))
-    print(colored("   🦸 Cohesium AI — Agent Workflow System", "blue"))
+    print(colored("   🦸 Assemble — AI Agent Orchestrator", "blue"))
     print(colored("   Installation & Configuration", "cyan"))
     print(colored("═" * 55, "cyan"))
     print()
@@ -73,13 +73,13 @@ def prompt(question, default=""):
 
 def run_update(project_dir="."):
     """Update an existing installation while preserving user preferences."""
-    config_path = Path(project_dir) / ".cohesium.yaml"
+    config_path = Path(project_dir) / ".assemble.yaml"
     if not config_path.exists():
-        print(colored("  ✗ No installation found (.cohesium.yaml missing)", "red"))
+        print(colored("  ✗ No installation found (.assemble.yaml missing)", "red"))
         sys.exit(1)
 
     print(colored("\n🔄 Updating...\n", "bold"))
-    print("Preserved preferences from .cohesium.yaml:")
+    print("Preserved preferences from .assemble.yaml:")
 
     for line in config_path.read_text(encoding="utf-8").splitlines():
         for key in ("langue_equipe", "langue_output", "platforms", "output_dir", "installed_at"):
@@ -128,9 +128,9 @@ def main():
         run_update(project_dir)
         sys.exit(0)
 
-    config_path = Path(".cohesium.yaml")
+    config_path = Path(".assemble.yaml")
     if config_path.exists():
-        print("📄 Existing installation detected: .cohesium.yaml\n")
+        print("📄 Existing installation detected: .assemble.yaml\n")
         print("  1) Update existing installation (keeps your preferences)")
         print("  2) New installation (overwrites configuration)\n")
         choice = prompt("Your choice", "1")
@@ -138,7 +138,7 @@ def main():
             run_update(".")
             sys.exit(0)
 
-    print("Welcome to the Cohesium AI installer.")
+    print("Welcome to the Assemble by Cohesium AI installer.")
     print("This script will configure the agent system for your project.")
     input("\nPress Enter to continue...")
 
@@ -194,7 +194,7 @@ def main():
     # 5. Output directory
     step("5/8 — Deliverable output directory")
     print("Where should agents write their deliverables?")
-    output_dir = prompt("Output directory", "./cohesium-output")
+    output_dir = prompt("Output directory", "./assemble-output")
     print(colored(f"  ✓ Output: {project_dir}/{output_dir}", "green"))
 
     # 6. Agents

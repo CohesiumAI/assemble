@@ -340,7 +340,7 @@ started_at: "2025-01-15T10:30:00Z"
 config:
   team_language: "english"
   output_language: "english"
-  output_dir: "./cohesium-output/mvp_20250115_103000"
+  output_dir: "./assemble-output/mvp_20250115_103000"
 steps:
   - step: 1
     agent: pm
@@ -395,7 +395,7 @@ steps:
 Each workflow creates a structured directory:
 
 ```
-cohesium-output/
+assemble-output/
   mvp_20250115_103000/
     _manifest.yaml                # Single source of truth for the workflow
     _summary.md                   # Summary generated at the end of the workflow

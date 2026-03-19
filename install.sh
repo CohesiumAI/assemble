@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ═══════════════════════════════════════════════════════════════════════
-# Cohesium AI — Interactive Installer (Bash)
+# Assemble — Interactive Installer (Bash)
 # Configures and deploys the agent system in your project
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -33,7 +33,7 @@ SELECTED_WORKFLOWS="all"
 banner() {
     echo ""
     echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
-    echo -e "${BOLD}${BLUE}   🦸 Cohesium AI — Agent Workflow System${NC}"
+    echo -e "${BOLD}${BLUE}   🦸 Assemble — AI Agent Orchestrator${NC}"
     echo -e "${CYAN}   Installation & Configuration${NC}"
     echo -e "${CYAN}═══════════════════════════════════════════════════════${NC}"
     echo ""
@@ -70,7 +70,7 @@ for arg in "$@"; do
     esac
 done
 
-EXISTING_CONFIG="$TARGET_DIR/.cohesium.yaml"
+EXISTING_CONFIG="$TARGET_DIR/.assemble.yaml"
 
 if [ "$UPDATE_MODE" = false ] && [ -f "$EXISTING_CONFIG" ]; then
     echo "📄 Existing installation detected: $EXISTING_CONFIG"
@@ -87,14 +87,14 @@ fi
 
 if [ "$UPDATE_MODE" = true ]; then
     if [ ! -f "$EXISTING_CONFIG" ]; then
-        error "No installation found (.cohesium.yaml missing in $TARGET_DIR)"
+        error "No installation found (.assemble.yaml missing in $TARGET_DIR)"
         exit 1
     fi
 
     echo ""
     echo -e "${BOLD}🔄 Updating...${NC}"
     echo ""
-    echo "Preserved preferences from .cohesium.yaml:"
+    echo "Preserved preferences from .assemble.yaml:"
 
     while IFS= read -r line; do
         case "$line" in
@@ -138,7 +138,7 @@ fi
 
 # ─── Step 1: Welcome ────────────────────────────────────────────────
 
-echo "Welcome to the Cohesium AI installer."
+echo "Welcome to the Assemble by Cohesium AI installer."
 echo "This script will configure the agent system for your project."
 echo ""
 echo "Press Enter to continue..."
@@ -225,8 +225,8 @@ step "5/8 — Deliverable output directory"
 echo "Where should agents write their deliverables?"
 echo "(relative to the project directory)"
 echo ""
-read -rp "Output directory [./cohesium-output] : " OUTPUT_DIR
-OUTPUT_DIR=${OUTPUT_DIR:-./cohesium-output}
+read -rp "Output directory [./assemble-output] : " OUTPUT_DIR
+OUTPUT_DIR=${OUTPUT_DIR:-./assemble-output}
 success "Output: $PROJECT_DIR/$OUTPUT_DIR"
 
 # ─── Step 7: Agent selection ────────────────────────────────────────

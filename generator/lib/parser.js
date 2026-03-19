@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — Parser de fichiers agents/skills/workflows
+ * Assemble — Parser de fichiers agents/skills/workflows
  * Parse les fichiers .md (frontmatter YAML + contenu) et .yaml
  */
 

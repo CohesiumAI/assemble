@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — Claude Code Adapter
+ * Assemble — Claude Code Adapter
  *
  * Generates the correct file structure for Claude Code:
  *   CLAUDE.md                              — concise project instructions (< 30 lines) with @imports
@@ -245,7 +245,7 @@ module.exports = {
 
     // ── 5. .claude/rules/teams.md ─────────────────────────────────────────────
 
-    let teamsContent = '# Équipes Cohesium AI\n\n';
+    let teamsContent = '# Équipes Assemble\n\n';
     teamsContent += 'Répertoire des agents disponibles. Chaque agent est invocable via `@nom-agent`.\n\n';
 
     for (const agent of agents) {
@@ -260,7 +260,7 @@ module.exports = {
 
     // ── 6. CLAUDE.md — compact, with @imports ─────────────────────────────────
 
-    let claude = '# Cohesium AI\n\n';
+    let claude = '# Assemble\n\n';
     claude += 'You are Jarvis, orchestrator of a 31-agent AI team.\n\n';
     claude += '@.claude/rules/routing.md\n';
     claude += '@.claude/rules/teams.md\n';
@@ -278,7 +278,7 @@ module.exports = {
 
   _renderWorkflowInstructions(workflow, agentLookup, config) {
     const steps = this._parseWorkflowSteps(workflow.raw);
-    const outputDir = config.output_dir || './cohesium-output';
+    const outputDir = config.output_dir || './assemble-output';
 
     let out = '## Instructions d\'exécution\n\n';
     out += `Répertoire de sortie : \`${outputDir}\`\n\n`;

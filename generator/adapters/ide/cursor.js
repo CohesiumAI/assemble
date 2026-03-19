@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — Cursor Adapter
+ * Assemble — Cursor Adapter
  * Generates .cursorrules + .cursor/agents/ with skills & workflows
  */
 
@@ -39,7 +39,7 @@ module.exports = {
     const agentLookup = buildAgentLookup(agents);
 
     // ── .cursorrules — compact overview ───────────────────────────────────
-    let rules = '# Cohesium AI — Cursor Configuration\n\n';
+    let rules = '# Assemble — Cursor Configuration\n\n';
 
     if (orchestrator) {
       rules += '## Orchestrator\n\n';
@@ -71,7 +71,7 @@ module.exports = {
 
     rules += '\n' + renderCommandRegistry(agents, skills, workflows);
 
-    rules += `\n## Répertoire de sortie\n\nLes livrables → \`${config.output_dir || './cohesium-output'}\`\n`;
+    rules += `\n## Répertoire de sortie\n\nLes livrables → \`${config.output_dir || './assemble-output'}\`\n`;
     fs.writeFileSync(path.join(projectDir, '.cursorrules'), rules, 'utf-8');
 
     // ── Individual agent files ────────────────────────────────────────────

@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — Rovo Dev Adapter
+ * Assemble — Rovo Dev Adapter
  * Generates .rovo/agents/ + skills/ + workflows/
  */
 

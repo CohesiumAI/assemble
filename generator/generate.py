@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Cohesium AI — Python wrapper for generate.js
+Assemble — Python wrapper for generate.js
 
 This script delegates all generation work to the Node.js generator (generate.js).
 It exists as a fallback entry point for environments where Python is available

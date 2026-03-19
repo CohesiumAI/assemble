@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — Crush Adapter
+ * Assemble — Crush Adapter
  * Generates .crush/agents/ + skills/ + workflows/
  */
 

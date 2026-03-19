@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — iFlow Adapter
+ * Assemble — iFlow Adapter
  * Generates .iflow/agents/ + .iflow/skills/ + .iflow/flows/
  */
 

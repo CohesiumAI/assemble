@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — Output Validator
+ * Assemble — Output Validator
  * Validates generated files by delegating to each adapter's own validate() method.
  */
 

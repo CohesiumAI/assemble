@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — Auggie (Augment Code) Adapter
+ * Assemble — Auggie (Augment Code) Adapter
  * Generates .augment/commands/*.md with YAML frontmatter
  * Each agent, skill, and workflow becomes a slash command
  */

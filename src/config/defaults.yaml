@@ -1,6 +1,6 @@
-# Cohesium AI — Configuration par défaut
+# Assemble — Configuration par défaut
 # Ce fichier définit les valeurs par défaut du système
-# L'installateur génère un .cohesium.yaml par projet qui surcharge ces valeurs
+# L'installateur génère un .assemble.yaml par projet qui surcharge ces valeurs
 
 version: "1.0.0"
 
@@ -16,7 +16,7 @@ i18n:
 
 # Répertoire de sortie des livrables
 output:
-  dir: "./cohesium-output"
+  dir: "./assemble-output"
   structure: "{workflow_name}_{timestamp}"
   manifest_file: "_manifest.yaml"
   summary_file: "_summary.md"

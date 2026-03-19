@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════════════
-# Cohesium AI — Interactive Installer (PowerShell)
+# Assemble — Interactive Installer (PowerShell)
 # Compatible with Windows PowerShell 5.1+ and PowerShell 7+
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -38,7 +38,7 @@ function Read-Prompt($Question, $Default = "") {
 
 Write-Host ""
 Write-Color "═══════════════════════════════════════════════════════" Cyan
-Write-Color "   Cohesium AI — Agent Workflow System" Blue
+Write-Color "   Assemble — AI Agent Orchestrator" Blue
 Write-Color "   Installation & Configuration (PowerShell)" Cyan
 Write-Color "═══════════════════════════════════════════════════════" Cyan
 Write-Host ""
@@ -55,7 +55,7 @@ if (-not $nodeCmd) {
 # ─── Detect existing installation / update mode ─────────────────────
 
 $UpdateMode = $Update -or $U
-$ConfigPath = Join-Path (Resolve-Path $Project) ".cohesium.yaml"
+$ConfigPath = Join-Path (Resolve-Path $Project) ".assemble.yaml"
 
 if (-not $UpdateMode -and (Test-Path $ConfigPath)) {
     Write-Host "📄 Existing installation detected: $ConfigPath"
@@ -69,14 +69,14 @@ if (-not $UpdateMode -and (Test-Path $ConfigPath)) {
 
 if ($UpdateMode) {
     if (-not (Test-Path $ConfigPath)) {
-        Write-Color "  ✗ No installation found (.cohesium.yaml missing)" Red
+        Write-Color "  ✗ No installation found (.assemble.yaml missing)" Red
         exit 1
     }
 
     Write-Host ""
     Write-Color "🔄 Updating..." White
     Write-Host ""
-    Write-Host "Preserved preferences from .cohesium.yaml:"
+    Write-Host "Preserved preferences from .assemble.yaml:"
 
     Get-Content $ConfigPath | ForEach-Object {
         foreach ($key in @("langue_equipe", "langue_output", "platforms", "output_dir", "installed_at")) {
@@ -114,7 +114,7 @@ if ($UpdateMode) {
 
 # ─── New Installation ────────────────────────────────────────────────
 
-Write-Host "Welcome to the Cohesium AI installer."
+Write-Host "Welcome to the Assemble by Cohesium AI installer."
 Write-Host "This script will configure the agent system for your project."
 Read-Host "`nPress Enter to continue"
 
@@ -185,7 +185,7 @@ Write-Color "  ✓ Project: $projectDir" Green
 # 5. Output directory
 Write-Step "5/8 — Deliverable output directory"
 Write-Host "Where should agents write their deliverables?"
-$outputDir = Read-Prompt "Output directory" "./cohesium-output"
+$outputDir = Read-Prompt "Output directory" "./assemble-output"
 Write-Color "  ✓ Output: $projectDir/$outputDir" Green
 
 # 6. Agents

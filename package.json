@@ -1,7 +1,7 @@
 {
-  "name": "create-cohesium-agents",
+  "name": "create-assemble",
   "version": "1.0.0",
-  "description": "Cohesium AI — Agent Workflow System. Deploy 31 specialized AI agents, 15 workflows, and 28 skills across 20 platforms.",
+  "description": "Assemble — AI Agent Orchestrator. Deploy 31 specialized AI agents, 15 workflows, and 28 skills across 20 platforms.",
   "author": "CohesiumAI <renald@cohesium.ai>",
   "license": "MIT",
   "keywords": [
@@ -14,10 +14,13 @@
     "copilot",
     "ide",
     "cli",
-    "cohesium"
+    "cohesium",
+    "assemble",
+    "multi-agent",
+    "orchestrator"
   ],
   "bin": {
-    "create-cohesium-agents": "./bin/cli.js"
+    "create-assemble": "./bin/cli.js"
   },
   "files": [
     "bin/",

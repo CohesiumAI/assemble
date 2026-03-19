@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — Kiro Adapter
+ * Assemble — Kiro Adapter
  * Generates .kiro/agents/*.json (JSON format required by Kiro)
  * and .kiro/steering/*.md for rules/skills/workflows
  */
@@ -80,7 +80,7 @@ module.exports = {
       fs.writeFileSync(path.join(kiroSteeringDir, 'orchestrator.md'), renderOrchestrator(orchestrator, config), 'utf-8');
     }
 
-    let teams = '# Équipes Cohesium AI\n\n';
+    let teams = '# Équipes Assemble\n\n';
     for (const agent of agents) {
       const display = marvelDisplayName(agent);
       const id = agentId(agent);

@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — Moteur de template
+ * Assemble — Moteur de template
  * Transforme les agents/skills/workflows source en format cible
  */
 
@@ -22,7 +22,7 @@ function prepareAgent(agent, config) {
   // Injecter la config output
   const outputBlock = `## Répertoire de sortie
 
-Tes livrables doivent être produits dans le répertoire : \`${config.output_dir || './cohesium-output'}\`
+Tes livrables doivent être produits dans le répertoire : \`${config.output_dir || './assemble-output'}\`
 Respecte la structure de dossiers définie par le workflow en cours.
 `;
 
@@ -120,7 +120,7 @@ function renderAsYaml(agent) {
  */
 function renderCommands(commandsYaml, format = 'markdown') {
   if (format === 'markdown') {
-    return `# Commandes Cohesium AI\n\n${commandsYaml}`;
+    return `# Commandes Assemble\n\n${commandsYaml}`;
   }
   return commandsYaml;
 }
@@ -218,7 +218,7 @@ function parseWorkflowSteps(raw) {
  */
 function renderWorkflowInstructions(workflow, agentLookup, config) {
   const steps = parseWorkflowSteps(workflow.raw);
-  const outputDir = (config || {}).output_dir || './cohesium-output';
+  const outputDir = (config || {}).output_dir || './assemble-output';
   let out = `## Instructions d'exécution\n\nRépertoire de sortie : \`${outputDir}\`\n\n`;
   if (steps.length === 0) {
     out += '```yaml\n' + workflow.raw + '\n```\n';
@@ -285,7 +285,7 @@ function renderCommandRegistry(agents, skills, workflows) {
  */
 function renderRoutingRules(agents, workflows) {
   let out = '# Jarvis — Routing Intelligence\n\n';
-  out += 'You are Jarvis, orchestrator of a 31-agent AI team (Cohesium AI).\n';
+  out += 'You are Jarvis, orchestrator of a 31-agent AI team (Assemble by Cohesium AI).\n';
   out += 'You don\'t do the work — you identify WHO should intervene, WHEN, in WHAT ORDER, and with WHAT context.\n\n';
 
   // Complexity assessment
@@ -358,7 +358,7 @@ function renderRoutingRules(agents, workflows) {
  * Generate compact help content for /help command.
  */
 function renderCompactHelp(agents, workflows) {
-  let out = '# Cohesium AI — Command Catalog\n\n';
+  let out = '# Assemble — Command Catalog\n\n';
   out += 'Display this catalog to the user:\n\n';
 
   // 10 commands

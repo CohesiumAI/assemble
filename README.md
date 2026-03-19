@@ -1,10 +1,10 @@
-# Cohesium AI — Agent Workflow System
+# Assemble — AI Agent Orchestrator
 
 > Transform any IDE or CLI into a full interdisciplinary team of **31 specialized AI agents**, organized in **9 teams**, with **15 automated workflows**, **28 skills**, and **10 commands** — deployable across **20 platforms** (15 IDE + 5 CLI). Powered by Jarvis smart routing and spec-driven methodology.
 
-## What is Cohesium AI?
+## What is Assemble by Cohesium AI?
 
-Cohesium AI is a multi-agent orchestration system that turns your development environment into a complete, cross-functional team. Each agent is a senior-level expert in its domain, inspired by the Marvel universe, and capable of collaborating with others through automatically orchestrated workflows.
+Assemble by Cohesium AI is a multi-agent orchestration system that turns your development environment into a complete, cross-functional team. Each agent is a senior-level expert in its domain, inspired by the Marvel universe, and capable of collaborating with others through automatically orchestrated workflows.
 
 The system uses an **adapter pattern**: agent definitions, skills, and workflows are maintained as platform-agnostic source files, then a generator produces the correct configuration files for each target platform — Cursor rules, Claude Code commands, GitHub Copilot agents, and 17 others.
 
@@ -17,13 +17,13 @@ An orchestrator named **Jarvis** serves as the single entry point. Use `/go <req
 ### Using NPX (recommended)
 
 ```bash
-npx create-cohesium-agents
+npx create-assemble
 ```
 
 ### Using Bash (macOS/Linux)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/CohesiumAI/Agents/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/CohesiumAI/assemble/main/install.sh | bash
 ```
 
 ### Using Python
@@ -55,13 +55,13 @@ The interactive installer guides you through:
 
 ## Update an Existing Installation
 
-If you already have Cohesium AI installed, you can update to the latest version while preserving your preferences:
+If you already have Assemble by Cohesium AI installed, you can update to the latest version while preserving your preferences:
 
 ```bash
-npx create-cohesium-agents --update
+npx create-assemble --update
 ```
 
-The `--update` flag re-generates all platform configuration files from your existing `.cohesium.yaml` without re-running the interactive setup. Your agent selection, language settings, and output directory are preserved.
+The `--update` flag re-generates all platform configuration files from your existing `.assemble.yaml` without re-running the interactive setup. Your agent selection, language settings, and output directory are preserved.
 
 You can also use `/go update my config` to trigger regeneration from within a session.
 
@@ -270,7 +270,7 @@ cohesium-ai/
     commands/
       commands.yaml     # Registry of 10 primary commands + hidden shortcuts + internal skills
   generator/            # Platform-specific file generator
-  bin/                  # CLI entry point (npx create-cohesium-agents)
+  bin/                  # CLI entry point (npx create-assemble)
   install.sh            # Bash installer
   install.py            # Python installer
   install.ps1           # PowerShell installer (Windows)
@@ -310,7 +310,7 @@ User types /go <request>
 
 ## Configuration
 
-After installation, a `.cohesium.yaml` file is created at the root of your project:
+After installation, a `.assemble.yaml` file is created at the root of your project:
 
 ```yaml
 version: "1.0.0"
@@ -320,7 +320,7 @@ i18n:
   output_language: "english"      # Language for produced deliverables
 
 output:
-  dir: "./cohesium-output"        # Output directory
+  dir: "./assemble-output"        # Output directory
   structure: "{workflow_name}_{timestamp}"
 
 agents:
@@ -359,4 +359,4 @@ Agent definitions live in `src/agents/`, skills in `src/skills/`, and workflows 
 
 ## License
 
-MIT — [CohesiumAI](mailto:renald@cohesium.ai)
+MIT — An open-source project by [Cohesium AI](https://cohesium.ai)

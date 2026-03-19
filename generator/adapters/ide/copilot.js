@@ -1,5 +1,5 @@
 /**
- * Cohesium AI — GitHub Copilot Adapter
+ * Assemble — GitHub Copilot Adapter
  * Generates .github/copilot-instructions.md (main)
  * + .github/instructions/*.md (path-specific agent instructions)
  */
@@ -36,7 +36,7 @@ module.exports = {
     const agentLookup = buildAgentLookup(agents);
 
     // ── copilot-instructions.md — main overview ───────────────────────────
-    let main = '# Cohesium AI — Copilot Instructions\n\n';
+    let main = '# Assemble — Copilot Instructions\n\n';
 
     if (orchestrator) {
       main += '## Orchestrator\n\n';
@@ -68,7 +68,7 @@ module.exports = {
 
     main += '\n' + renderCommandRegistry(agents, skills, workflows);
 
-    main += `\n## Répertoire de sortie\n\nLivrables → \`${config.output_dir || './cohesium-output'}\`\n`;
+    main += `\n## Répertoire de sortie\n\nLivrables → \`${config.output_dir || './assemble-output'}\`\n`;
     fs.writeFileSync(path.join(githubDir, 'copilot-instructions.md'), main, 'utf-8');
 
     // ── Agent instruction files ───────────────────────────────────────────
