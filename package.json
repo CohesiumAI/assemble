@@ -17,7 +17,11 @@
     "cohesium",
     "assemble",
     "multi-agent",
-    "orchestrator"
+    "orchestrator",
+    "mcp",
+    "model-context-protocol",
+    "governance",
+    "enterprise"
   ],
   "bin": {
     "create-assemble": "./bin/cli.js"
@@ -31,7 +35,10 @@
     "install-agents": "node bin/cli.js",
     "generate": "node generator/generate.js",
     "validate": "node generator/generate.js --validate",
-    "test": "node tests/snapshot.test.js"
+    "test": "node tests/snapshot.test.js",
+    "doctor": "node bin/doctor.js",
+    "diff": "node bin/diff.js",
+    "ls": "node bin/ls.js"
   },
   "dependencies": {},
   "engines": {

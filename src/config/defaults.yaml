@@ -14,8 +14,20 @@ i18n:
     Les fichiers que tu produis sont rédigés en {langue_output}.
     Les termes techniques et le code restent en anglais.
 
-# Gouvernance (none = pas de surcharge, standard = decision gates + risk assessment)
+# Profil d'équipe (custom = configuration manuelle, startup/enterprise/agency = presets)
+profile: "custom"
+
+# Gouvernance (none = pas de surcharge, standard = decision gates + risk assessment, strict = audit + RBAC + NIST)
 governance: "none"
+
+# MCP Server (false = désactivé, true = génère mcp-server.js dans .assemble/)
+mcp: false
+
+# Mémoire cross-session (false = désactivé, true = génère _memory.md)
+memory: false
+
+# Métriques workflow (false = désactivé, true = génère _metrics.md)
+metrics: false
 
 # Répertoire de sortie des livrables
 output:

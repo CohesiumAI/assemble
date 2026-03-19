@@ -14,6 +14,9 @@ const path = require('path');
 const { loadAgents, loadSkills, loadWorkflows, loadCommands, loadOrchestrator } = require('./lib/parser');
 const { prepareAgent } = require('./lib/template-engine');
 const { validateOutput } = require('./lib/validator');
+const { resolveProfile } = require('./lib/profiles');
+const { generateMCPServer } = require('./lib/mcp-generator');
+const { generateUniversalAgentsMd } = require('./lib/agents-md-generator');
 
 // ─── Configuration par défaut ───────────────────────────────────────────────
 
@@ -67,6 +70,7 @@ function loadConfig(configPath) {
 
   const raw = fs.readFileSync(configPath, 'utf-8');
   const config = { ...DEFAULTS };
+  const explicitKeys = new Set();
 
   // Parse simple du YAML de config
   for (const line of raw.split('\n')) {
@@ -74,14 +78,22 @@ function loadConfig(configPath) {
     if (!match) continue;
 
     const [, key, value] = match;
+    explicitKeys.add(key);
     if (value.startsWith('[')) {
       config[key] = value.slice(1, -1).split(',').map(v => v.trim().replace(/["']/g, ''));
     } else if (value === 'all') {
       config[key] = 'all';
     } else {
-      config[key] = value.replace(/["']/g, '').trim();
+      const cleaned = value.replace(/["']/g, '').trim();
+      // Parse booleans
+      if (cleaned === 'true') config[key] = true;
+      else if (cleaned === 'false') config[key] = false;
+      else config[key] = cleaned;
     }
   }
+
+  // Track which keys were explicitly set (used by resolveProfile)
+  config._explicitKeys = explicitKeys;
 
   return config;
 }
@@ -201,7 +213,10 @@ function generate() {
   }
 
   // Charger la config
-  const config = loadConfig(configPath);
+  let config = loadConfig(configPath);
+
+  // Résoudre le profil (les valeurs du profil sont des defaults, config explicite gagne)
+  config = resolveProfile(config);
 
   // Surcharger avec les arguments CLI (sauf en mode update pur)
   if (args.platforms) config.platforms = args.platforms;
@@ -209,6 +224,11 @@ function generate() {
   if (args.langue_output) config.langue_output = args.langue_output;
   if (args.output_dir) config.output_dir = args.output_dir;
   if (!config.governance) config.governance = 'none';
+
+  // Normalize booleans once (in case they came as strings from YAML or CLI)
+  config.mcp = config.mcp === true || config.mcp === 'true';
+  config.memory = config.memory === true || config.memory === 'true';
+  config.metrics = config.metrics === true || config.metrics === 'true';
 
   console.log('🚀 Assemble — Générateur de configurations');
   console.log(`📁 Projet : ${projectDir}`);
@@ -257,8 +277,50 @@ function generate() {
   }
   console.log(`  ✓ ${agents.length} agents chargés`);
 
+  // Charger les custom agents depuis .assemble/agents/
+  const customAgentsDir = path.join(projectDir, '.assemble', 'agents');
+  if (fs.existsSync(customAgentsDir)) {
+    const customAgents = loadAgents(customAgentsDir);
+    for (const ca of customAgents) {
+      const caId = (ca.fileName || '').replace(/^AGENT-/, '').replace(/\.md$/, '');
+      const existingIdx = agents.findIndex(a => {
+        const id = (a.fileName || '').replace(/^AGENT-/, '').replace(/\.md$/, '');
+        return id === caId;
+      });
+      if (existingIdx >= 0) {
+        agents[existingIdx] = ca; // Custom overrides built-in
+      } else {
+        agents.push(ca);
+      }
+    }
+    if (customAgents.length > 0) {
+      console.log(`  ✓ ${customAgents.length} custom agents chargés depuis .assemble/agents/`);
+    }
+  }
+
   const skills = loadSkills(SKILLS_DIR);
   console.log(`  ✓ ${skills.shared.length} skills partagées, ${skills.specific.length} skills spécifiques`);
+
+  // Charger les custom skills depuis .assemble/skills/
+  const customSkillsDir = path.join(projectDir, '.assemble', 'skills');
+  if (fs.existsSync(customSkillsDir)) {
+    const customSkillFiles = fs.readdirSync(customSkillsDir).filter(f => f.endsWith('.md'));
+    for (const file of customSkillFiles) {
+      const content = fs.readFileSync(path.join(customSkillsDir, file), 'utf-8');
+      const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
+      const meta = {};
+      if (fmMatch) {
+        for (const line of fmMatch[1].split('\n')) {
+          const m = line.match(/^(\w+):\s*"?([^"\n]+)"?/);
+          if (m) meta[m[1]] = m[2].trim();
+        }
+      }
+      skills.specific.push({ fileName: file, meta, content, raw: content, sections: {} });
+    }
+    if (customSkillFiles.length > 0) {
+      console.log(`  ✓ ${customSkillFiles.length} custom skills chargées depuis .assemble/skills/`);
+    }
+  }
 
   let workflows = loadWorkflows(WORKFLOWS_DIR);
   // Filter workflows if config specifies a subset (not "all")
@@ -357,13 +419,84 @@ function generate() {
     }
   }
 
-  // Créer le répertoire output pour les livrables
+  // ─── Créer le répertoire output pour les livrables ──────────────────────
   const outputPath = path.resolve(projectDir, config.output_dir);
   fs.mkdirSync(outputPath, { recursive: true });
   fs.writeFileSync(
     path.join(outputPath, '.gitkeep'),
     '# Ce dossier contient les livrables produits par les agents Assemble by Cohesium AI\n'
   );
+
+  // ─── MCP Server generation (opt-in) ──────────────────────────────────────
+  if (config.mcp) {
+    console.log('🔌 Generating MCP server...');
+    try {
+      generateMCPServer(projectDir, { agents: preparedAgents, workflows, config });
+      console.log('  ✅ MCP server generated in .assemble/');
+    } catch (err) {
+      console.warn(`  ⚠️  MCP generation failed: ${err.message}`);
+    }
+  }
+
+  // ─── Cross-session memory template (opt-in) ────────────────────────────────
+  if (config.memory) {
+    const memoryContent = `# Assemble — Cross-Session Memory
+
+## Purpose
+This file persists context across sessions. Jarvis and agents can read/write here.
+
+## Session Log
+<!-- Agents append key decisions, blockers, and outcomes here -->
+
+## Active Context
+<!-- Current project state, recent decisions, open threads -->
+
+## Key Decisions
+<!-- Important decisions with rationale — survives across sessions -->
+`;
+    const memoryPath = path.join(projectDir, config.output_dir || './assemble-output', '_memory.md');
+    fs.mkdirSync(path.dirname(memoryPath), { recursive: true });
+    if (!fs.existsSync(memoryPath)) {
+      fs.writeFileSync(memoryPath, memoryContent, 'utf-8');
+      console.log('🧠 Cross-session _memory.md created');
+    }
+  }
+
+  // ─── Metrics template (opt-in) ─────────────────────────────────────────────
+  if (config.metrics) {
+    const metricsContent = `# Assemble — Workflow Metrics
+
+## Purpose
+Track workflow execution metrics for observability and continuous improvement.
+
+## Metrics Format
+| Workflow | Started | Completed | Duration | Steps | Agents | Status |
+|----------|---------|-----------|----------|-------|--------|--------|
+<!-- Jarvis appends a row after each workflow completion -->
+
+## Agent Performance
+| Agent | Invocations | Avg Output Quality | Common Issues |
+|-------|-------------|-------------------|---------------|
+<!-- Updated periodically based on workflow outcomes -->
+
+## Trends
+<!-- Weekly/monthly summaries appended by Jarvis -->
+`;
+    const metricsPath = path.join(projectDir, config.output_dir || './assemble-output', '_metrics.md');
+    fs.mkdirSync(path.dirname(metricsPath), { recursive: true });
+    if (!fs.existsSync(metricsPath)) {
+      fs.writeFileSync(metricsPath, metricsContent, 'utf-8');
+      console.log('📊 Workflow _metrics.md created');
+    }
+  }
+
+  // ─── AGENTS.md universal (for all platforms except those that generate their own) ─
+  {
+    const agentsMdContent = generateUniversalAgentsMd(preparedAgents, workflows, config);
+    const agentsMdPath = path.join(projectDir, config.output_dir || './assemble-output', 'AGENTS.md');
+    fs.mkdirSync(path.dirname(agentsMdPath), { recursive: true });
+    fs.writeFileSync(agentsMdPath, agentsMdContent, 'utf-8');
+  }
 
   // Mettre à jour ou créer .assemble.yaml
   const assembleConfigPath = path.join(projectDir, '.assemble.yaml');
@@ -374,6 +507,7 @@ function generate() {
 # Régénérer :     node generate.js --config .assemble.yaml
 
 version: "1.0.0"
+profile: "${config.profile || 'custom'}"
 langue_equipe: "${config.langue_equipe}"
 langue_output: "${config.langue_output}"
 output_dir: "${config.output_dir}"
@@ -381,6 +515,9 @@ platforms: [${config.platforms.join(', ')}]
 agents: ${config.agents || 'all'}
 workflows: ${config.workflows || 'all'}
 governance: "${config.governance || 'none'}"
+mcp: ${config.mcp ? 'true' : 'false'}
+memory: ${config.memory ? 'true' : 'false'}
+metrics: ${config.metrics ? 'true' : 'false'}
 installed_at: "${existingConfig.installed_at || today}"
 updated_at: "${today}"
 `;

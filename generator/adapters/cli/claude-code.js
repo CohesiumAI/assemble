@@ -146,7 +146,8 @@ module.exports = {
       content += '1. Assess complexity of the request (TRIVIAL / MODERATE / COMPLEX)\n';
       content += '2. Select the appropriate agent(s) or workflow\n';
       content += '3. For COMPLEX tasks, apply the Spec-Driven Methodology (SPECIFY → PLAN → TASKS → IMPLEMENT)\n';
-      content += '4. Execute with full agent context from `.claude/agents/`\n\n';
+      content += '4. Use the Agent tool to launch @agent-name as a sub-agent for each workflow step\n';
+      content += '5. Execute with full agent context from `.claude/agents/`\n\n';
       content += 'User request: $ARGUMENTS\n';
       fs.writeFileSync(path.join(dir, 'SKILL.md'), content, 'utf-8');
     }
@@ -230,6 +231,7 @@ module.exports = {
 
       if (wf) {
         content += this._renderWorkflowInstructions(wf, agentLookup, config);
+        content += '\n**Execution:** For each step, use the Agent tool to launch the designated @agent as a sub-agent with the step context.\n';
       }
 
       content += '\nApply this workflow to: $ARGUMENTS\n';
@@ -239,7 +241,7 @@ module.exports = {
 
     // ── 3. .claude/rules/routing.md ───────────────────────────────────────────
 
-    const routingContent = renderRoutingRules(agents, workflows);
+    const routingContent = renderRoutingRules(agents, workflows, config);
     fs.writeFileSync(path.join(rulesDir, 'routing.md'), routingContent, 'utf-8');
 
     // ── 3b. .claude/rules/governance/governance.md (if enabled) ────────────────

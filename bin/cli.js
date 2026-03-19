@@ -125,6 +125,35 @@ async function runUpdate(projectDir) {
 async function main() {
   const fs = require('fs');
 
+  // ─── Subcommand routing (before --update check to avoid conflicts) ───────
+  const subcommand = process.argv[2];
+  if (subcommand && !subcommand.startsWith('-')) {
+    if (subcommand === 'doctor') {
+      require('./doctor.js');
+      return;
+    }
+    if (subcommand === 'diff') {
+      require('./diff.js');
+      return;
+    }
+    if (subcommand === 'ls') {
+      require('./ls.js');
+      return;
+    }
+    if (subcommand === 'import') {
+      const importPath = process.argv[3];
+      if (!importPath) {
+        print('Usage: assemble import <path-to-skill.md>');
+        rl.close();
+        process.exit(0);
+      }
+      const { importSkill } = require('./import.js');
+      importSkill(importPath);
+      rl.close();
+      return;
+    }
+  }
+
   print('');
   print('\x1b[36m═══════════════════════════════════════════════════════\x1b[0m');
   print('\x1b[1m\x1b[34m   🦸 Assemble — AI Agent Orchestrator\x1b[0m');
@@ -152,15 +181,25 @@ async function main() {
   }
 
   // 1. Team language
-  print('\n\x1b[1m\x1b[34m▸ 1/6 — Team language\x1b[0m\n');
+  print('\n\x1b[1m\x1b[34m▸ 1/9 — Team language\x1b[0m\n');
   const langTeam = await ask('Team language (français, english, deutsch...)', 'français');
 
   // 2. Output language
-  print('\n\x1b[1m\x1b[34m▸ 2/6 — Deliverable language\x1b[0m\n');
+  print('\n\x1b[1m\x1b[34m▸ 2/9 — Deliverable language\x1b[0m\n');
   const langOutput = await ask('Deliverable language', langTeam);
 
-  // 3. Platforms
-  print('\n\x1b[1m\x1b[34m▸ 3/6 — IDE/CLI selection\x1b[0m\n');
+  // 3. Profile
+  print('\n\x1b[1m\x1b[34m▸ 3/9 — Team profile\x1b[0m\n');
+  print('  1) startup   — Lean team, ship fast');
+  print('  2) enterprise — Full team with strict governance');
+  print('  3) agency     — Marketing & content focus');
+  print('  4) custom     — Choose everything manually\n');
+  const profileChoice = await ask('Profile', '4');
+  const profileMap = { '1': 'startup', '2': 'enterprise', '3': 'agency', '4': 'custom' };
+  const profile = profileMap[profileChoice] || 'custom';
+
+  // 4. Platforms
+  print('\n\x1b[1m\x1b[34m▸ 4/9 — IDE/CLI selection\x1b[0m\n');
   print('  IDE:');
   PLATFORMS.ide.forEach(([, name], i) => print(`  ${String(i + 1).padStart(2)}) ${name}`));
   print('\n  CLI:');
@@ -179,21 +218,39 @@ async function main() {
   }
   print(`\x1b[32m  ✓ ${selectedPlatforms.length} platforms selected\x1b[0m`);
 
-  // 4. Directory
-  print('\n\x1b[1m\x1b[34m▸ 4/6 — Project directory\x1b[0m\n');
+  // 5. Directory
+  print('\n\x1b[1m\x1b[34m▸ 5/9 — Project directory\x1b[0m\n');
   const projectDir = path.resolve(await ask('Project directory', '.'));
 
-  // 5. Output
-  print('\n\x1b[1m\x1b[34m▸ 5/6 — Output directory\x1b[0m\n');
+  // 6. Output
+  print('\n\x1b[1m\x1b[34m▸ 6/9 — Output directory\x1b[0m\n');
   const outputDir = await ask('Deliverable output directory', './assemble-output');
 
-  // 6. Confirmation
-  print('\n\x1b[1m\x1b[34m▸ 6/6 — Confirmation\x1b[0m\n');
+  // 7. MCP Server
+  print('\n\x1b[1m\x1b[34m▸ 7/9 — MCP server\x1b[0m\n');
+  const mcpChoice = await ask('Enable MCP server? (y/n)', 'n');
+  const mcp = ['y', 'o'].includes(mcpChoice.toLowerCase());
+
+  // 8. Governance
+  print('\n\x1b[1m\x1b[34m▸ 8/9 — Governance level\x1b[0m\n');
+  print('  1) none     — No governance overhead (default)');
+  print('  2) standard — Decision gates + risk assessment');
+  print('  3) strict   — Full audit trail + RBAC + NIST mapping\n');
+  const govDefault = profile === 'enterprise' ? '3' : '1';
+  const govChoice = await ask('Governance', govDefault);
+  const govMap = { '1': 'none', '2': 'standard', '3': 'strict' };
+  const governance = govMap[govChoice] || 'none';
+
+  // 9. Confirmation
+  print('\n\x1b[1m\x1b[34m▸ 9/9 — Confirmation\x1b[0m\n');
+  print(`  Profile        : \x1b[1m${profile}\x1b[0m`);
   print(`  Team language  : \x1b[1m${langTeam}\x1b[0m`);
   print(`  Output language: \x1b[1m${langOutput}\x1b[0m`);
   print(`  Platforms      : \x1b[1m${selectedPlatforms.join(', ')}\x1b[0m`);
   print(`  Project        : \x1b[1m${projectDir}\x1b[0m`);
   print(`  Output         : \x1b[1m${outputDir}\x1b[0m`);
+  print(`  MCP server     : \x1b[1m${mcp ? 'yes' : 'no'}\x1b[0m`);
+  print(`  Governance     : \x1b[1m${governance}\x1b[0m`);
   print('');
 
   const confirm = await ask('Start installation?', 'Y');
@@ -203,19 +260,39 @@ async function main() {
     process.exit(0);
   }
 
-  // Generation
+  // Write .assemble.yaml with all wizard choices, then generate via --update
   print('\n\x1b[1m\x1b[34m▸ Generating...\x1b[0m\n');
+
+  const today = new Date().toISOString().split('T')[0];
+  const configContent = [
+    '# Assemble — Configuration du projet',
+    '# Mettre à jour : npx create-assemble --update',
+    '',
+    'version: "1.0.0"',
+    `profile: "${profile}"`,
+    `langue_equipe: "${langTeam}"`,
+    `langue_output: "${langOutput}"`,
+    `output_dir: "${outputDir}"`,
+    `platforms: [${selectedPlatforms.join(', ')}]`,
+    'agents: all',
+    'workflows: all',
+    `governance: "${governance}"`,
+    `mcp: ${mcp ? 'true' : 'false'}`,
+    'memory: false',
+    'metrics: false',
+    `installed_at: "${today}"`,
+    `updated_at: "${today}"`,
+    '',
+  ].join('\n');
+  fs.writeFileSync(path.join(projectDir, '.assemble.yaml'), configContent, 'utf-8');
 
   const generatorPath = path.join(__dirname, '..', 'generator', 'generate.js');
 
   try {
     execFileSync(process.execPath, [
       generatorPath,
+      '--update',
       '--project', projectDir,
-      '--platforms', selectedPlatforms.join(','),
-      '--lang-team', langTeam,
-      '--lang-output', langOutput,
-      '--output-dir', outputDir
     ], { stdio: 'inherit' });
   } catch (err) {
     print('\x1b[31m  ✗ Error during generation\x1b[0m');

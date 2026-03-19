@@ -18,7 +18,7 @@
 
 ---
 
-> Transform any IDE or CLI into a full interdisciplinary team of **31 specialized AI agents**, organized in **9 teams**, with **15 automated workflows**, **28 skills**, and **10 commands** — deployable across **20 platforms** (15 IDE + 5 CLI). Powered by Jarvis smart routing and spec-driven methodology.
+> Transform any IDE or CLI into a full interdisciplinary team of **31 specialized AI agents**, organized in **9 teams**, with **15 automated workflows**, **28 skills**, and **10 commands** — deployable across **20 platforms** (15 IDE + 5 CLI). Powered by Jarvis smart routing, spec-driven methodology, MCP server, cross-session memory, and enterprise governance.
 
 ## What is Assemble by Cohesium AI?
 
@@ -64,10 +64,35 @@ install.bat
 
 The interactive installer guides you through:
 
-1. Choosing your **target platforms** (Cursor, Claude Code, Copilot, etc.)
-2. Selecting which **agents** to activate
-3. Configuring **languages** (team communication and deliverables)
-4. Setting the **output directory** for deliverables
+1. Choosing your **team language** and **deliverable language**
+2. Selecting a **team profile** (startup, enterprise, agency, or custom)
+3. Choosing your **target platforms** (Cursor, Claude Code, Copilot, etc.)
+4. Setting the **project** and **output directories**
+5. Enabling **MCP server** (opt-in)
+6. Selecting **governance level** (none, standard, strict)
+
+---
+
+## Quick Demo
+
+```bash
+$ npx create-assemble
+
+🦸 Assemble — AI Agent Orchestrator
+
+▸ 1/9 — Team language
+  Team language: english
+
+▸ 3/9 — Team profile
+  1) startup   2) enterprise   3) agency   4) custom
+  Profile: 4
+
+▸ 4/9 — IDE/CLI selection
+  Your choice: 0    # → all 20 platforms
+
+✅ Installation complete!
+  62 tests passing | 20 platforms | 31 agents
+```
 
 ---
 
@@ -284,16 +309,29 @@ assemble/
     workflows/          # 15 workflow definitions (YAML)
     orchestrator/       # ORCHESTRATOR.md (Jarvis)
     config/
-      defaults.yaml     # Default configuration
+      defaults.yaml     # Default configuration (profiles, MCP, memory, metrics)
       teams.yaml        # Team definitions (9 teams)
     commands/
       commands.yaml     # Registry of 10 primary commands + hidden shortcuts + internal skills
-  generator/            # Platform-specific file generator
-  bin/                  # CLI entry point (npx create-assemble)
-  install.sh            # Bash installer
-  install.py            # Python installer
-  install.ps1           # PowerShell installer (Windows)
-  install.bat           # Batch installer (Windows)
+  generator/
+    generate.js         # Main generator (profiles, custom agents/skills, MCP, memory, metrics)
+    lib/
+      profiles.js       # Team profiles (startup, enterprise, agency)
+      mcp-generator.js  # MCP server + config generator
+      agents-md-generator.js  # Universal AGENTS.md generator
+      template-engine.js      # Template rendering (memory, metrics, governance strict)
+    adapters/           # 20 platform adapters (IDE + CLI)
+  bin/
+    cli.js              # Interactive installer (9-step wizard)
+    doctor.js           # Health check (assemble doctor)
+    diff.js             # Dry run diff (assemble diff)
+    ls.js               # List active config (assemble ls)
+    import.js           # Import skills (assemble import)
+  tests/
+    snapshot.test.js    # 62 tests (snapshot + qualitative)
+  .assemble/            # User extensibility (auto-detected)
+    agents/             # Custom agents (AGENT-*.md)
+    skills/             # Imported skills
 ```
 
 ### Execution Flow
@@ -335,15 +373,55 @@ After installation, a `.assemble.yaml` file is created at the root of your proje
 ```yaml
 # Assemble — Configuration du projet
 version: "1.0.0"
+profile: "custom"                 # startup | enterprise | agency | custom
 langue_equipe: "english"          # Language for agent-to-agent communication
 langue_output: "english"          # Language for produced deliverables
 output_dir: "./assemble-output"   # Output directory for deliverables
 platforms: [claude-code, cursor]  # Target platforms
 agents: all                       # Activated agents (all or list)
 workflows: all                    # Activated workflows (all or list)
-governance: "none"                # none | standard (see Governance section)
+governance: "none"                # none | standard | strict
+mcp: false                        # MCP server generation
+memory: false                     # Cross-session _memory.md
+metrics: false                    # Workflow _metrics.md
 installed_at: "2026-03-19"
 ```
+
+### Team Profiles
+
+Profiles provide sensible defaults that can be overridden by explicit config:
+
+| Profile | Agents | Governance | Best for |
+|---------|--------|------------|----------|
+| `startup` | 12 core agents | none | Early-stage, ship fast |
+| `enterprise` | all 31 agents | strict | Regulated environments |
+| `agency` | 16 marketing/content agents | none | Agencies, consultancies |
+| `custom` | your choice | your choice | Full control |
+
+### Extensibility
+
+**Custom agents:** Drop `AGENT-*.md` files in `.assemble/agents/` — they're auto-discovered and merged during generation. Same slug overrides built-in.
+
+**Custom skills:** Use `assemble import <path>` to copy skill files into `.assemble/skills/`. They're included in the next generation.
+
+### MCP Server (opt-in)
+
+Set `mcp: true` to generate an MCP (Model Context Protocol) server:
+
+```bash
+# Generated in .assemble/
+mcp-server.js        # Standalone Node.js server (31+ tools)
+mcp.json             # Config for Claude Desktop / VS Code
+mcp-package.json     # Install deps: cd .assemble && npm install
+```
+
+### Cross-Session Memory (opt-in)
+
+Set `memory: true` to enable persistent context across sessions. Generates `_memory.md` with sections for session log, active context, and key decisions.
+
+### Metrics (opt-in)
+
+Set `metrics: true` to track workflow execution metrics. Generates `_metrics.md` with tables for workflow performance and agent statistics.
 
 ---
 
@@ -355,20 +433,23 @@ Assemble includes an opt-in governance layer that adds **decision gates** and **
 
 ### Enabling governance
 
-Set `governance: "standard"` in `.assemble.yaml`:
+Set `governance: "standard"` or `governance: "strict"` in `.assemble.yaml`:
 
 ```yaml
-governance: "standard"
+governance: "standard"   # Decision gates + risk assessment
+# or
+governance: "strict"     # Full audit trail + RBAC + NIST AI RMF mapping
 ```
 
 Then regenerate: `npx create-assemble --update`
 
 ### What it adds
 
-| Layer | Description |
-|-------|-------------|
-| **Decision Gates** | TRIVIAL = agent acts freely. MODERATE = deliverable + user validation. COMPLEX = phased approval (spec → plan → tasks → implement). |
-| **Change Risk Assessment** | LOW risk (`/bugfix`, `/review`) = post-action summary. MEDIUM (`/feature`, `/sprint`) = plan required. HIGH (`/release`, `/hotfix`, `/mvp`) = risk assessment + rollback plan + approval gate. |
+| Level | Decision Gates | Risk Assessment | Extras |
+|-------|---------------|-----------------|--------|
+| `none` | — | — | Zero overhead |
+| `standard` | MODERATE + COMPLEX tasks | HIGH risk workflows | _quality.md |
+| `strict` | ALL tasks (incl. TRIVIAL) | ALL workflows | Audit trail (`_audit.md`), RBAC, NIST AI RMF mapping |
 
 ### Token impact
 
@@ -376,12 +457,13 @@ Then regenerate: `npx create-assemble --update`
 |------|---------------|----------------|
 | `governance: "none"` (default) | 0 extra tokens | 0 |
 | `governance: "standard"` | ~20 tokens (routing reference) | ~200 tokens (governance.md loaded when relevant) |
+| `governance: "strict"` | ~20 tokens (routing reference) | ~400 tokens (governance.md with RBAC + audit) |
 
 ### How it works across platforms
 
-- **19 platforms** (Cursor, Copilot, Cline, Windsurf, Kiro, Roo Code, Codex, Gemini CLI, Pi, Auggie, and all IDE adapters): Governance rules are injected into the command registry. When `governance: "standard"`, the output includes decision gates and risk assessment instructions.
-- **Claude Code:** Uses a dedicated `.claude/rules/governance/governance.md` file loaded on-demand by Jarvis, in addition to the routing rules reference.
-- **Platforms with orchestrator** (Cursor, Copilot, Cline, Windsurf, Kiro, Roo Code, Codex, Gemini CLI, Pi): Governance behavior is also embedded in the orchestrator instructions.
+- **19 platforms** (Cursor, Copilot, Cline, Windsurf, Kiro, Roo Code, Codex, Gemini CLI, Pi, Auggie, and all IDE adapters): Governance rules are injected into the command registry.
+- **Claude Code:** Uses a dedicated `.claude/rules/governance/governance.md` file loaded on-demand by Jarvis.
+- **Platforms with orchestrator**: Governance behavior is also embedded in the orchestrator instructions.
 
 ---
 

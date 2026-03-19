@@ -359,6 +359,44 @@
 
 ---
 
+## Cross-Platform Features
+
+### AGENTS.md Universal
+
+Every generation produces an `AGENTS.md` in the output directory (`assemble-output/AGENTS.md`) with:
+- Build commands reference
+- Complete agent table (ID, Marvel name, domain, @mention)
+- Workflow table with triggers
+- Usage conventions
+
+### MCP Server (opt-in)
+
+When `mcp: true` in `.assemble.yaml`, generates an MCP (Model Context Protocol) server in `.assemble/`:
+
+| File | Purpose |
+|------|---------|
+| `mcp-server.js` | Standalone Node.js server with 31+ tools (one per agent + jarvis-route) |
+| `mcp.json` | Configuration for Claude Desktop / VS Code MCP integration |
+| `mcp-package.json` | Dependencies — run `cd .assemble && npm install` to set up |
+
+The MCP server uses stdio transport and exposes each agent as an `invoke-{slug}` tool.
+
+### Cross-Session Memory (opt-in)
+
+When `memory: true`, generates `_memory.md` in the output directory. Routing rules instruct Jarvis and agents to:
+- Read memory at session start
+- Append key decisions and outcomes after each workflow
+- Maintain active context across sessions
+
+### Metrics & Observability (opt-in)
+
+When `metrics: true`, generates `_metrics.md` in the output directory with tables for:
+- Workflow execution tracking (name, timestamps, duration, steps, status)
+- Agent performance metrics
+- Trend summaries
+
+---
+
 ## Technical Notes
 
 ### File Regeneration

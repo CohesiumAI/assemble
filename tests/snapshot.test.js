@@ -487,6 +487,333 @@ console.log('\nTest 10: Governance propagation (standard) across platforms');
   cleanTmpDir();
 }
 
+// ── Test 11: Team Profiles ────────────────────────────────────────────────
+
+console.log('\nTest 11: Team profiles');
+{
+  const dir = createTmpDir();
+  fs.mkdirSync(dir, { recursive: true });
+  const configContent = `version: "1.0.0"\nprofile: "startup"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\ninstalled_at: "2026-03-19"\n`;
+  fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
+  run(['--project', dir, '--update']);
+
+  test('Profile startup: .assemble.yaml preserved', () => {
+    assert(fs.existsSync(path.join(dir, '.assemble.yaml')), '.assemble.yaml should exist');
+    assert(fs.existsSync(path.join(dir, 'CLAUDE.md')), 'CLAUDE.md should be generated');
+  });
+
+  test('Profile config override: explicit agents: all wins over startup profile', () => {
+    // Config has explicit agents: all — profile startup should NOT override to 12 agents
+    const agentsDir = path.join(dir, '.claude', 'agents');
+    const dirCount = countDirs(agentsDir);
+    assert(dirCount >= 31, `Expected >= 31 agent dirs (explicit 'all' wins over startup profile), got ${dirCount}`);
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 12: Custom Agents ───────────────────────────────────────────────
+
+console.log('\nTest 12: Custom agents');
+{
+  const dir = createTmpDir();
+  // Create a custom agent
+  const customAgentsDir = path.join(dir, '.assemble', 'agents');
+  fs.mkdirSync(customAgentsDir, { recursive: true });
+  const customAgent = `---\nname: test-hero\ndescription: A custom test agent\nmarvel: Test Hero — Custom test agent for validation\n---\n\n# Test Hero\n\nYou are Test Hero, a custom agent.\n`;
+  fs.writeFileSync(path.join(customAgentsDir, 'AGENT-custom-test.md'), customAgent);
+
+  run(['--project', dir, '--platforms', 'claude-code', '--lang-team', 'english', '--lang-output', 'english']);
+
+  test('Custom agent appears in output', () => {
+    const agentsDir = path.join(dir, '.claude', 'agents');
+    const dirCount = countDirs(agentsDir);
+    assert(dirCount >= 32, `Expected >= 32 agent dirs (31 + 1 custom), got ${dirCount}`);
+  });
+
+  test('Custom agent AGENT.md exists', () => {
+    const agentsDir = path.join(dir, '.claude', 'agents');
+    const dirs = fs.readdirSync(agentsDir);
+    const hasCustom = dirs.some(d => {
+      const agentMd = path.join(agentsDir, d, 'AGENT.md');
+      if (!fs.existsSync(agentMd)) return false;
+      return fs.readFileSync(agentMd, 'utf-8').includes('Test Hero');
+    });
+    assert(hasCustom, 'Custom agent should have AGENT.md with Test Hero content');
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 13: MCP Server ──────────────────────────────────────────────────
+
+console.log('\nTest 13: MCP server generation');
+{
+  const dir = createTmpDir();
+  fs.mkdirSync(dir, { recursive: true });
+  const configContent = `version: "1.0.0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nmcp: true\ninstalled_at: "2026-03-19"\n`;
+  fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
+  run(['--project', dir, '--update']);
+
+  test('MCP: mcp-server.js generated', () => {
+    assert(fs.existsSync(path.join(dir, '.assemble', 'mcp-server.js')), 'mcp-server.js should exist');
+  });
+
+  test('MCP: mcp.json generated', () => {
+    assert(fs.existsSync(path.join(dir, '.assemble', 'mcp.json')), 'mcp.json should exist');
+  });
+
+  test('MCP: mcp-package.json generated', () => {
+    assert(fs.existsSync(path.join(dir, '.assemble', 'mcp-package.json')), 'mcp-package.json should exist');
+  });
+
+  test('MCP: mcp-server.js contains agent tools', () => {
+    const content = fs.readFileSync(path.join(dir, '.assemble', 'mcp-server.js'), 'utf-8');
+    assert(content.includes('invoke-'), 'mcp-server.js should contain invoke- tools');
+    assert(content.includes('jarvis-route'), 'mcp-server.js should contain jarvis-route');
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 14: Cross-session memory ────────────────────────────────────────
+
+console.log('\nTest 14: Cross-session memory');
+{
+  const dir = createTmpDir();
+  fs.mkdirSync(dir, { recursive: true });
+  const configContent = `version: "1.0.0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nmemory: true\ninstalled_at: "2026-03-19"\n`;
+  fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
+  run(['--project', dir, '--update']);
+
+  test('Memory: _memory.md exists', () => {
+    assert(fs.existsSync(path.join(dir, 'assemble-output', '_memory.md')), '_memory.md should exist');
+  });
+
+  test('Memory: routing.md contains memory instructions', () => {
+    const routing = fs.readFileSync(path.join(dir, '.claude', 'rules', 'routing.md'), 'utf-8');
+    assert(routing.includes('Cross-Session Memory'), 'routing.md should contain Cross-Session Memory section');
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 15: Metrics ─────────────────────────────────────────────────────
+
+console.log('\nTest 15: Metrics');
+{
+  const dir = createTmpDir();
+  fs.mkdirSync(dir, { recursive: true });
+  const configContent = `version: "1.0.0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nmetrics: true\ninstalled_at: "2026-03-19"\n`;
+  fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
+  run(['--project', dir, '--update']);
+
+  test('Metrics: _metrics.md exists', () => {
+    assert(fs.existsSync(path.join(dir, 'assemble-output', '_metrics.md')), '_metrics.md should exist');
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 16: AGENTS.md universal ─────────────────────────────────────────
+
+console.log('\nTest 16: AGENTS.md universal');
+{
+  const dir = createTmpDir();
+  run(['--project', dir, '--platforms', 'claude-code,cursor', '--lang-team', 'english', '--lang-output', 'english']);
+
+  test('AGENTS.md exists in output directory', () => {
+    assert(fs.existsSync(path.join(dir, 'assemble-output', 'AGENTS.md')), 'AGENTS.md should exist in output');
+  });
+
+  test('AGENTS.md contains agent table', () => {
+    const content = fs.readFileSync(path.join(dir, 'assemble-output', 'AGENTS.md'), 'utf-8');
+    assert(content.includes('Agent ID'), 'AGENTS.md should contain agent table');
+    assert(content.includes('@tony-stark') || content.includes('tony-stark'), 'AGENTS.md should contain agent mentions');
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 17: Sub-agent instructions ──────────────────────────────────────
+
+console.log('\nTest 17: Sub-agent instructions');
+{
+  const dir = createTmpDir();
+  run(['--project', dir, '--platforms', 'claude-code', '--lang-team', 'english', '--lang-output', 'english']);
+
+  test('/go SKILL.md contains Agent tool instruction', () => {
+    const goSkill = fs.readFileSync(path.join(dir, '.claude', 'skills', 'go', 'SKILL.md'), 'utf-8');
+    assert(goSkill.includes('Agent tool'), '/go should reference Agent tool for sub-agents');
+  });
+
+  test('routing.md contains Sub-Agent Delegation', () => {
+    const routing = fs.readFileSync(path.join(dir, '.claude', 'rules', 'routing.md'), 'utf-8');
+    assert(routing.includes('Sub-Agent Delegation'), 'routing.md should contain Sub-Agent Delegation');
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 18: Qualitative — domain→agent mapping consistency ──────────────
+
+console.log('\nTest 18: Qualitative tests');
+{
+  const dir = createTmpDir();
+  run(['--project', dir, '--platforms', 'claude-code', '--lang-team', 'english', '--lang-output', 'english']);
+
+  // Generic/placeholder @mentions to exclude from resolution checks
+  const GENERIC_MENTIONS = new Set([
+    'agent-name', 'name', 'agent', 'nom-agent', 'marvel-name',
+    'mention', 'imports', 'slug', 'ref',
+  ]);
+
+  test('Domain→agent: every slug in routing.md Domain Mapping has an agent directory', () => {
+    const routing = fs.readFileSync(path.join(dir, '.claude', 'rules', 'routing.md'), 'utf-8');
+    const agentsDir = path.join(dir, '.claude', 'agents');
+    const agentDirs = fs.readdirSync(agentsDir);
+    // Only check the Domain → Agent Mapping section (inside ``` block)
+    const mappingMatch = routing.match(/## Domain → Agent Mapping\n\n```\n([\s\S]*?)```/);
+    if (!mappingMatch) { assert(false, 'routing.md missing Domain → Agent Mapping section'); return; }
+    const mentions = mappingMatch[1].match(/@([\w-]+)/g) || [];
+    const slugs = [...new Set(mentions.map(m => m.slice(1)))];
+    const missing = slugs.filter(s => !GENERIC_MENTIONS.has(s) && !agentDirs.includes(s));
+    assert(missing.length === 0, `Missing agent dirs for routing slugs: ${missing.join(', ')}`);
+  });
+
+  test('@mention resolution: agent @mentions in teams.md resolve to agent dirs', () => {
+    const teamsContent = fs.readFileSync(path.join(dir, '.claude', 'rules', 'teams.md'), 'utf-8');
+    const agentsDir = path.join(dir, '.claude', 'agents');
+    const agentDirs = fs.readdirSync(agentsDir);
+    // Only match @mentions inside backticks (actual agent references)
+    const mentions = teamsContent.match(/`@([\w-]+)`/g) || [];
+    const slugs = [...new Set(mentions.map(m => m.slice(2, -1)))];
+    const missing = slugs.filter(s => !GENERIC_MENTIONS.has(s) && !agentDirs.includes(s));
+    assert(missing.length === 0, `Unresolved @mentions in teams.md: ${missing.join(', ')}`);
+  });
+
+  test('Workflow step agents: @mentions in workflow SKILLs resolve to agent dirs', () => {
+    const skillsDir = path.join(dir, '.claude', 'skills');
+    const agentsDir = path.join(dir, '.claude', 'agents');
+    const agentDirs = fs.readdirSync(agentsDir);
+    const missing = [];
+    for (const slug of ['review', 'bugfix', 'feature', 'sprint', 'release', 'mvp']) {
+      const skillPath = path.join(skillsDir, slug, 'SKILL.md');
+      if (!fs.existsSync(skillPath)) continue;
+      const content = fs.readFileSync(skillPath, 'utf-8');
+      // Only match backtick-wrapped @mentions (actual agent refs in step instructions)
+      const refs = content.match(/`@([\w-]+)`/g) || [];
+      for (const ref of refs) {
+        const s = ref.slice(2, -1);
+        if (!GENERIC_MENTIONS.has(s) && !agentDirs.includes(s)) {
+          missing.push(`${slug}: @${s}`);
+        }
+      }
+    }
+    assert(missing.length === 0, `Workflow skills reference missing agents: ${missing.join(', ')}`);
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 19: Governance strict ───────────────────────────────────────────
+
+console.log('\nTest 19: Governance strict');
+{
+  const dir = createTmpDir();
+  fs.mkdirSync(dir, { recursive: true });
+  const configContent = `version: "1.0.0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "strict"\ninstalled_at: "2026-03-19"\n`;
+  fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
+  run(['--project', dir, '--update']);
+
+  test('governance: strict — governance.md exists', () => {
+    const govPath = path.join(dir, '.claude', 'rules', 'governance', 'governance.md');
+    assert(fs.existsSync(govPath), 'governance.md should exist for strict');
+  });
+
+  test('governance: strict — contains audit trail and RBAC', () => {
+    const govContent = fs.readFileSync(path.join(dir, '.claude', 'rules', 'governance', 'governance.md'), 'utf-8');
+    assert(govContent.includes('Audit Trail'), 'Should contain Audit Trail');
+    assert(govContent.includes('RBAC'), 'Should contain RBAC');
+    assert(govContent.includes('NIST'), 'Should contain NIST mapping');
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 20: Doctor on valid install ─────────────────────────────────────
+
+console.log('\nTest 20: CLI doctor');
+{
+  const dir = createTmpDir();
+  run(['--project', dir, '--platforms', 'claude-code', '--lang-team', 'english', '--lang-output', 'english']);
+
+  test('assemble doctor exits with code 0', () => {
+    const doctorPath = path.join(ROOT, 'bin', 'doctor.js');
+    try {
+      execFileSync(process.execPath, [doctorPath, '--project', dir], { stdio: 'pipe', timeout: 30000 });
+    } catch (e) {
+      throw new Error('Doctor should exit 0 on valid install');
+    }
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 21: Boolean parsing in config ───────────────────────────────────
+
+console.log('\nTest 21: Boolean config parsing');
+{
+  const dir = createTmpDir();
+  fs.mkdirSync(dir, { recursive: true });
+  const configContent = `version: "1.0.0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nmcp: false\nmemory: false\nmetrics: false\ninstalled_at: "2026-03-19"\n`;
+  fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
+  run(['--project', dir, '--update']);
+
+  test('mcp: false — no MCP files generated', () => {
+    assert(!fs.existsSync(path.join(dir, '.assemble', 'mcp-server.js')), 'mcp-server.js should NOT exist when mcp: false');
+  });
+
+  test('memory: false — no _memory.md generated', () => {
+    assert(!fs.existsSync(path.join(dir, 'assemble-output', '_memory.md')), '_memory.md should NOT exist when memory: false');
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 22: Import skill validation ──────────────────────────────────────
+
+console.log('\nTest 22: Import skill validation');
+{
+  const dir = createTmpDir();
+  const importPath = path.join(ROOT, 'bin', 'import.js');
+
+  test('import rejects file without frontmatter', () => {
+    // Create a file without frontmatter
+    const badSkill = path.join(dir, 'bad-skill.md');
+    fs.writeFileSync(badSkill, '# No Frontmatter\n\nThis is not a valid skill.\n');
+    try {
+      execFileSync(process.execPath, [importPath, badSkill], { stdio: 'pipe', timeout: 10000, cwd: dir });
+      assert(false, 'Should have exited with error');
+    } catch (e) {
+      assert(e.status !== 0, 'Should exit with non-zero code');
+    }
+  });
+
+  test('import accepts file with valid frontmatter', () => {
+    const goodSkill = path.join(dir, 'good-skill.md');
+    fs.writeFileSync(goodSkill, '---\nname: test-skill\ndescription: "A test skill"\n---\n\n# Test Skill\n');
+    try {
+      execFileSync(process.execPath, [importPath, goodSkill], { stdio: 'pipe', timeout: 10000, cwd: dir });
+    } catch (e) {
+      assert(false, 'Import should succeed for valid skill');
+    }
+    assert(fs.existsSync(path.join(dir, '.assemble', 'skills', 'test-skill.md')), 'Skill file should exist in .assemble/skills/');
+  });
+
+  cleanTmpDir();
+}
+
 // ── Summary ──────────────────────────────────────────────────────────────────
 
 console.log('');

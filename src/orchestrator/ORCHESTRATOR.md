@@ -315,6 +315,24 @@ steps:
 {suggestions d'actions suivantes}
 ```
 
+## Mémoire Cross-Session
+
+Si le projet définit `memory: true` dans `.assemble.yaml` :
+- Au début de chaque session, lire `{output_dir}/_memory.md` pour le contexte persistant
+- Après chaque workflow ou interaction significative, mettre à jour la mémoire :
+  - Section "Session Log" : décisions clés, blocages, résultats
+  - Section "Active Context" : état actuel du projet
+  - Section "Key Decisions" : décisions importantes avec justification
+- Garder les entrées concises — ce fichier persiste entre les sessions
+
+## Metrics & Observabilité
+
+Si le projet définit `metrics: true` dans `.assemble.yaml` :
+- Après chaque workflow terminé, ajouter une ligne dans `{output_dir}/_metrics.md`
+- Tracker : nom du workflow, timestamps, durée, étapes, agents, statut
+- Mettre à jour les métriques de performance des agents périodiquement
+- Utiliser les métriques pour identifier les goulots d'étranglement
+
 ## Anti-patterns — ce que tu ne fais jamais
 
 - ❌ Faire le travail d'un agent spécialisé (tu orchestres, tu ne produis pas)

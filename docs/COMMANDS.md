@@ -103,6 +103,55 @@ When you type `/go <request>`, Jarvis:
 
 ---
 
+---
+
+## CLI Subcommands
+
+In addition to the in-session commands above, Assemble provides CLI utilities:
+
+| Command | Description |
+|---------|-------------|
+| `assemble doctor` | Health check: verifies config, generated files, Node.js version |
+| `assemble diff` | Dry run: shows what files would be created/modified without generating |
+| `assemble ls` | List active agents, workflows, skills, and configuration |
+| `assemble import <path>` | Import a skill file into `.assemble/skills/` for next generation |
+
+### Doctor
+
+```bash
+npx create-assemble doctor
+# or
+node bin/doctor.js --project /path/to/project
+```
+
+Checks: Node.js version, `.assemble.yaml` validity, output directory, generated platform files, custom agents/skills.
+
+### Diff
+
+```bash
+npx create-assemble diff
+```
+
+Shows what files would be created (new) or modified (existing) without actually regenerating. Useful for previewing changes before `--update`.
+
+### Ls
+
+```bash
+npx create-assemble ls
+```
+
+Lists the current active configuration: profile, platforms, agents, workflows, governance, and any custom agents/skills.
+
+### Import
+
+```bash
+npx create-assemble import ./my-custom-skill.md
+```
+
+Copies a skill file into `.assemble/skills/`. The skill must have YAML frontmatter with at least a `name` field. Run `--update` after importing.
+
+---
+
 ## Source File
 
 Commands are defined in `src/commands/commands.yaml` with structure: `primary_commands` (10), `hidden_shortcuts` (9), `internal_skills` (28), and `agents` (31 via @mention).

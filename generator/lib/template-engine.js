@@ -302,16 +302,53 @@ function renderCommandRegistry(agents, skills, workflows, governance = 'none') {
     out += '- LOW risk (/bugfix, /review, /docs): act, summarize post-action\n';
     out += '- MEDIUM risk (/feature, /sprint, /refactor): plan required before action\n';
     out += '- HIGH risk (/release, /hotfix, /mvp, /upgrade): risk assessment + rollback plan + approval gate\n';
+
+    if (governance === 'strict') {
+      out += '\n**RBAC Notice:** This project uses strict governance. Sensitive agents (security, devops, finance, legal) require explicit user authorization before executing. All actions are logged to `_audit.md`.\n';
+    }
   }
 
   return out;
 }
 
 /**
+ * Render cross-session memory instructions for routing.
+ * @param {object} config
+ * @returns {string}
+ */
+function renderMemoryInstructions(config) {
+  if (!config.memory) return '';
+  return `\n## Cross-Session Memory\n\n` +
+    `This project has cross-session memory enabled. After each workflow or significant interaction:\n` +
+    `- Read \`${config.output_dir || './assemble-output'}/_memory.md\` at the start of each session\n` +
+    `- Append key decisions, blockers, and outcomes to the Session Log section\n` +
+    `- Update Active Context with current project state\n` +
+    `- Record important decisions with rationale in Key Decisions\n` +
+    `- Keep entries concise — this file persists across sessions\n\n`;
+}
+
+/**
+ * Render metrics/observability template instructions.
+ * @param {object} config
+ * @returns {string}
+ */
+function renderMetricsTemplate(config) {
+  if (!config.metrics) return '';
+  return `\n## Metrics & Observability\n\n` +
+    `This project has workflow metrics enabled. After each workflow completion:\n` +
+    `- Append a row to \`${config.output_dir || './assemble-output'}/_metrics.md\` with: workflow name, timestamps, duration, steps, agents, status\n` +
+    `- Update agent performance metrics periodically\n` +
+    `- Use metrics to identify bottlenecks and improve workflow efficiency\n\n`;
+}
+
+/**
  * Generate routing rules for Jarvis.
  * Contains identity, complexity assessment, domain→agent mapping, and methodology.
+ * @param {Array} agents
+ * @param {Array} workflows
+ * @param {object} [config] - Optional config for memory/metrics sections
  */
-function renderRoutingRules(agents, workflows) {
+function renderRoutingRules(agents, workflows, config) {
   let out = '# Jarvis — Routing Intelligence\n\n';
   out += 'You are Jarvis, orchestrator of a 31-agent AI team (Assemble by Cohesium AI).\n';
   out += 'You don\'t do the work — you identify WHO should intervene, WHEN, in WHAT ORDER, and with WHAT context.\n\n';
@@ -374,9 +411,18 @@ function renderRoutingRules(agents, workflows) {
 
   // Governance
   out += '## Governance\n\n';
-  out += 'If the project has `governance: standard` in `.assemble.yaml`, load and apply rules from\n';
+  out += 'If the project has `governance: standard` or `governance: strict` in `.assemble.yaml`, load and apply rules from\n';
   out += '`.claude/rules/governance/governance.md` — decision gates, risk assessment, and quality checkpoints.\n';
+  out += 'Strict adds: audit trail (`_audit.md`), RBAC for sensitive agents, NIST AI RMF mapping.\n';
   out += 'Default: no governance overhead.\n\n';
+
+  // Sub-Agent Delegation
+  out += '## Sub-Agent Delegation\n\n';
+  out += 'When a task requires a specific agent\'s expertise during workflow execution:\n';
+  out += '- Use the Agent tool (if available) to launch `@agent-name` as a sub-agent\n';
+  out += '- Provide full context: current workflow step, inputs available, expected outputs\n';
+  out += '- The sub-agent works autonomously and returns results to the parent workflow\n';
+  out += '- For CLI platforms with Agent tool support, prefer sub-agent delegation over role-switching\n\n';
 
   // Persistence
   out += '## Persistence Behavior\n\n';
@@ -384,6 +430,12 @@ function renderRoutingRules(agents, workflows) {
   out += '- `/party` → multi-agent session, all stay active, session footer on every response\n';
   out += '- `/dismiss` is the ONLY way to end a session\n';
   out += '- Say "add [agent]" to add agents mid-session, "who\'s here?" to check roster\n';
+
+  // Append memory instructions if enabled
+  if (config) {
+    out += renderMemoryInstructions(config);
+    out += renderMetricsTemplate(config);
+  }
 
   return out;
 }
@@ -510,6 +562,36 @@ function renderGovernanceRules(level) {
     out += '- Post-mortem is optional — Jarvis offers it at workflow completion\n';
   }
 
+  if (level === 'strict') {
+    out += '## Strict Level Behavior\n\n';
+    out += 'Strict includes everything from Standard, plus:\n\n';
+    out += '- ALL decision gates are enforced, including TRIVIAL tasks (summary required)\n';
+    out += '- Risk assessment is MANDATORY for ALL workflows\n';
+    out += '- Quality checkpoint (_quality.md) is produced for ALL workflows\n';
+    out += '- Post-mortem is REQUIRED at workflow completion\n\n';
+
+    out += '### Audit Trail\n\n';
+    out += 'Every agent action MUST be logged to `_audit.md` with:\n';
+    out += '- Timestamp, agent name, action taken, inputs consumed, outputs produced\n';
+    out += '- Decision rationale for non-trivial choices\n';
+    out += '- User approvals with timestamps\n\n';
+
+    out += '### RBAC — Role-Based Access Control\n\n';
+    out += 'Sensitive operations require explicit user authorization:\n';
+    out += '- **Security agents** (@punisher, @she-hulk): security audits, compliance checks\n';
+    out += '- **DevOps agents** (@thor): deployments, infrastructure changes\n';
+    out += '- **Finance agents** (@iron-fist): budget approvals, P&L modifications\n';
+    out += '- All HIGH-risk workflow steps require per-step approval\n\n';
+
+    out += '### NIST AI RMF Mapping\n\n';
+    out += '| NIST Function | Assemble Implementation |\n';
+    out += '|---------------|------------------------|\n';
+    out += '| GOVERN | Decision gates, RBAC, audit trail |\n';
+    out += '| MAP | Domain→agent mapping, complexity assessment |\n';
+    out += '| MEASURE | _metrics.md, _quality.md, workflow tracking |\n';
+    out += '| MANAGE | Risk assessment, rollback plans, post-mortems |\n';
+  }
+
   return out;
 }
 
@@ -548,5 +630,7 @@ module.exports = {
   renderRoutingRules,
   renderCompactHelp,
   renderGovernanceRules,
+  renderMemoryInstructions,
+  renderMetricsTemplate,
   buildAgentLookup,
 };

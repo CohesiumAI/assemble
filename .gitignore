@@ -2,3 +2,9 @@ tmp-analysis/
 tmp-analysis-2/
 tmp-analysis-py/
 tmp-migrate-check/
+
+# MCP generated files
+.assemble/mcp-server.js
+.assemble/mcp.json
+.assemble/mcp-package.json
+node_modules/
