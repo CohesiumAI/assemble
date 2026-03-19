@@ -70,7 +70,7 @@ module.exports = {
       }
     }
 
-    content += renderCommandRegistry(agents, skills, workflows);
+    content += renderCommandRegistry(agents, skills, workflows, config.governance);
 
     fs.writeFileSync(path.join(projectDir, 'AGENTS.md'), content, 'utf-8');
   },

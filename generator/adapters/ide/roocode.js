@@ -101,7 +101,7 @@ module.exports = {
     }
 
     // ── Command registry ────────────────────────────────────────────────
-    fs.writeFileSync(path.join(rooDir, 'rules-commands.md'), renderCommandRegistry(agents, skills, workflows), 'utf-8');
+    fs.writeFileSync(path.join(rooDir, 'rules-commands.md'), renderCommandRegistry(agents, skills, workflows, config.governance), 'utf-8');
 
     // ── .roomodes JSON ────────────────────────────────────────────────────
     fs.writeFileSync(

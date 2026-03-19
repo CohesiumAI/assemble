@@ -245,8 +245,9 @@ function renderWorkflowInstructions(workflow, agentLookup, config) {
  * @param {Array} agents - Agent list
  * @param {object} skills - Skills (kept for backward compat with 20 adapters, not used in output)
  * @param {Array} workflows - Workflow list
+ * @param {string} governance - Governance level ('none' or 'standard')
  */
-function renderCommandRegistry(agents, skills, workflows) {
+function renderCommandRegistry(agents, skills, workflows, governance = 'none') {
   let out = '## Command Reference\n\n';
   out += 'When the user types a command starting with `/`, execute it as described below.\n\n';
 
@@ -275,6 +276,22 @@ function renderCommandRegistry(agents, skills, workflows) {
   out += '- When an agent is invoked via `@agent-name`, **stay in character** for ALL subsequent messages until `/dismiss`.\n';
   out += '- When `/party` is used, multiple agents are convoked and ALL stay active with a combined footer.\n';
   out += '- **Only `/dismiss` ends the session.** No other command or natural message ends it.\n';
+
+  // Governance (if enabled)
+  if (governance && governance !== 'none') {
+    out += '\n### Governance (' + governance + ')\n\n';
+    out += 'This project has governance enabled. Apply the following controls:\n\n';
+    out += '**Decision Gates:**\n';
+    out += '- TRIVIAL tasks: agent acts autonomously\n';
+    out += '- MODERATE tasks: produce deliverable → user validates before next step\n';
+    out += '- COMPLEX tasks: phased approval (spec → plan → tasks → implement), each phase requires user approval\n\n';
+    out += '**Change Risk Assessment:**\n';
+    out += '- LOW risk (/bugfix, /review, /docs): act, summarize post-action\n';
+    out += '- MEDIUM risk (/feature, /sprint, /refactor): plan required before action\n';
+    out += '- HIGH risk (/release, /hotfix, /mvp, /upgrade): risk assessment + rollback plan + approval gate\n\n';
+    out += '**Quality Checkpoints:**\n';
+    out += '- Workflows with 4+ steps produce `_quality.md` (delivered, validated, risks remaining, lessons learned)\n';
+  }
 
   return out;
 }

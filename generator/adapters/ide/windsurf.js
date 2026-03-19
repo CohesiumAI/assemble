@@ -68,7 +68,7 @@ module.exports = {
       rules += `- **${slug}** — ${desc}\n`;
     }
 
-    rules += '\n' + renderCommandRegistry(agents, skills, workflows);
+    rules += '\n' + renderCommandRegistry(agents, skills, workflows, config.governance);
 
     rules += `\n## Output\n\nLivrables → \`${config.output_dir || './assemble-output'}\`\n`;
     fs.writeFileSync(path.join(projectDir, '.windsurfrules'), rules, 'utf-8');

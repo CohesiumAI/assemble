@@ -323,8 +323,7 @@ User types /go <request>
       +-- Agent N --> deliverables --> _manifest.yaml updated
       |
       v
-  Consolidation → _summary.md → Report to user
-  (+ _quality.md if governance: standard)
+  Consolidation → _summary.md + _quality.md → Report to user
 ```
 
 ---
@@ -350,7 +349,9 @@ installed_at: "2026-03-19"
 
 ## Governance (optional)
 
-Assemble includes an opt-in governance layer that adds decision gates, risk assessment, and quality checkpoints to workflows. **Disabled by default** — zero overhead when not needed.
+Assemble includes an opt-in governance layer that adds **decision gates** and **change risk assessment** to workflows. Works across all 20 supported platforms. **Disabled by default** — zero overhead when not needed.
+
+> **Note:** `_quality.md` (deliverables, validations, remaining risks, lessons learned) is always produced at the end of COMPLEX workflows (4+ steps) as part of Phase 5 CLOSE — this is baseline behavior, not governance-specific. Governance adds the **gates** and **risk controls** that govern _how_ you get there.
 
 ### Enabling governance
 
@@ -368,7 +369,6 @@ Then regenerate: `npx create-assemble --update`
 |-------|-------------|
 | **Decision Gates** | TRIVIAL = agent acts freely. MODERATE = deliverable + user validation. COMPLEX = phased approval (spec → plan → tasks → implement). |
 | **Change Risk Assessment** | LOW risk (`/bugfix`, `/review`) = post-action summary. MEDIUM (`/feature`, `/sprint`) = plan required. HIGH (`/release`, `/hotfix`, `/mvp`) = risk assessment + rollback plan + approval gate. |
-| **Quality Checkpoints** | Workflows with 4+ steps produce `_quality.md`: deliverables, validations, remaining risks, lessons learned. |
 
 ### Token impact
 
@@ -377,13 +377,11 @@ Then regenerate: `npx create-assemble --update`
 | `governance: "none"` (default) | 0 extra tokens | 0 |
 | `governance: "standard"` | ~20 tokens (routing reference) | ~200 tokens (governance.md loaded when relevant) |
 
-### Generated files (when enabled)
+### How it works across platforms
 
-```
-.claude/rules/governance/governance.md   # Decision gates, risk matrix, quality checkpoints
-```
-
-This file is **not** @imported in CLAUDE.md — Jarvis loads it on-demand when the task complexity or workflow risk level requires it.
+- **All 20 platforms:** Governance rules are injected into the command registry that every adapter generates. When `governance: "standard"`, the AI receives decision gates, risk assessment, and quality checkpoint instructions as part of its rules.
+- **Claude Code (additionally):** A dedicated `.claude/rules/governance/governance.md` file is generated for on-demand loading by Jarvis.
+- **Platforms with orchestrator** (Cursor, Copilot, Cline, Windsurf, Kiro, Roo Code, Codex, Gemini CLI, Pi): Governance behavior is also embedded in the orchestrator instructions.
 
 ---
 

@@ -90,7 +90,7 @@ module.exports = {
     fs.writeFileSync(path.join(kiroSteeringDir, 'teams.md'), teams, 'utf-8');
 
     // ── Command registry ───────────────────────────────────────────────
-    fs.writeFileSync(path.join(kiroSteeringDir, 'commands.md'), renderCommandRegistry(agents, skills, workflows), 'utf-8');
+    fs.writeFileSync(path.join(kiroSteeringDir, 'commands.md'), renderCommandRegistry(agents, skills, workflows, config.governance), 'utf-8');
   },
 
   validate(projectDir) {

@@ -39,7 +39,7 @@ module.exports = {
       fs.writeFileSync(path.join(projectDir, '.antigravity', 'workflows', `${slug}.md`), content, 'utf-8');
     }
 
-    fs.writeFileSync(path.join(projectDir, '.antigravity', 'commands.md'), renderCommandRegistry(agents, skills, workflows), 'utf-8');
+    fs.writeFileSync(path.join(projectDir, '.antigravity', 'commands.md'), renderCommandRegistry(agents, skills, workflows, config.governance), 'utf-8');
   },
 
   validate(projectDir) {
