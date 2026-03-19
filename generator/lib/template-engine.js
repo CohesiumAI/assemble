@@ -374,7 +374,8 @@ function renderRoutingRules(agents, workflows, config) {
   out += 'mobile, React Native, Flutter → @ant-man\n';
   out += 'CI/CD, Docker, Kubernetes, deploy → @thor\n';
   out += 'tests, QA, regression, coverage → @hawkeye\n';
-  out += 'security, vulnerability, pentest → @punisher\n';
+  out += 'security, vulnerability, pentest, audit → @punisher\n';
+  out += 'red team, hacking, exploit, injection, offensive security → @microchip\n';
   out += 'automation, workflow, RPA → @quicksilver\n';
   out += 'product, roadmap, OKR, user stories → @professor-x\n';
   out += 'specs, requirements, analysis → @nick-fury\n';
@@ -468,7 +469,7 @@ function renderCompactHelp(agents, workflows) {
 
   const teams = {
     'Dev': ['architect', 'dev-backend', 'dev-frontend', 'dev-fullstack', 'dev-mobile', 'db'],
-    'Ops': ['devops', 'qa', 'security', 'automation'],
+    'Ops': ['devops', 'qa', 'security', 'redteam', 'automation'],
     'Product': ['pm', 'analyst', 'scrum', 'legal'],
     'Marketing': ['marketing', 'growth', 'ads', 'seo', 'content-seo', 'geo-aio'],
     'Content': ['copywriter', 'brand', 'storytelling', 'social'],

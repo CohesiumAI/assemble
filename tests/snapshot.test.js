@@ -898,7 +898,7 @@ module.exports = {
     const outputPath = path.join(dir, '.test-plugin', 'output.md');
     assert(fs.existsSync(outputPath), '.test-plugin/output.md should exist');
     const content = fs.readFileSync(outputPath, 'utf-8');
-    assert(content.includes('32 agents'), `Should contain 32 agents, got: ${content}`);
+    assert(content.includes('33 agents'), `Should contain 33 agents, got: ${content}`);
   });
 
   cleanTmpDir();

@@ -119,6 +119,7 @@ Si `governance: none` (défaut), aucune règle de gouvernance supplémentaire n'
 | customer-success | Pepper Potts | Customer Success | @pepper-potts |
 | finance | Iron Fist | Finance / CFO | @iron-fist |
 | pr-comms | Phil Coulson | PR / Communication | @phil-coulson |
+| redteam | Microchip | Red Team / Offensive Security | @microchip |
 
 ## Catalogue des workflows prédéfinis
 
