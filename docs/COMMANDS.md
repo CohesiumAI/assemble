@@ -1,6 +1,6 @@
 # Command Reference — 10 Commands
 
-> **10 primary commands** that expose the full power of 31 agents, 15 workflows, and 28 skills. Jarvis smart routing handles complexity assessment and agent selection.
+> **10 primary commands** that expose the full power of 33 agents, 15 workflows, and 28 skills. Jarvis smart routing handles complexity assessment and agent selection.
 
 ---
 
@@ -11,7 +11,7 @@
 | System Commands | 4 | `/go`, `/party`, `/dismiss`, `/help` |
 | Workflow Shortcuts | 6 | `/review`, `/bugfix`, `/feature`, `/sprint`, `/release`, `/mvp` |
 | Hidden Shortcuts | 9 | Work if typed, not in autocomplete |
-| Agent Access | 31 | Via `@marvel-name` mentions |
+| Agent Access | 33 | Via `@marvel-name` mentions |
 | **Total visible** | **10** | |
 
 ---
@@ -31,7 +31,7 @@
 
 | # | Command | Workflow | Agent Chain |
 |---|---------|----------|-------------|
-| 5 | `/review` | Code Review Pipeline | Fullstack → QA → Security → Contrarian |
+| 5 | `/review` | Code Review Pipeline | Fullstack → QA → Security → Red Team → Contrarian |
 | 6 | `/bugfix` | Bug Fix | QA → Fullstack → QA |
 | 7 | `/feature` | Feature Development | PM → Analyst → Architect → Dev → QA |
 | 8 | `/sprint` | Sprint Cycle | Scrum → PM → Fullstack → QA → DevOps |
@@ -54,11 +54,11 @@ These commands work if typed directly but don't appear in autocomplete. They are
 | `/experiment` | Experimentation | PM → Data → Fullstack → QA → Growth |
 | `/onboard` | Project Onboarding | PM → Analyst → Architect → Scrum |
 | `/docs` | Documentation Sprint | Analyst → Architect → Fullstack → Copywriter → DevOps |
-| `/security` | Security Audit | Security → Backend → DevOps → Legal |
+| `/security` | Security Audit | Security → Red Team → Backend → DevOps → Legal |
 
 ---
 
-## Agent Access (31)
+## Agent Access (33)
 
 All agents are accessible via `@marvel-name` mentions. Use `@tony-stark`, `@professor-x`, etc. directly in your prompt.
 
@@ -82,7 +82,7 @@ When you type `/go <request>`, Jarvis:
    - **IMPLEMENT** (Dev agents) → code + tests
    - **CLOSE** (Jarvis) → produces `_quality.md` (automatic)
 
-3. **Selects and chains agents** from the 31-agent roster based on domain matching.
+3. **Selects and chains agents** from the 33-agent roster based on domain matching.
 
 4. **If governance is enabled** (`governance: "standard"` in `.assemble.yaml`):
    - Applies change risk assessment (LOW/MEDIUM/HIGH) per workflow

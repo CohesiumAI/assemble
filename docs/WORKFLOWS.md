@@ -11,8 +11,8 @@
 | 1 | MVP Launch | `/mvp` | PM → Architect → UX → Brand → DB → Backend → Frontend → QA → DevOps | Launch an MVP from vision to deployment (9 steps) |
 | 2 | Feature Development | `/feature` | PM → Analyst → Architect → Backend → Frontend → QA | Develop a new feature from spec to validation |
 | 3 | Bug Fix | `/bugfix` | QA → Fullstack → QA | Structured bug fix from analysis to verification |
-| 4 | Code Review Pipeline | `/review-pipeline` | Fullstack → QA → Security → Contrarian | Multi-perspective code review pipeline |
-| 5 | Security Audit | `/audit-security` | Security → Backend → DevOps → Legal | Comprehensive security audit with remediation |
+| 4 | Code Review Pipeline | `/review` | Fullstack → QA → Security → Red Team → Contrarian | Multi-perspective code review with offensive testing |
+| 5 | Security Audit | `/security` | Security → Red Team → Backend → DevOps → Legal | Full security audit with red team pentest |
 | 6 | SEO Content Pipeline | `/seo-pipeline` | SEO → Content-SEO → Copywriter → GEO/AIO | Create SEO-optimized content end to end |
 | 7 | Marketing Campaign | `/campaign` | Marketing → Finance → Brand → Copywriter → Ads + Social + PR → Growth | Multi-channel marketing campaign (8 steps) |
 | 8 | Sprint Cycle | `/sprint` | Scrum → PM → Fullstack → QA → DevOps | Complete agile sprint cycle |

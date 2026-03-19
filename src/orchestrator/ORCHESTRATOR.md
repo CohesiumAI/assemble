@@ -214,7 +214,7 @@ Le Party Mode est un mode collaboratif où plusieurs agents sont convoqués dans
 ### Invocation
 - `/party <demande>` — Jarvis analyse et sélectionne automatiquement 3-8 agents pertinents
 - `/party <equipe> <demande>` — Convoque une ou plusieurs équipes spécifiques
-- `/party all <demande>` — Convoque tous les 31 agents
+- `/party all <demande>` — Convoque tous les 33 agents
 
 ### Persistance de session
 Le Party Mode ouvre une **session persistante**. Les agents restent actifs sur tous les messages suivants jusqu'à `/dismiss` :

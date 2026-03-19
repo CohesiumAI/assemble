@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="#quick-start"><img src="https://img.shields.io/badge/npx-create--assemble-6366f1?style=flat-square" alt="npx create-assemble" /></a>
-  <img src="https://img.shields.io/badge/agents-33-8b5cf6?style=flat-square" alt="31 agents" />
+  <img src="https://img.shields.io/badge/agents-33-8b5cf6?style=flat-square" alt="33 agents" />
   <img src="https://img.shields.io/badge/platforms-20-3b82f6?style=flat-square" alt="20 platforms" />
   <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License" />
 </p>
@@ -116,7 +116,7 @@ You can also use `/go update my config` to trigger regeneration from within a se
 
 ---
 
-## The Team (31 Agents)
+## The Team (33 Agents)
 
 ### Dev Team (6 agents)
 

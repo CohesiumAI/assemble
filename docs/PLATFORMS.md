@@ -273,7 +273,7 @@
 
 ### 16. Claude Code
 
-**Description:** Claude Code CLI (Anthropic) — The **reference platform** with the most complete adapter. Uses a Jarvis-first architecture with 10 commands, 31 agents via @mention, and spec-driven methodology.
+**Description:** Claude Code CLI (Anthropic) — The **reference platform** with the most complete adapter. Uses a Jarvis-first architecture with 10 commands, 33 agents via @mention, and spec-driven methodology.
 
 **Generated files:**
 

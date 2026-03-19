@@ -128,7 +128,7 @@ Cross-functional skills available to multiple agents. Any agent that owns a skil
 
 **Description:** Generate technical and functional documentation including README files, Architecture Decision Records (ADRs), architecture guides, OpenAPI documentation, user guides, operational runbooks, and changelogs.
 
-**Agents:** all agents (31 agents)
+**Agents:** all agents (33 agents)
 
 **When to use:**
 - At the start of a new project

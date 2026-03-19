@@ -1,6 +1,6 @@
-# Agent Catalog — 31 Specialized Agents
+# Agent Catalog — 33 Specialized Agents
 
-> **31 agents** (29 specialists + 1 contrarian + 1 orchestrator) organized into **9 teams**.
+> **33 agents** (30 specialists + 1 red team + 1 contrarian + 1 orchestrator) organized into **9 teams**.
 
 ---
 
@@ -16,30 +16,31 @@
 | 6 | `db` | Doctor Strange | Senior Database Architect | `@doctor-strange` | dev |
 | 7 | `devops` | Thor | Senior DevOps / SRE | `@thor` | ops |
 | 8 | `qa` | Hawkeye | Senior QA / Testing Engineer | `@hawkeye` | ops |
-| 9 | `security` | Punisher | Senior Security Expert / Pentester | `@punisher` | ops |
-| 10 | `automation` | Quicksilver | Senior Automation Expert | `@quicksilver` | ops |
-| 11 | `pm` | Professor X | Senior Product Manager | `@professor-x` | product |
-| 12 | `analyst` | Nick Fury | Senior Business Analyst | `@nick-fury` | product |
-| 13 | `scrum` | Captain America | Senior Scrum Master / Agile Coach | `@captain-america` | product |
-| 14 | `legal` | She-Hulk | Senior Digital & AI Legal Counsel | `@she-hulk` | product |
-| 15 | `marketing` | Star-Lord | Senior Marketing Director / CMO | `@star-lord` | marketing |
-| 16 | `growth` | Rocket Raccoon | Senior Growth Hacker | `@rocket-raccoon` | marketing |
-| 17 | `ads` | Gamora | Senior Paid Media / Ads Expert | `@gamora` | marketing |
-| 18 | `seo` | Black Widow | Senior Technical SEO Expert | `@black-widow` | marketing |
-| 19 | `content-seo` | Storm | Senior Content SEO Expert | `@storm` | marketing |
-| 20 | `geo-aio` | Jean Grey | Senior GEO / AIO Expert | `@jean-grey` | marketing |
-| 21 | `copywriter` | Loki | Senior Copywriter | `@loki` | content |
-| 22 | `brand` | Black Panther | Senior Brand Strategist | `@black-panther` | content |
-| 23 | `storytelling` | Silver Surfer | Senior Storytelling Expert | `@silver-surfer` | content |
-| 24 | `social` | Ms. Marvel | Senior Social Media Manager | `@ms-marvel` | content |
-| 25 | `data` | Beast | Senior Data Analyst | `@beast` | data |
-| 26 | `ai-engineer` | Vision | Senior AI Engineer | `@vision` | data |
-| 27 | `ux` | Invisible Woman | Senior UX Designer | `@invisible-woman` | design |
-| 28 | `customer-success` | Pepper Potts | Senior Customer Success Manager | `@pepper-potts` | business |
-| 29 | `finance` | Iron Fist | Senior CFO / Financial Director | `@iron-fist` | business |
-| 30 | `pr-comms` | Phil Coulson | Senior Communications Director | `@phil-coulson` | business |
-| 31 | `contrarian` | Deadpool | Devil's Advocate | `@deadpool` | meta |
-| 32 | `jarvis` | Jarvis (J.A.R.V.I.S.) | Chief Orchestrator | *(automatic)* | meta |
+| 9 | `security` | Punisher | Senior Security Expert (Blue Team) | `@punisher` | ops |
+| 10 | `redteam` | Microchip | Red Team / Offensive Security | `@microchip` | ops |
+| 11 | `automation` | Quicksilver | Senior Automation Expert | `@quicksilver` | ops |
+| 12 | `pm` | Professor X | Senior Product Manager | `@professor-x` | product |
+| 13 | `analyst` | Nick Fury | Senior Business Analyst | `@nick-fury` | product |
+| 14 | `scrum` | Captain America | Senior Scrum Master / Agile Coach | `@captain-america` | product |
+| 15 | `legal` | She-Hulk | Senior Digital & AI Legal Counsel | `@she-hulk` | product |
+| 16 | `marketing` | Star-Lord | Senior Marketing Director / CMO | `@star-lord` | marketing |
+| 17 | `growth` | Rocket Raccoon | Senior Growth Hacker | `@rocket-raccoon` | marketing |
+| 18 | `ads` | Gamora | Senior Paid Media / Ads Expert | `@gamora` | marketing |
+| 19 | `seo` | Black Widow | Senior Technical SEO Expert | `@black-widow` | marketing |
+| 20 | `content-seo` | Storm | Senior Content SEO Expert | `@storm` | marketing |
+| 21 | `geo-aio` | Jean Grey | Senior GEO / AIO Expert | `@jean-grey` | marketing |
+| 22 | `copywriter` | Loki | Senior Copywriter | `@loki` | content |
+| 23 | `brand` | Black Panther | Senior Brand Strategist | `@black-panther` | content |
+| 24 | `storytelling` | Silver Surfer | Senior Storytelling Expert | `@silver-surfer` | content |
+| 25 | `social` | Ms. Marvel | Senior Social Media Manager | `@ms-marvel` | content |
+| 26 | `data` | Beast | Senior Data Analyst | `@beast` | data |
+| 27 | `ai-engineer` | Vision | Senior AI Engineer | `@vision` | data |
+| 28 | `ux` | Invisible Woman | Senior UX Designer | `@invisible-woman` | design |
+| 29 | `customer-success` | Pepper Potts | Senior Customer Success Manager | `@pepper-potts` | business |
+| 30 | `finance` | Iron Fist | Senior CFO / Financial Director | `@iron-fist` | business |
+| 31 | `pr-comms` | Phil Coulson | Senior Communications Director | `@phil-coulson` | business |
+| 32 | `contrarian` | Deadpool | Devil's Advocate | `@deadpool` | meta |
+| 33 | `jarvis` | Jarvis (J.A.R.V.I.S.) | Chief Orchestrator | `@jarvis` | meta |
 
 ---
 

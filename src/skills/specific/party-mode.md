@@ -26,7 +26,7 @@ Once a session is opened (via `/party` or single agent invocation like `@tony-st
 |---------|--------|
 | `/party <request>` | Open session — Jarvis auto-selects relevant agents + Deadpool |
 | `/party <team> <request>` | Open session with specific team(s): dev, ops, product, marketing, content, data, design, business |
-| `/party all <request>` | Open session with all 31 agents |
+| `/party all <request>` | Open session with all 33 agents |
 | `/dismiss <agent>` | Remove a specific agent from the session |
 | `/dismiss` | Close the session — all agents leave |
 
