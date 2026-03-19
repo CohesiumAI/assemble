@@ -398,6 +398,22 @@ Profiles provide sensible defaults that can be overridden by explicit config:
 | `agency` | 16 marketing/content agents | none | Agencies, consultancies |
 | `custom` | your choice | your choice | Full control |
 
+**Impact example — `profile: startup` vs `profile: custom` (all agents):**
+
+```diff
+  # .assemble.yaml
+- profile: "custom"
+- agents: all                    # 31 agents, 15 workflows
++ profile: "startup"
++                                # 12 agents: pm, architect, dev-backend,
++                                #   dev-frontend, dev-fullstack, qa, devops,
++                                #   growth, copywriter, data, ux, contrarian
++                                # 6 workflows: mvp-launch, feature-development,
++                                #   bug-fix, sprint-cycle, hotfix-release, experimentation
+```
+
+The startup profile generates **60% fewer config files** while keeping the core dev+ship loop. Add `agents: all` to override and get the full roster back.
+
 ### Extensibility
 
 **Custom agents:** Drop `AGENT-*.md` files in `.assemble/agents/` — they're auto-discovered and merged during generation. Same slug overrides built-in.

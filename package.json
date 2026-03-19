@@ -35,7 +35,7 @@
     "install-agents": "node bin/cli.js",
     "generate": "node generator/generate.js",
     "validate": "node generator/generate.js --validate",
-    "test": "node tests/snapshot.test.js && node tests/integration-full.js",
+    "test": "node tests/unit.test.js && node tests/snapshot.test.js && node tests/integration-full.js",
     "doctor": "node bin/doctor.js",
     "diff": "node bin/diff.js",
     "ls": "node bin/ls.js"

@@ -181,15 +181,15 @@ async function main() {
   }
 
   // 1. Team language
-  print('\n\x1b[1m\x1b[34m▸ 1/9 — Team language\x1b[0m\n');
+  print('\n\x1b[1m\x1b[34m▸ 1/11 — Team language\x1b[0m\n');
   const langTeam = await ask('Team language (français, english, deutsch...)', 'français');
 
   // 2. Output language
-  print('\n\x1b[1m\x1b[34m▸ 2/9 — Deliverable language\x1b[0m\n');
+  print('\n\x1b[1m\x1b[34m▸ 2/11 — Deliverable language\x1b[0m\n');
   const langOutput = await ask('Deliverable language', langTeam);
 
   // 3. Profile
-  print('\n\x1b[1m\x1b[34m▸ 3/9 — Team profile\x1b[0m\n');
+  print('\n\x1b[1m\x1b[34m▸ 3/11 — Team profile\x1b[0m\n');
   print('  1) startup   — Lean team, ship fast');
   print('  2) enterprise — Full team with strict governance');
   print('  3) agency     — Marketing & content focus');
@@ -199,7 +199,7 @@ async function main() {
   const profile = profileMap[profileChoice] || 'custom';
 
   // 4. Platforms
-  print('\n\x1b[1m\x1b[34m▸ 4/9 — IDE/CLI selection\x1b[0m\n');
+  print('\n\x1b[1m\x1b[34m▸ 4/11 — IDE/CLI selection\x1b[0m\n');
   print('  IDE:');
   PLATFORMS.ide.forEach(([, name], i) => print(`  ${String(i + 1).padStart(2)}) ${name}`));
   print('\n  CLI:');
@@ -219,20 +219,20 @@ async function main() {
   print(`\x1b[32m  ✓ ${selectedPlatforms.length} platforms selected\x1b[0m`);
 
   // 5. Directory
-  print('\n\x1b[1m\x1b[34m▸ 5/9 — Project directory\x1b[0m\n');
+  print('\n\x1b[1m\x1b[34m▸ 5/11 — Project directory\x1b[0m\n');
   const projectDir = path.resolve(await ask('Project directory', '.'));
 
   // 6. Output
-  print('\n\x1b[1m\x1b[34m▸ 6/9 — Output directory\x1b[0m\n');
+  print('\n\x1b[1m\x1b[34m▸ 6/11 — Output directory\x1b[0m\n');
   const outputDir = await ask('Deliverable output directory', './assemble-output');
 
   // 7. MCP Server
-  print('\n\x1b[1m\x1b[34m▸ 7/9 — MCP server\x1b[0m\n');
+  print('\n\x1b[1m\x1b[34m▸ 7/11 — MCP server\x1b[0m\n');
   const mcpChoice = await ask('Enable MCP server? (y/n)', 'n');
   const mcp = ['y', 'o'].includes(mcpChoice.toLowerCase());
 
   // 8. Governance
-  print('\n\x1b[1m\x1b[34m▸ 8/9 — Governance level\x1b[0m\n');
+  print('\n\x1b[1m\x1b[34m▸ 8/11 — Governance level\x1b[0m\n');
   print('  1) none     — No governance overhead (default)');
   print('  2) standard — Decision gates + risk assessment');
   print('  3) strict   — Full audit trail + RBAC + NIST mapping\n');
@@ -241,8 +241,18 @@ async function main() {
   const govMap = { '1': 'none', '2': 'standard', '3': 'strict' };
   const governance = govMap[govChoice] || 'none';
 
-  // 9. Confirmation
-  print('\n\x1b[1m\x1b[34m▸ 9/9 — Confirmation\x1b[0m\n');
+  // 9. Cross-session memory
+  print('\n\x1b[1m\x1b[34m▸ 9/11 — Cross-session memory\x1b[0m\n');
+  const memoryChoice = await ask('Enable cross-session memory? (y/n)', 'n');
+  const memory = ['y', 'o'].includes(memoryChoice.toLowerCase());
+
+  // 10. Metrics
+  print('\n\x1b[1m\x1b[34m▸ 10/11 — Workflow metrics\x1b[0m\n');
+  const metricsChoice = await ask('Enable workflow metrics? (y/n)', 'n');
+  const metrics = ['y', 'o'].includes(metricsChoice.toLowerCase());
+
+  // 11. Confirmation
+  print('\n\x1b[1m\x1b[34m▸ 11/11 — Confirmation\x1b[0m\n');
   print(`  Profile        : \x1b[1m${profile}\x1b[0m`);
   print(`  Team language  : \x1b[1m${langTeam}\x1b[0m`);
   print(`  Output language: \x1b[1m${langOutput}\x1b[0m`);
@@ -251,6 +261,8 @@ async function main() {
   print(`  Output         : \x1b[1m${outputDir}\x1b[0m`);
   print(`  MCP server     : \x1b[1m${mcp ? 'yes' : 'no'}\x1b[0m`);
   print(`  Governance     : \x1b[1m${governance}\x1b[0m`);
+  print(`  Memory         : \x1b[1m${memory ? 'yes' : 'no'}\x1b[0m`);
+  print(`  Metrics        : \x1b[1m${metrics ? 'yes' : 'no'}\x1b[0m`);
   print('');
 
   const confirm = await ask('Start installation?', 'Y');
@@ -288,8 +300,8 @@ async function main() {
     lines.push(`governance: "${governance}"`);
   }
   lines.push(`mcp: ${mcp ? 'true' : 'false'}`);
-  lines.push('memory: false');
-  lines.push('metrics: false');
+  lines.push(`memory: ${memory ? 'true' : 'false'}`);
+  lines.push(`metrics: ${metrics ? 'true' : 'false'}`);
   lines.push(`installed_at: "${today}"`);
   lines.push(`updated_at: "${today}"`);
   lines.push('');

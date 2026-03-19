@@ -41,9 +41,10 @@ const ADAPTERS_DIR = path.join(__dirname, 'adapters');
 
 // ─── Chargement des adaptateurs ──────────────────────────────────────────────
 
-function loadAdapters() {
+function loadAdapters(projectDir) {
   const adapters = {};
 
+  // Built-in adapters
   for (const subdir of ['ide', 'cli']) {
     const dir = path.join(ADAPTERS_DIR, subdir);
     if (!fs.existsSync(dir)) continue;
@@ -54,6 +55,25 @@ function loadAdapters() {
         adapters[adapter.name] = adapter;
       } catch (err) {
         console.warn(`⚠️  Impossible de charger l'adaptateur ${file}: ${err.message}`);
+      }
+    }
+  }
+
+  // Plugin adapters from .assemble/adapters/ (user-provided, override built-in if same name)
+  if (projectDir) {
+    const pluginDir = path.join(projectDir, '.assemble', 'adapters');
+    if (fs.existsSync(pluginDir)) {
+      for (const file of fs.readdirSync(pluginDir).filter(f => f.endsWith('.js'))) {
+        try {
+          const adapter = require(path.resolve(pluginDir, file));
+          if (adapter.name && typeof adapter.generate === 'function') {
+            adapters[adapter.name] = adapter;
+          } else {
+            console.warn(`⚠️  Plugin adapter ${file}: missing name or generate() — skipped`);
+          }
+        } catch (err) {
+          console.warn(`⚠️  Plugin adapter ${file}: ${err.message}`);
+        }
       }
     }
   }
@@ -335,6 +355,28 @@ function generate() {
   }
   console.log(`  ✓ ${workflows.length} workflows chargés`);
 
+  // Charger les custom workflows depuis .assemble/workflows/
+  const customWorkflowsDir = path.join(projectDir, '.assemble', 'workflows');
+  if (fs.existsSync(customWorkflowsDir)) {
+    const customWfFiles = fs.readdirSync(customWorkflowsDir).filter(f => f.endsWith('.yaml') || f.endsWith('.yml'));
+    for (const file of customWfFiles) {
+      const raw = fs.readFileSync(path.join(customWorkflowsDir, file), 'utf-8');
+      const wfId = file.replace(/\.(yaml|yml)$/, '');
+      const existingIdx = workflows.findIndex(w => {
+        return (w.fileName || '').replace(/\.(yaml|yml)$/, '') === wfId;
+      });
+      const wf = { fileName: file, raw, meta: {} };
+      if (existingIdx >= 0) {
+        workflows[existingIdx] = wf;
+      } else {
+        workflows.push(wf);
+      }
+    }
+    if (customWfFiles.length > 0) {
+      console.log(`  ✓ ${customWfFiles.length} custom workflows chargés depuis .assemble/workflows/`);
+    }
+  }
+
   const commands = loadCommands(COMMANDS_FILE);
   console.log(`  ✓ Registre de commandes chargé`);
 
@@ -344,8 +386,8 @@ function generate() {
   // Préparer les agents (injection langue + output)
   const preparedAgents = agents.map(a => prepareAgent(a, config));
 
-  // Charger les adaptateurs
-  const adapters = loadAdapters();
+  // Charger les adaptateurs (built-in + plugins from .assemble/adapters/)
+  const adapters = loadAdapters(projectDir);
   console.log(`  ✓ ${Object.keys(adapters).length} adaptateurs disponibles`);
   console.log('');
 
@@ -487,6 +529,30 @@ Track workflow execution metrics for observability and continuous improvement.
     if (!fs.existsSync(metricsPath)) {
       fs.writeFileSync(metricsPath, metricsContent, 'utf-8');
       console.log('📊 Workflow _metrics.md created');
+    }
+  }
+
+  // ─── Audit trail template (governance: strict) ──────────────────────────────
+  if (config.governance === 'strict') {
+    const auditContent = `# Assemble — Audit Trail
+
+## Purpose
+Log of all agent actions for governance compliance. Required by \`governance: strict\`.
+
+## Format
+| Timestamp | Agent | Action | Inputs | Outputs | Approved By |
+|-----------|-------|--------|--------|---------|-------------|
+<!-- Jarvis appends a row for every agent action -->
+
+## Approval Log
+| Timestamp | Phase | Decision | User |
+|-----------|-------|----------|------|
+<!-- Logged at each governance gate -->
+`;
+    const auditPath = path.join(outputPath, '_audit.md');
+    if (!fs.existsSync(auditPath)) {
+      fs.writeFileSync(auditPath, auditContent, 'utf-8');
+      console.log('📋 Audit trail _audit.md created (governance: strict)');
     }
   }
 

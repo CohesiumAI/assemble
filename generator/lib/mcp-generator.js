@@ -129,14 +129,27 @@ function resolveAgentPath(slug) {
 
 // ─── Jarvis Route (smart routing) ──────────────────────────────────────────
 
+const AGENT_REGISTRY = {
+${agents.map(a => `  "${marvelSlug(a)}": { id: "${agentId(a)}", name: "${marvelDisplayName(a).replace(/"/g, '\\"')}" }`).join(',\n')}
+};
+
 server.tool("jarvis-route", "Jarvis smart routing — analyzes request, assesses complexity, selects agents", { request: { type: "string", description: "User request to route" } }, async ({ request }) => {
   const workflows = {
 ${workflowTriggers}
   };
+  // Return structured JSON for programmatic consumption
+  const routing = {
+    request,
+    complexity: "MODERATE",
+    suggested_agents: Object.keys(AGENT_REGISTRY).slice(0, 3),
+    available_workflows: workflows,
+    agent_count: Object.keys(AGENT_REGISTRY).length,
+    methodology: "Assess complexity: TRIVIAL (single agent) | MODERATE (2-3 agents) | COMPLEX (spec-driven 5 phases)",
+  };
   return {
     content: [{
       type: "text",
-      text: \`[Jarvis] Routing: \${request}\\n\\nAvailable workflows: \${Object.entries(workflows).map(([k,v]) => \`\${k} → \${v}\`).join(", ")}\`
+      text: JSON.stringify(routing, null, 2)
     }]
   };
 });

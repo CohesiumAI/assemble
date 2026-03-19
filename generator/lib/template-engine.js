@@ -583,6 +583,22 @@ function renderGovernanceRules(level) {
     out += '- **Finance agents** (@iron-fist): budget approvals, P&L modifications\n';
     out += '- All HIGH-risk workflow steps require per-step approval\n\n';
 
+    out += '**Example RBAC interactions:**\n\n';
+    out += '```\n';
+    out += 'User: /go deploy to production\n';
+    out += 'Jarvis: This requires @thor (DevOps). Deploying to production is a HIGH-risk\n';
+    out += '        action under strict governance. Before proceeding:\n';
+    out += '        1. Risk assessment required → producing risk-assessment.md\n';
+    out += '        2. Explicit approval needed for @thor to execute deployment\n';
+    out += '        Approve @thor for production deployment? [yes/no]\n';
+    out += '\n';
+    out += 'User: /go run security audit on auth module\n';
+    out += 'Jarvis: This requires @punisher (Security). Under strict governance,\n';
+    out += '        security audits require authorization.\n';
+    out += '        Approve @punisher for security audit? [yes/no]\n';
+    out += '        → After approval, all findings logged to _audit.md\n';
+    out += '```\n\n';
+
     out += '### NIST AI RMF Mapping\n\n';
     out += '| NIST Function | Assemble Implementation |\n';
     out += '|---------------|------------------------|\n';

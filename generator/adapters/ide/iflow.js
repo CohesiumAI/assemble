@@ -5,7 +5,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { prepareAgent, renderAgent, marvelSlug, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions, renderCommandRegistry } = require('../../lib/template-engine');
+const { prepareAgent, renderAgent, marvelSlug, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions, renderCommandRegistry, renderOrchestrator } = require('../../lib/template-engine');
 
 module.exports = {
   name: 'iflow',
@@ -46,6 +46,9 @@ module.exports = {
     }
 
     fs.writeFileSync(path.join(projectDir, '.iflow', 'commands.md'), renderCommandRegistry(agents, skills, workflows, config.governance), 'utf-8');
+    if (orchestrator) {
+      fs.writeFileSync(path.join(projectDir, '.iflow', 'orchestrator.md'), renderOrchestrator(orchestrator, config), 'utf-8');
+    }
   },
 
   validate(projectDir) {
