@@ -1,4 +1,22 @@
-# Assemble — AI Agent Orchestrator
+<p align="center">
+  <img src="assets/logo.svg" width="160" height="160" alt="Assemble logo" />
+</p>
+
+<h1 align="center">Assemble</h1>
+
+<p align="center">
+  <strong>Your 31-agent AI team</strong><br>
+  <em>An open-source project by <a href="https://cohesium.ai">Cohesium AI</a></em>
+</p>
+
+<p align="center">
+  <a href="#quick-start"><img src="https://img.shields.io/badge/npx-create--assemble-6366f1?style=flat-square" alt="npx create-assemble" /></a>
+  <img src="https://img.shields.io/badge/agents-31-8b5cf6?style=flat-square" alt="31 agents" />
+  <img src="https://img.shields.io/badge/platforms-20-3b82f6?style=flat-square" alt="20 platforms" />
+  <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License" />
+</p>
+
+---
 
 > Transform any IDE or CLI into a full interdisciplinary team of **31 specialized AI agents**, organized in **9 teams**, with **15 automated workflows**, **28 skills**, and **10 commands** — deployable across **20 platforms** (15 IDE + 5 CLI). Powered by Jarvis smart routing and spec-driven methodology.
 

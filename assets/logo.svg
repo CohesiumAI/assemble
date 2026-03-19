@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grad2" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grad3" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" style="stop-color:#a78bfa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Circle background -->
+  <circle cx="256" cy="256" r="248" fill="#0f172a" />
+  <circle cx="256" cy="256" r="240" fill="none" stroke="url(#grad1)" stroke-width="3" opacity="0.4" />
+
+  <!-- "A" shape — built from 5 assembled pieces (representing agents coming together) -->
+
+  <!-- Left leg of A — piece 1 -->
+  <polygon points="148,400 220,400 256,180 204,180" fill="url(#grad1)" />
+
+  <!-- Right leg of A — piece 2 -->
+  <polygon points="292,400 364,400 308,180 256,180" fill="url(#grad2)" />
+
+  <!-- Crossbar — piece 3 (the bridge that connects) -->
+  <rect x="188" y="300" width="136" height="32" rx="4" fill="url(#grad3)" />
+
+  <!-- Arrow/chevron at top — piece 4 (pointing up, evoking direction/leadership) -->
+  <polygon points="256,88 296,160 276,160 256,120 236,160 216,160" fill="#e0e7ff" />
+
+  <!-- Orbital dots — representing the 31 agents in orbit -->
+  <circle cx="120" cy="180" r="8" fill="#6366f1" opacity="0.7" />
+  <circle cx="100" cy="256" r="6" fill="#8b5cf6" opacity="0.5" />
+  <circle cx="120" cy="332" r="7" fill="#a78bfa" opacity="0.6" />
+  <circle cx="392" cy="180" r="7" fill="#6366f1" opacity="0.6" />
+  <circle cx="412" cy="256" r="8" fill="#8b5cf6" opacity="0.7" />
+  <circle cx="392" cy="332" r="6" fill="#a78bfa" opacity="0.5" />
+  <circle cx="180" cy="120" r="6" fill="#818cf8" opacity="0.5" />
+  <circle cx="332" cy="120" r="6" fill="#818cf8" opacity="0.5" />
+</svg>
