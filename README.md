@@ -22,11 +22,17 @@
 
 ## What is Assemble by Cohesium AI?
 
-Assemble by Cohesium AI is a multi-agent orchestration system that turns your development environment into a complete, cross-functional team. Each agent is a senior-level expert in its domain, inspired by the Marvel universe, and capable of collaborating with others through automatically orchestrated workflows.
+Assemble by Cohesium AI is a multi-agent orchestration system that turns your development environment into a complete, cross-functional team. Each agent is a senior-level expert in its domain, with persona and `@mention` name drawn from the Marvel universe.
 
 The system uses an **adapter pattern**: agent definitions, skills, and workflows are maintained as platform-agnostic source files, then a generator produces the correct configuration files for each target platform — Cursor rules, Claude Code commands, GitHub Copilot agents, and 17 others.
 
 An orchestrator named **Jarvis** serves as the single entry point. Use `/go <request>` and Jarvis assesses complexity (trivial/moderate/complex), selects the right agents, and for complex tasks applies a spec-driven methodology with gated phases (SPECIFY → PLAN → TASKS → IMPLEMENT). All 31 agents remain accessible via `@marvel-name` mentions.
+
+### Why Marvel?
+
+The Marvel naming is not cosmetic — it's **prompt engineering embedded in the naming convention**. LLMs already have deep knowledge of these characters. When routing says `@tony-stark` for architecture, the AI doesn't just receive an arbitrary slug — it activates a semantic network: inventive, systematic, pragmatic, technological. Same for `@hawkeye` in QA (precision, never misses), `@punisher` in security (zero tolerance), `@loki` in copywriting (language manipulation, persuasion).
+
+Each persona acts as a behavioral shortcut. Instead of spending 200 tokens describing how an agent should think, the Marvel identity primes the LLM into the right mindset with a single `@mention`. And for humans, `@professor-x` is easier to remember than `@product-manager-agent`.
 
 ---
 
