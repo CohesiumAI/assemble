@@ -1,7 +1,7 @@
 name: seo-content-pipeline
 description: "Pipeline de création de contenu SEO — de la recherche de mots-clés à l'optimisation GEO/AIO"
 trigger: /seo
-output_dir: "{cohesium_output}/seo_{timestamp}"
+output_dir: "{assemble_output}/seo_{timestamp}"
 steps:
   - step: 1
     agent: seo

@@ -1,9 +1,0 @@
-# Cohesium AI — Configuration du projet
-version: "1.0.0"
-langue_equipe: "français"
-langue_output: "english"
-output_dir: ".\deliverables"
-platforms: [claude-code, codex]
-agents: all
-workflows: all
-installed_at: "2026-03-19"

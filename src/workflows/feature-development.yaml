@@ -1,7 +1,7 @@
 name: feature-development
 description: "Développement d'une nouvelle fonctionnalité — de la spécification à la validation"
 trigger: /feature
-output_dir: "{cohesium_output}/feature_{timestamp}"
+output_dir: "{assemble_output}/feature_{timestamp}"
 steps:
   - step: 1
     agent: pm

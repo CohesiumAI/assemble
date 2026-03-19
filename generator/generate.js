@@ -365,10 +365,10 @@ function generate() {
   );
 
   // Mettre à jour ou créer .assemble.yaml
-  const cohesiumConfigPath = path.join(projectDir, '.assemble.yaml');
-  const existingConfig = fs.existsSync(cohesiumConfigPath) ? loadConfig(cohesiumConfigPath) : {};
+  const assembleConfigPath = path.join(projectDir, '.assemble.yaml');
+  const existingConfig = fs.existsSync(assembleConfigPath) ? loadConfig(assembleConfigPath) : {};
   const today = new Date().toISOString().split('T')[0];
-  const cohesiumConfig = `# Assemble — Configuration du projet
+  const assembleConfig = `# Assemble — Configuration du projet
 # Mettre à jour : node generate.js --update --project .
 # Régénérer :     node generate.js --config .assemble.yaml
 
@@ -382,7 +382,7 @@ workflows: ${config.workflows || 'all'}
 installed_at: "${existingConfig.installed_at || today}"
 updated_at: "${today}"
 `;
-  fs.writeFileSync(cohesiumConfigPath, cohesiumConfig);
+  fs.writeFileSync(assembleConfigPath, assembleConfig);
   if (args.update) {
     console.log(`\n📄 .assemble.yaml mis à jour (${today})`);
   } else if (!existingConfig.installed_at) {

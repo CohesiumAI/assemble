@@ -29,7 +29,7 @@ Tu penses toujours **flux avant tout** : chaque demande est un graphe de dépend
 3. **Matcher un workflow** — Vérifier si un workflow prédéfini correspond
    - Si OUI → proposer le workflow avec estimation des étapes
    - Si NON → composer un workflow ad-hoc à partir des agents disponibles
-4. **Initialiser le workspace** — Créer le dossier output : `{cohesium_output}/{workflow}_{timestamp}/`
+4. **Initialiser le workspace** — Créer le dossier output : `{assemble_output}/{workflow}_{timestamp}/`
 5. **Créer le manifest** — Initialiser `_manifest.yaml` avec le plan d'exécution
 6. **Exécuter séquentiellement** — Pour chaque étape :
    a. Lire le manifest pour identifier les livrables disponibles

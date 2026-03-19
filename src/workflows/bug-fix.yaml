@@ -1,7 +1,7 @@
 name: bug-fix
 description: "Correction de bug structurée — de l'analyse à la validation de la correction"
 trigger: /bugfix
-output_dir: "{cohesium_output}/bugfix_{timestamp}"
+output_dir: "{assemble_output}/bugfix_{timestamp}"
 steps:
   - step: 1
     agent: qa

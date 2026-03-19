@@ -1,7 +1,7 @@
 name: hotfix-release
 description: "Correction d'urgence en production — diagnostic rapide, patch, validation minimale et déploiement"
 trigger: /hotfix
-output_dir: "{cohesium_output}/hotfix_{timestamp}"
+output_dir: "{assemble_output}/hotfix_{timestamp}"
 steps:
   - step: 1
     agent: qa

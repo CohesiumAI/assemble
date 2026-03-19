@@ -49,7 +49,7 @@ The Jarvis orchestrator manages this chaining automatically:
 
 **Description:** Launch an MVP from start to finish — from product vision to deployment. Covers the full stack: product definition, architecture, design, database, backend, frontend, testing, and deployment.
 
-**Output directory:** `{cohesium_output}/mvp_{timestamp}/`
+**Output directory:** `{assemble_output}/mvp_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
@@ -77,7 +77,7 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 
 **Description:** Develop a new feature from specification to validation. Covers functional specification, requirements analysis, technical design, implementation, and QA.
 
-**Output directory:** `{cohesium_output}/feature_{timestamp}/`
+**Output directory:** `{assemble_output}/feature_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
@@ -96,7 +96,7 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 
 **Description:** Structured bug fix from analysis to verification. QA analyzes and reproduces the bug, the fullstack developer fixes it, and QA validates the fix with regression tests.
 
-**Output directory:** `{cohesium_output}/bugfix_{timestamp}/`
+**Output directory:** `{assemble_output}/bugfix_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
@@ -112,7 +112,7 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 
 **Description:** Multi-perspective code review pipeline. The fullstack developer summarizes changes, QA evaluates quality, Security audits for vulnerabilities, and the Contrarian challenges technical choices.
 
-**Output directory:** `{cohesium_output}/code-review_{timestamp}/`
+**Output directory:** `{assemble_output}/code-review_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
@@ -129,7 +129,7 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 
 **Description:** Comprehensive security audit covering vulnerability detection, remediation planning, infrastructure hardening, and regulatory compliance.
 
-**Output directory:** `{cohesium_output}/security-audit_{timestamp}/`
+**Output directory:** `{assemble_output}/security-audit_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
@@ -146,7 +146,7 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 
 **Description:** End-to-end SEO content creation pipeline from keyword research to GEO/AIO optimization. Produces fully optimized content ready for publication.
 
-**Output directory:** `{cohesium_output}/seo-content_{timestamp}/`
+**Output directory:** `{assemble_output}/seo-content_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
@@ -163,7 +163,7 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 
 **Description:** Launch a multi-channel marketing campaign from strategy through execution. Covers strategy, budgeting, branding, copywriting, paid media, social media, PR, and growth tracking.
 
-**Output directory:** `{cohesium_output}/marketing_{timestamp}/`
+**Output directory:** `{assemble_output}/marketing_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
@@ -186,7 +186,7 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 
 **Description:** Complete agile sprint cycle from planning to delivery. Covers backlog preparation, goal setting, implementation, testing, and release.
 
-**Output directory:** `{cohesium_output}/sprint_{timestamp}/`
+**Output directory:** `{assemble_output}/sprint_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
@@ -204,7 +204,7 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 
 **Description:** Identify and reduce technical debt systematically. Covers debt inventory, impact analysis, refactoring planning, regression validation, and deployment.
 
-**Output directory:** `{cohesium_output}/tech-debt_{timestamp}/`
+**Output directory:** `{assemble_output}/tech-debt_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
@@ -221,7 +221,7 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 
 **Description:** Onboard a new project with structured kickoff. Covers project chartering, requirements gathering, stakeholder mapping, architecture definition, and team setup.
 
-**Output directory:** `{cohesium_output}/onboarding_{timestamp}/`
+**Output directory:** `{assemble_output}/onboarding_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
@@ -238,7 +238,7 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 
 **Description:** Full release cycle from validation to communication. Covers release preparation, QA sign-off, security clearance, legal review, deployment, marketing announcement, PR outreach, and customer support preparation.
 
-**Output directory:** `{cohesium_output}/release_{timestamp}/`
+**Output directory:** `{assemble_output}/release_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
@@ -259,7 +259,7 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 
 **Description:** Emergency production fix with built-in security verification. QA reproduces the issue, Security assesses the risk, the fullstack developer implements the fix, QA validates, and DevOps deploys.
 
-**Output directory:** `{cohesium_output}/hotfix_{timestamp}/`
+**Output directory:** `{assemble_output}/hotfix_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
@@ -277,7 +277,7 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 
 **Description:** Safe and structured dependency upgrade pipeline. The architect evaluates impact, Security checks for vulnerabilities, the fullstack developer applies updates, QA validates compatibility, and DevOps deploys.
 
-**Output directory:** `{cohesium_output}/upgrade-deps_{timestamp}/`
+**Output directory:** `{assemble_output}/upgrade-deps_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
@@ -295,7 +295,7 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 
 **Description:** Focused documentation sprint to bring project documentation up to date. The analyst inventories existing docs, the architect and fullstack developer write technical content in parallel, the copywriter polishes and standardizes, and DevOps publishes.
 
-**Output directory:** `{cohesium_output}/doc-sprint_{timestamp}/`
+**Output directory:** `{assemble_output}/doc-sprint_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
@@ -315,7 +315,7 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 
 **Description:** Design, build, and analyze product experiments. The PM defines the hypothesis, Data designs the measurement framework, the fullstack developer implements the experiment, QA validates the setup, and Growth analyzes results.
 
-**Output directory:** `{cohesium_output}/experiment_{timestamp}/`
+**Output directory:** `{assemble_output}/experiment_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|

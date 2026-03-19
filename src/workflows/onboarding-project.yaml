@@ -1,7 +1,7 @@
 name: onboarding-project
 description: "Onboarding d'un nouveau projet — cadrage, analyse et mise en place de l'équipe"
 trigger: /onboarding
-output_dir: "{cohesium_output}/onboarding_{timestamp}"
+output_dir: "{assemble_output}/onboarding_{timestamp}"
 steps:
   - step: 1
     agent: pm

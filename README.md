@@ -274,7 +274,7 @@ Specialized capabilities tied to a primary agent.
 ## Architecture
 
 ```
-cohesium-ai/
+assemble/
   src/
     agents/             # 31 agent definition files (AGENT-*.md)
     skills/
@@ -331,21 +331,15 @@ User types /go <request>
 After installation, a `.assemble.yaml` file is created at the root of your project:
 
 ```yaml
+# Assemble — Configuration du projet
 version: "1.0.0"
-
-i18n:
-  team_language: "english"        # Language for agent-to-agent communication
-  output_language: "english"      # Language for produced deliverables
-
-output:
-  dir: "./assemble-output"        # Output directory
-  structure: "{workflow_name}_{timestamp}"
-
-agents:
-  default: all                    # Activated agents (all or list)
-
-workflows:
-  default: all                    # Activated workflows (all or list)
+langue_equipe: "english"          # Language for agent-to-agent communication
+langue_output: "english"          # Language for produced deliverables
+output_dir: "./assemble-output"   # Output directory for deliverables
+platforms: [claude-code, cursor]  # Target platforms
+agents: all                       # Activated agents (all or list)
+workflows: all                    # Activated workflows (all or list)
+installed_at: "2026-03-19"
 ```
 
 ---
@@ -355,7 +349,7 @@ workflows:
 | Document | Contents |
 |----------|----------|
 | [Agent Catalog](docs/AGENTS.md) | Complete catalog of all 31 agents with roles, skills, and workflows |
-| [Skills Reference](docs/SKILLS.md) | 27 skills (14 shared + 13 specific) with detailed processes |
+| [Skills Reference](docs/SKILLS.md) | 28 skills (14 shared + 14 specific) with detailed processes |
 | [Workflow Guide](docs/WORKFLOWS.md) | 15 workflows with agent chains, inputs/outputs, and dependency graphs |
 | [Platform Support](docs/PLATFORMS.md) | Platform-specific setup guides and file structure details |
 | [Command Reference](docs/COMMANDS.md) | Full reference for 10 commands + hidden shortcuts |

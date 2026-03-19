@@ -1,7 +1,7 @@
 name: release-cycle
 description: "Cycle de mise en production — validation, déploiement et communication"
 trigger: /release
-output_dir: "{cohesium_output}/release_{timestamp}"
+output_dir: "{assemble_output}/release_{timestamp}"
 steps:
   - step: 1
     agent: scrum

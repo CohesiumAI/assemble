@@ -1,7 +1,7 @@
 name: dependency-upgrade
 description: "Mise à jour des dépendances — analyse des breaking changes, upgrade, tests de compatibilité"
 trigger: /upgrade
-output_dir: "{cohesium_output}/upgrade_{timestamp}"
+output_dir: "{assemble_output}/upgrade_{timestamp}"
 steps:
   - step: 1
     agent: architect

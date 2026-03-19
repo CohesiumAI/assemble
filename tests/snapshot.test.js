@@ -31,7 +31,7 @@ let tmpDir;
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function createTmpDir() {
-  tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cohesium-test-'));
+  tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'assemble-test-'));
   return tmpDir;
 }
 

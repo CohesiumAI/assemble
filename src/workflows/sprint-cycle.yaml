@@ -1,7 +1,7 @@
 name: sprint-cycle
 description: "Cycle de sprint Agile complet — de la planification à la livraison"
 trigger: /sprint
-output_dir: "{cohesium_output}/sprint_{timestamp}"
+output_dir: "{assemble_output}/sprint_{timestamp}"
 steps:
   - step: 1
     agent: scrum

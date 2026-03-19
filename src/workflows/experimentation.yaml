@@ -1,7 +1,7 @@
 name: experimentation
 description: "Cycle d'expérimentation A/B — hypothèse, implémentation, mesure et décision"
 trigger: /experiment
-output_dir: "{cohesium_output}/experiment_{timestamp}"
+output_dir: "{assemble_output}/experiment_{timestamp}"
 steps:
   - step: 1
     agent: pm

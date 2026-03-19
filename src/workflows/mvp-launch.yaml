@@ -1,7 +1,7 @@
 name: mvp-launch
 description: "Lancement d'un MVP de A à Z — de la vision produit au déploiement"
 trigger: /mvp
-output_dir: "{cohesium_output}/mvp_{timestamp}"
+output_dir: "{assemble_output}/mvp_{timestamp}"
 steps:
   - step: 1
     agent: pm
