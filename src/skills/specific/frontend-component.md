@@ -1,7 +1,7 @@
 ---
 name: frontend-component
 description: Création de composant React/Next.js intégré au design system avec accessibilité et tests
-agent: dev-frontend
+agents: [dev-frontend, dev-fullstack]
 trigger: /component
 ---
 

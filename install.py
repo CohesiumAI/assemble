@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 """
-Cohesium AI — Installateur interactif (Python)
-Configure et déploie le système d'agents dans votre projet
+Cohesium AI — Interactive Installer (Python)
+Configures and deploys the agent system in your project
 """
 
 import os
 import sys
+import shutil
 import subprocess
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).parent.resolve()
 
-# ─── Plateformes disponibles ─────────────────────────────────────────
+# ─── Available platforms ───────────────────────────────────────────
 
 PLATFORMS = {
     "IDE": [
@@ -55,7 +56,7 @@ def banner():
     print()
     print(colored("═" * 55, "cyan"))
     print(colored("   🦸 Cohesium AI — Agent Workflow System", "blue"))
-    print(colored("   Installation et configuration", "cyan"))
+    print(colored("   Installation & Configuration", "cyan"))
     print(colored("═" * 55, "cyan"))
     print()
 
@@ -70,62 +71,105 @@ def prompt(question, default=""):
     return answer if answer else default
 
 
-def select_multiple(options, label="Votre choix"):
-    for i, (_, display) in enumerate(options, 1):
-        print(f"  {i:2d}) {display}")
-    print(f"   0) Tout sélectionner")
+def run_update(project_dir="."):
+    """Update an existing installation while preserving user preferences."""
+    config_path = Path(project_dir) / ".cohesium.yaml"
+    if not config_path.exists():
+        print(colored("  ✗ No installation found (.cohesium.yaml missing)", "red"))
+        sys.exit(1)
+
+    print(colored("\n🔄 Updating...\n", "bold"))
+    print("Preserved preferences from .cohesium.yaml:")
+
+    for line in config_path.read_text(encoding="utf-8").splitlines():
+        for key in ("langue_equipe", "langue_output", "platforms", "output_dir", "installed_at"):
+            if line.startswith(f"{key}:"):
+                print(colored(f"  {key}: {line.split(':', 1)[1].strip()}", "green"))
+
     print()
-    choice = prompt(label, "0")
+    confirm = prompt("Confirm update?", "Y")
+    if confirm.lower() not in ("y", "o"):
+        print("Update cancelled.")
+        sys.exit(0)
 
-    if choice == "0":
-        return [o[0] for o in options]
+    step("Regenerating...")
 
-    selected = []
-    for num_str in choice.split():
-        try:
-            num = int(num_str)
-            if 1 <= num <= len(options):
-                selected.append(options[num - 1][0])
-        except ValueError:
-            pass
-    return selected
+    abs_project = str(Path(project_dir).resolve())
+    generator_js = SCRIPT_DIR / "generator" / "generate.js"
+    generator_py = SCRIPT_DIR / "generator" / "generate.py"
+
+    if generator_py.exists():
+        subprocess.run([sys.executable, str(generator_py), "--update", "--project", abs_project])
+    elif generator_js.exists() and shutil.which("node"):
+        subprocess.run(["node", str(generator_js), "--update", "--project", abs_project])
+    else:
+        print(colored("  ✗ No generator available.", "red"))
+        sys.exit(1)
+
+    print()
+    print(colored("═" * 55, "cyan"))
+    print(colored("   ✅ Update complete!", "green"))
+    print(colored("═" * 55, "cyan"))
+    print()
+    print("Your preferences have been preserved.")
+    print("Configuration files have been regenerated with the latest version.")
+    print()
 
 
 def main():
     banner()
 
-    print("Bienvenue dans l'installateur Cohesium AI.")
-    print("Ce script va configurer le système d'agents pour votre projet.")
-    input("\nAppuyez sur Entrée pour continuer...")
+    # Detect --update flag or existing installation
+    if "--update" in sys.argv or "-u" in sys.argv:
+        project_dir = "."
+        for i, arg in enumerate(sys.argv):
+            if arg in ("--project", "-p") and i + 1 < len(sys.argv):
+                project_dir = sys.argv[i + 1]
+        run_update(project_dir)
+        sys.exit(0)
 
-    # 1. Langue de l'équipe
-    step("1/8 — Langue de l'équipe")
-    print("Dans quelle langue l'équipe d'agents doit-elle communiquer ?")
-    print("(ex: français, english, deutsch, español, italiano, português...)")
-    langue_equipe = prompt("Langue de l'équipe", "français")
-    print(colored(f"  ✓ Langue de l'équipe : {langue_equipe}", "green"))
+    config_path = Path(".cohesium.yaml")
+    if config_path.exists():
+        print("📄 Existing installation detected: .cohesium.yaml\n")
+        print("  1) Update existing installation (keeps your preferences)")
+        print("  2) New installation (overwrites configuration)\n")
+        choice = prompt("Your choice", "1")
+        if choice == "1":
+            run_update(".")
+            sys.exit(0)
 
-    # 2. Langue des livrables
-    step("2/8 — Langue des fichiers produits")
-    print("Dans quelle langue les livrables doivent-ils être rédigés ?")
-    langue_output = prompt("Langue des livrables", langue_equipe)
-    print(colored(f"  ✓ Langue des livrables : {langue_output}", "green"))
+    print("Welcome to the Cohesium AI installer.")
+    print("This script will configure the agent system for your project.")
+    input("\nPress Enter to continue...")
 
-    # 3. Sélection des IDE/CLI
-    step("3/8 — Sélection des IDE/CLI")
-    print("Sélectionnez les IDE/CLI que vous utilisez :\n")
+    # 1. Team language
+    step("1/8 — Team language")
+    print("In which language should the agent team communicate?")
+    print("(e.g.: français, english, deutsch, español, italiano, português...)")
+    langue_equipe = prompt("Team language", "français")
+    print(colored(f"  ✓ Team language: {langue_equipe}", "green"))
+
+    # 2. Output language
+    step("2/8 — Deliverable language")
+    print("In which language should deliverables be written?")
+    langue_output = prompt("Deliverable language", langue_equipe)
+    print(colored(f"  ✓ Deliverable language: {langue_output}", "green"))
+
+    # 3. Platform selection
+    step("3/8 — IDE/CLI selection")
+    print("Select the IDE/CLI tools you use:\n")
     all_options = []
-    print("  IDE :")
+    print("  IDE:")
     for i, (slug, name) in enumerate(PLATFORMS["IDE"], 1):
         print(f"  {i:2d}) {name}")
         all_options.append((slug, name))
-    print("\n  CLI :")
+    print("\n  CLI:")
     for i, (slug, name) in enumerate(PLATFORMS["CLI"], len(PLATFORMS["IDE"]) + 1):
         print(f"  {i:2d}) {name}")
         all_options.append((slug, name))
-    print(f"\n   0) Tout sélectionner\n")
+    print(f"\n   0) Select all\n")
 
-    platform_choice = prompt("Votre choix", "0")
+    platform_choice = prompt("Your choice", "0")
     if platform_choice == "0":
         selected_platforms = ALL_PLATFORMS[:]
     else:
@@ -137,53 +181,53 @@ def main():
                     selected_platforms.append(all_options[num - 1][0])
             except ValueError:
                 pass
-    print(colored(f"  ✓ {len(selected_platforms)} plateformes sélectionnées", "green"))
+    print(colored(f"  ✓ {len(selected_platforms)} platforms selected", "green"))
 
-    # 4. Répertoire du projet
-    step("4/8 — Répertoire du projet cible")
-    print("Où se trouve votre projet ?")
-    project_dir = prompt("Répertoire du projet", ".")
+    # 4. Project directory
+    step("4/8 — Target project directory")
+    print("Where is your project located?")
+    project_dir = prompt("Project directory", ".")
     project_dir = os.path.abspath(project_dir)
     os.makedirs(project_dir, exist_ok=True)
-    print(colored(f"  ✓ Projet : {project_dir}", "green"))
+    print(colored(f"  ✓ Project: {project_dir}", "green"))
 
-    # 5. Répertoire de sortie
-    step("5/8 — Répertoire de sortie des livrables")
-    print("Où les agents doivent-ils écrire leurs livrables ?")
-    output_dir = prompt("Répertoire de sortie", "./cohesium-output")
-    print(colored(f"  ✓ Output : {project_dir}/{output_dir}", "green"))
+    # 5. Output directory
+    step("5/8 — Deliverable output directory")
+    print("Where should agents write their deliverables?")
+    output_dir = prompt("Output directory", "./cohesium-output")
+    print(colored(f"  ✓ Output: {project_dir}/{output_dir}", "green"))
 
     # 6. Agents
-    step("6/8 — Agents à installer")
-    agent_choice = prompt("Installer tous les 28 agents ? [O/n]", "O")
-    selected_agents = "all" if agent_choice.lower() in ("o", "y", "") else "custom"
-    print(colored(f"  ✓ Agents : {selected_agents}", "green"))
+    step("6/8 — Agents to install")
+    agent_choice = prompt("Install all 28 agents? [Y/n]", "Y")
+    selected_agents = "all" if agent_choice.lower() in ("y", "o", "") else "custom"
+    print(colored(f"  ✓ Agents: {selected_agents}", "green"))
 
     # 7. Workflows
-    step("7/8 — Workflows à activer")
-    wf_choice = prompt("Activer tous les 11 workflows ? [O/n]", "O")
-    selected_workflows = "all" if wf_choice.lower() in ("o", "y", "") else "custom"
-    print(colored(f"  ✓ Workflows : {selected_workflows}", "green"))
+    step("7/8 — Workflows to enable")
+    wf_choice = prompt("Enable all 11 workflows? [Y/n]", "Y")
+    selected_workflows = "all" if wf_choice.lower() in ("y", "o", "") else "custom"
+    print(colored(f"  ✓ Workflows: {selected_workflows}", "green"))
 
     # 8. Confirmation
     step("8/8 — Confirmation")
-    print("Récapitulatif :\n")
-    print(f"  Langue équipe  : {colored(langue_equipe, 'bold')}")
-    print(f"  Langue output  : {colored(langue_output, 'bold')}")
-    print(f"  Plateformes    : {colored(', '.join(selected_platforms), 'bold')}")
-    print(f"  Projet         : {colored(project_dir, 'bold')}")
+    print("Summary:\n")
+    print(f"  Team language  : {colored(langue_equipe, 'bold')}")
+    print(f"  Output language: {colored(langue_output, 'bold')}")
+    print(f"  Platforms      : {colored(', '.join(selected_platforms), 'bold')}")
+    print(f"  Project        : {colored(project_dir, 'bold')}")
     print(f"  Output         : {colored(output_dir, 'bold')}")
     print(f"  Agents         : {colored(selected_agents, 'bold')}")
     print(f"  Workflows      : {colored(selected_workflows, 'bold')}")
     print()
 
-    confirm = prompt("Lancer l'installation ?", "O")
-    if confirm.lower() not in ("o", "y"):
-        print("Installation annulée.")
+    confirm = prompt("Start installation?", "Y")
+    if confirm.lower() not in ("y", "o"):
+        print("Installation cancelled.")
         sys.exit(0)
 
-    # Génération
-    step("Génération en cours...")
+    # Generation
+    step("Generating...")
 
     generator_py = SCRIPT_DIR / "generator" / "generate.py"
     generator_js = SCRIPT_DIR / "generator" / "generate.js"
@@ -199,7 +243,7 @@ def main():
             "--lang-output", langue_output,
             "--output-dir", output_dir,
         ]
-        result = subprocess.run(cmd)
+        subprocess.run(cmd)
     elif generator_js.exists() and shutil.which("node"):
         cmd = [
             "node", str(generator_js),
@@ -209,23 +253,25 @@ def main():
             "--lang-output", langue_output,
             "--output-dir", output_dir,
         ]
-        result = subprocess.run(cmd)
+        subprocess.run(cmd)
     else:
-        print(colored("  ✗ Aucun générateur disponible.", "red"))
+        print(colored("  ✗ No generator available.", "red"))
         sys.exit(1)
 
     print()
     print(colored("═" * 55, "cyan"))
-    print(colored("   ✅ Installation terminée !", "green"))
+    print(colored("   ✅ Installation complete!", "green"))
     print(colored("═" * 55, "cyan"))
     print()
-    print("Prochaines étapes :")
-    print("  1. Ouvrez votre projet dans votre IDE")
-    print("  2. Les agents sont prêts à être utilisés")
-    print("  3. Tapez /help pour voir les commandes disponibles")
+    print("Next steps:")
+    print("  1. Open your project in your IDE")
+    print("  2. Agents are ready to use")
+    print("  3. Type /help to see available commands")
+    print()
+    print("To reconfigure: python3 install.py")
+    print("To update:      python3 install.py --update")
     print()
 
 
 if __name__ == "__main__":
-    import shutil
     main()

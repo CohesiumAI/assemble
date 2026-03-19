@@ -1,7 +1,7 @@
 ---
 name: competitive-analysis
 description: Analyse concurrentielle et benchmark — positionnement, forces et faiblesses, stratégies, opportunités de marché et recommandations stratégiques
-agents: [analyst, marketing, growth, pm]
+agents: [analyst, marketing, growth, pm, customer-success, finance]
 trigger: /benchmark
 ---
 

@@ -1,59 +1,52 @@
 /**
  * Cohesium AI — Google Antigravity Adapter
- * Generates .antigravity/agents/{agent-name}.md (Gemini-compatible markdown)
+ * Generates .antigravity/agents/ + skills/ + workflows/
  */
 
 const fs = require('fs');
 const path = require('path');
-const { prepareAgent, renderAgent } = require('../../lib/template-engine');
+const { prepareAgent, renderAgent, marvelSlug, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions } = require('../../lib/template-engine');
 
 module.exports = {
   name: 'antigravity',
   displayName: 'Google Antigravity',
   type: 'ide',
 
-  getOutputPaths(projectDir, { agents = [] } = {}) {
-    return agents.map(agent => {
-      const slug = (agent.meta.name || agent.fileName.replace('.md', '')).toLowerCase().replace(/\s+/g, '-');
-      return path.join(projectDir, '.antigravity', 'agents', `${slug}.md`);
-    });
+  getOutputPaths(projectDir, { agents = [], skills = {}, workflows = [] } = {}) {
+    const paths = [];
+    for (const a of agents) paths.push(path.join(projectDir, '.antigravity', 'agents', `${marvelSlug(a)}.md`));
+    for (const s of [...(skills.shared || []), ...(skills.specific || [])]) paths.push(path.join(projectDir, '.antigravity', 'skills', `${skillSlug(s)}.md`));
+    for (const w of workflows) paths.push(path.join(projectDir, '.antigravity', 'workflows', `${workflowSlug(w)}.md`));
+    return paths;
   },
 
   generate(projectDir, { agents = [], skills = {}, workflows = [], commands, orchestrator, config = {} }) {
-    const agentsDir = path.join(projectDir, '.antigravity', 'agents');
-    fs.mkdirSync(agentsDir, { recursive: true });
+    for (const d of ['agents', 'skills', 'workflows']) fs.mkdirSync(path.join(projectDir, '.antigravity', d), { recursive: true });
+    const agentLookup = buildAgentLookup(agents);
 
     for (const agent of agents) {
       const prepared = prepareAgent(agent, config);
-      const slug = (agent.meta.name || agent.fileName.replace('.md', '')).toLowerCase().replace(/\s+/g, '-');
-
-      // Gemini-compatible markdown: add model hint at top
-      let content = `<!-- Gemini-compatible agent definition -->\n`;
-      content += renderAgent(prepared, 'markdown');
-
-      fs.writeFileSync(path.join(agentsDir, `${slug}.md`), content, 'utf-8');
+      fs.writeFileSync(path.join(projectDir, '.antigravity', 'agents', `${marvelSlug(agent)}.md`), renderAgent(prepared, 'markdown'), 'utf-8');
+    }
+    for (const skill of [...(skills.shared || []), ...(skills.specific || [])]) {
+      const prepared = prepareAgent(skill, config);
+      fs.writeFileSync(path.join(projectDir, '.antigravity', 'skills', `${skillSlug(skill)}.md`), renderAgent(prepared, 'markdown'), 'utf-8');
+    }
+    for (const workflow of workflows) {
+      const slug = workflowSlug(workflow);
+      let content = `# Workflow : ${workflowField(workflow.raw, 'name') || slug}\n\n${workflowField(workflow.raw, 'description')}\n\n`;
+      content += renderWorkflowInstructions(workflow, agentLookup, config);
+      fs.writeFileSync(path.join(projectDir, '.antigravity', 'workflows', `${slug}.md`), content, 'utf-8');
     }
   },
 
   validate(projectDir) {
     const errors = [];
-    const agentsDir = path.join(projectDir, '.antigravity', 'agents');
-
-    if (!fs.existsSync(agentsDir)) {
-      errors.push(`Missing agents directory: ${agentsDir}`);
-    } else {
-      const files = fs.readdirSync(agentsDir);
-      if (files.length === 0) {
-        errors.push('No agent files generated');
-      }
-      for (const file of files) {
-        const content = fs.readFileSync(path.join(agentsDir, file), 'utf-8');
-        if (content.trim().length === 0) {
-          errors.push(`Empty agent file: ${file}`);
-        }
-      }
+    for (const subdir of ['agents', 'skills', 'workflows']) {
+      const dir = path.join(projectDir, '.antigravity', subdir);
+      if (fs.existsSync(dir)) for (const file of fs.readdirSync(dir)) { if (fs.readFileSync(path.join(dir, file), 'utf-8').trim().length === 0) errors.push(`Empty: .antigravity/${subdir}/${file}`); }
     }
-
+    if (!fs.existsSync(path.join(projectDir, '.antigravity', 'agents'))) errors.push('Missing .antigravity/agents/');
     return { valid: errors.length === 0, errors };
   }
 };

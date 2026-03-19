@@ -1,359 +1,366 @@
-# Plateformes supportees -- Cohesium AI
+# Platform Support — 20 Supported Platforms
 
-> **20 plateformes** supportees : 15 IDE et 5 CLI. Le generateur adapte automatiquement les fichiers d'agents, de skills et de workflows au format natif de chaque plateforme.
-
----
-
-## Vue d'ensemble
-
-| # | Plateforme | Type | Fichiers de configuration |
-|---|------------|------|--------------------------|
-| 1 | Cursor | IDE | `.cursorrules`, `.cursor/agents/` |
-| 2 | Windsurf | IDE | `.windsurfrules`, `.windsurf/workflows/` |
-| 3 | Cline | IDE | `.clinerules`, `.cline/` |
-| 4 | Roo Code | IDE | `.roo/rules-*`, `.roomodes` |
-| 5 | GitHub Copilot | IDE | `.github/copilot-instructions.md`, `.github/copilot/agents/` |
-| 6 | Kiro | IDE | `.kiro/agents/`, `.kiro/skills/` |
-| 7 | Trae | IDE | `.trae/rules/`, `.trae/agents/` |
-| 8 | Google Antigravity | IDE | `.antigravity/agents/` |
-| 9 | CodeBuddy | IDE | `.codebuddy/agents/` |
-| 10 | Crush | IDE | `.crush/agents/` |
-| 11 | iFlow | IDE | `.iflow/agents/` |
-| 12 | KiloCoder | IDE | `.kilocoder/agents/` |
-| 13 | OpenCode | IDE | `opencode.yaml`, `.opencode/agents/` |
-| 14 | QwenCoder | IDE | `.qwencoder/agents/` |
-| 15 | Rovo Dev | IDE | `.rovo/agents/` |
-| 16 | Claude Code | CLI | `CLAUDE.md`, `.claude/commands/`, `.claude/agents/` |
-| 17 | Codex (OpenAI) | CLI | `codex.md`, `AGENTS.md` |
-| 18 | Gemini CLI | CLI | `GEMINI.md` |
-| 19 | Auggie | CLI | `.auggie/agents/` |
-| 20 | Pi | CLI | `.pi/agents/` |
+> **20 platforms** supported: 15 IDE and 5 CLI. The generator automatically adapts agent, skill, and workflow files to the native format of each platform.
 
 ---
 
-## IDE (15)
+## Overview
 
-### Cursor
-
-**Description :** Cursor AI IDE
-
-**Fichiers generes :**
-
-| Fichier / Dossier | Contenu |
-|-------------------|---------|
-| `.cursorrules` | Regles globales : orchestrateur Jarvis, catalogue des commandes, instructions generales |
-| `.cursor/agents/*.md` | Un fichier Markdown par agent (28 fichiers) avec frontmatter YAML |
-
-**Format :** Markdown avec frontmatter YAML
-
-**Notes :** Chaque agent est un fichier `.md` dans `.cursor/agents/`. Les regles globales et l'orchestrateur sont dans `.cursorrules`. Les workflows et skills sont integres dans les instructions des agents.
-
----
-
-### Windsurf
-
-**Description :** Windsurf AI IDE
-
-**Fichiers generes :**
-
-| Fichier / Dossier | Contenu |
-|-------------------|---------|
-| `.windsurfrules` | Regles globales : orchestrateur, catalogue, commandes |
-| `.windsurf/workflows/` | Fichiers de workflows au format natif Windsurf |
-
-**Format :** Regles Markdown + workflows YAML
-
-**Notes :** L'orchestrateur et les commandes sont integres dans `.windsurfrules`. Les workflows natifs de Windsurf sont exploites.
+| # | Platform | Type | Configuration Files |
+|---|----------|------|---------------------|
+| 1 | Cursor | IDE | `.cursorrules` + `.cursor/` |
+| 2 | Windsurf | IDE | `.windsurfrules` + `.windsurf/` |
+| 3 | Cline | IDE | `.clinerules` + `.cline/` |
+| 4 | Roo Code | IDE | `.roomodes` + `.roo/` |
+| 5 | GitHub Copilot | IDE | `.github/copilot-instructions.md` + `.github/instructions/` |
+| 6 | Kiro | IDE | `.kiro/agents/*.json` + `.kiro/steering/` |
+| 7 | Trae | IDE | `.trae/` |
+| 8 | Antigravity | IDE | `.antigravity/` |
+| 9 | CodeBuddy | IDE | `.codebuddy/` |
+| 10 | Crush | IDE | `.crush/` |
+| 11 | iFlow | IDE | `.iflow/` |
+| 12 | KiloCoder | IDE | `.kilocoder/` |
+| 13 | OpenCode | IDE | `.opencode/` |
+| 14 | QwenCoder | IDE | `.qwencoder/` |
+| 15 | Rovo Dev | IDE | `.rovo/` |
+| 16 | Claude Code | CLI | `CLAUDE.md` + `.claude/agents/*/AGENT.md` + `.claude/skills/*/SKILL.md` + `.claude/rules/` |
+| 17 | Codex | CLI | `AGENTS.md` |
+| 18 | Gemini CLI | CLI | `GEMINI.md` + `.gemini/` |
+| 19 | Auggie | CLI | `.augment/commands/*.md` |
+| 20 | Pi | CLI | `AGENTS.md` + `SYSTEM.md` |
 
 ---
 
-### Cline
+## IDE Platforms (15)
 
-**Description :** Cline (extension VS Code)
+### 1. Cursor
 
-**Fichiers generes :**
+**Description:** Cursor AI IDE — AI-first code editor with built-in agent and rules support.
 
-| Fichier / Dossier | Contenu |
-|-------------------|---------|
-| `.clinerules` | Regles globales et orchestrateur |
-| `.cline/agents/*.md` | Un fichier par agent |
+**Generated files:**
 
-**Format :** Markdown
+| File / Directory | Content |
+|------------------|---------|
+| `.cursorrules` | Global rules: Jarvis orchestrator, command catalog, general instructions |
+| `.cursor/agents/*.md` | One Markdown file per agent with YAML front matter |
 
-**Notes :** Structure similaire a Cursor. Agents dans `.cline/agents/`.
+**Format:** Markdown with YAML front matter
 
----
-
-### Roo Code
-
-**Description :** Roo Code
-
-**Fichiers generes :**
-
-| Fichier / Dossier | Contenu |
-|-------------------|---------|
-| `.roomodes` | Fichier JSON definissant chaque agent comme un "mode" avec `roleDefinition` et `customInstructions` |
-| `.roo/rules-*.md` | Regles specifiques par agent au format Markdown |
-
-**Format :** JSON pour les modes, Markdown pour les regles
-
-**Notes :** Chaque agent devient un "mode" dans `.roomodes`. Roo Code utilise un systeme de modes specifique ou chaque mode a son propre contexte et ses propres instructions.
+**Notes:** Each agent is a `.md` file in `.cursor/agents/`. Global rules and orchestrator configuration go in `.cursorrules`. Workflows and skills are embedded in agent instructions.
 
 ---
 
-### GitHub Copilot
+### 2. Windsurf
 
-**Description :** GitHub Copilot
+**Description:** Windsurf AI IDE — IDE with native workflow support and AI-powered coding.
 
-**Fichiers generes :**
+**Generated files:**
 
-| Fichier / Dossier | Contenu |
-|-------------------|---------|
-| `.github/copilot-instructions.md` | Instructions globales : orchestrateur, catalogue, regles |
-| `.github/copilot/agents/*.md` | Un fichier par agent |
+| File / Directory | Content |
+|------------------|---------|
+| `.windsurfrules` | Global rules: orchestrator, catalog, commands |
+| `.windsurf/workflows/` | Workflow files in native Windsurf format |
 
-**Format :** Markdown
+**Format:** Markdown rules + YAML workflows
 
-**Notes :** Instructions globales dans `copilot-instructions.md`, agents individuels dans le dossier `agents/`.
-
----
-
-### Kiro
-
-**Description :** Kiro IDE
-
-**Fichiers generes :**
-
-| Fichier / Dossier | Contenu |
-|-------------------|---------|
-| `.kiro/agents/*.md` | Un fichier par agent |
-| `.kiro/skills/*.md` | Un fichier par skill |
-| `.kiro/workflows/` | Workflows au format natif |
-
-**Format :** Markdown + YAML
-
-**Notes :** Support natif des agents, skills et workflows. C'est la structure la plus riche car Kiro prend en charge nativement les trois concepts.
+**Notes:** The orchestrator and commands are embedded in `.windsurfrules`. Native Windsurf workflows are leveraged for pipeline execution.
 
 ---
 
-### Trae
+### 3. Cline
 
-**Description :** Trae IDE
+**Description:** Cline — VS Code extension for AI-assisted development.
 
-**Fichiers generes :**
+**Generated files:**
 
-| Fichier / Dossier | Contenu |
-|-------------------|---------|
-| `.trae/rules/*.md` | Regles par agent |
-| `.trae/agents/*.md` | Fichiers agents complets |
+| File / Directory | Content |
+|------------------|---------|
+| `.clinerules` | Global rules and orchestrator |
+| `.cline/agents/*.md` | One file per agent |
 
-**Format :** Markdown
+**Format:** Markdown
 
-**Notes :** Separation entre rules (regles courtes) et agents (instructions completes).
-
----
-
-### Google Antigravity
-
-**Description :** Google Antigravity
-
-**Fichiers generes :**
-
-| Fichier / Dossier | Contenu |
-|-------------------|---------|
-| `.antigravity/agents/*.md` | Un fichier par agent |
-
-**Format :** Markdown compatible Gemini
+**Notes:** Structure similar to Cursor. Agents reside in `.cline/agents/`.
 
 ---
 
-### CodeBuddy
+### 4. Roo Code
 
-**Description :** CodeBuddy
+**Description:** Roo Code — IDE with a mode-based agent system.
 
-**Fichiers generes :**
+**Generated files:**
 
-| Fichier / Dossier | Contenu |
-|-------------------|---------|
-| `.codebuddy/agents/*.md` | Un fichier par agent |
+| File / Directory | Content |
+|------------------|---------|
+| `.roomodes` | JSON file defining each agent as a "mode" with `roleDefinition` and `customInstructions` |
+| `.roo/rules-*.md` | Agent-specific rules in Markdown format |
 
-**Format :** Markdown
+**Format:** JSON for modes, Markdown for rules
 
----
-
-### Crush
-
-**Description :** Crush IDE
-
-**Fichiers generes :**
-
-| Fichier / Dossier | Contenu |
-|-------------------|---------|
-| `.crush/agents/*.md` | Un fichier par agent |
-
-**Format :** Markdown
+**Notes:** Each agent becomes a "mode" in `.roomodes`. Roo Code uses a unique mode system where each mode has its own context and instructions.
 
 ---
 
-### iFlow
+### 5. GitHub Copilot
 
-**Description :** iFlow IDE
+**Description:** GitHub Copilot — AI pair programming tool integrated into VS Code and JetBrains IDEs.
 
-**Fichiers generes :**
+**Generated files:**
 
-| Fichier / Dossier | Contenu |
-|-------------------|---------|
-| `.iflow/agents/*.md` | Un fichier par agent |
+| File / Directory | Content |
+|------------------|---------|
+| `.github/copilot-instructions.md` | Global instructions: orchestrator, catalog, rules |
+| `.github/instructions/*.md` | Instruction files for specific agents and contexts |
 
-**Format :** Markdown
+**Format:** Markdown
 
----
-
-### KiloCoder
-
-**Description :** KiloCoder
-
-**Fichiers generes :**
-
-| Fichier / Dossier | Contenu |
-|-------------------|---------|
-| `.kilocoder/agents/*.md` | Un fichier par agent |
-
-**Format :** Markdown
+**Notes:** Global instructions in `copilot-instructions.md`, agent-specific and contextual instructions in the `instructions/` directory.
 
 ---
 
-### OpenCode
+### 6. Kiro
 
-**Description :** OpenCode
+**Description:** Kiro IDE — IDE with native support for agents, steering, and structured specifications.
 
-**Fichiers generes :**
+**Generated files:**
 
-| Fichier / Dossier | Contenu |
-|-------------------|---------|
-| `opencode.yaml` | Configuration principale |
-| `.opencode/agents/*.md` | Un fichier par agent |
+| File / Directory | Content |
+|------------------|---------|
+| `.kiro/agents/*.json` | One JSON file per agent with configuration and capabilities |
+| `.kiro/steering/*.md` | Steering documents that guide agent behavior |
 
-**Format :** YAML + Markdown
+**Format:** JSON for agents, Markdown for steering
 
-**Notes :** OpenCode utilise un fichier YAML de configuration a la racine en plus des fichiers d'agents Markdown.
-
----
-
-### QwenCoder
-
-**Description :** QwenCoder
-
-**Fichiers generes :**
-
-| Fichier / Dossier | Contenu |
-|-------------------|---------|
-| `.qwencoder/agents/*.md` | Un fichier par agent |
-
-**Format :** Markdown
+**Notes:** Kiro natively supports agents and steering documents. Agent definitions are JSON-based, while steering provides behavioral guidance in Markdown.
 
 ---
 
-### Rovo Dev
+### 7. Trae
 
-**Description :** Rovo Dev
+**Description:** Trae IDE — AI-powered code editor with rules and agent support.
 
-**Fichiers generes :**
+**Generated files:**
 
-| Fichier / Dossier | Contenu |
-|-------------------|---------|
-| `.rovo/agents/*.md` | Un fichier par agent |
+| File / Directory | Content |
+|------------------|---------|
+| `.trae/rules/*.md` | Per-agent rules (concise directives) |
+| `.trae/agents/*.md` | Full agent instruction files |
 
-**Format :** Markdown
+**Format:** Markdown
 
----
-
-## CLI (5)
-
-### Claude Code
-
-**Description :** Claude Code CLI (Anthropic)
-
-**Fichiers generes :**
-
-| Fichier / Dossier | Contenu |
-|-------------------|---------|
-| `CLAUDE.md` | Fichier principal : orchestrateur Jarvis, catalogue des agents, regles globales |
-| `.claude/commands/*.md` | Un fichier par commande (`/agent-*`, workflows, skills) |
-| `.claude/agents/*.md` | Un fichier par agent |
-
-**Format :** Markdown
-
-**Notes :** C'est la **plateforme de reference** avec l'adaptateur le plus complet. `CLAUDE.md` contient l'orchestrateur et le catalogue. Chaque commande a son propre fichier `.md` dans `.claude/commands/`, ce qui permet l'invocation directe via `/commande`.
+**Notes:** Separation between rules (short directives) and agents (complete instructions).
 
 ---
 
-### Codex (OpenAI)
+### 8. Antigravity
 
-**Description :** Codex CLI (OpenAI)
+**Description:** Google Antigravity — Google's AI-powered development environment.
 
-**Fichiers generes :**
+**Generated files:**
 
-| Fichier / Dossier | Contenu |
-|-------------------|---------|
-| `codex.md` | Fichier unique consolide : orchestrateur, agents, commandes |
-| `AGENTS.md` | Catalogue des agents |
+| File / Directory | Content |
+|------------------|---------|
+| `.antigravity/agents/*.md` | One file per agent |
 
-**Format :** Markdown compact
+**Format:** Markdown (Gemini-compatible)
 
-**Notes :** Tout est consolide dans un seul fichier `codex.md` avec l'orchestrateur et les commandes. `AGENTS.md` sert de reference pour le catalogue.
-
----
-
-### Gemini CLI
-
-**Description :** Gemini CLI (Google)
-
-**Fichiers generes :**
-
-| Fichier / Dossier | Contenu |
-|-------------------|---------|
-| `GEMINI.md` | Fichier unique consolide : orchestrateur, agents, commandes |
-
-**Format :** Markdown
-
-**Notes :** Format similaire a Codex, fichier unique `GEMINI.md` avec toutes les instructions.
+**Notes:** Uses Gemini-compatible Markdown format for agent definitions.
 
 ---
 
-### Auggie
+### 9. CodeBuddy
 
-**Description :** Auggie CLI
+**Description:** CodeBuddy — AI coding assistant with agent support.
 
-**Fichiers generes :**
+**Generated files:**
 
-| Fichier / Dossier | Contenu |
-|-------------------|---------|
-| `.auggie/agents/*.md` | Un fichier par agent |
+| File / Directory | Content |
+|------------------|---------|
+| `.codebuddy/agents/*.md` | One file per agent |
 
-**Format :** Markdown
-
----
-
-### Pi
-
-**Description :** Pi CLI
-
-**Fichiers generes :**
-
-| Fichier / Dossier | Contenu |
-|-------------------|---------|
-| `.pi/agents/*.md` | Un fichier par agent |
-
-**Format :** Markdown
+**Format:** Markdown
 
 ---
 
-## Notes techniques
+### 10. Crush
 
-### Regeneration des fichiers
+**Description:** Crush IDE — AI code editor with agent-based workflows.
 
-Pour regenerer les fichiers apres modification de la configuration :
+**Generated files:**
+
+| File / Directory | Content |
+|------------------|---------|
+| `.crush/agents/*.md` | One file per agent |
+
+**Format:** Markdown
+
+---
+
+### 11. iFlow
+
+**Description:** iFlow IDE — AI development environment with agent integration.
+
+**Generated files:**
+
+| File / Directory | Content |
+|------------------|---------|
+| `.iflow/agents/*.md` | One file per agent |
+
+**Format:** Markdown
+
+---
+
+### 12. KiloCoder
+
+**Description:** KiloCoder — AI-powered coding tool with multi-agent support.
+
+**Generated files:**
+
+| File / Directory | Content |
+|------------------|---------|
+| `.kilocoder/agents/*.md` | One file per agent |
+
+**Format:** Markdown
+
+---
+
+### 13. OpenCode
+
+**Description:** OpenCode — Open-source AI coding assistant.
+
+**Generated files:**
+
+| File / Directory | Content |
+|------------------|---------|
+| `opencode.yaml` | Main configuration file |
+| `.opencode/agents/*.md` | One file per agent |
+
+**Format:** YAML + Markdown
+
+**Notes:** OpenCode uses a root-level YAML configuration file alongside Markdown agent files.
+
+---
+
+### 14. QwenCoder
+
+**Description:** QwenCoder — AI coding assistant powered by the Qwen model family.
+
+**Generated files:**
+
+| File / Directory | Content |
+|------------------|---------|
+| `.qwencoder/agents/*.md` | One file per agent |
+
+**Format:** Markdown
+
+---
+
+### 15. Rovo Dev
+
+**Description:** Rovo Dev — Atlassian's AI development agent platform.
+
+**Generated files:**
+
+| File / Directory | Content |
+|------------------|---------|
+| `.rovo/agents/*.md` | One file per agent |
+
+**Format:** Markdown
+
+---
+
+## CLI Platforms (5)
+
+### 16. Claude Code
+
+**Description:** Claude Code CLI (Anthropic) — The **reference platform** with the most complete adapter. Supports agents, skills, and rules as separate structured files.
+
+**Generated files:**
+
+| File / Directory | Content |
+|------------------|---------|
+| `CLAUDE.md` | Main file: Jarvis orchestrator, agent catalog, global rules |
+| `.claude/agents/*/AGENT.md` | One directory per agent, each containing an `AGENT.md` file with full agent instructions |
+| `.claude/skills/*/SKILL.md` | One directory per skill, each containing a `SKILL.md` file with skill definition |
+| `.claude/rules/` | Rule files for global and context-specific behavior |
+
+**Format:** Markdown
+
+**Notes:** `CLAUDE.md` contains the orchestrator and catalog. Each agent and skill has its own directory with a dedicated Markdown file, enabling direct invocation via `/agent-*` and skill commands. Rules provide layered behavioral configuration.
+
+---
+
+### 17. Codex
+
+**Description:** Codex CLI (OpenAI) — OpenAI's command-line coding agent.
+
+**Generated files:**
+
+| File / Directory | Content |
+|------------------|---------|
+| `AGENTS.md` | Consolidated file: orchestrator, agent catalog, commands |
+
+**Format:** Compact Markdown
+
+**Notes:** Everything is consolidated into `AGENTS.md` which contains the orchestrator, all agent definitions, and command references.
+
+---
+
+### 18. Gemini CLI
+
+**Description:** Gemini CLI (Google) — Google's command-line AI coding tool.
+
+**Generated files:**
+
+| File / Directory | Content |
+|------------------|---------|
+| `GEMINI.md` | Main consolidated file: orchestrator, agents, commands |
+| `.gemini/` | Additional configuration and settings |
+
+**Format:** Markdown
+
+**Notes:** The main instructions go in `GEMINI.md`. The `.gemini/` directory can hold additional configuration files and context.
+
+---
+
+### 19. Auggie
+
+**Description:** Auggie CLI (Augment Code) — Augment's command-line AI assistant.
+
+**Generated files:**
+
+| File / Directory | Content |
+|------------------|---------|
+| `.augment/commands/*.md` | One Markdown file per command (agents, workflows, skills) |
+
+**Format:** Markdown
+
+**Notes:** Each command is a separate `.md` file in `.augment/commands/`, allowing direct invocation through the CLI.
+
+---
+
+### 20. Pi
+
+**Description:** Pi CLI — AI coding assistant with multi-agent and system-level configuration.
+
+**Generated files:**
+
+| File / Directory | Content |
+|------------------|---------|
+| `AGENTS.md` | Agent catalog with all agent definitions |
+| `SYSTEM.md` | System-level instructions including orchestrator and global rules |
+
+**Format:** Markdown
+
+**Notes:** Pi splits configuration between `AGENTS.md` (agent definitions) and `SYSTEM.md` (orchestrator and system instructions).
+
+---
+
+## Technical Notes
+
+### File Regeneration
+
+To regenerate files after modifying the configuration:
 
 ```bash
 # Via Node.js
@@ -362,43 +369,43 @@ node generator/generate.js --config .cohesium.yaml
 # Via Python
 python3 generator/generate.py --config .cohesium.yaml
 
-# Via les commandes integrees
-/update         # Regenerer depuis .cohesium.yaml
-/reconfigure    # Relancer l'assistant de configuration
+# Via built-in commands
+/update         # Regenerate from .cohesium.yaml
+/reconfigure    # Relaunch the configuration wizard
 ```
 
-### Multi-plateforme
+### Multi-Platform Support
 
-Il est possible de generer les fichiers pour **plusieurs plateformes simultanement**. L'installateur permet de selectionner une ou plusieurs cibles. Les fichiers sont generes dans les emplacements natifs de chaque plateforme sans conflit.
+You can generate files for **multiple platforms simultaneously**. The installer lets you select one or more targets. Files are generated at each platform's native locations without conflicts.
 
-### Ajout d'une plateforme
+### Adding a New Platform
 
-Pour ajouter le support d'une nouvelle plateforme :
-1. Creer un nouveau fichier adaptateur dans `generator/adapters/ide/` ou `generator/adapters/cli/`
-2. Implementer l'interface standard (voir les adaptateurs existants comme modele)
-3. Ajouter la plateforme dans `src/config/defaults.yaml` sous `platforms.ide` ou `platforms.cli`
+To add support for a new platform:
+1. Create a new adapter file in `generator/adapters/ide/` or `generator/adapters/cli/`
+2. Implement the standard interface (use existing adapters as a reference)
+3. Add the platform to `src/config/defaults.yaml` under `platforms.ide` or `platforms.cli`
 
-### Tableau recapitulatif des emplacements
+### File Location Summary
 
-| Plateforme | Fichier principal | Dossier agents | Autres |
-|------------|-------------------|----------------|--------|
-| Cursor | `.cursorrules` | `.cursor/agents/` | -- |
-| Windsurf | `.windsurfrules` | -- | `.windsurf/workflows/` |
-| Cline | `.clinerules` | `.cline/agents/` | -- |
-| Roo Code | `.roomodes` | -- | `.roo/rules-*` |
-| Copilot | `.github/copilot-instructions.md` | `.github/copilot/agents/` | -- |
-| Kiro | -- | `.kiro/agents/` | `.kiro/skills/`, `.kiro/workflows/` |
-| Trae | -- | `.trae/agents/` | `.trae/rules/` |
-| Antigravity | -- | `.antigravity/agents/` | -- |
-| CodeBuddy | -- | `.codebuddy/agents/` | -- |
-| Crush | -- | `.crush/agents/` | -- |
-| iFlow | -- | `.iflow/agents/` | -- |
-| KiloCoder | -- | `.kilocoder/agents/` | -- |
-| OpenCode | `opencode.yaml` | `.opencode/agents/` | -- |
-| QwenCoder | -- | `.qwencoder/agents/` | -- |
-| Rovo Dev | -- | `.rovo/agents/` | -- |
-| Claude Code | `CLAUDE.md` | `.claude/agents/` | `.claude/commands/` |
-| Codex | `codex.md` | -- | `AGENTS.md` |
-| Gemini CLI | `GEMINI.md` | -- | -- |
-| Auggie | -- | `.auggie/agents/` | -- |
-| Pi | -- | `.pi/agents/` | -- |
+| Platform | Main File | Agent Directory | Other |
+|----------|-----------|-----------------|-------|
+| Cursor | `.cursorrules` | `.cursor/agents/` | — |
+| Windsurf | `.windsurfrules` | — | `.windsurf/workflows/` |
+| Cline | `.clinerules` | `.cline/agents/` | — |
+| Roo Code | `.roomodes` | — | `.roo/rules-*` |
+| GitHub Copilot | `.github/copilot-instructions.md` | `.github/instructions/` | — |
+| Kiro | — | `.kiro/agents/` | `.kiro/steering/` |
+| Trae | — | `.trae/agents/` | `.trae/rules/` |
+| Antigravity | — | `.antigravity/agents/` | — |
+| CodeBuddy | — | `.codebuddy/agents/` | — |
+| Crush | — | `.crush/agents/` | — |
+| iFlow | — | `.iflow/agents/` | — |
+| KiloCoder | — | `.kilocoder/agents/` | — |
+| OpenCode | `opencode.yaml` | `.opencode/agents/` | — |
+| QwenCoder | — | `.qwencoder/agents/` | — |
+| Rovo Dev | — | `.rovo/agents/` | — |
+| Claude Code | `CLAUDE.md` | `.claude/agents/*/AGENT.md` | `.claude/skills/*/SKILL.md`, `.claude/rules/` |
+| Codex | `AGENTS.md` | — | — |
+| Gemini CLI | `GEMINI.md` | — | `.gemini/` |
+| Auggie | — | — | `.augment/commands/*.md` |
+| Pi | `AGENTS.md` + `SYSTEM.md` | — | — |

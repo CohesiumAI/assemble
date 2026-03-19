@@ -12,7 +12,7 @@ const path = require('path');
  * @returns {{ meta: object, content: string, sections: object }}
  */
 function parseMarkdown(filePath) {
-  const raw = fs.readFileSync(filePath, 'utf-8');
+  const raw = fs.readFileSync(filePath, 'utf-8').replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
   const frontmatterMatch = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
 
   if (!frontmatterMatch) {
@@ -85,7 +85,7 @@ function parseSections(content) {
  * @returns {object}
  */
 function parseYamlFile(filePath) {
-  const raw = fs.readFileSync(filePath, 'utf-8');
+  const raw = fs.readFileSync(filePath, 'utf-8').replace(/^\uFEFF/, '');
   // Pour les fichiers YAML complexes, on utilise un parsing simplifié
   // En production, utiliser js-yaml
   try {
@@ -142,7 +142,7 @@ function loadWorkflows(workflowsDir) {
   return fs.readdirSync(workflowsDir)
     .filter(f => f.endsWith('.yaml') || f.endsWith('.yml'))
     .map(fileName => {
-      const raw = fs.readFileSync(path.join(workflowsDir, fileName), 'utf-8');
+      const raw = fs.readFileSync(path.join(workflowsDir, fileName), 'utf-8').replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
       return { raw, fileName };
     });
 }
@@ -154,7 +154,7 @@ function loadWorkflows(workflowsDir) {
  */
 function loadCommands(commandsFile) {
   if (!fs.existsSync(commandsFile)) return '';
-  return fs.readFileSync(commandsFile, 'utf-8');
+  return fs.readFileSync(commandsFile, 'utf-8').replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
 }
 
 /**

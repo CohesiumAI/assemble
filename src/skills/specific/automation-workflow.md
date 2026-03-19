@@ -1,83 +1,83 @@
 ---
 name: automation-workflow
-description: Conception de workflow d'automatisation multi-outils avec declencheurs, actions, gestion d'erreurs et monitoring
-agent: automation
+description: Conception de workflow d'automatisation multi-outils avec déclencheurs, actions, gestion d'erreurs et monitoring
+agents: [automation, devops, dev-backend]
 trigger: /automate
 ---
 
 # Skill : Automation Workflow
 
 ## Objectif
-Concevoir et implementer un workflow d'automatisation complet en utilisant les outils no-code/low-code (n8n, Make, Zapier) ou des scripts personnalises. Definir les declencheurs, les etapes de transformation, les integrations tierces, la gestion des erreurs et le monitoring pour automatiser des processus metier repetitifs de maniere fiable.
+Concevoir et implémenter un workflow d'automatisation complet en utilisant les outils no-code/low-code (n8n, Make, Zapier) ou des scripts personnalisés. Définir les déclencheurs, les étapes de transformation, les intégrations tierces, la gestion des erreurs et le monitoring pour automatiser des processus métier répétitifs de manière fiable.
 
 ## Quand l'utiliser
-- Pour automatiser un processus metier repetitif impliquant plusieurs outils ou services
-- Lors de la creation d'une integration entre deux systemes qui ne communiquent pas nativement
-- Quand un flux de donnees doit etre automatise entre des applications (CRM, ERP, outil de ticketing, etc.)
-- Pour mettre en place des notifications automatiques basees sur des evenements
-- Lors de l'automatisation de taches de reporting, de synchronisation de donnees ou de provisioning
+- Pour automatiser un processus métier répétitif impliquant plusieurs outils ou services
+- Lors de la création d'une intégration entre deux systèmes qui ne communiquent pas nativement
+- Quand un flux de données doit être automatisé entre des applications (CRM, ERP, outil de ticketing, etc.)
+- Pour mettre en place des notifications automatiques basées sur des événements
+- Lors de l'automatisation de tâches de reporting, de synchronisation de données ou de provisioning
 
-## Etapes
-1. **Cartographier le processus actuel** — Documenter le processus manuel existant : etapes, acteurs, outils utilises, frequence d'execution, volume de donnees et temps passe. Identifier les points de douleur et les erreurs frequentes.
-2. **Definir le workflow cible** — Concevoir le workflow automatise : declencheur (webhook, schedule, evenement), etapes de traitement, conditions de branchement, boucles et points de sortie. Produire un diagramme de flux.
-3. **Selectionner les outils et connecteurs** — Choisir la plateforme d'automatisation adaptee (n8n pour le self-hosted, Make pour la flexibilite, Zapier pour la simplicite) et verifier la disponibilite des connecteurs pour chaque service implique.
-4. **Configurer le declencheur** — Implementer le declencheur du workflow : webhook entrant, polling schedule (cron), evenement applicatif, file d'attente de messages ou declenchement manuel avec parametres.
-5. **Implementer les etapes de traitement** — Configurer chaque noeud du workflow : appels API, transformations de donnees (mapping, filtrage, agregation), conditions logiques (if/else, switch) et boucles (for each).
-6. **Gerer les erreurs et les retries** — Implementer la gestion des erreurs a chaque etape critique : retries avec backoff exponentiel, chemins d'erreur alternatifs, notifications d'echec et file de messages morts (dead letter queue).
-7. **Tester le workflow de bout en bout** — Executer le workflow avec des donnees de test representatives, verifier chaque etape, valider les transformations de donnees et simuler les cas d'erreur pour verifier la resilience.
-8. **Deployer et monitorer** — Activer le workflow en production, configurer les alertes de monitoring (echecs, latence, volume anormal), mettre en place les logs et definir les procedures de maintenance.
+## Étapes
+1. **Cartographier le processus actuel** — Documenter le processus manuel existant : étapes, acteurs, outils utilisés, fréquence d'exécution, volume de données et temps passé. Identifier les points de douleur et les erreurs fréquentes.
+2. **Définir le workflow cible** — Concevoir le workflow automatisé : déclencheur (webhook, schedule, événement), étapes de traitement, conditions de branchement, boucles et points de sortie. Produire un diagramme de flux.
+3. **Sélectionner les outils et connecteurs** — Choisir la plateforme d'automatisation adaptée (n8n pour le self-hosted, Make pour la flexibilité, Zapier pour la simplicité) et vérifier la disponibilité des connecteurs pour chaque service impliqué.
+4. **Configurer le déclencheur** — Implémenter le déclencheur du workflow : webhook entrant, polling schedule (cron), événement applicatif, file d'attente de messages ou déclenchement manuel avec paramètres.
+5. **Implémenter les étapes de traitement** — Configurer chaque noeud du workflow : appels API, transformations de données (mapping, filtrage, agrégation), conditions logiques (if/else, switch) et boucles (for each).
+6. **Gérer les erreurs et les retries** — Implémenter la gestion des erreurs à chaque étape critique : retries avec backoff exponentiel, chemins d'erreur alternatifs, notifications d'échec et file de messages morts (dead letter queue).
+7. **Tester le workflow de bout en bout** — Exécuter le workflow avec des données de test représentatives, vérifier chaque étape, valider les transformations de données et simuler les cas d'erreur pour vérifier la résilience.
+8. **Déployer et monitorer** — Activer le workflow en production, configurer les alertes de monitoring (échecs, latence, volume anormal), mettre en place les logs et définir les procédures de maintenance.
 
 ## Checklist de sortie
-- [ ] Le processus actuel est documente et les gains de l'automatisation sont chiffres
-- [ ] Le diagramme de flux du workflow est clair et valide par les parties prenantes
-- [ ] Tous les connecteurs et API sont configures avec les authentifications appropriees
-- [ ] Le declencheur fonctionne de maniere fiable (webhook verifie, schedule correct)
-- [ ] Les transformations de donnees sont correctes et les mappings sont valides
-- [ ] La gestion des erreurs est implementee avec retries et notifications d'echec
-- [ ] Le workflow est teste avec des donnees representatives (cas nominal et cas d'erreur)
+- [ ] Le processus actuel est documenté et les gains de l'automatisation sont chiffrés
+- [ ] Le diagramme de flux du workflow est clair et validé par les parties prenantes
+- [ ] Tous les connecteurs et API sont configurés avec les authentifications appropriées
+- [ ] Le déclencheur fonctionne de manière fiable (webhook vérifié, schedule correct)
+- [ ] Les transformations de données sont correctes et les mappings sont validés
+- [ ] La gestion des erreurs est implémentée avec retries et notifications d'échec
+- [ ] Le workflow est testé avec des données représentatives (cas nominal et cas d'erreur)
 - [ ] Le monitoring et les alertes sont en place pour la supervision en production
 
 ## Format de sortie
 ```
-Specification de Workflow d'Automatisation
+Spécification de Workflow d'Automatisation
 
 Nom : [nom descriptif du workflow]
 Plateforme : [n8n / Make / Zapier / script custom]
 Concepteur : [agent automation]
 Date : [date]
-Frequence : [temps reel / toutes les X minutes / quotidien / hebdomadaire]
+Fréquence : [temps réel / toutes les X minutes / quotidien / hebdomadaire]
 
-Processus automatise :
+Processus automatisé :
   - Description : [ce que fait le workflow en une phrase]
-  - Declencheur : [webhook / schedule / evenement]
-  - Volume estime : [X executions par jour/semaine]
-  - Temps economise : [X heures par semaine]
+  - Déclencheur : [webhook / schedule / événement]
+  - Volume estimé : [X exécutions par jour/semaine]
+  - Temps économisé : [X heures par semaine]
 
 Diagramme de flux :
-  [Declencheur] → [Etape 1 : Recuperation donnees]
-                 → [Etape 2 : Transformation / Filtrage]
+  [Déclencheur] → [Étape 1 : Récupération données]
+                 → [Étape 2 : Transformation / Filtrage]
                  → [Condition : validation]
-                    → OUI → [Etape 3A : Action principale]
-                           → [Etape 4 : Notification succes]
-                    → NON → [Etape 3B : Gestion rejet]
-                           → [Etape 4B : Alerte equipe]
+                    → OUI → [Étape 3A : Action principale]
+                           → [Étape 4 : Notification succès]
+                    → NON → [Étape 3B : Gestion rejet]
+                           → [Étape 4B : Alerte équipe]
 
-Services integres :
+Services intégrés :
   | Service        | Connecteur | Action                   | Authentification |
   |----------------|-----------|--------------------------|-----------------|
-  | [Service 1]    | API REST  | Recuperer donnees        | API Key         |
+  | [Service 1]    | API REST  | Récupérer données        | API Key         |
   | [Service 2]    | Webhook   | Envoyer notification     | OAuth 2.0       |
-  | [Service 3]    | SDK natif | Creer enregistrement     | Token           |
+  | [Service 3]    | SDK natif | Créer enregistrement     | Token           |
 
 Gestion des erreurs :
   - Retry : 3 tentatives avec backoff exponentiel (1s, 5s, 30s)
-  - Notification d'echec : [Slack / email / PagerDuty]
-  - Dead letter queue : [activee / desactivee]
-  - Fallback : [action alternative en cas d'echec definitif]
+  - Notification d'échec : [Slack / email / PagerDuty]
+  - Dead letter queue : [activée / désactivée]
+  - Fallback : [action alternative en cas d'échec définitif]
 
 Monitoring :
   - Dashboard : [lien vers le tableau de bord]
-  - Alertes : [conditions de declenchement des alertes]
-  - Logs : [retention et niveau de detail]
-  - SLA : [temps de reponse attendu, taux de succes cible]
+  - Alertes : [conditions de déclenchement des alertes]
+  - Logs : [rétention et niveau de détail]
+  - SLA : [temps de réponse attendu, taux de succès cible]
 ```

@@ -1,71 +1,58 @@
 /**
  * Cohesium AI — iFlow Adapter
- * Generates .iflow/agents/{agent-name}.md and .iflow/flows/ for workflows
+ * Generates .iflow/agents/ + .iflow/skills/ + .iflow/flows/
  */
 
 const fs = require('fs');
 const path = require('path');
-const { prepareAgent, renderAgent, renderWorkflow } = require('../../lib/template-engine');
+const { prepareAgent, renderAgent, marvelSlug, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions } = require('../../lib/template-engine');
 
 module.exports = {
   name: 'iflow',
   displayName: 'iFlow',
   type: 'ide',
 
-  getOutputPaths(projectDir, { agents = [], workflows = [] } = {}) {
+  getOutputPaths(projectDir, { agents = [], skills = {}, workflows = [] } = {}) {
     const paths = [];
-    for (const agent of agents) {
-      const slug = (agent.meta.name || agent.fileName.replace('.md', '')).toLowerCase().replace(/\s+/g, '-');
-      paths.push(path.join(projectDir, '.iflow', 'agents', `${slug}.md`));
-    }
-    for (const workflow of workflows) {
-      paths.push(path.join(projectDir, '.iflow', 'flows', workflow.fileName));
-    }
+    for (const agent of agents) paths.push(path.join(projectDir, '.iflow', 'agents', `${marvelSlug(agent)}.md`));
+    const allSkills = [...(skills.shared || []), ...(skills.specific || [])];
+    for (const skill of allSkills) paths.push(path.join(projectDir, '.iflow', 'skills', `${skillSlug(skill)}.md`));
+    for (const wf of workflows) paths.push(path.join(projectDir, '.iflow', 'flows', `${workflowSlug(wf)}.md`));
     return paths;
   },
 
   generate(projectDir, { agents = [], skills = {}, workflows = [], commands, orchestrator, config = {} }) {
-    const agentsDir = path.join(projectDir, '.iflow', 'agents');
-    const flowsDir = path.join(projectDir, '.iflow', 'flows');
-    fs.mkdirSync(agentsDir, { recursive: true });
-    fs.mkdirSync(flowsDir, { recursive: true });
+    for (const d of ['agents', 'skills', 'flows']) fs.mkdirSync(path.join(projectDir, '.iflow', d), { recursive: true });
+    const agentLookup = buildAgentLookup(agents);
 
-    // Generate agent files
     for (const agent of agents) {
       const prepared = prepareAgent(agent, config);
-      const slug = (agent.meta.name || agent.fileName.replace('.md', '')).toLowerCase().replace(/\s+/g, '-');
-      const content = renderAgent(prepared, 'markdown');
-      fs.writeFileSync(path.join(agentsDir, `${slug}.md`), content, 'utf-8');
+      fs.writeFileSync(path.join(projectDir, '.iflow', 'agents', `${marvelSlug(agent)}.md`), renderAgent(prepared, 'markdown'), 'utf-8');
     }
 
-    // Generate workflow/flow files
+    const allSkills = [...(skills.shared || []), ...(skills.specific || [])];
+    for (const skill of allSkills) {
+      const prepared = prepareAgent(skill, config);
+      fs.writeFileSync(path.join(projectDir, '.iflow', 'skills', `${skillSlug(skill)}.md`), renderAgent(prepared, 'markdown'), 'utf-8');
+    }
+
     for (const workflow of workflows) {
-      const content = renderWorkflow(workflow, 'yaml');
-      fs.writeFileSync(path.join(flowsDir, workflow.fileName), content, 'utf-8');
+      const slug = workflowSlug(workflow);
+      const name = workflowField(workflow.raw, 'name') || slug;
+      const desc = workflowField(workflow.raw, 'description');
+      let content = `# Workflow : ${name}\n\n${desc}\n\n`;
+      content += renderWorkflowInstructions(workflow, agentLookup, config);
+      fs.writeFileSync(path.join(projectDir, '.iflow', 'flows', `${slug}.md`), content, 'utf-8');
     }
   },
 
   validate(projectDir) {
     const errors = [];
-    const iflowDir = path.join(projectDir, '.iflow');
-
-    if (!fs.existsSync(iflowDir)) {
-      errors.push(`Missing .iflow directory: ${iflowDir}`);
-    } else {
-      for (const subdir of ['agents', 'flows']) {
-        const dir = path.join(iflowDir, subdir);
-        if (fs.existsSync(dir)) {
-          const files = fs.readdirSync(dir);
-          for (const file of files) {
-            const content = fs.readFileSync(path.join(dir, file), 'utf-8');
-            if (content.trim().length === 0) {
-              errors.push(`Empty file: ${path.join(subdir, file)}`);
-            }
-          }
-        }
-      }
+    if (!fs.existsSync(path.join(projectDir, '.iflow'))) { errors.push('Missing .iflow directory'); return { valid: false, errors }; }
+    for (const subdir of ['agents', 'skills', 'flows']) {
+      const dir = path.join(projectDir, '.iflow', subdir);
+      if (fs.existsSync(dir)) for (const file of fs.readdirSync(dir)) { const c = fs.readFileSync(path.join(dir, file), 'utf-8'); if (c.trim().length === 0) errors.push(`Empty: .iflow/${subdir}/${file}`); }
     }
-
     return { valid: errors.length === 0, errors };
   }
 };

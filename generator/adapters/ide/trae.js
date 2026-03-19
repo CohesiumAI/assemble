@@ -1,66 +1,61 @@
 /**
  * Cohesium AI — Trae Adapter
- * Generates .trae/rules/ and .trae/agents/ files
+ * Generates .trae/rules/ (compact) + .trae/agents/ + .trae/skills/ + .trae/workflows/
  */
 
 const fs = require('fs');
 const path = require('path');
-const { prepareAgent, renderAgent } = require('../../lib/template-engine');
+const { prepareAgent, renderAgent, marvelSlug, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions } = require('../../lib/template-engine');
 
 module.exports = {
   name: 'trae',
   displayName: 'Trae',
   type: 'ide',
 
-  getOutputPaths(projectDir, { agents = [] } = {}) {
+  getOutputPaths(projectDir, { agents = [], skills = {}, workflows = [] } = {}) {
     const paths = [];
-    for (const agent of agents) {
-      const slug = (agent.meta.name || agent.fileName.replace('.md', '')).toLowerCase().replace(/\s+/g, '-');
-      paths.push(path.join(projectDir, '.trae', 'rules', `${slug}.md`));
-      paths.push(path.join(projectDir, '.trae', 'agents', `${slug}.md`));
-    }
+    for (const agent of agents) { const s = marvelSlug(agent); paths.push(path.join(projectDir, '.trae', 'rules', `${s}.md`)); paths.push(path.join(projectDir, '.trae', 'agents', `${s}.md`)); }
+    const allSkills = [...(skills.shared || []), ...(skills.specific || [])];
+    for (const skill of allSkills) paths.push(path.join(projectDir, '.trae', 'skills', `${skillSlug(skill)}.md`));
+    for (const wf of workflows) paths.push(path.join(projectDir, '.trae', 'workflows', `${workflowSlug(wf)}.md`));
     return paths;
   },
 
   generate(projectDir, { agents = [], skills = {}, workflows = [], commands, orchestrator, config = {} }) {
-    const rulesDir = path.join(projectDir, '.trae', 'rules');
-    const agentsDir = path.join(projectDir, '.trae', 'agents');
-    fs.mkdirSync(rulesDir, { recursive: true });
-    fs.mkdirSync(agentsDir, { recursive: true });
+    for (const d of ['rules', 'agents', 'skills', 'workflows']) fs.mkdirSync(path.join(projectDir, '.trae', d), { recursive: true });
+    const agentLookup = buildAgentLookup(agents);
 
     for (const agent of agents) {
       const prepared = prepareAgent(agent, config);
-      const slug = (agent.meta.name || agent.fileName.replace('.md', '')).toLowerCase().replace(/\s+/g, '-');
+      const slug = marvelSlug(agent);
       const content = renderAgent(prepared, 'markdown');
+      fs.writeFileSync(path.join(projectDir, '.trae', 'rules', `${slug}.md`), content, 'utf-8');
+      fs.writeFileSync(path.join(projectDir, '.trae', 'agents', `${slug}.md`), content, 'utf-8');
+    }
 
-      // Rules file (same content as agent)
-      fs.writeFileSync(path.join(rulesDir, `${slug}.md`), content, 'utf-8');
-      // Agent file
-      fs.writeFileSync(path.join(agentsDir, `${slug}.md`), content, 'utf-8');
+    const allSkills = [...(skills.shared || []), ...(skills.specific || [])];
+    for (const skill of allSkills) {
+      const prepared = prepareAgent(skill, config);
+      fs.writeFileSync(path.join(projectDir, '.trae', 'skills', `${skillSlug(skill)}.md`), renderAgent(prepared, 'markdown'), 'utf-8');
+    }
+
+    for (const workflow of workflows) {
+      const slug = workflowSlug(workflow);
+      const name = workflowField(workflow.raw, 'name') || slug;
+      const desc = workflowField(workflow.raw, 'description');
+      let content = `# Workflow : ${name}\n\n${desc}\n\n`;
+      content += renderWorkflowInstructions(workflow, agentLookup, config);
+      fs.writeFileSync(path.join(projectDir, '.trae', 'workflows', `${slug}.md`), content, 'utf-8');
     }
   },
 
   validate(projectDir) {
     const errors = [];
-    const traeDir = path.join(projectDir, '.trae');
-
-    if (!fs.existsSync(traeDir)) {
-      errors.push(`Missing .trae directory: ${traeDir}`);
-    } else {
-      for (const subdir of ['rules', 'agents']) {
-        const dir = path.join(traeDir, subdir);
-        if (fs.existsSync(dir)) {
-          const files = fs.readdirSync(dir);
-          for (const file of files) {
-            const content = fs.readFileSync(path.join(dir, file), 'utf-8');
-            if (content.trim().length === 0) {
-              errors.push(`Empty file: ${path.join(subdir, file)}`);
-            }
-          }
-        }
-      }
+    if (!fs.existsSync(path.join(projectDir, '.trae'))) { errors.push('Missing .trae directory'); return { valid: false, errors }; }
+    for (const subdir of ['rules', 'agents', 'skills', 'workflows']) {
+      const dir = path.join(projectDir, '.trae', subdir);
+      if (fs.existsSync(dir)) for (const file of fs.readdirSync(dir)) { const c = fs.readFileSync(path.join(dir, file), 'utf-8'); if (c.trim().length === 0) errors.push(`Empty: .trae/${subdir}/${file}`); }
     }
-
     return { valid: errors.length === 0, errors };
   }
 };

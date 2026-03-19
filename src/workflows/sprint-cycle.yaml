@@ -14,7 +14,7 @@ steps:
     outputs: [sprint-goals.md, prioritized-stories.md]
     depends_on: [1]
   - step: 3
-    agent: dev
+    agent: dev-fullstack
     action: "Implémenter les user stories et documenter les développements"
     inputs: [02-pm/sprint-goals.md, 02-pm/prioritized-stories.md, 01-scrum/sprint-backlog.md]
     outputs: [implementation-log.md, technical-notes.md]
@@ -22,12 +22,12 @@ steps:
   - step: 4
     agent: qa
     action: "Tester les développements du sprint et rapporter les résultats"
-    inputs: [03-dev/implementation-log.md, 02-pm/prioritized-stories.md, 02-pm/sprint-goals.md]
+    inputs: [03-dev-fullstack/implementation-log.md, 02-pm/prioritized-stories.md, 02-pm/sprint-goals.md]
     outputs: [test-results.md, defects-log.md]
     depends_on: [3]
   - step: 5
     agent: devops
     action: "Préparer la release et rédiger les notes de version"
-    inputs: [03-dev/implementation-log.md, 04-qa/test-results.md, 04-qa/defects-log.md]
+    inputs: [03-dev-fullstack/implementation-log.md, 04-qa/test-results.md, 04-qa/defects-log.md]
     outputs: [release-notes.md, deployment-summary.md]
     depends_on: [4]

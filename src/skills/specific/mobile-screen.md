@@ -1,7 +1,7 @@
 ---
 name: mobile-screen
 description: Création d'écran mobile React Native/Flutter avec navigation, état et animations
-agent: dev-mobile
+agents: [dev-mobile, dev-fullstack]
 trigger: /screen
 ---
 

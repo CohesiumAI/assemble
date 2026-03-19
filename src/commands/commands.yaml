@@ -176,6 +176,25 @@ commands:
     description: "Invoquer Invisible Woman — UX/UI Designer Senior"
     category: design
 
+  # --- Équipe Business & Operations ---
+  - name: /agent-cs
+    type: agent
+    agent: customer-success
+    description: "Invoquer Pepper Potts — Customer Success Manager Senior"
+    category: business
+
+  - name: /agent-finance
+    type: agent
+    agent: finance
+    description: "Invoquer Iron Fist — Directeur Financier / CFO Senior"
+    category: business
+
+  - name: /agent-pr
+    type: agent
+    agent: pr-comms
+    description: "Invoquer Phil Coulson — Directeur Communication / PR Senior"
+    category: business
+
   # --- Agent Transversal ---
   - name: /agent-contrarian
     type: agent
@@ -190,7 +209,7 @@ commands:
   - name: /mvp
     type: workflow
     workflow: mvp-launch
-    description: "Lancer le workflow MVP complet (PM → Architect → UX → DB → Backend → Frontend → QA → DevOps)"
+    description: "Lancer le workflow MVP complet (PM → Architect → UX → Brand → DB → Backend → Frontend → QA → DevOps)"
     category: workflow
 
   - name: /feature
@@ -208,7 +227,7 @@ commands:
   - name: /review-pipeline
     type: workflow
     workflow: code-review-pipeline
-    description: "Lancer le pipeline de revue de code (Dev → QA → Security → Contrarian)"
+    description: "Lancer le pipeline de revue de code (Fullstack → QA → Security → Contrarian)"
     category: workflow
 
   - name: /audit-security
@@ -226,19 +245,19 @@ commands:
   - name: /campaign
     type: workflow
     workflow: marketing-campaign
-    description: "Lancer le workflow campagne marketing (Marketing → Brand → Copy → Ads → Social → Growth)"
+    description: "Lancer le workflow campagne marketing (Marketing → Finance → Brand → Copy → Ads + Social + PR → Growth)"
     category: workflow
 
   - name: /sprint
     type: workflow
     workflow: sprint-cycle
-    description: "Lancer le cycle de sprint (Scrum → PM → Dev → QA → DevOps)"
+    description: "Lancer le cycle de sprint (Scrum → PM → Fullstack → QA → DevOps)"
     category: workflow
 
   - name: /tech-debt
     type: workflow
     workflow: tech-debt-reduction
-    description: "Lancer la réduction de dette technique (Architect → Dev → QA → DevOps)"
+    description: "Lancer la réduction de dette technique (Architect → Fullstack → QA → DevOps)"
     category: workflow
 
   - name: /onboard
@@ -250,7 +269,31 @@ commands:
   - name: /release
     type: workflow
     workflow: release-cycle
-    description: "Lancer le cycle de release (Scrum → QA → Security → DevOps → Marketing)"
+    description: "Lancer le cycle de release (Scrum → QA → Security → Legal → DevOps → Marketing → PR → CS)"
+    category: workflow
+
+  - name: /hotfix
+    type: workflow
+    workflow: hotfix-release
+    description: "Lancer le workflow hotfix production (QA → Security → Fullstack → QA → DevOps)"
+    category: workflow
+
+  - name: /upgrade-deps
+    type: workflow
+    workflow: dependency-upgrade
+    description: "Lancer la mise à jour des dépendances (Architect → Security → Fullstack → QA → DevOps)"
+    category: workflow
+
+  - name: /doc-sprint
+    type: workflow
+    workflow: documentation-sprint
+    description: "Lancer un sprint documentation (Analyst → Architect → Fullstack → Copywriter → DevOps)"
+    category: workflow
+
+  - name: /experiment-cycle
+    type: workflow
+    workflow: experimentation
+    description: "Lancer un cycle d'expérimentation A/B (PM → Data → Fullstack → QA → Growth)"
     category: workflow
 
   # ═══════════════════════════════════════════
@@ -466,6 +509,12 @@ commands:
     type: meta
     team: data
     description: "Afficher l'équipe Data & IA"
+    category: meta
+
+  - name: /team-business
+    type: meta
+    team: business
+    description: "Afficher l'équipe Business & Operations"
     category: meta
 
   - name: /team-design

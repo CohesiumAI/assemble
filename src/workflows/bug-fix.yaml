@@ -8,7 +8,7 @@ steps:
     action: "Analyser le bug, reproduire le problème et documenter les conditions"
     outputs: [bug-analysis.md, reproduction-steps.md]
   - step: 2
-    agent: dev
+    agent: dev-fullstack
     action: "Proposer et implémenter la correction du bug"
     inputs: [01-qa/bug-analysis.md, 01-qa/reproduction-steps.md]
     outputs: [fix-proposal.md, fix-implementation.md]
@@ -16,6 +16,6 @@ steps:
   - step: 3
     agent: qa
     action: "Exécuter les tests de non-régression et valider la correction"
-    inputs: [02-dev/fix-proposal.md, 02-dev/fix-implementation.md, 01-qa/bug-analysis.md]
+    inputs: [02-dev-fullstack/fix-proposal.md, 02-dev-fullstack/fix-implementation.md, 01-qa/bug-analysis.md]
     outputs: [regression-test.md, validation-report.md]
     depends_on: [2]

@@ -126,6 +126,21 @@ teams:
         role: "UX/UI Designer"
         marvel: "Invisible Woman"
 
+  business:
+    name: "Équipe Business & Operations"
+    description: "Finance, Customer Success, PR/Communication"
+    lead: finance
+    members:
+      - agent: finance
+        role: "Directeur Financier / CFO"
+        marvel: "Iron Fist"
+      - agent: customer-success
+        role: "Customer Success Manager"
+        marvel: "Pepper Potts"
+      - agent: pr-comms
+        role: "Directeur Communication / PR"
+        marvel: "Phil Coulson"
+
   meta:
     name: "Agents Transversaux"
     description: "Agents de support et de challenge"

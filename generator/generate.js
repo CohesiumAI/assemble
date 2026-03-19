@@ -115,6 +115,10 @@ function parseArgs() {
       case '-o':
         parsed.output_dir = args[++i];
         break;
+      case '--update':
+      case '-u':
+        parsed.update = true;
+        break;
       case '--validate':
         parsed.validateOnly = true;
         break;
@@ -146,6 +150,7 @@ Options:
   --lang-team <lang>       Langue de l'équipe (défaut: français)
   --lang-output <lang>     Langue des livrables (défaut: français)
   --output-dir, -o <path>  Répertoire de sortie des livrables
+  --update, -u             Mettre à jour une installation existante (lit .cohesium.yaml)
   --validate               Valider les fichiers générés sans régénérer
   --help, -h               Afficher cette aide
 
@@ -157,6 +162,7 @@ Plateformes supportées:
 Exemples:
   node generate.js --platforms cursor,claude-code --lang-team français
   node generate.js --config .cohesium.yaml --project /my/project
+  node generate.js --update --project /my/project
   node generate.js --validate --project /my/project
 `);
 }
@@ -166,17 +172,28 @@ Exemples:
 function generate() {
   const args = parseArgs();
 
+  const projectDir = path.resolve(args.projectDir || '.');
+  const configPath = args.configPath || path.join(projectDir, '.cohesium.yaml');
+
+  // ─── Mode update : lire .cohesium.yaml existant ─────────────────────────
+  if (args.update) {
+    if (!fs.existsSync(configPath)) {
+      console.error('❌ No installation found (.cohesium.yaml missing).');
+      console.error('   Run an installation first: npx create-cohesium-agents');
+      process.exit(1);
+    }
+    console.log('🔄 Cohesium AI — Update');
+    console.log(`📄 Config loaded: ${configPath}`);
+  }
+
   // Charger la config
-  const configPath = args.configPath || path.join(args.projectDir || '.', '.cohesium.yaml');
   const config = loadConfig(configPath);
 
-  // Surcharger avec les arguments CLI
+  // Surcharger avec les arguments CLI (sauf en mode update pur)
   if (args.platforms) config.platforms = args.platforms;
   if (args.langue_equipe) config.langue_equipe = args.langue_equipe;
   if (args.langue_output) config.langue_output = args.langue_output;
   if (args.output_dir) config.output_dir = args.output_dir;
-
-  const projectDir = path.resolve(args.projectDir || '.');
 
   console.log('🚀 Cohesium AI — Générateur de configurations');
   console.log(`📁 Projet : ${projectDir}`);
@@ -235,6 +252,37 @@ function generate() {
   console.log(`  ✓ ${Object.keys(adapters).length} adaptateurs disponibles`);
   console.log('');
 
+  // ─── Clean up old generated files before regeneration ────────────────────
+  if (args.update) {
+    console.log('🧹 Cleaning old generated files...');
+    // Directories that adapters generate — clean them but NEVER touch output or .cohesium.yaml
+    const platformDirs = [
+      '.cursor', '.windsurf', '.cline', '.roo', '.github',
+      '.kiro', '.trae', '.antigravity', '.codebuddy', '.crush',
+      '.iflow', '.kilocoder', '.opencode', '.qwencoder', '.rovo',
+      '.claude', '.gemini', '.augment', '.pi',
+    ];
+    const platformFiles = [
+      '.cursorrules', '.windsurfrules', '.clinerules', '.roomodes',
+      'CLAUDE.md', 'GEMINI.md', 'AGENTS.md', 'SYSTEM.md',
+    ];
+
+    for (const dir of platformDirs) {
+      const fullPath = path.join(projectDir, dir);
+      if (fs.existsSync(fullPath)) {
+        fs.rmSync(fullPath, { recursive: true, force: true });
+      }
+    }
+    for (const file of platformFiles) {
+      const fullPath = path.join(projectDir, file);
+      if (fs.existsSync(fullPath)) {
+        fs.unlinkSync(fullPath);
+      }
+    }
+    console.log('  ✓ Old files removed');
+    console.log('');
+  }
+
   // Générer pour chaque plateforme
   let successCount = 0;
   let errorCount = 0;
@@ -282,23 +330,28 @@ function generate() {
     '# Ce dossier contient les livrables produits par les agents Cohesium AI\n'
   );
 
-  // Générer le .cohesium.yaml si pas déjà présent
+  // Mettre à jour ou créer .cohesium.yaml
   const cohesiumConfigPath = path.join(projectDir, '.cohesium.yaml');
-  if (!fs.existsSync(cohesiumConfigPath)) {
-    const cohesiumConfig = `# Cohesium AI — Configuration du projet
-# Généré le ${new Date().toISOString().split('T')[0]}
-# Relancer la génération : node generate.js --config .cohesium.yaml
+  const existingConfig = fs.existsSync(cohesiumConfigPath) ? loadConfig(cohesiumConfigPath) : {};
+  const today = new Date().toISOString().split('T')[0];
+  const cohesiumConfig = `# Cohesium AI — Configuration du projet
+# Mettre à jour : node generate.js --update --project .
+# Régénérer :     node generate.js --config .cohesium.yaml
 
 version: "1.0.0"
 langue_equipe: "${config.langue_equipe}"
 langue_output: "${config.langue_output}"
 output_dir: "${config.output_dir}"
 platforms: [${config.platforms.join(', ')}]
-agents: all
-workflows: all
-installed_at: "${new Date().toISOString().split('T')[0]}"
+agents: ${config.agents || 'all'}
+workflows: ${config.workflows || 'all'}
+installed_at: "${existingConfig.installed_at || today}"
+updated_at: "${today}"
 `;
-    fs.writeFileSync(cohesiumConfigPath, cohesiumConfig);
+  fs.writeFileSync(cohesiumConfigPath, cohesiumConfig);
+  if (args.update) {
+    console.log(`\n📄 .cohesium.yaml mis à jour (${today})`);
+  } else if (!existingConfig.installed_at) {
     console.log(`\n📄 Fichier .cohesium.yaml créé`);
   }
 

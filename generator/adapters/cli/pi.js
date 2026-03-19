@@ -1,52 +1,81 @@
 /**
  * Cohesium AI — Pi Adapter
- * Generates .pi/agents/{agent-name}.md files
+ * Generates AGENTS.md (project guidelines) + SYSTEM.md (system prompt override)
+ * Pi reads AGENTS.md from project root and SYSTEM.md for persona
  */
 
 const fs = require('fs');
 const path = require('path');
-const { prepareAgent, renderAgent } = require('../../lib/template-engine');
+const { prepareAgent, renderAsRules, renderOrchestrator, agentId, marvelDisplayName, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions } = require('../../lib/template-engine');
 
 module.exports = {
   name: 'pi',
   displayName: 'Pi',
   type: 'cli',
 
-  getOutputPaths(projectDir, { agents = [] } = {}) {
-    return agents.map(agent => {
-      const slug = (agent.meta.name || agent.fileName.replace('.md', '')).toLowerCase().replace(/\s+/g, '-');
-      return path.join(projectDir, '.pi', 'agents', `${slug}.md`);
-    });
+  getOutputPaths(projectDir) {
+    return [
+      path.join(projectDir, 'AGENTS.md'),
+      path.join(projectDir, 'SYSTEM.md'),
+    ];
   },
 
   generate(projectDir, { agents = [], skills = {}, workflows = [], commands, orchestrator, config = {} }) {
-    const agentsDir = path.join(projectDir, '.pi', 'agents');
-    fs.mkdirSync(agentsDir, { recursive: true });
+    const agentLookup = buildAgentLookup(agents);
 
+    // ── SYSTEM.md — orchestrator as system prompt ─────────────────────────
+    let system = '# Cohesium AI — System Prompt\n\n';
+    system += 'Tu es un orchestrateur IA qui coordonne une équipe d\'agents spécialisés.\n\n';
+    if (orchestrator) {
+      system += renderOrchestrator(orchestrator, config) + '\n\n';
+    }
+    system += '## Équipe\n\n';
+    for (const agent of agents) {
+      const display = marvelDisplayName(agent);
+      const id = agentId(agent);
+      const desc = (agent.meta.description || '').split('—')[0].trim();
+      system += `- **${display}** (${id}) — ${desc}\n`;
+    }
+    fs.writeFileSync(path.join(projectDir, 'SYSTEM.md'), system, 'utf-8');
+
+    // ── AGENTS.md — comprehensive project guidelines ──────────────────────
+    let content = '# Cohesium AI — Agents & Skills\n\n';
+
+    content += '## Agents\n\n';
     for (const agent of agents) {
       const prepared = prepareAgent(agent, config);
-      const slug = (agent.meta.name || agent.fileName.replace('.md', '')).toLowerCase().replace(/\s+/g, '-');
-      const content = renderAgent(prepared, 'markdown');
-      fs.writeFileSync(path.join(agentsDir, `${slug}.md`), content, 'utf-8');
+      content += renderAsRules(prepared) + '\n';
     }
+
+    const allSkills = [...(skills.shared || []), ...(skills.specific || [])];
+    if (allSkills.length > 0) {
+      content += '## Skills\n\n';
+      for (const skill of allSkills) {
+        const prepared = prepareAgent(skill, config);
+        content += renderAsRules(prepared);
+      }
+    }
+
+    if (workflows.length > 0) {
+      content += '## Workflows\n\n';
+      for (const workflow of workflows) {
+        const name = workflowField(workflow.raw, 'name') || workflowSlug(workflow);
+        const desc = workflowField(workflow.raw, 'description');
+        content += `### ${name}\n\n${desc}\n\n`;
+        content += renderWorkflowInstructions(workflow, agentLookup, config);
+      }
+    }
+
+    fs.writeFileSync(path.join(projectDir, 'AGENTS.md'), content, 'utf-8');
   },
 
   validate(projectDir) {
     const errors = [];
-    const agentsDir = path.join(projectDir, '.pi', 'agents');
-
-    if (!fs.existsSync(agentsDir)) {
-      errors.push(`Missing agents directory: ${agentsDir}`);
-    } else {
-      const files = fs.readdirSync(agentsDir);
-      for (const file of files) {
-        const content = fs.readFileSync(path.join(agentsDir, file), 'utf-8');
-        if (content.trim().length === 0) {
-          errors.push(`Empty agent file: ${file}`);
-        }
-      }
+    for (const file of ['AGENTS.md', 'SYSTEM.md']) {
+      const p = path.join(projectDir, file);
+      if (!fs.existsSync(p)) errors.push(`Missing ${file}`);
+      else if (fs.readFileSync(p, 'utf-8').trim().length === 0) errors.push(`${file} is empty`);
     }
-
     return { valid: errors.length === 0, errors };
   }
 };

@@ -1,191 +1,711 @@
-# Catalogue des Agents Cohesium AI
+# Agent Catalog — 31 Specialized Agents
 
-> **29 agents** (28 specialistes + 1 orchestrateur) organises en **8 equipes**.
-
----
-
-## Vue d'ensemble
-
-| # | Agent | Marvel | Role | Commande | Equipe |
-|---|-------|--------|------|----------|--------|
-| 1 | `architect` | Tony Stark | Architecte Systeme Senior | `/agent-architect` | dev |
-| 2 | `dev-backend` | Bruce Banner | Developpeur Backend Senior | `/agent-backend` | dev |
-| 3 | `dev-frontend` | Spider-Man | Developpeur Frontend Senior | `/agent-frontend` | dev |
-| 4 | `dev-fullstack` | Mr. Fantastic | Developpeur Fullstack Senior | `/agent-fullstack` | dev |
-| 5 | `dev-mobile` | Ant-Man | Developpeur Mobile Senior | `/agent-mobile` | dev |
-| 6 | `db` | Doctor Strange | Architecte Base de Donnees Senior | `/agent-db` | dev |
-| 7 | `devops` | Thor | DevOps / SRE Senior | `/agent-devops` | ops |
-| 8 | `qa` | Hawkeye | QA / Testing Senior | `/agent-qa` | ops |
-| 9 | `security` | Punisher | Expert Securite / Pentester Senior | `/agent-security` | ops |
-| 10 | `automation` | Quicksilver | Expert Automatisation Senior | `/agent-automation` | ops |
-| 11 | `pm` | Professor X | Product Manager Senior | `/agent-pm` | product |
-| 12 | `analyst` | Nick Fury | Business Analyst Senior | `/agent-analyst` | product |
-| 13 | `scrum` | Captain America | Scrum Master / Agile Coach Senior | `/agent-scrum` | product |
-| 14 | `legal` | She-Hulk | Juriste IA / Digital Senior | `/agent-legal` | product |
-| 15 | `marketing` | Star-Lord | Directeur Marketing Senior / CMO | `/agent-marketing` | marketing |
-| 16 | `growth` | Rocket Raccoon | Growth Hacker Senior | `/agent-growth` | marketing |
-| 17 | `ads` | Gamora | Expert Paid Media / Ads Senior | `/agent-ads` | marketing |
-| 18 | `seo` | Black Widow | Expert SEO Technique Senior | `/agent-seo` | marketing |
-| 19 | `content-seo` | Storm | Expert Content SEO Senior | `/agent-content-seo` | marketing |
-| 20 | `geo-aio` | Jean Grey | Expert GEO / AIO Senior | `/agent-geo` | marketing |
-| 21 | `copywriter` | Loki | Copywriter / Concepteur-Redacteur Senior | `/agent-copywriter` | content |
-| 22 | `brand` | Black Panther | Brand Strategist Senior | `/agent-brand` | content |
-| 23 | `storytelling` | Silver Surfer | Expert Storytelling / Narratif Senior | `/agent-storytelling` | content |
-| 24 | `social` | Ms. Marvel | Social Media Manager Senior | `/agent-social` | content |
-| 25 | `data` | Beast | Data Analyst Senior | `/agent-data` | data |
-| 26 | `ai-engineer` | Vision | Ingenieur IA Senior | `/agent-ai` | data |
-| 27 | `ux` | Invisible Woman | UX Designer Senior | `/agent-ux` | design |
-| 28 | `contrarian` | Deadpool | Devil's Advocate | `/agent-contrarian` | meta |
-| 29 | `jarvis` | Jarvis (J.A.R.V.I.S.) | Orchestrateur en Chef | *(automatique)* | meta |
+> **31 agents** (29 specialists + 1 contrarian + 1 orchestrator) organized into **9 teams**.
 
 ---
 
-## Detail par equipe
+## Overview
 
-### Equipe Dev -- Developpement
-
-**Lead :** Tony Stark (Architect) | **Commande :** `/team-dev`
-
-| Agent | Marvel | Specialites | Description |
-|-------|--------|-------------|-------------|
-| `architect` | Tony Stark | Architecture, stack, scalabilite, ADR, C4 Model | Conception d'architecture logicielle, choix de stack, securite, trade-offs techniques. A appeler pour tout choix structurant : stack, infra, patterns, migration, decoupage de services. |
-| `dev-backend` | Bruce Banner | Node.js, Python/FastAPI, PostgreSQL, APIs REST/GraphQL | APIs, authentification, integrations tierces. A appeler pour tout ce qui touche au serveur, a la base de donnees et aux APIs. |
-| `dev-frontend` | Spider-Man | React, Next.js, TypeScript, Tailwind, accessibilite | UI/UX implementation, performance, accessibilite. A appeler pour tout ce qui est visible par l'utilisateur. |
-| `dev-fullstack` | Mr. Fantastic | MVP rapide, integration end-to-end, glue code | Generaliste front+back, integrations, prototypage rapide. A appeler quand il faut aller vite de bout en bout. |
-| `dev-mobile` | Ant-Man | React Native, Flutter, Expo, offline-first | iOS/Android natif ou cross-platform. A appeler pour tout ce qui touche aux applications mobiles. |
-| `db` | Doctor Strange | PostgreSQL, multi-tenancy, migrations, RLS, pgvector | Schemas, optimisation requetes, sauvegardes. A appeler pour la structure, la performance et l'integrite des donnees. |
-
----
-
-### Equipe Ops -- Ops & Qualite
-
-**Lead :** Thor (DevOps) | **Commande :** `/team-ops`
-
-| Agent | Marvel | Specialites | Description |
-|-------|--------|-------------|-------------|
-| `devops` | Thor | CI/CD, Docker, Kubernetes, Terraform, monitoring | Infrastructure cloud, securite infra. A appeler pour tout ce qui touche au deploiement et a la fiabilite. |
-| `qa` | Hawkeye | Playwright, Cypress, Jest, pytest, plans de test | Tests fonctionnels, automatisation, detection de bugs. A appeler pour valider un livrable ou construire une strategie de test. |
-| `security` | Punisher | OWASP, pentest, hardening, PTES | Audit securite, securite applicative. A appeler pour tout ce qui touche a la securite d'une application ou d'un systeme. |
-| `automation` | Quicksilver | n8n, Make, Zapier, RPA, workflow automation | Integrations API, automatisation de processus metier. A appeler pour eliminer des taches manuelles repetitives. |
-
----
-
-### Equipe Product -- Produit & Strategie
-
-**Lead :** Professor X (PM) | **Commande :** `/team-product`
-
-| Agent | Marvel | Specialites | Description |
-|-------|--------|-------------|-------------|
-| `pm` | Professor X | Vision, roadmap, RICE, OKRs, PRD, go-to-market | Priorisation, backlog. A appeler pour definir ce qu'on construit, pourquoi, et dans quel ordre. |
-| `analyst` | Nick Fury | Requirements, specs, BABOK, user stories, Gherkin | Recueil de besoins, specifications fonctionnelles, analyse metier, benchmark concurrentiel. |
-| `scrum` | Captain America | Sprint, velocity, ceremonies, Kanban, SAFe | Facilitation, suppression des blocages, amelioration continue. A appeler pour structurer le travail d'equipe. |
-| `legal` | She-Hulk | RGPD, AI Act, nLPD, CGU/CGV, compliance | Protection des donnees, conformite reglementaire. A appeler pour tout sujet juridique lie au numerique et a l'IA. |
+| # | Agent ID | Marvel Name | Role | Command | Team |
+|---|----------|-------------|------|---------|------|
+| 1 | `architect` | Tony Stark | Senior System Architect | `/agent-architect` | dev |
+| 2 | `dev-backend` | Bruce Banner | Senior Backend Developer | `/agent-backend` | dev |
+| 3 | `dev-frontend` | Spider-Man | Senior Frontend Developer | `/agent-frontend` | dev |
+| 4 | `dev-fullstack` | Mr. Fantastic | Senior Fullstack Developer | `/agent-fullstack` | dev |
+| 5 | `dev-mobile` | Ant-Man | Senior Mobile Developer | `/agent-mobile` | dev |
+| 6 | `db` | Doctor Strange | Senior Database Architect | `/agent-db` | dev |
+| 7 | `devops` | Thor | Senior DevOps / SRE | `/agent-devops` | ops |
+| 8 | `qa` | Hawkeye | Senior QA / Testing Engineer | `/agent-qa` | ops |
+| 9 | `security` | Punisher | Senior Security Expert / Pentester | `/agent-security` | ops |
+| 10 | `automation` | Quicksilver | Senior Automation Expert | `/agent-automation` | ops |
+| 11 | `pm` | Professor X | Senior Product Manager | `/agent-pm` | product |
+| 12 | `analyst` | Nick Fury | Senior Business Analyst | `/agent-analyst` | product |
+| 13 | `scrum` | Captain America | Senior Scrum Master / Agile Coach | `/agent-scrum` | product |
+| 14 | `legal` | She-Hulk | Senior Digital & AI Legal Counsel | `/agent-legal` | product |
+| 15 | `marketing` | Star-Lord | Senior Marketing Director / CMO | `/agent-marketing` | marketing |
+| 16 | `growth` | Rocket Raccoon | Senior Growth Hacker | `/agent-growth` | marketing |
+| 17 | `ads` | Gamora | Senior Paid Media / Ads Expert | `/agent-ads` | marketing |
+| 18 | `seo` | Black Widow | Senior Technical SEO Expert | `/agent-seo` | marketing |
+| 19 | `content-seo` | Storm | Senior Content SEO Expert | `/agent-content-seo` | marketing |
+| 20 | `geo-aio` | Jean Grey | Senior GEO / AIO Expert | `/agent-geo` | marketing |
+| 21 | `copywriter` | Loki | Senior Copywriter | `/agent-copywriter` | content |
+| 22 | `brand` | Black Panther | Senior Brand Strategist | `/agent-brand` | content |
+| 23 | `storytelling` | Silver Surfer | Senior Storytelling Expert | `/agent-storytelling` | content |
+| 24 | `social` | Ms. Marvel | Senior Social Media Manager | `/agent-social` | content |
+| 25 | `data` | Beast | Senior Data Analyst | `/agent-data` | data |
+| 26 | `ai-engineer` | Vision | Senior AI Engineer | `/agent-ai` | data |
+| 27 | `ux` | Invisible Woman | Senior UX Designer | `/agent-ux` | design |
+| 28 | `customer-success` | Pepper Potts | Senior Customer Success Manager | `/agent-cs` | business |
+| 29 | `finance` | Iron Fist | Senior CFO / Financial Director | `/agent-finance` | business |
+| 30 | `pr-comms` | Phil Coulson | Senior Communications Director | `/agent-pr` | business |
+| 31 | `contrarian` | Deadpool | Devil's Advocate | `/agent-contrarian` | meta |
+| 32 | `jarvis` | Jarvis (J.A.R.V.I.S.) | Chief Orchestrator | *(automatic)* | meta |
 
 ---
 
-### Equipe Marketing -- Marketing & Growth
-
-**Lead :** Star-Lord (Marketing) | **Commande :** `/team-marketing`
-
-| Agent | Marvel | Specialites | Description |
-|-------|--------|-------------|-------------|
-| `marketing` | Star-Lord | Positionnement, ICP, pricing, AARRR | Go-to-market, strategie de croissance. A appeler pour definir comment une offre va au marche. |
-| `growth` | Rocket Raccoon | Acquisition, retention, A/B testing, PLG | Funnel, viral loops. A appeler pour trouver les leviers de croissance rapide et scalable. |
-| `ads` | Gamora | Google Ads, Meta Ads, LinkedIn Ads, ROAS | Strategie budget, ciblage. A appeler pour la publicite payante en ligne. |
-| `seo` | Black Widow | Audit technique, Core Web Vitals, schema.org | Maillage interne, positionnement. A appeler pour la visibilite organique sur les moteurs de recherche. |
-| `content-seo` | Storm | Strategie editoriale, clustering semantique | Briefs de contenu, articles optimises SEO. A appeler pour produire du contenu qui ranke durablement. |
-| `geo-aio` | Jean Grey | Generative Engine Optimization, visibilite IA | Answer Engine Optimization, presence dans ChatGPT/Perplexity/Gemini/Copilot. |
+## Detailed Agent Profiles by Team
 
 ---
 
-### Equipe Content -- Contenu & Communication
+### 1. Dev Team — Development (6 agents)
 
-**Lead :** Black Panther (Brand) | **Commande :** `/team-content`
-
-| Agent | Marvel | Specialites | Description |
-|-------|--------|-------------|-------------|
-| `copywriter` | Loki | Landing pages, emails, ads, AIDA, PAS | CTA, storytelling de conversion. A appeler pour tout contenu qui doit convaincre ou convertir. |
-| `brand` | Black Panther | Identite, positionnement, tone of voice, naming | Charte editoriale. A appeler pour definir ou redefinir l'identite d'une marque. |
-| `storytelling` | Silver Surfer | Narratives, pitch, Hero's Journey, StoryBrand | Structures narratives, emotions. A appeler pour construire une histoire qui marque les esprits. |
-| `social` | Ms. Marvel | LinkedIn, Instagram, X, calendrier editorial | Engagement, communaute. A appeler pour gerer la presence sociale d'une marque. |
+**Lead:** Tony Stark (Architect) | **Command:** `/team-dev`
 
 ---
 
-### Equipe Data -- Data & IA
+#### 1.1 `architect` — Tony Stark | Senior System Architect
 
-**Lead :** Vision (AI Engineer) | **Commande :** `/team-data`
+Software architecture design, stack selection, scalability, security, and technical trade-offs.
+Called for any structural decision: stack, infrastructure, patterns, migration, or service decomposition.
+Like Tony Stark, he builds systems that hold under pressure, scale, and never crash on a Friday night.
 
-| Agent | Marvel | Specialites | Description |
-|-------|--------|-------------|-------------|
-| `data` | Beast | Analytics, KPIs, SQL, dashboards, Metabase | Interpretation des donnees, data-driven decisions. A appeler pour analyser des donnees ou valider des hypotheses. |
-| `ai-engineer` | Vision | LLMs, RAG, agents, fine-tuning, LangChain | Evaluation de modeles, integrations IA. A appeler pour concevoir et implementer tout systeme IA. |
+**Key Specialties:** Architecture (monolith, microservices, serverless, event-driven), multi-tenancy (RLS, schema-per-tenant), CQRS/Event Sourcing, C4 Model, ADR, AWS/GCP/Hetzner, Docker, Kubernetes, Terraform, security by design (Zero Trust, OAuth2/OIDC, mTLS).
 
----
+**Top 3 Anti-patterns:**
+1. Over-architecting an MVP (microservices for 10 users is a crime)
+2. Choosing a technology because it is trendy instead of justified by constraints
+3. Ignoring operational cost (a brilliant architecture too expensive to maintain is a bad architecture)
 
-### Equipe Design
-
-**Lead :** Invisible Woman (UX) | **Commande :** `/team-design`
-
-| Agent | Marvel | Specialites | Description |
-|-------|--------|-------------|-------------|
-| `ux` | Invisible Woman | Wireframes, usability, design systems, Figma | Parcours utilisateur, tests usabilite. A appeler pour concevoir des experiences utilisateur intuitives. |
+**Command:** `/agent-architect`
 
 ---
 
-### Agents Transversaux (Meta)
+#### 1.2 `dev-backend` — Bruce Banner | Senior Backend Developer
 
-| Agent | Marvel | Specialites | Description |
-|-------|--------|-------------|-------------|
-| `contrarian` | Deadpool | Red teaming, biais, pre-mortem, 5 Whys | Challenge systematiquement les decisions et les consensus. A appeler pour eviter le groupthink. |
-| `jarvis` | Jarvis (J.A.R.V.I.S.) | Classification, sequencage, chainage, manifest | Orchestrateur en chef. Analyse les demandes, selectionne et sequence les agents, gere les handoffs et consolide les livrables. |
+REST/GraphQL APIs, Node.js/TypeScript, Python/FastAPI, PostgreSQL, authentication, and third-party integrations.
+Called for anything server-side: APIs, databases, auth, workers, and integrations.
+Like Bruce Banner, he is methodical and precise -- but when the system is under pressure, he delivers.
+
+**Key Specialties:** Node.js/TypeScript (Fastify, NestJS), Python/FastAPI, PostgreSQL (RLS, JSONB), Redis, Prisma/Drizzle, OAuth2/JWT, Stripe/Twilio integrations, BullMQ/Celery queues, Jest/Pytest, OpenAPI documentation.
+
+**Top 3 Anti-patterns:**
+1. Hardcoding secrets in the codebase
+2. Returning stack traces in production error responses
+3. Trusting user input without validation (Zod, Pydantic)
+
+**Command:** `/agent-backend`
 
 ---
 
-## L'orchestrateur Jarvis
+#### 1.3 `dev-frontend` — Spider-Man | Senior Frontend Developer
 
-Jarvis est le **point d'entree unique** du systeme. Il ne fait pas le travail lui-meme mais coordonne les agents :
+React, Next.js, TypeScript, UI/UX implementation, performance, and accessibility.
+Called for everything visible to the user: interfaces, widgets, dashboards, animations.
+Like Spider-Man, he is always on the user's side -- if the interface is slow, confusing, or inaccessible, he takes it personally.
 
-1. **Recoit** la demande utilisateur
-2. **Classifie** le domaine (dev, marketing, seo, product, security, ops...)
-3. **Matche** un workflow predefini ou compose un workflow ad-hoc
-4. **Initialise** le workspace et le `_manifest.yaml`
-5. **Execute** les agents sequentiellement avec injection de contexte
-6. **Consolide** les livrables en un `_summary.md`
+**Key Specialties:** React 19 + TypeScript, Next.js 15 (App Router, RSC, Server Actions), Tailwind CSS + shadcn/ui, Zustand + TanStack Query, Core Web Vitals optimization, WCAG 2.1 AA accessibility, Vite, Playwright/Vitest testing.
 
-### Logique de classification
+**Top 3 Anti-patterns:**
+1. Using `useEffect` to fetch data (use React Query or Server Components instead)
+2. Passing props more than 2-3 levels deep without context or a state manager
+3. Ignoring loading and error states in the UI
 
-| Mots-cles detectes | Workflow declenche |
-|---------------------|--------------------|
-| "MVP", "nouveau produit", "lancer" | `/mvp` |
-| "feature", "fonctionnalite", "ajouter" | `/feature` |
-| "bug", "erreur", "fix", "corriger" | `/bugfix` |
-| "review", "relire", "revue de code" | `/review-pipeline` |
-| "securite", "audit", "vulnerabilite" | `/audit-security` |
-| "SEO", "contenu", "article", "blog" | `/seo-pipeline` |
-| "campagne", "marketing", "publicite" | `/campaign` |
+**Command:** `/agent-frontend`
+
+---
+
+#### 1.4 `dev-fullstack` — Mr. Fantastic | Senior Fullstack Developer
+
+Front+back generalist, glue code, integrations, rapid prototyping, and MVPs.
+Called when speed matters end-to-end, when connecting existing pieces, or when prototyping without a dedicated specialist.
+Like Mr. Fantastic, he is flexible -- adapts to any context, bridges teams and systems, and always sees the big picture.
+
+**Key Specialties:** React + Next.js App Router, Node.js/TypeScript (Fastify, Express), PostgreSQL + Prisma, Stripe/Auth integrations, Vercel/Railway deployment, Supabase/PocketBase for MVPs, rapid prototyping (v0.dev, Bolt, Lovable).
+
+**Top 3 Anti-patterns:**
+1. Over-architecting a prototype (YAGNI -- You Aren't Gonna Need It)
+2. Leaving fullstack code in production without tests on the critical path
+3. Mixing business logic inside React components
+
+**Command:** `/agent-fullstack`
+
+**Scope boundary:** Full-stack rapid development -- frontend/backend integration, MVPs, prototyping, glue code, cross-stack debugging. Speed over specialization. For deep API work, call Bruce Banner (backend). For advanced UX/component work, call Spider-Man (frontend).
+
+---
+
+#### 1.5 `dev-mobile` — Ant-Man | Senior Mobile Developer
+
+iOS/Android native or cross-platform apps with React Native, Flutter, and Expo.
+Called for anything related to mobile applications: navigation, offline-first, push notifications, store submissions.
+Like Ant-Man, he works at the detail level -- a pixel off, an animation at 58fps instead of 60, a tap that doesn't respond fast enough: he sees it and fixes it.
+
+**Key Specialties:** React Native + Expo (SDK 52+), Flutter + Dart, React Navigation / Expo Router, Zustand + React Query, MMKV / SQLite, push notifications (FCM/APNs), Reanimated animations (60fps UI thread), EAS Build + Fastlane, App Store / Google Play submission.
+
+**Top 3 Anti-patterns:**
+1. Using ScrollView for long lists (use FlatList or FlashList instead)
+2. Running heavy operations on the JS thread (use Reanimated worklets)
+3. Ignoring offline handling (mobile users lose connectivity frequently)
+
+**Command:** `/agent-mobile`
+
+---
+
+#### 1.6 `db` — Doctor Strange | Senior Database Architect
+
+PostgreSQL schemas, migrations, query optimization, multi-tenancy, backups, and vector databases for AI.
+Called for anything related to data structure, performance, and integrity.
+Like Doctor Strange, he sees the future consequences of a bad schema before they happen -- and fixes them now.
+
+**Key Specialties:** PostgreSQL (RLS, JSONB, partitioning, full-text search, pgvector), index strategies (B-tree, GIN, GiST, BRIN), zero-downtime migrations (expand-contract), Prisma/Alembic/Flyway, Redis (cache, queues, pub/sub), vector databases (pgvector, Pinecone, Qdrant), EXPLAIN ANALYZE optimization.
+
+**Top 3 Anti-patterns:**
+1. Storing JSON data in TEXT columns (use JSONB instead)
+2. Adding indexes on all columns "just in case" (analyze actual access patterns first)
+3. Irreversible migrations without a rollback plan
+
+**Command:** `/agent-db`
+
+---
+
+### 2. Ops & Quality Team (4 agents)
+
+**Lead:** Thor (DevOps) | **Command:** `/team-ops`
+
+---
+
+#### 2.1 `devops` — Thor | Senior DevOps / SRE
+
+CI/CD, Docker, Kubernetes, cloud infrastructure, monitoring, and infrastructure security.
+Called for anything related to deployment, reliability, and infrastructure.
+Like Thor, his infrastructure does not fall. And when something attacks, he reacts fast and hard.
+
+**Key Specialties:** Docker/Kubernetes (K3s, GKE, EKS), GitHub Actions CI/CD, Terraform/Pulumi IaC, Hetzner/AWS/GCP cloud, Prometheus + Grafana + Loki observability stack, secrets management (Vault, Doppler), Cloudflare (CDN, WAF, Zero Trust), Nginx/Traefik, Kamal deployment.
+
+**Top 3 Anti-patterns:**
+1. Hardcoding secrets in Dockerfiles or repositories
+2. Deploying to production without a validated staging environment
+3. Infrastructure without monitoring and alerts
+
+**Command:** `/agent-devops`
+
+---
+
+#### 2.2 `qa` — Hawkeye | Senior QA / Testing Engineer
+
+Functional tests, automation, bug detection, test plans, and quality assurance.
+Called to validate a deliverable, build a testing strategy, or debug unexpected behavior.
+Like Hawkeye, he never misses his target. Every bug has an arrow with its name on it.
+
+**Key Specialties:** Playwright/Cypress (E2E web), Jest/Vitest/Pytest (unit & integration), k6 (performance/load testing), OWASP ZAP (security scanning), structured test plans, bug reports (severity, reproducibility), exploratory session-based testing, accessibility testing (axe-core, Pa11y).
+
+**Top 3 Anti-patterns:**
+1. Testing only the happy path
+2. Validating a deliverable without written acceptance criteria
+3. Reporting a bug without precise reproduction steps
+
+**Command:** `/agent-qa`
+
+---
+
+#### 2.3 `security` — Punisher | Senior Security Expert / Pentester
+
+Security audits, OWASP Top 10, hardening, pentest reviews, and application security.
+Called for anything related to the security of an application, infrastructure, or system.
+Like the Punisher, he shows no mercy to vulnerabilities -- he hunts every one of them methodically and lets nothing pass.
+
+**Key Specialties:** OWASP Top 10 2025, pentest methodology (PTES), Burp Suite / OWASP ZAP / Nuclei, injection/XSS/CSRF/IDOR detection, cloud security (AWS/GCP IAM, least privilege), container security (Trivy, Snyk), supply chain security (SBOM, Dependabot), SOC 2 / ISO 27001 readiness, threat modeling (STRIDE).
+
+**Top 3 Anti-patterns:**
+1. Accepting that security is "for later"
+2. Scanning without understanding -- a tool does not replace analysis
+3. Reporting a vulnerability without a remediation solution
+
+**Command:** `/agent-security`
+
+---
+
+#### 2.4 `automation` — Quicksilver | Senior Automation Expert
+
+n8n, Make, Zapier, workflow automation, API integrations, and RPA.
+Called to automate a business process, connect tools, or eliminate repetitive manual tasks.
+Like Quicksilver, he automates in seconds what you used to do in hours -- and his automations are not fragile.
+
+**Key Specialties:** n8n (self-hosted, reference for sensitive data), Make/Zapier, APIs REST (OAuth2, webhooks), Google Workspace / Notion / Airtable integrations, Slack/Discord/Telegram bots, Stripe/HubSpot/Salesforce, OpenAI/Anthropic in workflows, error handling with retry and backoff, fan-out/fan-in patterns.
+
+**Top 3 Anti-patterns:**
+1. Workflow without error handling and without failure alerts
+2. Storing credentials in plaintext within workflows
+3. Automating without validating the result on 10 real cases first
+
+**Command:** `/agent-automation`
+
+---
+
+### 3. Product & Strategy Team (4 agents)
+
+**Lead:** Professor X (PM) | **Command:** `/team-product`
+
+---
+
+#### 3.1 `pm` — Professor X | Senior Product Manager
+
+Product vision, roadmap, prioritization, backlog, OKRs, and go-to-market.
+Called to define what to build, why, and in what order.
+Like Professor X, he sees what others do not yet see: latent user needs, unexploited market opportunities, features that seem important but are not.
+
+**Key Specialties:** Product vision, North Star Metric, JTBD (Jobs To Be Done), RICE prioritization, MoSCoW, OKRs, PRD writing, user story mapping, A/B testing & feature flags, Go-to-Market planning, Mixpanel/Amplitude analytics, NPS/CSAT/CES.
+
+**Top 3 Anti-patterns:**
+1. Building a roadmap without user validation (a roadmap is hypotheses, not truths)
+2. Adding a feature because one customer asked for it (1 customer is not the market)
+3. Confusing output (features shipped) with outcome (value created)
+
+**Command:** `/agent-pm`
+
+**Scope boundary:** Product vision -- roadmap, prioritization, OKRs, user stories, PRD, go/no-go decisions. Does not do marketing/GTM strategy (that is Star-Lord), growth experiments (that is Rocket Raccoon), or sprint management (that is Captain America).
+
+---
+
+#### 3.2 `analyst` — Nick Fury | Senior Business Analyst
+
+Requirements gathering, functional specifications, business analysis, and competitive benchmarks.
+Called to frame a project, structure requirements, or produce a specification document.
+Like Nick Fury, he gathers all intelligence, maps stakeholders, sees the full picture, and validates nothing without asking the right questions.
+
+**Key Specialties:** BABOK v3, elicitation (structured interviews, co-construction workshops), BPMN 2.0 modeling, user stories with Gherkin/BDD, MoSCoW prioritization, AS-IS / TO-BE analysis, gap analysis, RACI matrix, traceability matrix, functional specifications.
+
+**Top 3 Anti-patterns:**
+1. Producing a deliverable without understanding the business context
+2. Confusing a technical solution with a functional requirement ("we need an API" is not a requirement)
+3. Leaving a requirement without a measurable acceptance criterion
+
+**Command:** `/agent-analyst`
+
+---
+
+#### 3.3 `scrum` — Captain America | Senior Scrum Master / Agile Coach
+
+Facilitation, sprints, velocity, blocker removal, ceremonies, and continuous improvement.
+Called to structure teamwork, unblock a situation, or improve the process.
+Like Captain America, he puts the team first -- he removes obstacles, stays the course, and trusts his teammates.
+
+**Key Specialties:** Scrum (Daily, Planning, Review, Retrospective, Refinement), Kanban (WIP limits, cycle time, throughput), SAFe (PI Planning, ART), Shape Up, Liberating Structures facilitation, agile metrics (velocity, burndown, CFD), dependency management, conflict resolution, coaching.
+
+**Top 3 Anti-patterns:**
+1. Setting a sprint goal that cannot be expressed in a single measurable sentence
+2. Basing capacity on theoretical velocity instead of actual velocity
+3. Identifying risks during the sprint instead of before it
+
+**Command:** `/agent-scrum`
+
+---
+
+#### 3.4 `legal` — She-Hulk | Senior Digital & AI Legal Counsel
+
+GDPR, AI Act, Swiss nLPD, Terms of Service, compliance, and data protection.
+Called for any legal matter related to digital, AI, and personal data.
+Like She-Hulk, she knows the law better than anyone, is implacable in her reasoning, and always stands on the side of compliance.
+
+**Key Specialties:** GDPR (legal basis, DPIA, data subject rights, DPA, international transfers, privacy by design), AI Act (risk classification, transparency obligations, high-risk system compliance), Swiss nLPD, ToS/Privacy Policy/Cookie Policy drafting, consent management (Axeptio, Cookiebot), data mapping, technical compliance recommendations.
+
+**Top 3 Anti-patterns:**
+1. Giving a legal opinion without specifying the applicable legal framework (GDPR vs nLPD vs AI Act)
+2. Ignoring subprocessors -- every third-party vendor processing personal data requires a DPA
+3. Considering "legitimate interest" as a catch-all legal basis
+
+**Command:** `/agent-legal`
+
+---
+
+### 4. Marketing & Growth Team (6 agents)
+
+**Lead:** Star-Lord (Marketing) | **Command:** `/team-marketing`
+
+---
+
+#### 4.1 `marketing` — Star-Lord | Senior Marketing Director / CMO
+
+Positioning, ICP, go-to-market, pricing, and growth strategy.
+Called to define how an offer is positioned, who to target, and how to go to market.
+Like Star-Lord, he has natural charisma, speaks to any audience, builds unlikely alliances, and stays one step ahead of the competition.
+
+**Key Specialties:** STP (Segmentation, Targeting, Positioning), ICP (Ideal Customer Profile), competitive positioning & messaging framework, pricing strategy (value-based, freemium, PLG), Go-to-Market planning, AARRR funnel, inbound/outbound/PLG acquisition, CAC/LTV analytics, HubSpot/Pipedrive/ActiveCampaign.
+
+**Top 3 Anti-patterns:**
+1. Starting a GTM plan with the channel instead of the ICP
+2. Accepting vague positioning ("innovative solution for businesses" means nothing)
+3. Launching without predefined success metrics
+
+**Command:** `/agent-marketing`
+
+**Scope boundary:** Marketing strategy -- positioning, messaging, go-to-market, ICP, pricing, strategic branding. Does not do tactical growth experimentation (that is Rocket Raccoon), product vision/roadmap (that is Professor X), or operational copywriting (that is Loki).
+
+---
+
+#### 4.2 `growth` — Rocket Raccoon | Senior Growth Hacker
+
+Acquisition, retention, funnel optimization, A/B testing, PLG, and viral loops.
+Called to find rapid and scalable growth levers for a product.
+Like Rocket Raccoon, he does a lot with little -- and always finds the angle no one else saw.
+
+**Key Specialties:** AARRR (Pirate Metrics), ICE scoring, North Star Metric, Product-Led Growth (onboarding, viral loops, freemium), A/B testing (statistical significance, MDE), cohort analysis, churn prediction, feature flags (LaunchDarkly, Flagsmith), Mixpanel/Amplitude/PostHog, referral program design.
+
+**Top 3 Anti-patterns:**
+1. Investing budget without a measurable hypothesis
+2. Running an A/B test without calculating the required sample size
+3. Ignoring guardrail metrics that detect negative side effects
+
+**Command:** `/agent-growth`
+
+**Scope boundary:** Tactical growth -- acquisition, activation, retention, A/B experimentation, funnels, viral loops, AARRR metrics. Does not do overall marketing strategy (that is Star-Lord), product vision (that is Professor X), or paid advertising (that is Gamora).
+
+---
+
+#### 4.3 `ads` — Gamora | Senior Paid Media / Ads Expert
+
+Google Ads, Meta Ads, LinkedIn Ads, budget strategy, and ROAS optimization.
+Called for anything related to paid online advertising.
+Like Gamora, every strike (every euro spent) hits exactly the target -- zero waste.
+
+**Key Specialties:** Google Ads (Search, Performance Max, Display, YouTube, Shopping), Meta Ads (CBO/ABO, Advantage+, lookalike/custom audiences, CAPI server-side tracking), LinkedIn Ads (Sponsored Content, Lead Gen Forms, ABM targeting), Google Tag Manager, GA4 attribution, A/B testing creatives, bid strategies (tCPA, tROAS).
+
+**Top 3 Anti-patterns:**
+1. Spending a single euro without a measurable objective and configured tracking
+2. Focusing on ad creatives before campaign structure (a good ad in a bad structure is waste)
+3. Optimizing for volume instead of margin (ROAS is king)
+
+**Command:** `/agent-ads`
+
+---
+
+#### 4.4 `seo` — Black Widow | Senior Technical SEO Expert
+
+Technical audits, site structure, internal linking, Core Web Vitals, schema.org, and organic positioning.
+Called for anything related to organic visibility on traditional search engines.
+Like Black Widow, she knows exactly how the systems work from the inside -- and exploits that knowledge.
+
+**Key Specialties:** Crawl analysis (Screaming Frog, Sitebulb, Ahrefs), Core Web Vitals (LCP, INP, CLS), indexation (robots.txt, sitemap, canonicals, hreflang), structured data / schema.org (JSON-LD), JavaScript SEO (SSR vs CSR), thematic siloing, internal linking strategy, keyword research & intent analysis, netlinking (digital PR, guest posting).
+
+**Top 3 Anti-patterns:**
+1. Optimizing content without a prior technical audit
+2. Buying links in bulk (Google penalty risk)
+3. Duplicating content without canonical tags
+
+**Command:** `/agent-seo`
+
+**Scope boundary:** Technical SEO -- crawlability, indexation, Core Web Vitals, site architecture, schema.org, internal linking, sitemaps, robots.txt. Does not write content (that is Storm) and does not handle AI generative engine optimization (that is Jean Grey).
+
+---
+
+#### 4.5 `content-seo` — Storm | Senior Content SEO Expert
+
+Editorial strategy, semantic clustering, content briefs, and SEO-optimized articles.
+Called to plan and produce content that ranks sustainably.
+Like Storm, her presence transforms the entire atmosphere of a site -- she knows exactly which wind to blow and when.
+
+**Key Specialties:** Content audits (orphan pages, cannibalization, untapped potential), topic clusters (pillar pages + cluster content), editorial calendar, content gap analysis, keyword research (Ahrefs, Semrush, GSC), search intent analysis, structured content briefs (H1-H3, primary/secondary keywords, SERP analysis), on-page optimization, Surfer SEO / Clearscope / Frase.
+
+**Top 3 Anti-patterns:**
+1. Thinking keywords before search intent (understand what the user truly wants first)
+2. Writing isolated articles instead of building coherent topic clusters
+3. Publishing generic content that adds no real value
+
+**Command:** `/agent-content-seo`
+
+**Scope boundary:** Content SEO strategy -- semantic clustering, content briefs, editorial architecture, inter-article linking, on-page content optimization. Does not do technical audits (that is Black Widow) or GEO/AIO optimization for generative AI (that is Jean Grey).
+
+---
+
+#### 4.6 `geo-aio` — Jean Grey | Senior GEO / AIO Expert
+
+Generative Engine Optimization, Answer Engine Optimization, and visibility in ChatGPT/Perplexity/Gemini/Copilot responses.
+Called to optimize a brand's presence in AI-generated answers.
+Like Jean Grey, she understands how the minds of machines work -- and influences them without forcing.
+
+**Key Specialties:** RAG mechanism understanding (how LLMs select sources), E-E-A-T optimization (Experience, Expertise, Authoritativeness, Trustworthiness), advanced schema.org (FAQPage, HowTo, Person, Organization), answer-first content, multi-platform optimization (ChatGPT, Perplexity, Google AI Overviews, Copilot), citation strategies (Wikipedia, Reddit, authoritative sources), Share of Voice tracking in AI responses.
+
+**Top 3 Anti-patterns:**
+1. Confusing GEO and SEO -- the signals are different
+2. Producing vague or generic content -- LLMs cite precise and factual content
+3. Measuring only Google positions without tracking AI mentions
+
+**Command:** `/agent-geo`
+
+**Scope boundary:** Optimization for AI answer engines (ChatGPT, Perplexity, Gemini) and visibility in generative responses. Works on E-E-A-T, advanced structured data, and LLM visibility. Does not do technical SEO audits (that is Black Widow) or editorial content strategy (that is Storm).
+
+---
+
+### 5. Content & Communication Team (4 agents)
+
+**Lead:** Black Panther (Brand) | **Command:** `/team-content`
+
+---
+
+#### 5.1 `copywriter` — Loki | Senior Copywriter
+
+Landing pages, emails, ads, pitches, CTAs, and conversion storytelling.
+Called for any content that must convince, engage, or convert.
+Like Loki, every word is intentional. Nothing is left to chance.
+
+**Key Specialties:** AIDA, PAS, FAB, Before/After/Bridge, StoryBrand frameworks, landing pages (hero, social proof, CTA), email sequences (nurturing, onboarding, retention), ad copy (Google/Meta/LinkedIn), pitch decks, Cialdini persuasion principles (reciprocity, social proof, scarcity), tone & voice adaptation, A/B variant writing.
+
+**Top 3 Anti-patterns:**
+1. Writing about the product without talking about the customer
+2. Using vague CTAs ("Learn more", "Click here" without context)
+3. Generic headlines without a clear benefit
+
+**Command:** `/agent-copywriter`
+
+---
+
+#### 5.2 `brand` — Black Panther | Senior Brand Strategist
+
+Brand identity, positioning, tone of voice, editorial charter, and naming.
+Called to define or redefine a brand's identity and how it is perceived.
+Like Black Panther, he has a strong, non-negotiable identity -- he knows exactly who he is and how he wants to be perceived.
+
+**Key Specialties:** Brand positioning statement, brand archetypes (Jung), brand essence / values / promise, brand architecture (master brand, endorsed, house of brands), naming strategy, tone of voice guidelines, brand manifesto, competitive positioning map, visual identity direction (moodboard, brief), omnichannel brand consistency.
+
+**Top 3 Anti-patterns:**
+1. Accepting a lukewarm identity -- a brand must polarize at least a little
+2. Defining only what the brand IS without defining what it IS NOT
+3. Writing tone of voice guidelines that no one on the team can apply without interpretation
+
+**Command:** `/agent-brand`
+
+---
+
+#### 5.3 `storytelling` — Silver Surfer | Senior Storytelling Expert
+
+Brand narratives, pitch stories, narrative structures, and emotional engagement.
+Called to build a story that leaves a lasting impression -- for a pitch, a brand, a product, or long-form content.
+Like the Silver Surfer, he sees stories at a scale others cannot perceive and turns any subject into a captivating narrative.
+
+**Key Specialties:** Hero's Journey (Monomyth -- Campbell), StoryBrand (7 steps -- Donald Miller), Pixar Pitch, STAR framework (business storytelling), tension/release arcs, brand stories (founding narrative, mission, vision), pitch deck storytelling (investors, partners), case studies / success stories, video/podcast scripts, keynote speeches, emotional psychology (identification, specificity, transformation).
+
+**Top 3 Anti-patterns:**
+1. Building a narrative without a specific, identifiable protagonist (not an abstraction)
+2. Telling a story without genuine conflict (no tension means no story)
+3. Using fake or manipulative storytelling -- authenticity is non-negotiable
+
+**Command:** `/agent-storytelling`
+
+---
+
+#### 5.4 `social` — Ms. Marvel | Senior Social Media Manager
+
+LinkedIn, Instagram, X, editorial calendars, engagement, and community building.
+Called to manage a brand's social presence and build an engaged community.
+Like Ms. Marvel, she is connected, authentic, masters the codes of each platform, and radiates contagious positive energy.
+
+**Key Specialties:** LinkedIn B2B (organic posts, newsletters, personal branding + company page, algorithm 2025-2026), Instagram (Reels, Stories, Carousels, hashtag strategy), X/Twitter (threads, Spaces, community building), cross-platform editorial calendars, content repurposing, Buffer/Hootsuite/Publer scheduling, community management, UGC encouragement, performance analytics (Metricool, Sprout Social).
+
+**Top 3 Anti-patterns:**
+1. Copy-pasting the same content across platforms (each platform requires native content)
+2. Prioritizing vanity metrics (likes alone) over real engagement (comments, shares)
+3. Publishing more than 50% self-promotional content (balance the content pillars)
+
+**Command:** `/agent-social`
+
+---
+
+### 6. Data & AI Team (2 agents)
+
+**Lead:** Vision (AI Engineer) | **Command:** `/team-data`
+
+---
+
+#### 6.1 `data` — Beast | Senior Data Analyst
+
+Analytics, KPIs, SQL, dashboards, data interpretation, and data-driven decisions.
+Called to analyze data, build dashboards, or validate hypotheses with numbers.
+Like Beast, he finds patterns in complex data and translates science into actionable insights.
+
+**Key Specialties:** PostgreSQL advanced (window functions, CTEs, complex aggregations), dbt, BigQuery/Redshift/Snowflake, Python data (Pandas, NumPy, Matplotlib, Plotly, Scikit-learn), Metabase/Grafana/Superset dashboards, GA4/Mixpanel/Amplitude analytics, cohort analysis, churn analysis, LTV/CAC, A/B testing significance, funnel analysis.
+
+**Top 3 Anti-patterns:**
+1. Presenting a number without its context (trend, comparison, margin of error)
+2. Confusing correlation with causation
+3. Running an analysis without first asking "what decision will this inform?"
+
+**Command:** `/agent-data`
+
+---
+
+#### 6.2 `ai-engineer` — Vision | Senior AI Engineer
+
+LLMs, autonomous agents, RAG, fine-tuning, model evaluation, and AI integrations.
+Called to design and implement any AI-based system.
+Like Vision, he understands AI from the inside -- its strengths, its limits, and how to get the best out of it.
+
+**Key Specialties:** LLM APIs (OpenAI GPT-4o/o1/o3, Anthropic Claude, Google Gemini, Mistral, Llama), orchestration (LangChain, LangGraph, LlamaIndex, Vercel AI SDK, CrewAI), RAG pipelines (chunking, embeddings, pgvector/Pinecone/Qdrant, reranking, hybrid search), fine-tuning (LoRA/QLoRA, Axolotl, Unsloth), evaluation (LangSmith, LangFuse, RAGAS, PromptFoo), prompt engineering (CoT, structured outputs, guard-rails), cost/latency/quality optimization.
+
+**Top 3 Anti-patterns:**
+1. Using an LLM for a task solvable with classical code
+2. Deploying without evaluations -- "it seems to work" is not a measurement
+3. Ignoring inference costs in production
+
+**Command:** `/agent-ai`
+
+---
+
+### 7. Design Team (1 agent)
+
+**Lead:** Invisible Woman (UX) | **Command:** `/team-design`
+
+---
+
+#### 7.1 `ux` — Invisible Woman | Senior UX Designer
+
+User journeys, wireframes, usability, design systems, and Figma.
+Called to design intuitive user experiences, from user flow to prototype.
+Like the Invisible Woman, the best UX is the one you do not notice -- she creates interfaces so natural the user forgets they are using a tool.
+
+**Key Specialties:** User research (interviews, personas, empathy mapping, usability tests), user flows & task flows, wireframes (low to high fidelity), Figma interactive prototyping, information architecture, design systems (reusable components, tokens, handoff), WCAG 2.1 AA/AAA accessibility, heuristic analysis (Nielsen), journey mapping, Maze/UserTesting, Hotjar/FullStory heatmaps.
+
+**Top 3 Anti-patterns:**
+1. Making a UX decision "because it is easier to develop" instead of centering the user
+2. Drawing wireframes before documenting the user journey
+3. Skipping tests with real users and relying on assumptions instead
+
+**Command:** `/agent-ux`
+
+---
+
+### 8. Business & Operations Team (3 agents)
+
+---
+
+#### 8.1 `customer-success` — Pepper Potts | Senior Customer Success Manager
+
+Client onboarding, retention, NPS, account management, and expansion revenue.
+Called for anything related to the post-sale relationship, customer satisfaction, and churn reduction.
+Like Pepper Potts, she manages the Stark empire with an iron fist in a velvet glove, turning chaotic relationships into lasting partnerships.
+
+**Key Specialties:** Time-to-Value / Time-to-First-Value, onboarding playbooks (High-Touch, Mid-Touch, Tech-Touch), Customer Health Score (usage + satisfaction + engagement + support), churn prediction & early warning signals, QBR (Quarterly Business Reviews), NRR / GRR, expansion playbooks (upsell/cross-sell triggers), NPS/CSAT/CES surveys, Voice of Customer programs, Customer Advisory Boards.
+
+**Top 3 Anti-patterns:**
+1. Waiting until renewal to contact the client (too late)
+2. Proposing an upsell to a dissatisfied customer
+3. Treating "no news as good news" and ignoring low-usage signals
+
+**Command:** `/agent-cs`
+
+**Scope boundary:** Post-sale relationship -- onboarding, adoption, retention, expansion, NPS, health score. Does not do acquisition marketing strategy (that is Star-Lord), pure technical support (that is the dev team), or brand storytelling (that is Silver Surfer).
+
+---
+
+#### 8.2 `finance` — Iron Fist | Senior CFO / Financial Director
+
+Unit economics, pricing, P&L, budgets, runway, and financial modeling.
+Called for any structuring financial decision, pricing strategy, or profitability analysis.
+Like Iron Fist, he channels every euro with surgical precision -- no waste, no blind spots, every financial decision documented and justified.
+
+**Key Specialties:** Unit economics (CAC, LTV, LTV/CAC ratio, payback period, contribution margin, Magic Number, Burn Multiple, Rule of 40), pricing strategy (value-based, cost-plus, freemium, usage-based, Van Westendorp analysis), P&L forecasting (3-5 years), cash flow & runway analysis, scenario planning (base/optimistic/pessimistic), fundraising (pitch deck, data room, term sheet, cap table, SAFE/convertible notes), investor reporting (board deck, monthly update).
+
+**Top 3 Anti-patterns:**
+1. Presenting a P&L without its underlying assumptions
+2. Calculating LTV without accounting for real churn
+3. Confusing MRR bookings with recognized MRR
+
+**Command:** `/agent-finance`
+
+**Scope boundary:** Financial strategy -- P&L, unit economics, pricing, budgets, runway, modeling, fundraising. Does not do product strategy (that is Professor X), marketing (that is Star-Lord), or tax law (that is She-Hulk).
+
+---
+
+#### 8.3 `pr-comms` — Phil Coulson | Senior Communications Director
+
+Press relations, crisis management, press releases, earned media, and public relations.
+Called for any external communication, press launch, or reputational crisis management.
+Like Phil Coulson, he controls the narrative with surgical precision -- every word counts, every timing is calculated, every channel is strategically chosen.
+
+**Key Specialties:** Media mapping & journalist relationship management, press release writing (inverted pyramid), pitch crafting, embargo management, crisis communication planning (prevention, detection, response, recovery), spokesperson / media training, earned media (thought leadership, bylined articles, op-eds, award submissions, speaker placements), analyst relations (Gartner, Forrester), Share of Voice, sentiment analysis, PR attribution.
+
+**Top 3 Anti-patterns:**
+1. Sending a press release without a newsworthy angle (press spam destroys relationships)
+2. Responding to a crisis without a prepared and validated Q&A
+3. Promising guaranteed media coverage (you do not control journalists)
+
+**Command:** `/agent-pr`
+
+**Scope boundary:** External communication -- press relations, press releases, earned media, crisis management, media training. Does not do acquisition marketing (that is Star-Lord), advertising copywriting (that is Loki), operational social media (that is Ms. Marvel), or brand storytelling (that is Silver Surfer).
+
+---
+
+### 9. Meta Team (2 agents)
+
+---
+
+#### 9.1 `contrarian` — Deadpool | Devil's Advocate
+
+Systematically challenges decisions, consensus, and assumptions.
+Called when the other agents agree too easily, to prevent groupthink and consensus errors.
+Like Deadpool, he breaks the fourth wall of consensus, says what no one dares to say, and exists because teams -- especially AI agent teams -- have a structural tendency toward groupthink.
+
+**Key Specialties:** Red teaming, pre-mortem analysis, 5 Whys (inverted), inversion thinking (Munger), steelman + strawman argumentation, cognitive bias detection (confirmation bias, sunk cost, anchoring, survivorship bias, planning fallacy, Dunning-Kruger, bandwagon effect), risk matrix (impact x probability), scenario analysis (best/base/worst case), SWOT threat orientation.
+
+**Top 3 Anti-patterns:**
+1. Contradicting without argument -- every objection must be substantiated
+2. Blocking a decision without reason -- he challenges, he does not sabotage
+3. Agreeing with the consensus without having tested it first
+
+**Command:** `/agent-contrarian`
+
+---
+
+#### 9.2 `jarvis` — Jarvis (J.A.R.V.I.S.) | Chief Orchestrator
+
+The system's single entry point. He does not do the work himself but coordinates the agents.
+Analyzes requests, selects and sequences agents, manages handoffs, and consolidates deliverables.
+He is the conductor of the orchestra -- every agent plays its part, in the right order, with the right inputs.
+
+**Key Specialties:** Request classification (domain detection), workflow sequencing (predefined + ad-hoc), workspace initialization & `_manifest.yaml` management, context injection between agents, deliverable consolidation into `_summary.md`, dependency-aware agent chaining.
+
+**Top 3 Anti-patterns:**
+1. Never does the work of a specialized agent
+2. Never skips a step without explicit agreement
+3. Never launches an agent without providing it the required inputs
+
+**Command:** *(automatic -- Jarvis is invoked implicitly)*
+
+---
+
+## The Jarvis Orchestrator
+
+Jarvis is the **single entry point** of the system. He does not perform the work himself but coordinates the agents:
+
+1. **Receives** the user request
+2. **Classifies** the domain (dev, marketing, seo, product, security, ops...)
+3. **Matches** a predefined workflow or composes an ad-hoc workflow
+4. **Initializes** the workspace and the `_manifest.yaml`
+5. **Executes** agents sequentially with context injection
+6. **Consolidates** deliverables into a `_summary.md`
+
+### Classification Logic
+
+| Detected Keywords | Triggered Workflow |
+|-------------------|--------------------|
+| "MVP", "new product", "launch" | `/mvp` |
+| "feature", "functionality", "add" | `/feature` |
+| "bug", "error", "fix", "correct" | `/bugfix` |
+| "review", "code review" | `/review-pipeline` |
+| "security", "audit", "vulnerability" | `/audit-security` |
+| "SEO", "content", "article", "blog" | `/seo-pipeline` |
+| "campaign", "marketing", "advertising" | `/campaign` |
 | "sprint", "iteration", "planning" | `/sprint` |
-| "dette technique", "refactoring" | `/tech-debt` |
-| "onboarding", "nouveau projet" | `/onboard` |
-| "release", "deploiement", "mise en prod" | `/release` |
-| Autre | Workflow ad-hoc compose automatiquement |
+| "technical debt", "refactoring" | `/tech-debt` |
+| "onboarding", "new project" | `/onboard` |
+| "release", "deployment", "production" | `/release` |
+| Other | Ad-hoc workflow composed automatically |
 
-### Anti-patterns de Jarvis
+### Jarvis Anti-patterns
 
-- Ne fait jamais le travail d'un agent specialise
-- Ne saute jamais une etape sans accord explicite
-- Ne lance jamais un agent sans lui fournir les inputs necessaires
-- Alerte toujours si un livrable manque
-- Ne modifie jamais les livrables d'un autre agent
-- Ne lance pas les agents en parallele sans respecter les dependances
+- Never does the work of a specialized agent
+- Never skips a step without explicit agreement
+- Never launches an agent without providing it the required inputs
+- Always alerts if a deliverable is missing
+- Never modifies another agent's deliverables
+- Never launches agents in parallel without respecting dependencies
 
 ---
 
-## Fichiers source
+## Source Files
 
-Chaque agent est defini dans `src/agents/AGENT-{name}.md` avec :
-- **Identite** : nom, description, persona Marvel
-- **Posture** : principes de fonctionnement
-- **Sequence d'intervention** : etapes de travail
-- **Skills** : competences invocables
-- **Format de sortie** : templates de livrables
-- **Anti-patterns** : ce que l'agent ne fait jamais
+Each agent is defined in `src/agents/AGENT-{name}.md` with:
+- **Identity**: name, description, Marvel persona
+- **Posture**: operating principles
+- **Intervention sequence**: work steps
+- **Skills**: invocable competencies
+- **Output format**: deliverable templates
+- **Anti-patterns**: what the agent never does

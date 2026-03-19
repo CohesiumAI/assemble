@@ -1,132 +1,120 @@
 /**
  * Cohesium AI — Cursor Adapter
- * Generates .cursorrules and .cursor/agents/ files
+ * Generates .cursorrules + .cursor/agents/ with skills & workflows
  */
 
 const fs = require('fs');
 const path = require('path');
-const { prepareAgent, renderAgent, renderAsMarkdown, renderOrchestrator, renderCommands } = require('../../lib/template-engine');
-const { translateSectionLabel } = require('../../lib/i18n');
+const { prepareAgent, renderAgent, renderOrchestrator, marvelSlug, marvelDisplayName, agentId, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions } = require('../../lib/template-engine');
 
 module.exports = {
   name: 'cursor',
   displayName: 'Cursor',
   type: 'ide',
 
-  /**
-   * Returns the list of output file paths this adapter will create
-   */
-  getOutputPaths(projectDir, { agents = [], orchestrator, commands } = {}) {
+  getOutputPaths(projectDir, { agents = [], skills = {}, workflows = [], orchestrator } = {}) {
     const paths = [path.join(projectDir, '.cursorrules')];
-
     for (const agent of agents) {
-      const agentName = agent.meta.name || agent.fileName.replace('.md', '');
-      paths.push(path.join(projectDir, '.cursor', 'agents', `AGENT-${agentName}.md`));
+      paths.push(path.join(projectDir, '.cursor', 'agents', `${marvelSlug(agent)}.md`));
     }
-
-    if (orchestrator) {
-      paths.push(path.join(projectDir, '.cursor', 'agents', 'ORCHESTRATOR.md'));
+    const allSkills = [...(skills.shared || []), ...(skills.specific || [])];
+    for (const skill of allSkills) {
+      paths.push(path.join(projectDir, '.cursor', 'skills', `${skillSlug(skill)}.md`));
     }
-
+    for (const workflow of workflows) {
+      paths.push(path.join(projectDir, '.cursor', 'workflows', `${workflowSlug(workflow)}.md`));
+    }
+    if (orchestrator) paths.push(path.join(projectDir, '.cursor', 'agents', 'ORCHESTRATOR.md'));
     return paths;
   },
 
-  /**
-   * Generate all config files for Cursor
-   */
   generate(projectDir, { agents = [], skills = {}, workflows = [], commands, orchestrator, config = {} }) {
     const agentsDir = path.join(projectDir, '.cursor', 'agents');
+    const skillsDir = path.join(projectDir, '.cursor', 'skills');
+    const workflowsDir = path.join(projectDir, '.cursor', 'workflows');
     fs.mkdirSync(agentsDir, { recursive: true });
+    fs.mkdirSync(skillsDir, { recursive: true });
+    fs.mkdirSync(workflowsDir, { recursive: true });
 
-    // Build .cursorrules main file
-    let rulesContent = '# Cohesium AI — Cursor Configuration\n\n';
+    const agentLookup = buildAgentLookup(agents);
 
-    // Include orchestrator reference in rules
+    // ── .cursorrules — compact overview ───────────────────────────────────
+    let rules = '# Cohesium AI — Cursor Configuration\n\n';
+
     if (orchestrator) {
-      const preparedOrch = prepareAgent(orchestrator, config);
-      rulesContent += '## Orchestrator\n\n';
-      rulesContent += 'This project uses an AI agent orchestrator. See `.cursor/agents/ORCHESTRATOR.md` for the full orchestration rules.\n\n';
-      rulesContent += renderOrchestrator(orchestrator, config) + '\n\n';
+      rules += '## Orchestrator\n\n';
+      rules += renderOrchestrator(orchestrator, config) + '\n\n';
     }
 
-    // Include commands reference
-    if (commands) {
-      rulesContent += '## Commands\n\n';
-      rulesContent += renderCommands(commands, 'markdown') + '\n\n';
+    rules += '## Agents disponibles\n\n';
+    for (const agent of agents) {
+      const slug = marvelSlug(agent);
+      const display = marvelDisplayName(agent);
+      const desc = (agent.meta.description || '').split('—')[0].trim();
+      rules += `- **${display}** — ${desc} → \`.cursor/agents/${slug}.md\`\n`;
     }
 
-    // Agent listing in rules
-    if (agents.length > 0) {
-      rulesContent += '## Available Agents\n\n';
-      for (const agent of agents) {
-        const agentName = agent.meta.name || agent.fileName.replace('.md', '');
-        const description = agent.meta.description || '';
-        rulesContent += `- **${agentName}**: ${description} (see \`.cursor/agents/AGENT-${agentName}.md\`)\n`;
-      }
-      rulesContent += '\n';
-    }
-
-    // Skills summary
     const allSkills = [...(skills.shared || []), ...(skills.specific || [])];
-    if (allSkills.length > 0) {
-      rulesContent += '## Skills\n\n';
-      for (const skill of allSkills) {
-        const skillName = skill.meta.name || skill.fileName.replace('.md', '');
-        rulesContent += `- **${skillName}**: ${skill.meta.description || ''}\n`;
-      }
-      rulesContent += '\n';
+    rules += '\n## Skills disponibles\n\n';
+    for (const skill of allSkills) {
+      const slug = skillSlug(skill);
+      const desc = (skill.meta.description || '').split('—')[0].trim();
+      rules += `- **${slug}** — ${desc}\n`;
     }
 
-    // Workflows summary
-    if (workflows.length > 0) {
-      rulesContent += '## Workflows\n\n';
-      for (const workflow of workflows) {
-        rulesContent += `- ${workflow.fileName}\n`;
-      }
-      rulesContent += '\n';
+    rules += '\n## Workflows disponibles\n\n';
+    for (const workflow of workflows) {
+      const slug = workflowSlug(workflow);
+      const desc = workflowField(workflow.raw, 'description');
+      rules += `- **${slug}** — ${desc}\n`;
     }
 
-    fs.writeFileSync(path.join(projectDir, '.cursorrules'), rulesContent, 'utf-8');
+    rules += `\n## Répertoire de sortie\n\nLes livrables → \`${config.output_dir || './cohesium-output'}\`\n`;
+    fs.writeFileSync(path.join(projectDir, '.cursorrules'), rules, 'utf-8');
 
-    // Generate individual agent files (full markdown)
+    // ── Individual agent files ────────────────────────────────────────────
     for (const agent of agents) {
       const prepared = prepareAgent(agent, config);
-      const agentName = agent.meta.name || agent.fileName.replace('.md', '');
-      const agentContent = renderAgent(prepared, 'markdown');
-      fs.writeFileSync(path.join(agentsDir, `AGENT-${agentName}.md`), agentContent, 'utf-8');
+      const slug = marvelSlug(agent);
+      fs.writeFileSync(path.join(agentsDir, `${slug}.md`), renderAgent(prepared, 'markdown'), 'utf-8');
     }
 
-    // Generate orchestrator file
+    // ── Orchestrator file ─────────────────────────────────────────────────
     if (orchestrator) {
       const preparedOrch = prepareAgent(orchestrator, config);
-      const orchContent = renderAgent(preparedOrch, 'markdown');
-      fs.writeFileSync(path.join(agentsDir, 'ORCHESTRATOR.md'), orchContent, 'utf-8');
+      fs.writeFileSync(path.join(agentsDir, 'ORCHESTRATOR.md'), renderAgent(preparedOrch, 'markdown'), 'utf-8');
+    }
+
+    // ── Skill files ───────────────────────────────────────────────────────
+    for (const skill of allSkills) {
+      const prepared = prepareAgent(skill, config);
+      const slug = skillSlug(skill);
+      fs.writeFileSync(path.join(skillsDir, `${slug}.md`), renderAgent(prepared, 'markdown'), 'utf-8');
+    }
+
+    // ── Workflow files ────────────────────────────────────────────────────
+    for (const workflow of workflows) {
+      const slug = workflowSlug(workflow);
+      const name = workflowField(workflow.raw, 'name') || slug;
+      const desc = workflowField(workflow.raw, 'description');
+      let content = `# Workflow : ${name}\n\n${desc}\n\n`;
+      content += renderWorkflowInstructions(workflow, agentLookup, config);
+      fs.writeFileSync(path.join(workflowsDir, `${slug}.md`), content, 'utf-8');
     }
   },
 
-  /**
-   * Validate generated files
-   */
   validate(projectDir) {
     const errors = [];
-    const rulesPath = path.join(projectDir, '.cursorrules');
-
-    if (!fs.existsSync(rulesPath)) {
-      errors.push(`Missing main rules file: ${rulesPath}`);
-    }
-
-    const agentsDir = path.join(projectDir, '.cursor', 'agents');
-    if (fs.existsSync(agentsDir)) {
-      const files = fs.readdirSync(agentsDir);
-      for (const file of files) {
-        const filePath = path.join(agentsDir, file);
-        const content = fs.readFileSync(filePath, 'utf-8');
-        if (content.trim().length === 0) {
-          errors.push(`Empty agent file: ${filePath}`);
+    if (!fs.existsSync(path.join(projectDir, '.cursorrules'))) errors.push('Missing .cursorrules');
+    for (const subdir of ['agents', 'skills', 'workflows']) {
+      const dir = path.join(projectDir, '.cursor', subdir);
+      if (fs.existsSync(dir)) {
+        for (const file of fs.readdirSync(dir)) {
+          const content = fs.readFileSync(path.join(dir, file), 'utf-8');
+          if (content.trim().length === 0) errors.push(`Empty: .cursor/${subdir}/${file}`);
         }
       }
     }
-
     return { valid: errors.length === 0, errors };
   }
 };

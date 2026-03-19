@@ -1,7 +1,7 @@
 ---
 name: content-brief
 description: Création de briefs de contenu structurés — recherche de mots-clés, analyse du search intent, structure éditoriale, guidelines de rédaction et critères de performance
-agents: [content-seo, copywriter, storytelling, social]
+agents: [content-seo, copywriter, storytelling, social, pr-comms]
 trigger: /brief
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: documentation
 description: Génération de documentation technique et fonctionnelle — README, guides d'architecture, ADR, documentation d'API et guides utilisateur
-agents: [dev-backend, dev-frontend, dev-fullstack, dev-mobile, devops, architect, qa, security, db, data, pm, scrum, ai-engineer, automation, seo, geo-aio, content-seo, marketing, copywriter, ads, growth, social, storytelling, ux, brand, contrarian, analyst, legal]
+agents: [dev-backend, dev-frontend, dev-fullstack, dev-mobile, devops, architect, qa, security, db, data, pm, scrum, ai-engineer, automation, seo, geo-aio, content-seo, marketing, copywriter, ads, growth, social, storytelling, ux, brand, contrarian, analyst, legal, pr-comms]
 trigger: /doc
 ---
 

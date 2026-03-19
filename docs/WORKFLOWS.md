@@ -1,264 +1,350 @@
-# Workflows Cohesium AI
+# Workflow Guide — 15 Pre-configured Workflows
 
-> **11 workflows pre-configures** : chaines de production qui orchestrent automatiquement une sequence d'agents pour accomplir un objectif complet.
-
----
-
-## Vue d'ensemble
-
-| # | Workflow | Commande | Agents impliques | Description |
-|---|----------|----------|------------------|-------------|
-| 1 | MVP Launch | `/mvp` | PM, Architect, UX, DB, Backend, Frontend, QA, DevOps | Lancement d'un MVP de A a Z |
-| 2 | Feature Development | `/feature` | PM, Analyst, Architect, Backend, Frontend, QA | Developpement d'une nouvelle fonctionnalite |
-| 3 | Bug Fix | `/bugfix` | QA, Dev, QA | Correction de bug structuree |
-| 4 | Code Review Pipeline | `/review-pipeline` | Dev, QA, Security, Contrarian | Revue de code multi-perspectives |
-| 5 | Security Audit | `/audit-security` | Security, Backend, DevOps, Legal | Audit de securite complet |
-| 6 | SEO Content Pipeline | `/seo-pipeline` | SEO, Content-SEO, Copywriter, GEO/AIO | Creation de contenu optimise SEO |
-| 7 | Marketing Campaign | `/campaign` | Marketing, Brand, Copywriter, Ads, Social, Growth | Campagne marketing multi-canal |
-| 8 | Sprint Cycle | `/sprint` | Scrum, PM, Dev, QA, DevOps | Cycle de sprint Agile complet |
-| 9 | Tech Debt Reduction | `/tech-debt` | Architect, Dev, QA, DevOps | Reduction de la dette technique |
-| 10 | Onboarding Project | `/onboard` | PM, Analyst, Architect, Scrum | Cadrage d'un nouveau projet |
-| 11 | Release Cycle | `/release` | Scrum, QA, Security, DevOps, Marketing | Mise en production |
+> **15 workflows**: pre-configured production chains that automatically orchestrate a sequence of agents to accomplish a complete objective end to end.
 
 ---
 
-## Concept de chainage (chaining)
+## Overview
 
-Chaque workflow est une **sequence ordonnee d'agents** ou chaque etape :
-
-1. **Recoit des inputs** -- livrables produits par les agents precedents
-2. **Execute une action** -- travail specifique de l'agent
-3. **Produit des outputs** -- livrables consommes par les agents suivants
-4. **Declare des dependances** -- `depends_on` definit quelles etapes doivent etre terminees avant
-
-L'orchestrateur Jarvis gere ce chainage automatiquement :
-- Il injecte le contexte (inputs) avant chaque agent
-- Il verifie que les outputs attendus sont produits
-- Il met a jour le `_manifest.yaml` apres chaque etape
-- Il alerte si un livrable manque
+| # | Workflow | Trigger | Agent Sequence | Description |
+|---|----------|---------|----------------|-------------|
+| 1 | MVP Launch | `/mvp` | PM → Architect → UX → Brand → DB → Backend → Frontend → QA → DevOps | Launch an MVP from vision to deployment (9 steps) |
+| 2 | Feature Development | `/feature` | PM → Analyst → Architect → Backend → Frontend → QA | Develop a new feature from spec to validation |
+| 3 | Bug Fix | `/bugfix` | QA → Fullstack → QA | Structured bug fix from analysis to verification |
+| 4 | Code Review Pipeline | `/review-pipeline` | Fullstack → QA → Security → Contrarian | Multi-perspective code review pipeline |
+| 5 | Security Audit | `/audit-security` | Security → Backend → DevOps → Legal | Comprehensive security audit with remediation |
+| 6 | SEO Content Pipeline | `/seo-pipeline` | SEO → Content-SEO → Copywriter → GEO/AIO | Create SEO-optimized content end to end |
+| 7 | Marketing Campaign | `/campaign` | Marketing → Finance → Brand → Copywriter → Ads + Social + PR → Growth | Multi-channel marketing campaign (8 steps) |
+| 8 | Sprint Cycle | `/sprint` | Scrum → PM → Fullstack → QA → DevOps | Complete agile sprint cycle |
+| 9 | Tech Debt Reduction | `/tech-debt` | Architect → Fullstack → QA → DevOps | Identify and reduce technical debt |
+| 10 | Onboarding Project | `/onboard` | PM → Analyst → Architect → Scrum | New project kickoff and team setup |
+| 11 | Release Cycle | `/release` | Scrum → QA → Security → Legal → DevOps → Marketing → PR → CS | Full release cycle from validation to communication (8 steps) |
+| 12 | Hotfix | `/hotfix` | QA → Security → Fullstack → QA → DevOps | Emergency production fix with security check (NEW) |
+| 13 | Dependency Upgrade | `/upgrade-deps` | Architect → Security → Fullstack → QA → DevOps | Safe dependency upgrade pipeline (NEW) |
+| 14 | Doc Sprint | `/doc-sprint` | Analyst → Architect + Fullstack → Copywriter → DevOps | Focused documentation sprint (NEW) |
+| 15 | Experimentation | `/experiment-cycle` | PM → Data → Fullstack → QA → Growth | Design, build, and analyze experiments (NEW) |
 
 ---
 
-## Detail des workflows
+## Chaining Concept
+
+Each workflow is an **ordered sequence of agents** where every step:
+
+1. **Receives inputs** — deliverables produced by previous agents
+2. **Executes an action** — the agent's specific work
+3. **Produces outputs** — deliverables consumed by subsequent agents
+4. **Declares dependencies** — `depends_on` defines which steps must complete first
+
+The Jarvis orchestrator manages this chaining automatically:
+- It injects context (inputs) before each agent starts
+- It verifies that expected outputs are produced
+- It updates the `_manifest.yaml` after each step
+- It alerts if a deliverable is missing
+
+---
+
+## Workflow Details
 
 ### 1. MVP Launch (`/mvp`)
 
-**Description :** Lancement d'un MVP de A a Z -- de la vision produit au deploiement.
+**Description:** Launch an MVP from start to finish — from product vision to deployment. Covers the full stack: product definition, architecture, design, database, backend, frontend, testing, and deployment.
 
-**Repertoire de sortie :** `{cohesium_output}/mvp_{timestamp}/`
+**Output directory:** `{cohesium_output}/mvp_{timestamp}/`
 
-| Etape | Agent | Action | Inputs | Outputs |
-|-------|-------|--------|--------|---------|
-| 1 | `pm` | Definir la vision produit, les user stories et le scope MVP | -- | `product-brief.md`, `user-stories.md` |
-| 2 | `architect` | Concevoir l'architecture technique du MVP | product-brief | `architecture-decision.md`, `tech-stack.md` |
-| 3 | `ux` | Creer les wireframes des ecrans cles | product-brief, user-stories | `wireframes.md`, `user-flows.md` |
-| 4 | `db` | Concevoir le schema de donnees | architecture-decision, user-stories | `schema.md`, `migrations.md` |
-| 5 | `dev-backend` | Developper l'API et la logique metier | architecture-decision, tech-stack, schema | `api-spec.md`, `endpoints.md` |
-| 6 | `dev-frontend` | Developper l'interface utilisateur | wireframes, user-flows, api-spec, endpoints | `components.md`, `pages.md` |
-| 7 | `qa` | Tester le MVP end-to-end | api-spec, components, user-stories | `test-plan.md`, `test-report.md` |
-| 8 | `devops` | Mettre en place le CI/CD et le deploiement | tech-stack, test-report | `deployment-guide.md`, `ci-cd-config.md` |
+| Step | Agent | Action | Inputs | Outputs |
+|------|-------|--------|--------|---------|
+| 1 | `pm` | Define product vision, user stories, and MVP scope | — | `product-brief.md`, `user-stories.md` |
+| 2 | `architect` | Design the technical architecture for the MVP | product-brief | `architecture-decision.md`, `tech-stack.md` |
+| 3 | `ux` | Create wireframes for key screens | product-brief, user-stories | `wireframes.md`, `user-flows.md` |
+| 4 | `brand` | Establish brand guidelines and visual identity for the MVP | product-brief, wireframes | `brand-guidelines.md`, `visual-identity.md` |
+| 5 | `db` | Design the data schema | architecture-decision, user-stories | `schema.md`, `migrations.md` |
+| 6 | `dev-backend` | Develop the API and business logic | architecture-decision, tech-stack, schema | `api-spec.md`, `endpoints.md` |
+| 7 | `dev-frontend` | Develop the user interface | wireframes, user-flows, api-spec, brand-guidelines | `components.md`, `pages.md` |
+| 8 | `qa` | Test the MVP end to end | api-spec, components, user-stories | `test-plan.md`, `test-report.md` |
+| 9 | `devops` | Set up CI/CD and deployment | tech-stack, test-report | `deployment-guide.md`, `ci-cd-config.md` |
 
-**Graphe de dependances :**
+**Dependency graph:**
 ```
-PM(1) --> Architect(2) --> DB(4) --> Backend(5) --> Frontend(6) --> QA(7) --> DevOps(8)
-PM(1) --> UX(3) ----------------------------------------^
+PM(1) → Architect(2) → DB(5) → Backend(6) → Frontend(7) → QA(8) → DevOps(9)
+PM(1) → UX(3) → Brand(4) ────────────────────↗
 ```
 
-**Livrables cles :** Brief produit, architecture, wireframes, schema BDD, spec API, composants UI, rapport de tests, guide de deploiement.
+**Key deliverables:** Product brief, architecture decision, wireframes, brand guidelines, database schema, API spec, UI components, test report, deployment guide.
 
 ---
 
 ### 2. Feature Development (`/feature`)
 
-**Description :** Developpement d'une nouvelle fonctionnalite -- de la specification a la validation.
+**Description:** Develop a new feature from specification to validation. Covers functional specification, requirements analysis, technical design, implementation, and QA.
 
-**Repertoire de sortie :** `{cohesium_output}/feature_{timestamp}/`
+**Output directory:** `{cohesium_output}/feature_{timestamp}/`
 
-| Etape | Agent | Action | Inputs | Outputs |
-|-------|-------|--------|--------|---------|
-| 1 | `pm` | Rediger la specification fonctionnelle | -- | `feature-spec.md`, `acceptance-criteria.md` |
-| 2 | `analyst` | Analyser les exigences techniques et metier | feature-spec, acceptance-criteria | `requirements.md`, `impact-analysis.md` |
-| 3 | `architect` | Concevoir la solution technique | requirements, feature-spec | `technical-design.md`, `integration-plan.md` |
-| 4 | `dev-backend` | Implementer la logique metier et les endpoints | technical-design, requirements | `implementation-notes.md`, `api-changes.md` |
-| 5 | `dev-frontend` | Implementer l'interface utilisateur | technical-design, api-changes, feature-spec | `ui-implementation.md`, `component-list.md` |
-| 6 | `qa` | Valider avec tests fonctionnels et de non-regression | implementation-notes, ui-implementation, acceptance-criteria | `test-report.md`, `validation-summary.md` |
+| Step | Agent | Action | Inputs | Outputs |
+|------|-------|--------|--------|---------|
+| 1 | `pm` | Write the functional specification | — | `feature-spec.md`, `acceptance-criteria.md` |
+| 2 | `analyst` | Analyze technical and business requirements | feature-spec, acceptance-criteria | `requirements.md`, `impact-analysis.md` |
+| 3 | `architect` | Design the technical solution | requirements, feature-spec | `technical-design.md`, `integration-plan.md` |
+| 4 | `dev-backend` | Implement business logic and endpoints | technical-design, requirements | `implementation-notes.md`, `api-changes.md` |
+| 5 | `dev-frontend` | Implement the user interface | technical-design, api-changes, feature-spec | `ui-implementation.md`, `component-list.md` |
+| 6 | `qa` | Validate with functional and regression tests | implementation-notes, ui-implementation, acceptance-criteria | `test-report.md`, `validation-summary.md` |
 
-**Livrables cles :** Spec fonctionnelle, analyse d'impact, design technique, plan d'integration, notes d'implementation, rapport de validation.
+**Key deliverables:** Feature spec, impact analysis, technical design, integration plan, implementation notes, validation report.
 
 ---
 
 ### 3. Bug Fix (`/bugfix`)
 
-**Description :** Correction de bug structuree -- de l'analyse a la validation.
+**Description:** Structured bug fix from analysis to verification. QA analyzes and reproduces the bug, the fullstack developer fixes it, and QA validates the fix with regression tests.
 
-**Repertoire de sortie :** `{cohesium_output}/bugfix_{timestamp}/`
+**Output directory:** `{cohesium_output}/bugfix_{timestamp}/`
 
-| Etape | Agent | Action | Inputs | Outputs |
-|-------|-------|--------|--------|---------|
-| 1 | `qa` | Analyser le bug, reproduire le probleme | -- | `bug-analysis.md`, `reproduction-steps.md` |
-| 2 | `dev` | Proposer et implementer la correction | bug-analysis, reproduction-steps | `fix-proposal.md`, `fix-implementation.md` |
-| 3 | `qa` | Executer les tests de non-regression et valider | fix-proposal, fix-implementation, bug-analysis | `regression-test.md`, `validation-report.md` |
+| Step | Agent | Action | Inputs | Outputs |
+|------|-------|--------|--------|---------|
+| 1 | `qa` | Analyze the bug and reproduce the problem | — | `bug-analysis.md`, `reproduction-steps.md` |
+| 2 | `dev-fullstack` | Propose and implement the fix | bug-analysis, reproduction-steps | `fix-proposal.md`, `fix-implementation.md` |
+| 3 | `qa` | Run regression tests and validate the fix | fix-proposal, fix-implementation, bug-analysis | `regression-test.md`, `validation-report.md` |
 
-**Livrables cles :** Analyse du bug, etapes de reproduction, proposition de correction, rapport de regression.
+**Key deliverables:** Bug analysis, reproduction steps, fix proposal, regression test results, validation report.
 
 ---
 
 ### 4. Code Review Pipeline (`/review-pipeline`)
 
-**Description :** Pipeline de revue de code complete -- analyse qualite, securite et regard critique.
+**Description:** Multi-perspective code review pipeline. The fullstack developer summarizes changes, QA evaluates quality, Security audits for vulnerabilities, and the Contrarian challenges technical choices.
 
-**Repertoire de sortie :** `{cohesium_output}/code-review_{timestamp}/`
+**Output directory:** `{cohesium_output}/code-review_{timestamp}/`
 
-| Etape | Agent | Action | Inputs | Outputs |
-|-------|-------|--------|--------|---------|
-| 1 | `dev` | Resumer les changements et documenter les decisions | -- | `code-summary.md`, `change-rationale.md` |
-| 2 | `qa` | Evaluer la qualite du code et la couverture de tests | code-summary, change-rationale | `quality-report.md`, `recommendations.md` |
-| 3 | `security` | Auditer le code pour detecter les vulnerabilites | code-summary, quality-report | `security-findings.md`, `risk-assessment.md` |
-| 4 | `contrarian` | Challenger les choix techniques et proposer des alternatives | code-summary, quality-report, security-findings | `devil-advocate-report.md`, `alternative-approaches.md` |
+| Step | Agent | Action | Inputs | Outputs |
+|------|-------|--------|--------|---------|
+| 1 | `dev-fullstack` | Summarize changes and document decisions | — | `code-summary.md`, `change-rationale.md` |
+| 2 | `qa` | Evaluate code quality and test coverage | code-summary, change-rationale | `quality-report.md`, `recommendations.md` |
+| 3 | `security` | Audit the code for vulnerabilities | code-summary, quality-report | `security-findings.md`, `risk-assessment.md` |
+| 4 | `contrarian` | Challenge technical choices and propose alternatives | code-summary, quality-report, security-findings | `devil-advocate-report.md`, `alternative-approaches.md` |
 
-**Livrables cles :** Resume du code, rapport qualite, constats de securite, rapport Devil's Advocate avec alternatives.
+**Key deliverables:** Code summary, quality report, security findings, Devil's Advocate report with alternatives.
 
 ---
 
 ### 5. Security Audit (`/audit-security`)
 
-**Description :** Audit de securite complet -- detection des vulnerabilites, remediation et conformite.
+**Description:** Comprehensive security audit covering vulnerability detection, remediation planning, infrastructure hardening, and regulatory compliance.
 
-**Repertoire de sortie :** `{cohesium_output}/security-audit_{timestamp}/`
+**Output directory:** `{cohesium_output}/security-audit_{timestamp}/`
 
-| Etape | Agent | Action | Inputs | Outputs |
-|-------|-------|--------|--------|---------|
-| 1 | `security` | Scanner et identifier les vulnerabilites | -- | `vulnerability-report.md`, `threat-model.md` |
-| 2 | `dev-backend` | Elaborer le plan de remediation | vulnerability-report, threat-model | `remediation-plan.md`, `patching-schedule.md` |
-| 3 | `devops` | Renforcer la securite de l'infrastructure | vulnerability-report, remediation-plan | `infrastructure-hardening.md`, `security-config.md` |
-| 4 | `legal` | Verifier la conformite reglementaire | vulnerability-report, infrastructure-hardening, remediation-plan | `compliance-check.md`, `regulatory-summary.md` |
+| Step | Agent | Action | Inputs | Outputs |
+|------|-------|--------|--------|---------|
+| 1 | `security` | Scan and identify vulnerabilities | — | `vulnerability-report.md`, `threat-model.md` |
+| 2 | `dev-backend` | Develop the remediation plan | vulnerability-report, threat-model | `remediation-plan.md`, `patching-schedule.md` |
+| 3 | `devops` | Harden infrastructure security | vulnerability-report, remediation-plan | `infrastructure-hardening.md`, `security-config.md` |
+| 4 | `legal` | Verify regulatory compliance | vulnerability-report, infrastructure-hardening, remediation-plan | `compliance-check.md`, `regulatory-summary.md` |
 
-**Livrables cles :** Rapport de vulnerabilites, modele de menaces, plan de remediation, hardening infra, verification de conformite.
+**Key deliverables:** Vulnerability report, threat model, remediation plan, infrastructure hardening, compliance check.
 
 ---
 
 ### 6. SEO Content Pipeline (`/seo-pipeline`)
 
-**Description :** Pipeline de creation de contenu SEO -- de la recherche de mots-cles a l'optimisation GEO/AIO.
+**Description:** End-to-end SEO content creation pipeline from keyword research to GEO/AIO optimization. Produces fully optimized content ready for publication.
 
-**Repertoire de sortie :** `{cohesium_output}/seo-content_{timestamp}/`
+**Output directory:** `{cohesium_output}/seo-content_{timestamp}/`
 
-| Etape | Agent | Action | Inputs | Outputs |
-|-------|-------|--------|--------|---------|
-| 1 | `seo` | Recherche de mots-cles et strategie de contenu | -- | `keyword-research.md`, `content-strategy.md` |
-| 2 | `content-seo` | Rediger le brief et structurer la semantique | keyword-research, content-strategy | `content-brief.md`, `semantic-structure.md` |
-| 3 | `copywriter` | Rediger l'article optimise SEO | content-brief, semantic-structure, keyword-research | `article-draft.md`, `meta-tags.md` |
-| 4 | `geo-aio` | Optimiser pour la recherche geolocalisee et l'IA generative | article-draft, keyword-research, semantic-structure | `geo-optimization.md`, `aio-recommendations.md` |
+| Step | Agent | Action | Inputs | Outputs |
+|------|-------|--------|--------|---------|
+| 1 | `seo` | Perform keyword research and define content strategy | — | `keyword-research.md`, `content-strategy.md` |
+| 2 | `content-seo` | Write the content brief and semantic structure | keyword-research, content-strategy | `content-brief.md`, `semantic-structure.md` |
+| 3 | `copywriter` | Write the SEO-optimized article | content-brief, semantic-structure, keyword-research | `article-draft.md`, `meta-tags.md` |
+| 4 | `geo-aio` | Optimize for geolocated search and generative AI | article-draft, keyword-research, semantic-structure | `geo-optimization.md`, `aio-recommendations.md` |
 
-**Livrables cles :** Recherche de mots-cles, brief de contenu, article redige, optimisation GEO/AIO.
+**Key deliverables:** Keyword research, content brief, SEO-optimized article, GEO/AIO optimization recommendations.
 
 ---
 
 ### 7. Marketing Campaign (`/campaign`)
 
-**Description :** Lancement de campagne marketing -- de la strategie a l'execution multi-canal.
+**Description:** Launch a multi-channel marketing campaign from strategy through execution. Covers strategy, budgeting, branding, copywriting, paid media, social media, PR, and growth tracking.
 
-**Repertoire de sortie :** `{cohesium_output}/marketing_{timestamp}/`
+**Output directory:** `{cohesium_output}/marketing_{timestamp}/`
 
-| Etape | Agent | Action | Inputs | Outputs |
-|-------|-------|--------|--------|---------|
-| 1 | `marketing` | Definir la strategie et identifier l'audience cible | -- | `campaign-strategy.md`, `target-audience.md` |
-| 2 | `brand` | Etablir les directives de marque et le positionnement | campaign-strategy, target-audience | `brand-guidelines.md`, `messaging.md` |
-| 3 | `copywriter` | Rediger les assets textuels pour tous les canaux | brand-guidelines, messaging, target-audience | `copy-assets.md`, `tone-of-voice.md` |
-| 4 | `ads` | Configurer les campagnes publicitaires et le budget | campaign-strategy, target-audience, copy-assets | `ad-setup.md`, `budget-plan.md` |
-| 5 | `social` | Planifier le calendrier editorial et le contenu social | copy-assets, brand-guidelines, campaign-strategy | `social-calendar.md`, `content-plan.md` |
-| 6 | `growth` | Definir les metriques de croissance et experimentations | ad-setup, budget-plan, social-calendar, campaign-strategy | `growth-metrics.md`, `experiment-plan.md` |
+| Step | Agent | Action | Inputs | Outputs |
+|------|-------|--------|--------|---------|
+| 1 | `marketing` | Define campaign strategy and target audience | — | `campaign-strategy.md`, `target-audience.md` |
+| 2 | `finance` | Plan the budget and allocate resources | campaign-strategy, target-audience | `budget-plan.md`, `resource-allocation.md` |
+| 3 | `brand` | Establish brand guidelines and positioning | campaign-strategy, target-audience | `brand-guidelines.md`, `messaging.md` |
+| 4 | `copywriter` | Write text assets for all channels | brand-guidelines, messaging, target-audience | `copy-assets.md`, `tone-of-voice.md` |
+| 5 | `ads` | Configure advertising campaigns | campaign-strategy, target-audience, copy-assets, budget-plan | `ad-setup.md`, `media-plan.md` |
+| 5 | `social` | Plan the editorial calendar and social content | copy-assets, brand-guidelines, campaign-strategy | `social-calendar.md`, `content-plan.md` |
+| 5 | `pr` | Prepare press outreach and media relations | campaign-strategy, messaging, copy-assets | `press-kit.md`, `media-outreach.md` |
+| 6 | `growth` | Define growth metrics and experiments | ad-setup, social-calendar, press-kit, campaign-strategy | `growth-metrics.md`, `experiment-plan.md` |
 
-**Livrables cles :** Strategie de campagne, guidelines de marque, assets textuels, configuration ads, calendrier social, plan d'experimentations growth.
+> Steps 5 (Ads, Social, PR) run in parallel.
+
+**Key deliverables:** Campaign strategy, budget plan, brand guidelines, copy assets, ad setup, social calendar, press kit, growth metrics.
 
 ---
 
 ### 8. Sprint Cycle (`/sprint`)
 
-**Description :** Cycle de sprint Agile complet -- de la planification a la livraison.
+**Description:** Complete agile sprint cycle from planning to delivery. Covers backlog preparation, goal setting, implementation, testing, and release.
 
-**Repertoire de sortie :** `{cohesium_output}/sprint_{timestamp}/`
+**Output directory:** `{cohesium_output}/sprint_{timestamp}/`
 
-| Etape | Agent | Action | Inputs | Outputs |
-|-------|-------|--------|--------|---------|
-| 1 | `scrum` | Preparer le backlog du sprint et planifier les ceremonies | -- | `sprint-backlog.md`, `ceremony-plan.md` |
-| 2 | `pm` | Definir les objectifs et prioriser les user stories | sprint-backlog, ceremony-plan | `sprint-goals.md`, `prioritized-stories.md` |
-| 3 | `dev` | Implementer les user stories et documenter | sprint-goals, prioritized-stories, sprint-backlog | `implementation-log.md`, `technical-notes.md` |
-| 4 | `qa` | Tester les developpements et rapporter les resultats | implementation-log, prioritized-stories, sprint-goals | `test-results.md`, `defects-log.md` |
-| 5 | `devops` | Preparer la release et rediger les notes de version | implementation-log, test-results, defects-log | `release-notes.md`, `deployment-summary.md` |
+| Step | Agent | Action | Inputs | Outputs |
+|------|-------|--------|--------|---------|
+| 1 | `scrum` | Prepare the sprint backlog and plan ceremonies | — | `sprint-backlog.md`, `ceremony-plan.md` |
+| 2 | `pm` | Define sprint goals and prioritize user stories | sprint-backlog, ceremony-plan | `sprint-goals.md`, `prioritized-stories.md` |
+| 3 | `dev-fullstack` | Implement user stories and document progress | sprint-goals, prioritized-stories, sprint-backlog | `implementation-log.md`, `technical-notes.md` |
+| 4 | `qa` | Test implementations and report results | implementation-log, prioritized-stories, sprint-goals | `test-results.md`, `defects-log.md` |
+| 5 | `devops` | Prepare the release and write release notes | implementation-log, test-results, defects-log | `release-notes.md`, `deployment-summary.md` |
 
-**Livrables cles :** Backlog de sprint, objectifs, log d'implementation, resultats de tests, notes de release.
+**Key deliverables:** Sprint backlog, sprint goals, implementation log, test results, release notes.
 
 ---
 
 ### 9. Tech Debt Reduction (`/tech-debt`)
 
-**Description :** Reduction de la dette technique -- inventaire, refactoring et validation.
+**Description:** Identify and reduce technical debt systematically. Covers debt inventory, impact analysis, refactoring planning, regression validation, and deployment.
 
-**Repertoire de sortie :** `{cohesium_output}/tech-debt_{timestamp}/`
+**Output directory:** `{cohesium_output}/tech-debt_{timestamp}/`
 
-| Etape | Agent | Action | Inputs | Outputs |
-|-------|-------|--------|--------|---------|
-| 1 | `architect` | Inventorier la dette technique et analyser l'impact | -- | `debt-inventory.md`, `impact-analysis.md` |
-| 2 | `dev` | Elaborer le plan de refactoring et le guide de migration | debt-inventory, impact-analysis | `refactoring-plan.md`, `migration-guide.md` |
-| 3 | `qa` | Verifier la couverture de tests et valider les regressions | refactoring-plan, migration-guide, debt-inventory | `test-coverage.md`, `regression-report.md` |
-| 4 | `devops` | Planifier le deploiement des changements | refactoring-plan, test-coverage, regression-report | `deployment-plan.md`, `rollback-strategy.md` |
+| Step | Agent | Action | Inputs | Outputs |
+|------|-------|--------|--------|---------|
+| 1 | `architect` | Inventory technical debt and analyze impact | — | `debt-inventory.md`, `impact-analysis.md` |
+| 2 | `dev-fullstack` | Create the refactoring plan and migration guide | debt-inventory, impact-analysis | `refactoring-plan.md`, `migration-guide.md` |
+| 3 | `qa` | Verify test coverage and validate regressions | refactoring-plan, migration-guide, debt-inventory | `test-coverage.md`, `regression-report.md` |
+| 4 | `devops` | Plan deployment of changes | refactoring-plan, test-coverage, regression-report | `deployment-plan.md`, `rollback-strategy.md` |
 
-**Livrables cles :** Inventaire de la dette, plan de refactoring, guide de migration, strategie de rollback.
+**Key deliverables:** Debt inventory, refactoring plan, migration guide, rollback strategy.
 
 ---
 
 ### 10. Onboarding Project (`/onboard`)
 
-**Description :** Onboarding d'un nouveau projet -- cadrage, analyse et mise en place de l'equipe.
+**Description:** Onboard a new project with structured kickoff. Covers project chartering, requirements gathering, stakeholder mapping, architecture definition, and team setup.
 
-**Repertoire de sortie :** `{cohesium_output}/onboarding_{timestamp}/`
+**Output directory:** `{cohesium_output}/onboarding_{timestamp}/`
 
-| Etape | Agent | Action | Inputs | Outputs |
-|-------|-------|--------|--------|---------|
-| 1 | `pm` | Rediger la charte du projet et definir la vision produit | -- | `project-charter.md`, `product-vision.md` |
-| 2 | `analyst` | Documenter les exigences et cartographier les parties prenantes | project-charter, product-vision | `requirements-doc.md`, `stakeholder-map.md` |
-| 3 | `architect` | Definir l'architecture globale et recommander la stack | requirements-doc, product-vision, project-charter | `architecture-overview.md`, `tech-stack-recommendation.md` |
-| 4 | `scrum` | Mettre en place l'equipe et definir les processus | project-charter, stakeholder-map, architecture-overview | `team-setup.md`, `process-guide.md` |
+| Step | Agent | Action | Inputs | Outputs |
+|------|-------|--------|--------|---------|
+| 1 | `pm` | Write the project charter and define product vision | — | `project-charter.md`, `product-vision.md` |
+| 2 | `analyst` | Document requirements and map stakeholders | project-charter, product-vision | `requirements-doc.md`, `stakeholder-map.md` |
+| 3 | `architect` | Define the overall architecture and recommend the tech stack | requirements-doc, product-vision, project-charter | `architecture-overview.md`, `tech-stack-recommendation.md` |
+| 4 | `scrum` | Set up the team and define processes | project-charter, stakeholder-map, architecture-overview | `team-setup.md`, `process-guide.md` |
 
-**Livrables cles :** Charte projet, vision produit, exigences, cartographie parties prenantes, architecture, guide des processus.
+**Key deliverables:** Project charter, product vision, requirements, stakeholder map, architecture overview, process guide.
 
 ---
 
 ### 11. Release Cycle (`/release`)
 
-**Description :** Cycle de mise en production -- validation, deploiement et communication.
+**Description:** Full release cycle from validation to communication. Covers release preparation, QA sign-off, security clearance, legal review, deployment, marketing announcement, PR outreach, and customer support preparation.
 
-**Repertoire de sortie :** `{cohesium_output}/release_{timestamp}/`
+**Output directory:** `{cohesium_output}/release_{timestamp}/`
 
-| Etape | Agent | Action | Inputs | Outputs |
-|-------|-------|--------|--------|---------|
-| 1 | `scrum` | Preparer la checklist de release et valider le scope | -- | `release-checklist.md`, `scope-validation.md` |
-| 2 | `qa` | Validation finale et tests de non-regression | release-checklist, scope-validation | `qa-sign-off.md`, `regression-results.md` |
-| 3 | `security` | Valider la conformite securitaire | qa-sign-off, regression-results, release-checklist | `security-clearance.md`, `final-audit.md` |
-| 4 | `devops` | Preparer le runbook de deploiement et le plan de rollback | security-clearance, qa-sign-off, release-checklist | `deploy-runbook.md`, `rollback-plan.md` |
-| 5 | `marketing` | Rediger l'annonce de la release et le changelog public | deploy-runbook, release-checklist, scope-validation | `announcement.md`, `changelog.md` |
+| Step | Agent | Action | Inputs | Outputs |
+|------|-------|--------|--------|---------|
+| 1 | `scrum` | Prepare the release checklist and validate scope | — | `release-checklist.md`, `scope-validation.md` |
+| 2 | `qa` | Final validation and regression testing | release-checklist, scope-validation | `qa-sign-off.md`, `regression-results.md` |
+| 3 | `security` | Validate security compliance | qa-sign-off, regression-results, release-checklist | `security-clearance.md`, `final-audit.md` |
+| 4 | `legal` | Review legal and regulatory compliance | security-clearance, release-checklist | `legal-sign-off.md`, `compliance-notes.md` |
+| 5 | `devops` | Prepare the deployment runbook and rollback plan | security-clearance, legal-sign-off, qa-sign-off, release-checklist | `deploy-runbook.md`, `rollback-plan.md` |
+| 6 | `marketing` | Write the release announcement and public changelog | deploy-runbook, release-checklist, scope-validation | `announcement.md`, `changelog.md` |
+| 7 | `pr` | Prepare press outreach and media materials | announcement, changelog, scope-validation | `press-release.md`, `media-kit.md` |
+| 8 | `cs` | Prepare customer support materials and FAQ | announcement, changelog, release-checklist | `support-guide.md`, `faq.md` |
 
-**Livrables cles :** Checklist de release, sign-off QA, clearance securite, runbook de deploiement, annonce et changelog.
+**Key deliverables:** Release checklist, QA sign-off, security clearance, legal sign-off, deployment runbook, announcement, press release, support guide.
 
 ---
 
-## Format du _manifest.yaml
+### 12. Hotfix (`/hotfix`) — NEW
 
-Chaque workflow genere un fichier `_manifest.yaml` qui sert de **source de verite** pour l'etat du workflow :
+**Description:** Emergency production fix with built-in security verification. QA reproduces the issue, Security assesses the risk, the fullstack developer implements the fix, QA validates, and DevOps deploys.
+
+**Output directory:** `{cohesium_output}/hotfix_{timestamp}/`
+
+| Step | Agent | Action | Inputs | Outputs |
+|------|-------|--------|--------|---------|
+| 1 | `qa` | Reproduce the production issue and assess impact | — | `incident-analysis.md`, `reproduction-steps.md` |
+| 2 | `security` | Evaluate whether the issue has security implications | incident-analysis, reproduction-steps | `security-assessment.md`, `risk-level.md` |
+| 3 | `dev-fullstack` | Implement the hotfix with minimal change scope | incident-analysis, reproduction-steps, security-assessment | `hotfix-implementation.md`, `change-scope.md` |
+| 4 | `qa` | Validate the fix with targeted and regression tests | hotfix-implementation, change-scope, incident-analysis | `validation-report.md`, `regression-results.md` |
+| 5 | `devops` | Deploy the hotfix to production with rollback plan | hotfix-implementation, validation-report, regression-results | `deployment-log.md`, `rollback-plan.md` |
+
+**Key deliverables:** Incident analysis, security assessment, hotfix implementation, validation report, deployment log.
+
+---
+
+### 13. Dependency Upgrade (`/upgrade-deps`) — NEW
+
+**Description:** Safe and structured dependency upgrade pipeline. The architect evaluates impact, Security checks for vulnerabilities, the fullstack developer applies updates, QA validates compatibility, and DevOps deploys.
+
+**Output directory:** `{cohesium_output}/upgrade-deps_{timestamp}/`
+
+| Step | Agent | Action | Inputs | Outputs |
+|------|-------|--------|--------|---------|
+| 1 | `architect` | Analyze current dependencies and evaluate upgrade impact | — | `dependency-audit.md`, `upgrade-plan.md` |
+| 2 | `security` | Scan for CVEs and assess security risk of changes | dependency-audit, upgrade-plan | `cve-report.md`, `security-risk.md` |
+| 3 | `dev-fullstack` | Apply dependency upgrades and fix breaking changes | upgrade-plan, cve-report, security-risk | `upgrade-log.md`, `breaking-changes.md` |
+| 4 | `qa` | Run full test suite and validate compatibility | upgrade-log, breaking-changes | `test-results.md`, `compatibility-report.md` |
+| 5 | `devops` | Deploy upgraded dependencies with monitoring | upgrade-log, test-results, compatibility-report | `deployment-plan.md`, `monitoring-config.md` |
+
+**Key deliverables:** Dependency audit, CVE report, upgrade log, compatibility report, deployment plan.
+
+---
+
+### 14. Doc Sprint (`/doc-sprint`) — NEW
+
+**Description:** Focused documentation sprint to bring project documentation up to date. The analyst inventories existing docs, the architect and fullstack developer write technical content in parallel, the copywriter polishes and standardizes, and DevOps publishes.
+
+**Output directory:** `{cohesium_output}/doc-sprint_{timestamp}/`
+
+| Step | Agent | Action | Inputs | Outputs |
+|------|-------|--------|--------|---------|
+| 1 | `analyst` | Inventory existing documentation and identify gaps | — | `doc-inventory.md`, `gap-analysis.md` |
+| 2a | `architect` | Write architecture and design documentation | doc-inventory, gap-analysis | `architecture-docs.md`, `adr-updates.md` |
+| 2b | `dev-fullstack` | Write API and implementation documentation | doc-inventory, gap-analysis | `api-docs.md`, `implementation-guides.md` |
+| 3 | `copywriter` | Edit, polish, and standardize all documentation | architecture-docs, api-docs, adr-updates, implementation-guides | `final-docs.md`, `style-guide.md` |
+| 4 | `devops` | Publish documentation and set up doc site | final-docs, style-guide | `published-docs.md`, `doc-site-config.md` |
+
+> Steps 2a and 2b (Architect + Fullstack) run in parallel.
+
+**Key deliverables:** Documentation inventory, gap analysis, architecture docs, API docs, polished final docs, doc site configuration.
+
+---
+
+### 15. Experimentation (`/experiment-cycle`) — NEW
+
+**Description:** Design, build, and analyze product experiments. The PM defines the hypothesis, Data designs the measurement framework, the fullstack developer implements the experiment, QA validates the setup, and Growth analyzes results.
+
+**Output directory:** `{cohesium_output}/experiment_{timestamp}/`
+
+| Step | Agent | Action | Inputs | Outputs |
+|------|-------|--------|--------|---------|
+| 1 | `pm` | Define the experiment hypothesis and success criteria | — | `experiment-brief.md`, `success-criteria.md` |
+| 2 | `data` | Design the measurement framework and analytics plan | experiment-brief, success-criteria | `measurement-plan.md`, `analytics-setup.md` |
+| 3 | `dev-fullstack` | Implement the experiment (feature flags, A/B setup) | experiment-brief, measurement-plan | `experiment-implementation.md`, `feature-flags.md` |
+| 4 | `qa` | Validate experiment setup and tracking accuracy | experiment-implementation, feature-flags, measurement-plan | `validation-report.md`, `tracking-audit.md` |
+| 5 | `growth` | Analyze results and recommend next steps | validation-report, measurement-plan, success-criteria | `results-analysis.md`, `recommendations.md` |
+
+**Key deliverables:** Experiment brief, measurement plan, implementation details, tracking audit, results analysis and recommendations.
+
+---
+
+## Manifest Format (`_manifest.yaml`)
+
+Each workflow generates a `_manifest.yaml` file that serves as the **single source of truth** for the workflow state:
 
 ```yaml
 workflow: mvp-launch
-description: "Lancement d'un MVP de A a Z"
+description: "Launch an MVP from start to finish"
 started_at: "2025-01-15T10:30:00Z"
 config:
-  langue_equipe: "francais"
-  langue_output: "francais"
+  team_language: "english"
+  output_language: "english"
   output_dir: "./cohesium-output/mvp_20250115_103000"
 steps:
   - step: 1
     agent: pm
-    action: "Definir la vision produit, les user stories et le scope MVP"
+    action: "Define product vision, user stories, and MVP scope"
     status: completed          # completed | in_progress | pending | failed
     started_at: "2025-01-15T10:30:00Z"
     completed_at: "2025-01-15T10:45:00Z"
@@ -266,15 +352,15 @@ steps:
     outputs:
       - path: "01-pm/product-brief.md"
         type: "document"
-        description: "Brief produit avec vision et scope MVP"
+        description: "Product brief with MVP vision and scope"
         status: produced       # produced | missing
       - path: "01-pm/user-stories.md"
         type: "document"
-        description: "User stories du MVP"
+        description: "MVP user stories"
         status: produced
   - step: 2
     agent: architect
-    action: "Concevoir l'architecture technique du MVP"
+    action: "Design the technical architecture for the MVP"
     status: in_progress
     started_at: "2025-01-15T10:46:00Z"
     inputs_consumed:
@@ -282,37 +368,37 @@ steps:
     outputs:
       - path: "02-architect/architecture-decision.md"
         type: "document"
-        description: "ADR avec choix d'architecture"
+        description: "ADR with architecture choices"
         status: pending
 ```
 
-### Champs du manifest
+### Manifest Fields
 
-| Champ | Description |
+| Field | Description |
 |-------|-------------|
-| `workflow` | Identifiant du workflow |
-| `description` | Description du workflow |
-| `started_at` | Timestamp ISO de demarrage |
-| `config` | Langues et repertoire de sortie |
-| `steps[].step` | Numero d'etape |
-| `steps[].agent` | Agent responsable |
-| `steps[].action` | Description de l'action |
-| `steps[].status` | `completed`, `in_progress`, `pending` ou `failed` |
-| `steps[].inputs_consumed` | Liste des fichiers lus par l'agent |
-| `steps[].outputs[].path` | Chemin relatif du livrable |
-| `steps[].outputs[].status` | `produced` ou `missing` |
+| `workflow` | Workflow identifier |
+| `description` | Workflow description |
+| `started_at` | ISO timestamp of workflow start |
+| `config` | Languages and output directory |
+| `steps[].step` | Step number |
+| `steps[].agent` | Responsible agent |
+| `steps[].action` | Description of the action |
+| `steps[].status` | `completed`, `in_progress`, `pending`, or `failed` |
+| `steps[].inputs_consumed` | List of files read by the agent |
+| `steps[].outputs[].path` | Relative path of the deliverable |
+| `steps[].outputs[].status` | `produced` or `missing` |
 
 ---
 
-## Structure du repertoire de sortie
+## Output Directory Structure
 
-Chaque workflow cree un repertoire structure :
+Each workflow creates a structured directory:
 
 ```
 cohesium-output/
   mvp_20250115_103000/
-    _manifest.yaml                # Source de verite du workflow
-    _summary.md                   # Synthese generee en fin de workflow
+    _manifest.yaml                # Single source of truth for the workflow
+    _summary.md                   # Summary generated at the end of the workflow
     01-pm/
       product-brief.md
       user-stories.md
@@ -322,65 +408,68 @@ cohesium-output/
     03-ux/
       wireframes.md
       user-flows.md
-    04-db/
+    04-brand/
+      brand-guidelines.md
+      visual-identity.md
+    05-db/
       schema.md
       migrations.md
-    05-dev-backend/
+    06-dev-backend/
       api-spec.md
       endpoints.md
-    06-dev-frontend/
+    07-dev-frontend/
       components.md
       pages.md
-    07-qa/
+    08-qa/
       test-plan.md
       test-report.md
-    08-devops/
+    09-devops/
       deployment-guide.md
       ci-cd-config.md
 ```
 
-**Convention de nommage des dossiers :** `{numero_etape_2chiffres}-{nom_agent}/`
+**Directory naming convention:** `{step_number_2digits}-{agent_name}/`
 
 ---
 
-## Format du _summary.md
+## Summary File Format (`_summary.md`)
 
-En fin de workflow, Jarvis genere un fichier de synthese :
+At the end of a workflow, Jarvis generates a summary file:
 
 ```markdown
-# Resume du workflow : MVP Launch
+# Workflow Summary: MVP Launch
 
-## Date : 2025-01-15
-## Duree : 2h30
+## Date: 2025-01-15
+## Duration: 2h30
 
-## Objectif
-Lancement d'un MVP de A a Z -- de la vision produit au deploiement.
+## Objective
+Launch an MVP from start to finish — from product vision to deployment.
 
-## Etapes executees
+## Steps Executed
 
-| # | Agent | Statut | Livrables produits |
-|---|-------|--------|-------------------|
-| 1 | pm | Complete | product-brief.md, user-stories.md |
-| 2 | architect | Complete | architecture-decision.md, tech-stack.md |
+| # | Agent | Status | Deliverables Produced |
+|---|-------|--------|----------------------|
+| 1 | pm | Completed | product-brief.md, user-stories.md |
+| 2 | architect | Completed | architecture-decision.md, tech-stack.md |
 | ... | ... | ... | ... |
 
-## Livrables produits
-[liste complete avec chemins]
+## Deliverables Produced
+[complete list with paths]
 
-## Points d'attention
-[observations, risques identifies, recommandations]
+## Points of Attention
+[observations, identified risks, recommendations]
 
-## Prochaines etapes recommandees
-[suggestions d'actions suivantes]
+## Recommended Next Steps
+[suggested follow-up actions]
 ```
 
 ---
 
-## Fichiers source
+## Source Files
 
-Les workflows sont definis dans `src/workflows/{workflow-name}.yaml`. Chaque fichier YAML contient :
-- `name` : identifiant du workflow
-- `description` : description du workflow
-- `trigger` : commande declencheuse
-- `output_dir` : template du repertoire de sortie
-- `steps` : liste ordonnee des etapes avec agent, action, inputs, outputs et dependances
+Workflows are defined in `src/workflows/{workflow-name}.yaml`. Each YAML file contains:
+- `name`: workflow identifier
+- `description`: workflow description
+- `trigger`: trigger command
+- `output_dir`: output directory template
+- `steps`: ordered list of steps with agent, action, inputs, outputs, and dependencies

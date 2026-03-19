@@ -1,7 +1,7 @@
 ---
 name: db-migration
 description: Création et gestion de migrations de base de données avec rollback et validation
-agent: db
+agents: [db, dev-backend, dev-fullstack]
 trigger: /migrate
 ---
 

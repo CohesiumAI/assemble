@@ -1,7 +1,7 @@
 ---
 name: devops-pipeline
 description: Création de pipeline CI/CD complet avec build, tests, sécurité et déploiement
-agent: devops
+agents: [devops, dev-backend, dev-fullstack]
 trigger: /pipeline
 ---
 

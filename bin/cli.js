@@ -7,7 +7,7 @@
 
 const readline = require('readline');
 const path = require('path');
-const { execSync } = require('child_process');
+const { execFileSync } = require('child_process');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -56,31 +56,103 @@ function print(msg) {
   console.log(msg);
 }
 
+async function runUpdate(projectDir) {
+  const fs = require('fs');
+  const configPath = path.join(projectDir, '.cohesium.yaml');
+  if (!fs.existsSync(configPath)) {
+    print('\x1b[31m  ✗ No installation found (.cohesium.yaml missing)\x1b[0m');
+    rl.close();
+    process.exit(1);
+  }
+
+  print('\n\x1b[1m🔄 Updating...\x1b[0m\n');
+  print('Preserved preferences from .cohesium.yaml:');
+
+  const content = fs.readFileSync(configPath, 'utf-8');
+  for (const line of content.split('\n')) {
+    for (const key of ['langue_equipe', 'langue_output', 'platforms', 'output_dir', 'installed_at']) {
+      if (line.startsWith(`${key}:`)) {
+        print(`\x1b[32m  ${line.trim()}\x1b[0m`);
+      }
+    }
+  }
+  print('');
+
+  const confirm = await ask('Confirm update?', 'Y');
+  if (!['y', 'o'].includes(confirm.toLowerCase())) {
+    print('Update cancelled.');
+    rl.close();
+    process.exit(0);
+  }
+
+  print('\n\x1b[1m\x1b[34m▸ Regenerating...\x1b[0m\n');
+
+  const generatorPath = path.join(__dirname, '..', 'generator', 'generate.js');
+  try {
+    execFileSync(process.execPath, [generatorPath, '--update', '--project', projectDir], { stdio: 'inherit' });
+  } catch (err) {
+    print('\x1b[31m  ✗ Error during update\x1b[0m');
+    rl.close();
+    process.exit(1);
+  }
+
+  print('');
+  print('\x1b[36m═══════════════════════════════════════════════════════\x1b[0m');
+  print('\x1b[32m\x1b[1m   ✅ Update complete!\x1b[0m');
+  print('\x1b[36m═══════════════════════════════════════════════════════\x1b[0m');
+  print('');
+  print('Your preferences have been preserved.');
+  print('Configuration files have been regenerated with the latest version.');
+  print('');
+  rl.close();
+}
+
 async function main() {
+  const fs = require('fs');
+
   print('');
   print('\x1b[36m═══════════════════════════════════════════════════════\x1b[0m');
   print('\x1b[1m\x1b[34m   🦸 Cohesium AI — Agent Workflow System\x1b[0m');
-  print('\x1b[36m   Installation et configuration (npx)\x1b[0m');
+  print('\x1b[36m   Installation & Configuration (npx)\x1b[0m');
   print('\x1b[36m═══════════════════════════════════════════════════════\x1b[0m');
   print('');
 
-  // 1. Langue équipe
-  print('\n\x1b[1m\x1b[34m▸ 1/6 — Langue de l\'équipe\x1b[0m\n');
-  const langTeam = await ask('Langue de l\'équipe (français, english, deutsch...)', 'français');
+  // Detect --update flag or existing installation
+  if (process.argv.includes('--update') || process.argv.includes('-u')) {
+    const projIdx = process.argv.indexOf('--project');
+    const dir = projIdx >= 0 ? path.resolve(process.argv[projIdx + 1]) : path.resolve('.');
+    await runUpdate(dir);
+    return;
+  }
 
-  // 2. Langue output
-  print('\n\x1b[1m\x1b[34m▸ 2/6 — Langue des livrables\x1b[0m\n');
-  const langOutput = await ask('Langue des livrables', langTeam);
+  if (fs.existsSync('.cohesium.yaml')) {
+    print('📄 Existing installation detected: .cohesium.yaml\n');
+    print('  1) Update (keeps your preferences)');
+    print('  2) New installation\n');
+    const choice = await ask('Your choice', '1');
+    if (choice === '1') {
+      await runUpdate(path.resolve('.'));
+      return;
+    }
+  }
 
-  // 3. Plateformes
-  print('\n\x1b[1m\x1b[34m▸ 3/6 — Sélection des IDE/CLI\x1b[0m\n');
-  print('  IDE :');
+  // 1. Team language
+  print('\n\x1b[1m\x1b[34m▸ 1/6 — Team language\x1b[0m\n');
+  const langTeam = await ask('Team language (français, english, deutsch...)', 'français');
+
+  // 2. Output language
+  print('\n\x1b[1m\x1b[34m▸ 2/6 — Deliverable language\x1b[0m\n');
+  const langOutput = await ask('Deliverable language', langTeam);
+
+  // 3. Platforms
+  print('\n\x1b[1m\x1b[34m▸ 3/6 — IDE/CLI selection\x1b[0m\n');
+  print('  IDE:');
   PLATFORMS.ide.forEach(([, name], i) => print(`  ${String(i + 1).padStart(2)}) ${name}`));
-  print('\n  CLI :');
+  print('\n  CLI:');
   PLATFORMS.cli.forEach(([, name], i) => print(`  ${String(i + PLATFORMS.ide.length + 1).padStart(2)}) ${name}`));
-  print('\n   0) Tout sélectionner\n');
+  print('\n   0) Select all\n');
 
-  const platformChoice = await ask('Votre choix (numéros séparés par des espaces)', '0');
+  const platformChoice = await ask('Your choice (space-separated numbers)', '0');
   let selectedPlatforms;
   if (platformChoice === '0') {
     selectedPlatforms = ALL_PLATFORMS.map(p => p[0]);
@@ -90,57 +162,58 @@ async function main() {
       return idx >= 0 && idx < ALL_PLATFORMS.length ? ALL_PLATFORMS[idx][0] : null;
     }).filter(Boolean);
   }
-  print(`\x1b[32m  ✓ ${selectedPlatforms.length} plateformes sélectionnées\x1b[0m`);
+  print(`\x1b[32m  ✓ ${selectedPlatforms.length} platforms selected\x1b[0m`);
 
-  // 4. Répertoire
-  print('\n\x1b[1m\x1b[34m▸ 4/6 — Répertoire du projet\x1b[0m\n');
-  const projectDir = path.resolve(await ask('Répertoire du projet', '.'));
+  // 4. Directory
+  print('\n\x1b[1m\x1b[34m▸ 4/6 — Project directory\x1b[0m\n');
+  const projectDir = path.resolve(await ask('Project directory', '.'));
 
   // 5. Output
-  print('\n\x1b[1m\x1b[34m▸ 5/6 — Répertoire de sortie\x1b[0m\n');
-  const outputDir = await ask('Répertoire de sortie des livrables', './cohesium-output');
+  print('\n\x1b[1m\x1b[34m▸ 5/6 — Output directory\x1b[0m\n');
+  const outputDir = await ask('Deliverable output directory', './cohesium-output');
 
   // 6. Confirmation
   print('\n\x1b[1m\x1b[34m▸ 6/6 — Confirmation\x1b[0m\n');
-  print(`  Langue équipe  : \x1b[1m${langTeam}\x1b[0m`);
-  print(`  Langue output  : \x1b[1m${langOutput}\x1b[0m`);
-  print(`  Plateformes    : \x1b[1m${selectedPlatforms.join(', ')}\x1b[0m`);
-  print(`  Projet         : \x1b[1m${projectDir}\x1b[0m`);
+  print(`  Team language  : \x1b[1m${langTeam}\x1b[0m`);
+  print(`  Output language: \x1b[1m${langOutput}\x1b[0m`);
+  print(`  Platforms      : \x1b[1m${selectedPlatforms.join(', ')}\x1b[0m`);
+  print(`  Project        : \x1b[1m${projectDir}\x1b[0m`);
   print(`  Output         : \x1b[1m${outputDir}\x1b[0m`);
   print('');
 
-  const confirm = await ask('Lancer l\'installation ?', 'O');
-  if (!['o', 'y'].includes(confirm.toLowerCase())) {
-    print('Installation annulée.');
+  const confirm = await ask('Start installation?', 'Y');
+  if (!['y', 'o'].includes(confirm.toLowerCase())) {
+    print('Installation cancelled.');
     rl.close();
     process.exit(0);
   }
 
-  // Génération
-  print('\n\x1b[1m\x1b[34m▸ Génération en cours...\x1b[0m\n');
+  // Generation
+  print('\n\x1b[1m\x1b[34m▸ Generating...\x1b[0m\n');
 
   const generatorPath = path.join(__dirname, '..', 'generator', 'generate.js');
-  const cmd = [
-    'node', generatorPath,
-    '--project', projectDir,
-    '--platforms', selectedPlatforms.join(','),
-    '--lang-team', langTeam,
-    '--lang-output', langOutput,
-    '--output-dir', outputDir
-  ].join(' ');
 
   try {
-    execSync(cmd, { stdio: 'inherit' });
+    execFileSync(process.execPath, [
+      generatorPath,
+      '--project', projectDir,
+      '--platforms', selectedPlatforms.join(','),
+      '--lang-team', langTeam,
+      '--lang-output', langOutput,
+      '--output-dir', outputDir
+    ], { stdio: 'inherit' });
   } catch (err) {
-    print('\x1b[31m  ✗ Erreur lors de la génération\x1b[0m');
+    print('\x1b[31m  ✗ Error during generation\x1b[0m');
     rl.close();
     process.exit(1);
   }
 
   print('');
   print('\x1b[36m═══════════════════════════════════════════════════════\x1b[0m');
-  print('\x1b[32m\x1b[1m   ✅ Installation terminée !\x1b[0m');
+  print('\x1b[32m\x1b[1m   ✅ Installation complete!\x1b[0m');
   print('\x1b[36m═══════════════════════════════════════════════════════\x1b[0m');
+  print('');
+  print('To update: npx create-cohesium-agents --update');
   print('');
 
   rl.close();

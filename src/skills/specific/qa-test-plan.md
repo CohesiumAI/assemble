@@ -1,79 +1,79 @@
 ---
 name: qa-test-plan
-description: Creation de plan de test complet avec strategies, cas de test, matrices de couverture et criteres d'acceptation
-agent: qa
+description: Création de plan de test complet avec stratégies, cas de test, matrices de couverture et critères d'acceptation
+agents: [qa, dev-backend, dev-frontend, dev-fullstack]
 trigger: /test-plan
 ---
 
 # Skill : QA Test Plan
 
 ## Objectif
-Creer un plan de test complet et structure qui couvre l'ensemble des exigences fonctionnelles et non fonctionnelles d'une fonctionnalite ou d'une release. Definir les strategies de test, rediger les cas de test detailles, etablir les matrices de couverture et fixer les criteres d'acceptation pour garantir la qualite avant mise en production.
+Créer un plan de test complet et structuré qui couvre l'ensemble des exigences fonctionnelles et non fonctionnelles d'une fonctionnalité ou d'une release. Définir les stratégies de test, rédiger les cas de test détaillés, établir les matrices de couverture et fixer les critères d'acceptation pour garantir la qualité avant mise en production.
 
 ## Quand l'utiliser
-- Avant le debut des tests d'une nouvelle fonctionnalite ou d'un epic
-- Lors de la preparation d'une release majeure necessitant un plan de test structure
-- Quand une regression critique impose de renforcer la couverture de test
-- Pour un audit qualite ou une certification necessitant une documentation de test formelle
-- Lors de la mise en place d'une strategie de test pour un nouveau projet
+- Avant le début des tests d'une nouvelle fonctionnalité ou d'un epic
+- Lors de la préparation d'une release majeure nécessitant un plan de test structuré
+- Quand une régression critique impose de renforcer la couverture de test
+- Pour un audit qualité ou une certification nécessitant une documentation de test formelle
+- Lors de la mise en place d'une stratégie de test pour un nouveau projet
 
-## Etapes
-1. **Analyser les exigences** — Etudier les specifications fonctionnelles, les user stories, les criteres d'acceptation et les maquettes. Identifier les regles metier, les cas limites et les contraintes non fonctionnelles (performance, securite, accessibilite).
-2. **Definir la strategie de test** — Choisir les types de tests a realiser (unitaire, integration, fonctionnel, E2E, performance, securite, accessibilite) et les approches (boite noire, boite blanche, exploratoire).
-3. **Identifier les scenarios de test** — Lister les scenarios couvrant le happy path, les cas alternatifs, les cas d'erreur et les cas limites. Organiser les scenarios par module fonctionnel et par priorite.
-4. **Rediger les cas de test** — Pour chaque scenario, ecrire les cas de test detailles avec preconditions, etapes d'execution, donnees de test, resultats attendus et postconditions. Utiliser un format standardise.
-5. **Creer la matrice de couverture** — Etablir la matrice de tracabilite reliant chaque exigence aux cas de test correspondants. Identifier les zones non couvertes et ajouter les cas manquants.
-6. **Configurer l'environnement de test** — Definir les prerequis d'environnement (donnees de test, configuration, services externes, mocks) et preparer les jeux de donnees necessaires.
-7. **Definir les criteres d'acceptation** — Fixer les criteres de sortie : taux de reussite minimum, couverture requise, zero defaut bloquant/critique, performance dans les seuils definis.
-8. **Planifier l'execution** — Estimer l'effort de test, definir le calendrier d'execution, assigner les testeurs et planifier les cycles de regression.
+## Étapes
+1. **Analyser les exigences** — Étudier les spécifications fonctionnelles, les user stories, les critères d'acceptation et les maquettes. Identifier les règles métier, les cas limites et les contraintes non fonctionnelles (performance, sécurité, accessibilité).
+2. **Définir la stratégie de test** — Choisir les types de tests à réaliser (unitaire, intégration, fonctionnel, E2E, performance, sécurité, accessibilité) et les approches (boîte noire, boîte blanche, exploratoire).
+3. **Identifier les scénarios de test** — Lister les scénarios couvrant le happy path, les cas alternatifs, les cas d'erreur et les cas limites. Organiser les scénarios par module fonctionnel et par priorité.
+4. **Rédiger les cas de test** — Pour chaque scénario, écrire les cas de test détaillés avec préconditions, étapes d'exécution, données de test, résultats attendus et postconditions. Utiliser un format standardisé.
+5. **Créer la matrice de couverture** — Établir la matrice de traçabilité reliant chaque exigence aux cas de test correspondants. Identifier les zones non couvertes et ajouter les cas manquants.
+6. **Configurer l'environnement de test** — Définir les prérequis d'environnement (données de test, configuration, services externes, mocks) et préparer les jeux de données nécessaires.
+7. **Définir les critères d'acceptation** — Fixer les critères de sortie : taux de réussite minimum, couverture requise, zéro défaut bloquant/critique, performance dans les seuils définis.
+8. **Planifier l'exécution** — Estimer l'effort de test, définir le calendrier d'exécution, assigner les testeurs et planifier les cycles de régression.
 
 ## Checklist de sortie
 - [ ] Toutes les exigences fonctionnelles sont couvertes par au moins un cas de test
-- [ ] Les cas limites et les scenarios d'erreur sont documentes et testes
-- [ ] La matrice de tracabilite est complete (exigences vs. cas de test)
-- [ ] Les donnees de test sont preparees et reproductibles
-- [ ] Les criteres d'acceptation sont definis et mesurables
-- [ ] Les tests de performance ont des seuils chiffres (temps de reponse, charge)
-- [ ] Les tests d'accessibilite WCAG 2.1 AA sont inclus
-- [ ] Le calendrier d'execution est realiste et valide par l'equipe
+- [ ] Les cas limites et les scénarios d'erreur sont documentés et testés
+- [ ] La matrice de traçabilité est complète (exigences vs. cas de test)
+- [ ] Les données de test sont préparées et reproductibles
+- [ ] Les critères d'acceptation sont définis et mesurables
+- [ ] Les tests de performance ont des seuils chiffrés (temps de réponse, charge)
+- [ ] Les tests d'accessibilité WCAG 2.1 AA sont inclus
+- [ ] Le calendrier d'exécution est réaliste et validé par l'équipe
 
 ## Format de sortie
 ```
 Plan de Test
 
-Projet : [nom du projet / fonctionnalite]
+Projet : [nom du projet / fonctionnalité]
 Version : [version du plan de test]
-Redacteur : [agent qa]
+Rédacteur : [agent qa]
 Date : [date]
-Sprint / Release : [reference]
+Sprint / Release : [référence]
 
-Perimetre de test :
-  - Fonctionnalites couvertes : [liste]
-  - Fonctionnalites hors perimetre : [liste]
-  - Environnement cible : [staging / preprod / navigateurs / devices]
+Périmètre de test :
+  - Fonctionnalités couvertes : [liste]
+  - Fonctionnalités hors périmètre : [liste]
+  - Environnement cible : [staging / préprod / navigateurs / devices]
 
-Strategie de test :
-  | Type de test       | Approche         | Outil           | Automatise |
+Stratégie de test :
+  | Type de test       | Approche         | Outil           | Automatisé |
   |--------------------|------------------|-----------------|-----------|
-  | Tests unitaires    | Boite blanche    | Jest / Vitest   | Oui       |
-  | Tests integration  | API / Service    | Supertest       | Oui       |
-  | Tests fonctionnels | Boite noire      | Cypress / PWTW  | Partiel   |
+  | Tests unitaires    | Boîte blanche    | Jest / Vitest   | Oui       |
+  | Tests intégration  | API / Service    | Supertest       | Oui       |
+  | Tests fonctionnels | Boîte noire      | Cypress / PWTW  | Partiel   |
   | Tests E2E          | Parcours complet | Playwright      | Oui       |
   | Tests performance  | Charge / Stress  | k6 / Artillery  | Oui       |
-  | Tests accessibilite| WCAG 2.1 AA      | axe / Lighthouse| Partiel   |
+  | Tests accessibilité| WCAG 2.1 AA      | axe / Lighthouse| Partiel   |
 
 Cas de test :
 
 [TC-001] Titre du cas de test
-  - Priorite : Haute
-  - Preconditions : [etat initial requis]
-  - Etapes :
+  - Priorité : Haute
+  - Préconditions : [état initial requis]
+  - Étapes :
     1. [action utilisateur]
     2. [action utilisateur]
-    3. [verification]
-  - Donnees de test : [donnees necessaires]
-  - Resultat attendu : [comportement attendu]
-  - Postconditions : [etat final]
+    3. [vérification]
+  - Données de test : [données nécessaires]
+  - Résultat attendu : [comportement attendu]
+  - Postconditions : [état final]
 
 Matrice de couverture :
   | Exigence | TC-001 | TC-002 | TC-003 | TC-004 | Couverture |
@@ -82,16 +82,16 @@ Matrice de couverture :
   | REQ-02   |        |        |   X    |   X    | 100%      |
   | REQ-03   |        |   X    |        |        | 50%       |
 
-Criteres d'acceptation :
-  - Taux de reussite : >= 95% des cas de test passes
-  - Zero defaut bloquant ou critique ouvert
+Critères d'acceptation :
+  - Taux de réussite : >= 95% des cas de test passés
+  - Zéro défaut bloquant ou critique ouvert
   - Couverture de code : >= 80%
-  - Temps de reponse API : < 200ms (P95)
-  - Score accessibilite Lighthouse : >= 90
+  - Temps de réponse API : < 200ms (P95)
+  - Score accessibilité Lighthouse : >= 90
 
 Calendrier :
-  - Preparation : [date debut] - [date fin]
-  - Execution cycle 1 : [date debut] - [date fin]
-  - Correction et retest : [date debut] - [date fin]
-  - Regression finale : [date debut] - [date fin]
+  - Préparation : [date début] - [date fin]
+  - Exécution cycle 1 : [date début] - [date fin]
+  - Correction et retest : [date début] - [date fin]
+  - Régression finale : [date début] - [date fin]
 ```

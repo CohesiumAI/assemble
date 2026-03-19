@@ -54,6 +54,9 @@ agents:
     - social
     - data
     - contrarian
+    - customer-success
+    - finance
+    - pr-comms
 
 # Workflows activés par défaut
 workflows:
@@ -70,6 +73,10 @@ workflows:
     - tech-debt-reduction
     - onboarding-project
     - release-cycle
+    - hotfix-release
+    - dependency-upgrade
+    - documentation-sprint
+    - experimentation
 
 # Plateformes supportées
 platforms:
@@ -87,10 +94,10 @@ platforms:
       config_files: [".roo/rules-*", ".roomodes"]
       description: "Roo Code"
     - name: copilot
-      config_files: [".github/copilot-instructions.md", ".github/copilot/agents/"]
+      config_files: [".github/copilot-instructions.md", ".github/instructions/"]
       description: "GitHub Copilot"
     - name: kiro
-      config_files: [".kiro/agents/", ".kiro/skills/"]
+      config_files: [".kiro/agents/*.json", ".kiro/steering/"]
       description: "Kiro IDE"
     - name: trae
       config_files: [".trae/rules/", ".trae/agents/"]
@@ -121,17 +128,17 @@ platforms:
       description: "Rovo Dev"
   cli:
     - name: claude-code
-      config_files: ["CLAUDE.md", ".claude/commands/", ".claude/agents/"]
+      config_files: ["CLAUDE.md", ".claude/agents/*/AGENT.md", ".claude/skills/*/SKILL.md", ".claude/rules/"]
       description: "Claude Code CLI"
     - name: codex
-      config_files: ["codex.md", "AGENTS.md"]
+      config_files: ["AGENTS.md"]
       description: "Codex CLI (OpenAI)"
     - name: gemini-cli
-      config_files: ["GEMINI.md"]
+      config_files: ["GEMINI.md", ".gemini/agents/", ".gemini/skills/", ".gemini/workflows/"]
       description: "Gemini CLI (Google)"
     - name: auggie
-      config_files: [".auggie/agents/"]
+      config_files: [".augment/commands/*.md"]
       description: "Auggie CLI"
     - name: pi
-      config_files: [".pi/agents/"]
+      config_files: ["AGENTS.md", "SYSTEM.md"]
       description: "Pi CLI"

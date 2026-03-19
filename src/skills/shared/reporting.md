@@ -1,7 +1,7 @@
 ---
 name: reporting
 description: Génération de rapports et tableaux de bord — collecte de données, analyse, visualisation, insights et recommandations pour le pilotage décisionnel
-agents: [data, analyst, pm, scrum, marketing]
+agents: [data, analyst, pm, scrum, marketing, customer-success, finance]
 trigger: /report
 ---
 

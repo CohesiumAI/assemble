@@ -1,7 +1,7 @@
 ---
 name: backend-api-scaffold
 description: Scaffolding complet d'une API backend avec structure, routes, contrôleurs et documentation
-agent: dev-backend
+agents: [dev-backend, dev-fullstack, architect]
 trigger: /scaffold-api
 ---
 

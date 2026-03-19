@@ -148,6 +148,110 @@ function renderWorkflow(workflow, format = 'yaml') {
   return workflow.raw;
 }
 
+// ─── Shared helpers for adapters ──────────────────────────────────────────────
+
+/** Extract the functional agent ID from source filename: AGENT-pm.md → pm */
+function agentId(agent) {
+  return (agent.fileName || '').replace(/^AGENT-/, '').replace(/\.md$/, '');
+}
+
+/** Return the Marvel slug from meta.name (e.g. professor-x, tony-stark) */
+function marvelSlug(agent) {
+  return (agent.meta.name || agentId(agent)).toLowerCase().replace(/\s+/g, '-');
+}
+
+/** Extract short Marvel display name: "Professor X (Charles Xavier) — ..." → "Professor X" */
+function marvelDisplayName(agent) {
+  const raw = agent.meta.marvel || agent.meta.name || '';
+  return raw.split('—')[0].split('(')[0].trim();
+}
+
+/** Extract skill slug from trigger or name */
+function skillSlug(skill) {
+  const trigger = (skill.meta.trigger || '').replace(/^\//, '');
+  return (trigger || skill.meta.name || (skill.fileName || '').replace('.md', ''))
+    .toLowerCase().replace(/\s+/g, '-');
+}
+
+/** Extract workflow slug from trigger in raw YAML */
+function workflowSlug(workflow) {
+  const triggerMatch = (workflow.raw || '').match(/trigger:\s*\/?([\w-]+)/);
+  return triggerMatch ? triggerMatch[1] : (workflow.fileName || '').replace(/\.(yaml|yml)$/, '');
+}
+
+/** Extract a field value from raw YAML */
+function workflowField(raw, field) {
+  const match = (raw || '').match(new RegExp(`${field}:\\s*"?([^"\\n]+)"?`));
+  return match ? match[1].trim() : '';
+}
+
+/** Parse workflow steps from raw YAML into structured array */
+function parseWorkflowSteps(raw) {
+  const steps = [];
+  const blocks = (raw || '').split(/(?=- step:)/);
+  for (const block of blocks) {
+    const stepMatch = block.match(/step:\s*(\d+)/);
+    if (!stepMatch) continue;
+    const step = {
+      num: parseInt(stepMatch[1], 10),
+      agent: (block.match(/agent:\s*([\w-]+)/) || [])[1] || '',
+      action: (block.match(/action:\s*"([^"]+)"/) || [])[1] || '',
+      outputs: [], inputs: [], depends_on: [],
+    };
+    const om = block.match(/outputs:\s*\[([^\]]+)\]/);
+    if (om) step.outputs = om[1].split(',').map(o => o.trim());
+    const im = block.match(/inputs:\s*\[([^\]]+)\]/);
+    if (im) step.inputs = im[1].split(',').map(i => i.trim());
+    const dm = block.match(/depends_on:\s*\[([^\]]*)\]/);
+    if (dm && dm[1].trim()) step.depends_on = dm[1].split(',').map(d => d.trim());
+    steps.push(step);
+  }
+  return steps;
+}
+
+/**
+ * Render workflow steps as human-readable instructions.
+ * @param {object} workflow - parsed workflow
+ * @param {object} agentLookup - { agentId: { marvelSlug, displayName } }
+ * @param {object} config
+ * @returns {string}
+ */
+function renderWorkflowInstructions(workflow, agentLookup, config) {
+  const steps = parseWorkflowSteps(workflow.raw);
+  const outputDir = (config || {}).output_dir || './cohesium-output';
+  let out = `## Instructions d'exécution\n\nRépertoire de sortie : \`${outputDir}\`\n\n`;
+  if (steps.length === 0) {
+    out += '```yaml\n' + workflow.raw + '\n```\n';
+    return out;
+  }
+  for (const step of steps) {
+    const info = agentLookup[step.agent] || {};
+    const display = info.displayName || step.agent;
+    const ref = info.marvelSlug || step.agent;
+    out += `### Étape ${step.num} — ${display} (${ref})\n\n`;
+    out += `**Action :** ${step.action}\n\n`;
+    if (step.inputs.length) out += '**Inputs :** ' + step.inputs.map(i => `\`${i}\``).join(', ') + '\n\n';
+    if (step.depends_on.length) out += `**Dépend de :** étape(s) ${step.depends_on.join(', ')}\n\n`;
+    out += '**Livrables :**\n';
+    for (const o of step.outputs) out += `- \`${o}\`\n`;
+    out += '\n';
+  }
+  return out;
+}
+
+/** Build agentLookup map from agents array */
+function buildAgentLookup(agents) {
+  const lookup = {};
+  for (const agent of agents) {
+    lookup[agentId(agent)] = {
+      marvelSlug: marvelSlug(agent),
+      displayName: marvelDisplayName(agent),
+      description: agent.meta.description || '',
+    };
+  }
+  return lookup;
+}
+
 module.exports = {
   prepareAgent,
   renderAgent,
@@ -156,5 +260,15 @@ module.exports = {
   renderAsYaml,
   renderCommands,
   renderOrchestrator,
-  renderWorkflow
+  renderWorkflow,
+  // Shared helpers
+  agentId,
+  marvelSlug,
+  marvelDisplayName,
+  skillSlug,
+  workflowSlug,
+  workflowField,
+  parseWorkflowSteps,
+  renderWorkflowInstructions,
+  buildAgentLookup,
 };

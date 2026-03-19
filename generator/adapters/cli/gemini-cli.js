@@ -1,86 +1,118 @@
 /**
  * Cohesium AI — Gemini CLI Adapter
- * Generates GEMINI.md with Gemini-compatible markdown format
+ * Generates GEMINI.md (concise overview) + .gemini/ directory with
+ * individual agent, skill, and workflow files
  */
 
 const fs = require('fs');
 const path = require('path');
-const { prepareAgent, renderAgent, renderAsRules, renderCommands, renderOrchestrator, renderWorkflow } = require('../../lib/template-engine');
+const { prepareAgent, renderAgent, renderOrchestrator, agentId, marvelSlug, marvelDisplayName, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions } = require('../../lib/template-engine');
 
 module.exports = {
   name: 'gemini-cli',
   displayName: 'Gemini CLI',
   type: 'cli',
 
-  getOutputPaths(projectDir) {
-    return [path.join(projectDir, 'GEMINI.md')];
+  getOutputPaths(projectDir, { agents = [], skills = {}, workflows = [] } = {}) {
+    const paths = [path.join(projectDir, 'GEMINI.md')];
+    for (const agent of agents) {
+      paths.push(path.join(projectDir, '.gemini', 'agents', `${marvelSlug(agent)}.md`));
+    }
+    const allSkills = [...(skills.shared || []), ...(skills.specific || [])];
+    for (const skill of allSkills) {
+      paths.push(path.join(projectDir, '.gemini', 'skills', `${skillSlug(skill)}.md`));
+    }
+    for (const workflow of workflows) {
+      paths.push(path.join(projectDir, '.gemini', 'workflows', `${workflowSlug(workflow)}.md`));
+    }
+    return paths;
   },
 
   generate(projectDir, { agents = [], skills = {}, workflows = [], commands, orchestrator, config = {} }) {
-    let content = '# Cohesium AI — Gemini CLI Configuration\n\n';
+    const geminiAgentsDir = path.join(projectDir, '.gemini', 'agents');
+    const geminiSkillsDir = path.join(projectDir, '.gemini', 'skills');
+    const geminiWorkflowsDir = path.join(projectDir, '.gemini', 'workflows');
+    fs.mkdirSync(geminiAgentsDir, { recursive: true });
+    fs.mkdirSync(geminiSkillsDir, { recursive: true });
+    fs.mkdirSync(geminiWorkflowsDir, { recursive: true });
 
-    // Orchestrator
-    if (orchestrator) {
-      content += '## Orchestrator\n\n';
-      content += renderOrchestrator(orchestrator, config) + '\n\n';
+    const agentLookup = buildAgentLookup(agents);
+
+    // ── Individual agent files ────────────────────────────────────────────
+    for (const agent of agents) {
+      const prepared = prepareAgent(agent, config);
+      const slug = marvelSlug(agent);
+      fs.writeFileSync(path.join(geminiAgentsDir, `${slug}.md`), renderAgent(prepared, 'markdown'), 'utf-8');
     }
 
-    // Commands
-    if (commands) {
-      content += renderCommands(commands, 'markdown') + '\n\n';
-    }
-
-    // Agents — markdown format compatible with Gemini
-    if (agents.length > 0) {
-      content += '## Agents\n\n';
-      for (const agent of agents) {
-        const prepared = prepareAgent(agent, config);
-        const agentName = agent.meta.name || agent.fileName.replace('.md', '');
-        const description = agent.meta.description || '';
-        content += `### ${agentName}\n\n`;
-        content += `${description}\n\n`;
-        content += renderAsRules(prepared) + '\n';
-      }
-    }
-
-    // Skills
+    // ── Individual skill files ────────────────────────────────────────────
     const allSkills = [...(skills.shared || []), ...(skills.specific || [])];
-    if (allSkills.length > 0) {
-      content += '## Skills\n\n';
-      for (const skill of allSkills) {
-        const skillName = skill.meta.name || skill.fileName.replace('.md', '');
-        content += `### ${skillName}\n\n`;
-        content += `${skill.meta.description || ''}\n\n`;
-        if (skill.content) {
-          content += skill.content + '\n\n';
-        }
-      }
+    for (const skill of allSkills) {
+      const prepared = prepareAgent(skill, config);
+      const slug = skillSlug(skill);
+      fs.writeFileSync(path.join(geminiSkillsDir, `${slug}.md`), renderAgent(prepared, 'markdown'), 'utf-8');
     }
 
-    // Workflows
-    if (workflows.length > 0) {
-      content += '## Workflows\n\n';
-      for (const workflow of workflows) {
-        content += renderWorkflow(workflow, 'markdown') + '\n\n';
-      }
+    // ── Individual workflow files ─────────────────────────────────────────
+    for (const workflow of workflows) {
+      const slug = workflowSlug(workflow);
+      const name = workflowField(workflow.raw, 'name') || slug;
+      const desc = workflowField(workflow.raw, 'description');
+      let content = `# Workflow : ${name}\n\n${desc}\n\n`;
+      content += renderWorkflowInstructions(workflow, agentLookup, config);
+      fs.writeFileSync(path.join(geminiWorkflowsDir, `${slug}.md`), content, 'utf-8');
     }
 
-    fs.writeFileSync(path.join(projectDir, 'GEMINI.md'), content, 'utf-8');
+    // ── Orchestrator ──────────────────────────────────────────────────────
+    if (orchestrator) {
+      fs.writeFileSync(path.join(projectDir, '.gemini', 'orchestrator.md'), renderOrchestrator(orchestrator, config), 'utf-8');
+    }
+
+    // ── GEMINI.md — concise overview ──────────────────────────────────────
+    let gemini = '# Cohesium AI\n\n';
+    gemini += 'Ce projet utilise le système Cohesium AI avec des agents IA spécialisés.\n\n';
+
+    gemini += '## Agents disponibles\n\n';
+    for (const agent of agents) {
+      const slug = marvelSlug(agent);
+      const display = marvelDisplayName(agent);
+      const desc = (agent.meta.description || '').split('—')[0].trim();
+      gemini += `- **${display}** — ${desc} → \`.gemini/agents/${slug}.md\`\n`;
+    }
+
+    gemini += '\n## Skills disponibles\n\n';
+    for (const skill of allSkills) {
+      const slug = skillSlug(skill);
+      const desc = (skill.meta.description || '').split('—')[0].trim();
+      gemini += `- **${slug}** — ${desc}\n`;
+    }
+
+    gemini += '\n## Workflows disponibles\n\n';
+    for (const workflow of workflows) {
+      const slug = workflowSlug(workflow);
+      const desc = workflowField(workflow.raw, 'description');
+      gemini += `- **${slug}** — ${desc}\n`;
+    }
+
+    gemini += `\n## Répertoire de sortie\n\nLes livrables sont produits dans : \`${config.output_dir || './cohesium-output'}\`\n`;
+
+    fs.writeFileSync(path.join(projectDir, 'GEMINI.md'), gemini, 'utf-8');
   },
 
   validate(projectDir) {
     const errors = [];
-    const geminiPath = path.join(projectDir, 'GEMINI.md');
-
-    if (!fs.existsSync(geminiPath)) {
-      errors.push(`Missing main instructions file: ${geminiPath}`);
-    } else {
-      const content = fs.readFileSync(geminiPath, 'utf-8');
-      if (content.trim().length === 0) {
-        errors.push('GEMINI.md is empty');
+    const p = path.join(projectDir, 'GEMINI.md');
+    if (!fs.existsSync(p)) errors.push('Missing GEMINI.md');
+    else if (fs.readFileSync(p, 'utf-8').trim().length === 0) errors.push('GEMINI.md is empty');
+    for (const subdir of ['agents', 'skills', 'workflows']) {
+      const dir = path.join(projectDir, '.gemini', subdir);
+      if (fs.existsSync(dir)) {
+        for (const file of fs.readdirSync(dir)) {
+          const content = fs.readFileSync(path.join(dir, file), 'utf-8');
+          if (content.trim().length === 0) errors.push(`Empty: .gemini/${subdir}/${file}`);
+        }
       }
     }
-
     return { valid: errors.length === 0, errors };
   }
 };

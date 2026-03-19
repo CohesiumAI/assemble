@@ -20,14 +20,33 @@ steps:
     outputs: [security-clearance.md, final-audit.md]
     depends_on: [2]
   - step: 4
-    agent: devops
-    action: "Préparer le runbook de déploiement et le plan de rollback"
-    inputs: [03-security/security-clearance.md, 02-qa/qa-sign-off.md, 01-scrum/release-checklist.md]
-    outputs: [deploy-runbook.md, rollback-plan.md]
+    agent: legal
+    action: "Vérifier la conformité réglementaire de la release (RGPD, CGU, mentions légales)"
+    inputs: [01-scrum/scope-validation.md, 03-security/security-clearance.md]
+    outputs: [compliance-sign-off.md, legal-notes.md]
     depends_on: [3]
   - step: 5
+    agent: devops
+    action: "Préparer le runbook de déploiement et le plan de rollback"
+    inputs: [03-security/security-clearance.md, 04-legal/compliance-sign-off.md, 02-qa/qa-sign-off.md]
+    outputs: [deploy-runbook.md, rollback-plan.md]
+    depends_on: [3, 4]
+  # Steps 6 and 7 can run in parallel after deployment
+  - step: 6
     agent: marketing
     action: "Rédiger l'annonce de la release et le changelog public"
-    inputs: [04-devops/deploy-runbook.md, 01-scrum/release-checklist.md, 01-scrum/scope-validation.md]
+    inputs: [05-devops/deploy-runbook.md, 01-scrum/scope-validation.md]
     outputs: [announcement.md, changelog.md]
-    depends_on: [4]
+    depends_on: [5]
+  - step: 7
+    agent: pr-comms
+    action: "Préparer le communiqué de presse et le plan de communication externe"
+    inputs: [06-marketing/announcement.md, 01-scrum/scope-validation.md]
+    outputs: [press-release.md, comms-plan.md]
+    depends_on: [6]
+  - step: 8
+    agent: customer-success
+    action: "Préparer la communication client et le plan d'accompagnement post-release"
+    inputs: [06-marketing/announcement.md, 06-marketing/changelog.md]
+    outputs: [customer-notification.md, adoption-plan.md]
+    depends_on: [6]
