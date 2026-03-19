@@ -215,7 +215,7 @@ Available to multiple agents across teams.
 | 13 | Competitive Analysis | `/benchmark` | Competitive analysis and market benchmarking |
 | 14 | Reporting | `/report` | Report and dashboard generation |
 
-### Specific Skills (13)
+### Specific Skills (14)
 
 Specialized capabilities tied to a primary agent.
 

@@ -1,6 +1,6 @@
-# Skills Reference — 27 Reusable Skills
+# Skills Reference — 28 Reusable Skills
 
-> **27 skills**: 14 shared (multi-agent) + 13 specific (role-focused). Each skill provides a structured, repeatable process that agents can execute via its trigger command.
+> **28 skills**: 14 shared (multi-agent) + 14 specific (role-focused). Each skill provides a structured, repeatable process that agents can execute via its trigger command.
 
 ---
 
@@ -264,7 +264,7 @@ Cross-functional skills available to multiple agents. Any agent that owns a skil
 
 ---
 
-## Specific Skills (13)
+## Specific Skills (14)
 
 Role-focused skills tied to a primary agent. Each provides a specialized process for a specific domain.
 
@@ -482,7 +482,7 @@ src/skills/
     security-check.md
     seo-audit.md
     testing.md
-  specific/             # 13 specific skills
+  specific/             # 14 specific skills
     ad-campaign-setup.md
     automation-workflow.md
     backend-api-scaffold.md
