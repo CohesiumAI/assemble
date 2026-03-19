@@ -285,6 +285,7 @@ Role-focused skills tied to a primary agent. Each provides a specialized process
 | 11 | `/test-plan` | QA Test Plan | Create a comprehensive test plan with strategies, coverage matrices, and acceptance criteria | qa |
 | 12 | `/sprint-plan` | Sprint Planning | Facilitate agile sprint planning with estimation, prioritization, and ceremony setup | scrum |
 | 13 | `/wireframe` | UX Wireframe | Create wireframes and interactive prototypes with information architecture | ux |
+| 14 | `/party` | Party Mode | Persistent collaborative multi-agent session with Jarvis facilitation | all |
 
 ---
 

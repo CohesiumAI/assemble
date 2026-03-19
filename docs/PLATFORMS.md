@@ -371,9 +371,8 @@ node generator/generate.js --config .assemble.yaml
 # Via Python
 python3 generator/generate.py --config .assemble.yaml
 
-# Via built-in commands
-/update         # Regenerate from .assemble.yaml
-/reconfigure    # Relaunch the configuration wizard
+# Via CLI
+npx create-assemble --update    # Regenerate from .assemble.yaml
 ```
 
 ### Multi-Platform Support

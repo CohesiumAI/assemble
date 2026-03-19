@@ -234,6 +234,7 @@ Specialized capabilities tied to a primary agent.
 | 11 | Sprint Planning | `/sprint-plan` | scrum | Agile sprint planning with estimation and prioritization |
 | 12 | QA Test Plan | `/test-plan` | qa | Complete test plan with coverage matrices and criteria |
 | 13 | Automation Workflow | `/automate` | automation | Multi-tool automation workflow with triggers and monitoring |
+| 14 | Party Mode | `/party` | all | Persistent collaborative multi-agent session |
 
 ---
 
