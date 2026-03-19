@@ -4,7 +4,7 @@
  * Assemble — List
  * Lists active agents, workflows, and skills from current configuration.
  *
- * Usage: assemble ls [--project <path>]
+ * Usage: npx create-assemble ls [--project <path>]
  *        node bin/ls.js [--project <path>]
  */
 

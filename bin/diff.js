@@ -3,8 +3,9 @@
 /**
  * Assemble — Diff (Dry Run)
  * Shows what files would be created/modified without actually generating.
+ * Loads the full config and source data to accurately predict output paths.
  *
- * Usage: assemble diff [--project <path>]
+ * Usage: npx create-assemble diff [--project <path>]
  *        node bin/diff.js [--project <path>]
  */
 
@@ -12,30 +13,55 @@ const fs = require('fs');
 const path = require('path');
 
 function diff(projectDir) {
-  // Load config
+  // Load config using the generator's own loadConfig
   const configPath = path.join(projectDir, '.assemble.yaml');
   if (!fs.existsSync(configPath)) {
     console.error('❌ No .assemble.yaml found. Run npx create-assemble first.');
     process.exit(1);
   }
 
-  // Parse minimal config to get platforms
-  const content = fs.readFileSync(configPath, 'utf-8');
-  const platformMatch = content.match(/platforms:\s*\[([^\]]+)\]/);
-  if (!platformMatch) {
-    console.error('❌ Could not parse platforms from .assemble.yaml');
+  // Reuse the generator's loader and parser for accurate results
+  const generatorDir = path.join(__dirname, '..', 'generator');
+  const { loadAgents, loadSkills, loadWorkflows } = require(path.join(generatorDir, 'lib', 'parser'));
+  const srcDir = path.join(__dirname, '..', 'src');
+
+  // Parse config
+  const raw = fs.readFileSync(configPath, 'utf-8');
+  const config = {};
+  for (const line of raw.split('\n')) {
+    const match = line.match(/^(\w[\w_]*):\s*(.+)$/);
+    if (!match) continue;
+    const [, key, value] = match;
+    if (value.startsWith('[')) {
+      config[key] = value.slice(1, -1).split(',').map(v => v.trim().replace(/["']/g, ''));
+    } else {
+      config[key] = value.replace(/["']/g, '').trim();
+    }
+  }
+
+  const platforms = config.platforms || [];
+  if (platforms.length === 0) {
+    console.error('❌ No platforms in .assemble.yaml');
     process.exit(1);
   }
 
-  const platforms = platformMatch[1].split(',').map(p => p.trim().replace(/["']/g, ''));
+  // Load real source data
+  let agents, skills, workflows;
+  try {
+    agents = loadAgents(path.join(srcDir, 'agents'));
+    skills = loadSkills(path.join(srcDir, 'skills'));
+    workflows = loadWorkflows(path.join(srcDir, 'workflows'));
+  } catch (e) {
+    console.warn(`  ⚠️  Could not load source data: ${e.message}`);
+    agents = []; skills = { shared: [], specific: [] }; workflows = [];
+  }
 
-  // Load adapters to get expected output paths
-  const adaptersDir = path.join(__dirname, '..', 'generator', 'adapters');
+  // Load adapters and query output paths with full context
+  const adaptersDir = path.join(generatorDir, 'adapters');
   const added = [];
   const modified = [];
 
   for (const platform of platforms) {
-    // Find adapter
     let adapter;
     for (const subdir of ['ide', 'cli']) {
       const adapterPath = path.join(adaptersDir, subdir, `${platform}.js`);
@@ -46,14 +72,38 @@ function diff(projectDir) {
     }
     if (!adapter || !adapter.getOutputPaths) continue;
 
-    const paths = adapter.getOutputPaths(projectDir, {});
+    // Pass real data so adapters can enumerate all output paths
+    const paths = adapter.getOutputPaths(projectDir, { agents, skills, workflows, config });
     for (const p of paths) {
       const rel = path.relative(projectDir, p);
       if (fs.existsSync(p)) {
-        modified.push(rel);
+        modified.push(`[${platform}] ${rel}`);
       } else {
-        added.push(rel);
+        added.push(`[${platform}] ${rel}`);
       }
+    }
+  }
+
+  // Also check cross-platform files
+  const crossPlatform = [
+    [config.output_dir || './assemble-output', 'AGENTS.md'],
+  ];
+  if (config.mcp === 'true') {
+    crossPlatform.push(['.assemble', 'mcp-server.js'], ['.assemble', 'mcp.json'], ['.assemble', 'mcp-package.json']);
+  }
+  if (config.memory === 'true') {
+    crossPlatform.push([config.output_dir || './assemble-output', '_memory.md']);
+  }
+  if (config.metrics === 'true') {
+    crossPlatform.push([config.output_dir || './assemble-output', '_metrics.md']);
+  }
+  for (const parts of crossPlatform) {
+    const p = path.join(projectDir, ...parts);
+    const rel = path.relative(projectDir, p);
+    if (fs.existsSync(p)) {
+      modified.push(`[cross-platform] ${rel}`);
+    } else {
+      added.push(`[cross-platform] ${rel}`);
     }
   }
 

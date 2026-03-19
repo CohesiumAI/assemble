@@ -4,7 +4,7 @@
  * Assemble — Import Skills
  * Copies a skill file into .assemble/skills/ for use during generation.
  *
- * Usage: assemble import <path-to-skill.md>
+ * Usage: npx create-assemble import <path-to-skill.md>
  *        node bin/import.js <path-to-skill.md>
  */
 
@@ -62,7 +62,7 @@ function importSkill(filePath) {
 if (require.main === module) {
   const args = process.argv.slice(2);
   if (args.length === 0) {
-    console.log('Usage: assemble import <path-to-skill.md>');
+    console.log('Usage: npx create-assemble import <path-to-skill.md>');
     console.log('');
     console.log('Imports a skill file into .assemble/skills/ for inclusion during generation.');
     console.log('The skill file must have YAML frontmatter with at least a "name" field.');

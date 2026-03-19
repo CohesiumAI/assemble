@@ -14,7 +14,10 @@ module.exports = {
   type: 'cli',
 
   getOutputPaths(projectDir, { agents = [], skills = {}, workflows = [] } = {}) {
-    const paths = [];
+    const paths = [
+      // Command registry (always generated)
+      path.join(projectDir, '.augment', 'commands', '_commands.md'),
+    ];
     for (const agent of agents) {
       paths.push(path.join(projectDir, '.augment', 'commands', `agent-${marvelSlug(agent)}.md`));
     }

@@ -512,6 +512,28 @@ console.log('\nTest 11: Team profiles');
   cleanTmpDir();
 }
 
+// ── Test 11b: Profile startup WITHOUT explicit agents → profile filters ───
+
+console.log('\nTest 11b: Profile startup actually filters agents');
+{
+  const dir = createTmpDir();
+  fs.mkdirSync(dir, { recursive: true });
+  // Config with profile: startup but NO explicit agents/workflows keys
+  const configContent = `version: "1.0.0"\nprofile: "startup"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\ninstalled_at: "2026-03-19"\n`;
+  fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
+  run(['--project', dir, '--update']);
+
+  test('Profile startup: filters to ~12 agents when agents key is absent', () => {
+    const agentsDir = path.join(dir, '.claude', 'agents');
+    const dirCount = countDirs(agentsDir);
+    // Startup profile has 12 agents — should be exactly 12, not 31
+    assert(dirCount <= 15, `Expected <= 15 agents (startup profile), got ${dirCount}`);
+    assert(dirCount >= 10, `Expected >= 10 agents (startup profile), got ${dirCount}`);
+  });
+
+  cleanTmpDir();
+}
+
 // ── Test 12: Custom Agents ───────────────────────────────────────────────
 
 console.log('\nTest 12: Custom agents');

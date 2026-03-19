@@ -22,8 +22,8 @@ function generateUniversalAgentsMd(agents, workflows, config = {}) {
   out += '```bash\n';
   out += 'npx create-assemble          # Install / configure\n';
   out += 'npx create-assemble --update # Regenerate from .assemble.yaml\n';
-  out += 'assemble doctor              # Health check\n';
-  out += 'assemble ls                  # List active agents/workflows\n';
+  out += 'npx create-assemble doctor   # Health check\n';
+  out += 'npx create-assemble ls       # List active agents/workflows\n';
   out += '```\n\n';
 
   // Agent table

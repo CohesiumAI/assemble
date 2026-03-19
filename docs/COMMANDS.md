@@ -111,10 +111,10 @@ In addition to the in-session commands above, Assemble provides CLI utilities:
 
 | Command | Description |
 |---------|-------------|
-| `assemble doctor` | Health check: verifies config, generated files, Node.js version |
-| `assemble diff` | Dry run: shows what files would be created/modified without generating |
-| `assemble ls` | List active agents, workflows, skills, and configuration |
-| `assemble import <path>` | Import a skill file into `.assemble/skills/` for next generation |
+| `npx create-assemble doctor` | Health check: verifies config, generated files, Node.js version |
+| `npx create-assemble diff` | Dry run: shows what files would be created/modified without generating |
+| `npx create-assemble ls` | List active agents, workflows, skills, and configuration |
+| `npx create-assemble import <path>` | Import a skill file into `.assemble/skills/` for next generation |
 
 ### Doctor
 

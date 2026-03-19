@@ -323,10 +323,10 @@ assemble/
     adapters/           # 20 platform adapters (IDE + CLI)
   bin/
     cli.js              # Interactive installer (9-step wizard)
-    doctor.js           # Health check (assemble doctor)
-    diff.js             # Dry run diff (assemble diff)
-    ls.js               # List active config (assemble ls)
-    import.js           # Import skills (assemble import)
+    doctor.js           # Health check (npx create-assemble doctor)
+    diff.js             # Dry run diff (npx create-assemble diff)
+    ls.js               # List active config (npx create-assemble ls)
+    import.js           # Import skills (npx create-assemble import)
   tests/
     snapshot.test.js    # 62 tests (snapshot + qualitative)
   .assemble/            # User extensibility (auto-detected)
@@ -402,7 +402,7 @@ Profiles provide sensible defaults that can be overridden by explicit config:
 
 **Custom agents:** Drop `AGENT-*.md` files in `.assemble/agents/` — they're auto-discovered and merged during generation. Same slug overrides built-in.
 
-**Custom skills:** Use `assemble import <path>` to copy skill files into `.assemble/skills/`. They're included in the next generation.
+**Custom skills:** Use `npx create-assemble import <path>` to copy skill files into `.assemble/skills/`. They're included in the next generation.
 
 ### MCP Server (opt-in)
 

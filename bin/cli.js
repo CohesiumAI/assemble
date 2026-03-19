@@ -143,7 +143,7 @@ async function main() {
     if (subcommand === 'import') {
       const importPath = process.argv[3];
       if (!importPath) {
-        print('Usage: assemble import <path-to-skill.md>');
+        print('Usage: npx create-assemble import <path-to-skill.md>');
         rl.close();
         process.exit(0);
       }
@@ -264,7 +264,10 @@ async function main() {
   print('\n\x1b[1m\x1b[34m▸ Generating...\x1b[0m\n');
 
   const today = new Date().toISOString().split('T')[0];
-  const configContent = [
+  // When a profile is selected (not custom), omit agents/workflows/governance
+  // so that resolveProfile() in the generator applies the profile defaults.
+  // When custom, write explicit values so the user has full control.
+  const lines = [
     '# Assemble — Configuration du projet',
     '# Mettre à jour : npx create-assemble --update',
     '',
@@ -274,16 +277,23 @@ async function main() {
     `langue_output: "${langOutput}"`,
     `output_dir: "${outputDir}"`,
     `platforms: [${selectedPlatforms.join(', ')}]`,
-    'agents: all',
-    'workflows: all',
-    `governance: "${governance}"`,
-    `mcp: ${mcp ? 'true' : 'false'}`,
-    'memory: false',
-    'metrics: false',
-    `installed_at: "${today}"`,
-    `updated_at: "${today}"`,
-    '',
-  ].join('\n');
+  ];
+  if (profile === 'custom') {
+    lines.push('agents: all');
+    lines.push('workflows: all');
+    lines.push(`governance: "${governance}"`);
+  }
+  // If a non-custom profile is selected but governance was explicitly changed, write it
+  if (profile !== 'custom' && governance !== 'none') {
+    lines.push(`governance: "${governance}"`);
+  }
+  lines.push(`mcp: ${mcp ? 'true' : 'false'}`);
+  lines.push('memory: false');
+  lines.push('metrics: false');
+  lines.push(`installed_at: "${today}"`);
+  lines.push(`updated_at: "${today}"`);
+  lines.push('');
+  const configContent = lines.join('\n');
   fs.writeFileSync(path.join(projectDir, '.assemble.yaml'), configContent, 'utf-8');
 
   const generatorPath = path.join(__dirname, '..', 'generator', 'generate.js');

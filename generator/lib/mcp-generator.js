@@ -2,11 +2,59 @@
  * Assemble — MCP Server Generator
  * Generates an MCP (Model Context Protocol) server that exposes all agents as tools.
  * The generated server uses @modelcontextprotocol/sdk (installed separately).
+ *
+ * Platform-agnostic: resolves agent file paths based on active platforms.
  */
 
 const fs = require('fs');
 const path = require('path');
 const { agentId, marvelSlug, marvelDisplayName } = require('./template-engine');
+
+/**
+ * Build a platform-agnostic agent path resolver snippet for the MCP server.
+ * At runtime, the server checks which platform directories exist and reads from the first match.
+ * @param {Array} platforms - List of active platform names from config
+ * @returns {string} - JS code snippet for the resolve function
+ */
+function buildAgentResolver(platforms) {
+  // Map platform names to their agent path patterns
+  const platformPaths = {
+    'claude-code': '.claude/agents/{slug}/AGENT.md',
+    'cursor':      '.cursor/agents/{slug}.md',
+    'windsurf':    '.windsurf/rules/{slug}.md',
+    'cline':       '.cline/agents/{slug}.md',
+    'copilot':     '.github/instructions/{slug}.md',
+    'kiro':        '.kiro/agents/{slug}.json',
+    'trae':        '.trae/agents/{slug}.md',
+    'antigravity': '.antigravity/agents/{slug}.md',
+    'codebuddy':   '.codebuddy/agents/{slug}.md',
+    'crush':       '.crush/agents/{slug}.md',
+    'iflow':       '.iflow/agents/{slug}.md',
+    'kilocoder':   '.kilocoder/agents/{slug}.md',
+    'opencode':    '.opencode/agents/{slug}.md',
+    'qwencoder':   '.qwencoder/agents/{slug}.md',
+    'rovodev':     '.rovo/agents/{slug}.md',
+    'gemini-cli':  '.gemini/agents/{slug}.md',
+    'roocode':     '.roo/rules-{slug}.md',
+    'auggie':      '.augment/commands/agent-{slug}.md',
+    'codex':       'AGENTS.md',
+    'pi':          'AGENTS.md',
+  };
+
+  // Build ordered list of paths to check based on active platforms
+  const candidates = (platforms || [])
+    .map(p => platformPaths[p])
+    .filter(Boolean);
+
+  // Fallback: if no platforms matched, use a generic list
+  if (candidates.length === 0) {
+    candidates.push('.claude/agents/{slug}/AGENT.md');
+    candidates.push('.cursor/agents/{slug}.md');
+  }
+
+  const candidatesStr = candidates.map(c => `    "${c}"`).join(',\n');
+  return `const AGENT_PATH_CANDIDATES = [\n${candidatesStr}\n  ];`;
+}
 
 /**
  * Generate MCP server files in the project directory.
@@ -16,6 +64,9 @@ const { agentId, marvelSlug, marvelDisplayName } = require('./template-engine');
 function generateMCPServer(projectDir, { agents = [], workflows = [], config = {} }) {
   const mcpDir = path.join(projectDir, '.assemble');
   fs.mkdirSync(mcpDir, { recursive: true });
+
+  const platforms = config.platforms || [];
+  const resolverCode = buildAgentResolver(platforms);
 
   // 1. Generate mcp-server.js
   const toolEntries = agents.map(agent => {
@@ -28,7 +79,9 @@ function generateMCPServer(projectDir, { agents = [], workflows = [], config = {
       .replace(/\$\{/g, '\\${')
       .substring(0, 200);
     return `  server.tool("invoke-${slug}", "${display} — ${desc}", { request: { type: "string", description: "What you need ${display} to do" } }, async ({ request }) => {
-    return { content: [{ type: "text", text: \`[${display} (@${slug})] Executing: \${request}\\n\\nAgent ID: ${id}\\nRead agent definition from .claude/agents/${slug}/AGENT.md for full instructions.\` }] };
+    const agentFile = resolveAgentPath("${slug}");
+    const instructions = agentFile ? \`Read full instructions from \${agentFile}\` : "Agent definition not found on disk — use built-in knowledge for ${display}";
+    return { content: [{ type: "text", text: \`[${display} (@${slug})] Executing: \${request}\\n\\nAgent ID: ${id}\\n\${instructions}\` }] };
   });`;
   }).join('\n\n');
 
@@ -47,18 +100,32 @@ function generateMCPServer(projectDir, { agents = [], workflows = [], config = {
  * Exposes ${agents.length} agents as MCP tools + jarvis-route for smart routing.
  * Transport: stdio
  *
- * Install: npm install @modelcontextprotocol/sdk
+ * Install: cd .assemble && npm install
  * Run:     node mcp-server.js
  */
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { existsSync } from "node:fs";
+import { resolve } from "node:path";
 
 const server = new McpServer({
   name: "assemble",
   version: "${config.version || '1.0.0'}",
   description: "Assemble — ${agents.length}-agent AI team orchestrator by Cohesium AI",
 });
+
+// ─── Agent path resolver (platform-agnostic) ───────────────────────────────
+
+${resolverCode}
+
+function resolveAgentPath(slug) {
+  for (const pattern of AGENT_PATH_CANDIDATES) {
+    const candidate = resolve(pattern.replace(/\\{slug\\}/g, slug));
+    if (existsSync(candidate)) return candidate;
+  }
+  return null;
+}
 
 // ─── Jarvis Route (smart routing) ──────────────────────────────────────────
 
@@ -69,7 +136,7 @@ ${workflowTriggers}
   return {
     content: [{
       type: "text",
-      text: \`[Jarvis] Routing: \${request}\\n\\nAvailable workflows: \${Object.entries(workflows).map(([k,v]) => \`\${k} → \${v}\`).join(", ")}\\n\\nRead .claude/rules/routing.md for full routing intelligence.\`
+      text: \`[Jarvis] Routing: \${request}\\n\\nAvailable workflows: \${Object.entries(workflows).map(([k,v]) => \`\${k} → \${v}\`).join(", ")}\`
     }]
   };
 });

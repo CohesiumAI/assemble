@@ -4,7 +4,7 @@
  * Assemble — Doctor
  * Health check for an Assemble installation.
  *
- * Usage: assemble doctor [--project <path>]
+ * Usage: npx create-assemble doctor [--project <path>]
  *        node bin/doctor.js [--project <path>]
  */
 
