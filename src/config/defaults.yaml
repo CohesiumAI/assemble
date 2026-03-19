@@ -6,8 +6,8 @@ version: "1.0.0"
 
 # Langues par défaut
 i18n:
-  langue_equipe: "français"
-  langue_output: "français"
+  langue_equipe: "english"
+  langue_output: "english"
   instruction_template: |
     ## Langue de travail
     Tu communiques et rédiges tous tes livrables en {langue_equipe}.

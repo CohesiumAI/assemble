@@ -6,8 +6,8 @@
 const fs = require('fs');
 
 const DEFAULTS = {
-  langue_equipe: 'français',
-  langue_output: 'français',
+  langue_equipe: 'english',
+  langue_output: 'english',
   output_dir: './assemble-output',
   platforms: [],
   agents: 'all',

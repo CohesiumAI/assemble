@@ -56,6 +56,85 @@ function print(msg) {
   console.log(msg);
 }
 
+/**
+ * Interactive multi-select: arrow keys to navigate, space to toggle, enter to confirm.
+ * Selected items are highlighted in green. Returns array of selected [id, name] pairs.
+ * @param {Array} items - Array of [id, displayName] pairs
+ * @param {string} groupLabel - Optional group separator labels (object { index: label })
+ * @param {Set} preselected - Indices to preselect
+ */
+function multiSelect(items, groupLabels = {}, preselected = new Set()) {
+  return new Promise((resolve) => {
+    const selected = new Set(preselected);
+    let cursor = 0;
+
+    function render() {
+      // Move cursor up to overwrite previous render (except first time)
+      const totalLines = items.length + Object.keys(groupLabels).length + 2;
+      process.stdout.write(`\x1b[${totalLines}A`);
+
+      for (let i = 0; i < items.length; i++) {
+        if (groupLabels[i] !== undefined) {
+          process.stdout.write(`\x1b[2K  \x1b[1m${groupLabels[i]}\x1b[0m\n`);
+        }
+        const isSelected = selected.has(i);
+        const isCursor = cursor === i;
+        const check = isSelected ? '\x1b[32m[x]\x1b[0m' : '[ ]';
+        const name = isSelected ? `\x1b[32m${items[i][1]}\x1b[0m` : items[i][1];
+        const arrow = isCursor ? '\x1b[36m>\x1b[0m ' : '  ';
+        process.stdout.write(`\x1b[2K  ${arrow}${check} ${name}\n`);
+      }
+      process.stdout.write(`\x1b[2K\n`);
+      process.stdout.write(`\x1b[2K  \x1b[2mSpace=toggle  A=all  N=none  Enter=confirm\x1b[0m`);
+    }
+
+    // Print initial blank lines to create space for render
+    for (let i = 0; i < items.length; i++) {
+      if (groupLabels[i] !== undefined) process.stdout.write('\n');
+      process.stdout.write('\n');
+    }
+    process.stdout.write('\n\n');
+    render();
+
+    const stdin = process.stdin;
+    stdin.setRawMode(true);
+    stdin.resume();
+
+    function onKeypress(chunk) {
+      const key = chunk.toString();
+
+      if (key === '\x1b[A') { // Up arrow
+        cursor = (cursor - 1 + items.length) % items.length;
+        render();
+      } else if (key === '\x1b[B') { // Down arrow
+        cursor = (cursor + 1) % items.length;
+        render();
+      } else if (key === ' ') { // Space = toggle
+        if (selected.has(cursor)) selected.delete(cursor);
+        else selected.add(cursor);
+        render();
+      } else if (key === 'a' || key === 'A') { // Select all
+        for (let i = 0; i < items.length; i++) selected.add(i);
+        render();
+      } else if (key === 'n' || key === 'N') { // Select none
+        selected.clear();
+        render();
+      } else if (key === '\r' || key === '\n') { // Enter = confirm
+        stdin.setRawMode(false);
+        stdin.removeListener('data', onKeypress);
+        process.stdout.write('\n');
+        const result = [...selected].sort((a, b) => a - b).map(i => items[i]);
+        resolve(result);
+      } else if (key === '\x03') { // Ctrl+C
+        stdin.setRawMode(false);
+        process.exit(0);
+      }
+    }
+
+    stdin.on('data', onKeypress);
+  });
+}
+
 async function runUpdate(projectDir) {
   const fs = require('fs');
   const configPath = path.join(projectDir, '.assemble.yaml');
@@ -182,7 +261,7 @@ async function main() {
 
   // 1. Team language
   print('\n\x1b[1m\x1b[34m▸ 1/11 — Team language\x1b[0m\n');
-  const langTeam = await ask('Team language (français, english, deutsch...)', 'français');
+  const langTeam = await ask('Team language (english, français, deutsch...)', 'english');
 
   // 2. Output language
   print('\n\x1b[1m\x1b[34m▸ 2/11 — Deliverable language\x1b[0m\n');
@@ -198,25 +277,22 @@ async function main() {
   const profileMap = { '1': 'startup', '2': 'enterprise', '3': 'agency', '4': 'custom' };
   const profile = profileMap[profileChoice] || 'custom';
 
-  // 4. Platforms
+  // 4. Platforms (interactive multi-select)
   print('\n\x1b[1m\x1b[34m▸ 4/11 — IDE/CLI selection\x1b[0m\n');
-  print('  IDE:');
-  PLATFORMS.ide.forEach(([, name], i) => print(`  ${String(i + 1).padStart(2)}) ${name}`));
-  print('\n  CLI:');
-  PLATFORMS.cli.forEach(([, name], i) => print(`  ${String(i + PLATFORMS.ide.length + 1).padStart(2)}) ${name}`));
-  print('\n   0) Select all\n');
 
-  const platformChoice = await ask('Your choice (space-separated numbers)', '0');
-  let selectedPlatforms;
-  if (platformChoice === '0') {
-    selectedPlatforms = ALL_PLATFORMS.map(p => p[0]);
-  } else {
-    selectedPlatforms = platformChoice.split(/\s+/).map(n => {
-      const idx = parseInt(n) - 1;
-      return idx >= 0 && idx < ALL_PLATFORMS.length ? ALL_PLATFORMS[idx][0] : null;
-    }).filter(Boolean);
-  }
-  print(`\x1b[32m  ✓ ${selectedPlatforms.length} platforms selected\x1b[0m`);
+  // Temporarily close readline so raw mode works
+  rl.pause();
+
+  const groupLabels = { 0: 'IDE:', [PLATFORMS.ide.length]: 'CLI:' };
+  // Pre-select all by default
+  const allIndices = new Set(ALL_PLATFORMS.map((_, i) => i));
+  const platformSelections = await multiSelect(ALL_PLATFORMS, groupLabels, allIndices);
+  const selectedPlatforms = platformSelections.map(p => p[0]);
+
+  // Resume readline for subsequent prompts
+  rl.resume();
+
+  print(`\x1b[32m  ✓ ${selectedPlatforms.length} platform${selectedPlatforms.length > 1 ? 's' : ''} selected: ${platformSelections.map(p => p[1]).join(', ')}\x1b[0m`);
 
   // 5. Directory
   print('\n\x1b[1m\x1b[34m▸ 5/11 — Project directory\x1b[0m\n');

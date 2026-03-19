@@ -224,7 +224,7 @@ test('loadConfig tracks explicit keys via _explicitKeys', () => {
 
 test('loadConfig returns DEFAULTS when file does not exist', () => {
   const config = loadConfig('/nonexistent/path.yaml');
-  assert(config.langue_equipe === 'français', 'should have default langue_equipe');
+  assert(config.langue_equipe === 'english', 'should have default langue_equipe');
   assert(config.agents === 'all', 'should have default agents');
   assert(Array.isArray(config.platforms), 'platforms should be array');
 });
