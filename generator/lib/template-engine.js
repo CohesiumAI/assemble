@@ -248,6 +248,23 @@ function renderCommandRegistry(agents, skills, workflows) {
   let out = '## Command Reference\n\n';
   out += 'When the user types a command starting with `/`, execute it as described below.\n\n';
 
+  // Slash command behavior instructions
+  out += '### How Slash Commands Work\n\n';
+  out += '**IMPORTANT:** When the user types any `/command`, you MUST recognize and execute it immediately.\n\n';
+  out += '**Persistence rules:**\n';
+  out += '- When an agent is invoked via `/agent-<name>`, **stay in character as that agent** for ALL subsequent messages until `/dismiss` is used.\n';
+  out += '- At the end of EVERY response while an agent is active, display this footer:\n';
+  out += '  ```\n';
+  out += '  ─────────────────────────────────────────────────────────\n';
+  out += '  🎭 Active: [Agent Marvel Name]\n';
+  out += '  💡 /summon <agent> to add · /dismiss to end\n';
+  out += '  ─────────────────────────────────────────────────────────\n';
+  out += '  ```\n';
+  out += '- When `/party` is used, multiple agents are convoked and ALL stay active with a combined footer.\n';
+  out += '- When `/summon <agent>` is used during an active session, add the agent to the session.\n';
+  out += '- When `/dismiss <agent>` is used, remove that agent. When `/dismiss` alone is used, end the entire session.\n';
+  out += '- **Only `/dismiss` ends the session.** No other command or natural message ends it.\n\n';
+
   // Agent commands
   out += '### Agent Commands\n\n';
   out += 'Invoke a specialist. Adopt their full role, expertise, and Marvel personality.\n\n';

@@ -208,6 +208,16 @@ module.exports = {
       content += '---\n\n';
       content += `Read and adopt the full role defined in \`.claude/agents/${marvelSlug}/AGENT.md\`.\n\n`;
       content += `You are **${displayName}**. Respond in character with this agent's expertise, posture, frameworks, and output format.\n\n`;
+      content += `## Persistence\n\n`;
+      content += `Once invoked, you MUST stay in character as **${displayName}** for ALL subsequent messages until the user types \`/dismiss\`.\n`;
+      content += `At the end of EVERY response while active, display this footer:\n\n`;
+      content += '```\n';
+      content += `─────────────────────────────────────────────────────────\n`;
+      content += `🎭 Active: ${displayName} (@${marvelSlug})\n`;
+      content += `💡 /summon <agent> to add · /dismiss to end\n`;
+      content += `─────────────────────────────────────────────────────────\n`;
+      content += '```\n\n';
+      content += `If another agent is summoned via \`/summon\`, switch to party mode with both agents active.\n\n`;
       content += `Apply this role to the following request:\n\n`;
       content += `$ARGUMENTS\n`;
 
@@ -384,7 +394,13 @@ module.exports = {
     // ── 6. CLAUDE.md — concise, with @imports ─────────────────────────────────
 
     let claude = '# Cohesium AI\n\n';
-    claude += 'Ce projet utilise le système Cohesium AI avec des agents IA spécialisés.\n\n';
+    claude += 'This project uses the Cohesium AI multi-agent system.\n\n';
+
+    claude += '## Agent Persistence\n\n';
+    claude += 'When a user invokes an agent via `/agent-<name>` or `@agent-name`, stay in character as that agent for ALL subsequent messages until `/dismiss` is used.\n';
+    claude += 'Always display the session footer at the end of every response while an agent is active.\n';
+    claude += 'When `/summon <agent>` is used, add the agent to the active session.\n';
+    claude += 'Only `/dismiss` ends the session.\n\n';
 
     claude += '@.claude/rules/orchestrator.md\n';
     claude += '@.claude/rules/teams.md\n\n';
