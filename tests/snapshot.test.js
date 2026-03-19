@@ -368,6 +368,54 @@ console.log('\nTest 7: Claude Code 10-command architecture');
   cleanTmpDir();
 }
 
+// ── Test 8: Governance ───────────────────────────────────────────────────────
+
+console.log('\nTest 8: Governance');
+{
+  // 8a: governance: none (default) — no governance file generated
+  const dirNone = createTmpDir();
+  run(['--project', dirNone, '--platforms', 'claude-code', '--lang-team', 'english', '--lang-output', 'english']);
+
+  test('governance: none — no governance.md generated', () => {
+    const govPath = path.join(dirNone, '.claude', 'rules', 'governance', 'governance.md');
+    assert(!fs.existsSync(govPath), 'governance.md should NOT exist when governance is none');
+  });
+
+  test('governance: none — config contains governance: "none"', () => {
+    const config = fs.readFileSync(path.join(dirNone, '.assemble.yaml'), 'utf-8');
+    assert(config.includes('governance:'), 'Config should contain governance field');
+  });
+
+  cleanTmpDir();
+
+  // 8b: governance: standard — governance file generated
+  const dirStd = createTmpDir();
+  // Create a config with governance: standard, then run update
+  const configContent = `version: "1.0.0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "standard"\ninstalled_at: "2026-03-19"\n`;
+  fs.mkdirSync(dirStd, { recursive: true });
+  fs.writeFileSync(path.join(dirStd, '.assemble.yaml'), configContent);
+  run(['--project', dirStd, '--update']);
+
+  test('governance: standard — governance.md exists', () => {
+    const govPath = path.join(dirStd, '.claude', 'rules', 'governance', 'governance.md');
+    assert(fs.existsSync(govPath), 'governance.md should exist when governance is standard');
+  });
+
+  test('governance: standard — contains decision gates and risk assessment', () => {
+    const govContent = fs.readFileSync(path.join(dirStd, '.claude', 'rules', 'governance', 'governance.md'), 'utf-8');
+    assert(govContent.includes('Decision Gates'), 'Should contain Decision Gates');
+    assert(govContent.includes('Risk Assessment'), 'Should contain Risk Assessment');
+    assert(govContent.includes('Quality Checkpoints'), 'Should contain Quality Checkpoints');
+  });
+
+  test('governance: standard — routing.md references governance', () => {
+    const routing = fs.readFileSync(path.join(dirStd, '.claude', 'rules', 'routing.md'), 'utf-8');
+    assert(routing.includes('Governance') || routing.includes('governance'), 'routing.md should reference governance');
+  });
+
+  cleanTmpDir();
+}
+
 // ── Summary ──────────────────────────────────────────────────────────────────
 
 console.log('');

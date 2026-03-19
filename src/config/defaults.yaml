@@ -14,6 +14,9 @@ i18n:
     Les fichiers que tu produis sont rédigés en {langue_output}.
     Les termes techniques et le code restent en anglais.
 
+# Gouvernance (none = pas de surcharge, standard = decision gates + risk assessment)
+governance: "none"
+
 # Répertoire de sortie des livrables
 output:
   dir: "./assemble-output"

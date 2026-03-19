@@ -15,6 +15,7 @@ const {
   renderOrchestrator,
   renderRoutingRules,
   renderCompactHelp,
+  renderGovernanceRules,
   agentId,
   marvelSlug,
   marvelDisplayName,
@@ -58,7 +59,7 @@ module.exports = {
 
   // ─── Output paths (used by validator) ───────────────────────────────────────
 
-  getOutputPaths(projectDir, { agents = [], workflows = [] } = {}) {
+  getOutputPaths(projectDir, { agents = [], workflows = [], config = {} } = {}) {
     const paths = [
       path.join(projectDir, 'CLAUDE.md'),
       path.join(projectDir, '.claude', 'rules', 'orchestrator.md'),
@@ -75,6 +76,11 @@ module.exports = {
     const skillSlugs = ['go', 'party', 'dismiss', 'help', 'review', 'bugfix', 'feature', 'sprint', 'release', 'mvp'];
     for (const slug of skillSlugs) {
       paths.push(path.join(projectDir, '.claude', 'skills', slug, 'SKILL.md'));
+    }
+
+    // Governance (if enabled)
+    if (config.governance && config.governance !== 'none') {
+      paths.push(path.join(projectDir, '.claude', 'rules', 'governance', 'governance.md'));
     }
 
     return paths;
@@ -235,6 +241,16 @@ module.exports = {
 
     const routingContent = renderRoutingRules(agents, workflows);
     fs.writeFileSync(path.join(rulesDir, 'routing.md'), routingContent, 'utf-8');
+
+    // ── 3b. .claude/rules/governance/governance.md (if enabled) ────────────────
+
+    const governance = config.governance || 'none';
+    if (governance !== 'none') {
+      const govDir = path.join(rulesDir, 'governance');
+      fs.mkdirSync(govDir, { recursive: true });
+      const govContent = renderGovernanceRules(governance);
+      fs.writeFileSync(path.join(govDir, 'governance.md'), govContent, 'utf-8');
+    }
 
     // ── 4. .claude/rules/orchestrator.md ──────────────────────────────────────
 
@@ -426,13 +442,27 @@ module.exports = {
       }
     }
 
-    // Check rules
+    // Check rules (files only, skip subdirectories like governance/)
     const rulesDir = path.join(projectDir, '.claude', 'rules');
     if (fs.existsSync(rulesDir)) {
-      for (const file of fs.readdirSync(rulesDir)) {
-        const content = fs.readFileSync(path.join(rulesDir, file), 'utf-8');
-        if (content.trim().length === 0) {
-          errors.push(`Fichier de règle vide : .claude/rules/${file}`);
+      for (const entry of fs.readdirSync(rulesDir)) {
+        const entryPath = path.join(rulesDir, entry);
+        if (fs.statSync(entryPath).isDirectory()) {
+          // Check files inside subdirectory (e.g. governance/)
+          for (const subFile of fs.readdirSync(entryPath)) {
+            const subPath = path.join(entryPath, subFile);
+            if (fs.statSync(subPath).isFile()) {
+              const content = fs.readFileSync(subPath, 'utf-8');
+              if (content.trim().length === 0) {
+                errors.push(`Fichier de règle vide : .claude/rules/${entry}/${subFile}`);
+              }
+            }
+          }
+        } else {
+          const content = fs.readFileSync(entryPath, 'utf-8');
+          if (content.trim().length === 0) {
+            errors.push(`Fichier de règle vide : .claude/rules/${entry}`);
+          }
         }
       }
     }

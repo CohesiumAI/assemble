@@ -208,6 +208,7 @@ function generate() {
   if (args.langue_equipe) config.langue_equipe = args.langue_equipe;
   if (args.langue_output) config.langue_output = args.langue_output;
   if (args.output_dir) config.output_dir = args.output_dir;
+  if (!config.governance) config.governance = 'none';
 
   console.log('🚀 Assemble — Générateur de configurations');
   console.log(`📁 Projet : ${projectDir}`);
@@ -379,6 +380,7 @@ output_dir: "${config.output_dir}"
 platforms: [${config.platforms.join(', ')}]
 agents: ${config.agents || 'all'}
 workflows: ${config.workflows || 'all'}
+governance: "${config.governance || 'none'}"
 installed_at: "${existingConfig.installed_at || today}"
 updated_at: "${today}"
 `;

@@ -344,6 +344,12 @@ function renderRoutingRules(agents, workflows) {
   }
   out += '\n';
 
+  // Governance
+  out += '## Governance\n\n';
+  out += 'If the project has `governance: standard` in `.assemble.yaml`, load and apply rules from\n';
+  out += '`.claude/rules/governance/governance.md` — decision gates, risk assessment, and quality checkpoints.\n';
+  out += 'Default: no governance overhead.\n\n';
+
   // Persistence
   out += '## Persistence Behavior\n\n';
   out += '- Agent invocation via `@name` → stay in character until `/dismiss`\n';
@@ -426,6 +432,59 @@ function renderCompactHelp(agents, workflows) {
   return out;
 }
 
+/**
+ * Generate governance rules content.
+ * Loaded on-demand by Jarvis when governance is enabled.
+ * @param {string} level - 'standard' or 'strict'
+ * @returns {string}
+ */
+function renderGovernanceRules(level) {
+  let out = '# Governance Rules\n\n';
+  out += `Governance level: **${level}**\n\n`;
+
+  // Section 1: Decision Gates (inspired by NIST AI RMF — GOVERN)
+  out += '## 1. Decision Gates\n\n';
+  out += 'Apply validation gates based on task complexity:\n\n';
+  out += '| Complexity | Gate | Action |\n';
+  out += '|------------|------|--------|\n';
+  out += '| TRIVIAL | None | Agent acts autonomously |\n';
+  out += '| MODERATE | Deliverable review | Produce deliverable → user validates before next step |\n';
+  out += '| COMPLEX | Phased approval | spec.md → approve → plan.md → approve → tasks.md → approve → implement |\n\n';
+  out += 'Every gate requires **explicit user approval** before proceeding. Do not skip gates.\n\n';
+
+  // Section 2: Change Risk Assessment (inspired by DORA + Bounded Autonomy)
+  out += '## 2. Change Risk Assessment\n\n';
+  out += 'Before executing a workflow, assess the risk level and apply the corresponding controls:\n\n';
+  out += '| Risk | Workflows | Controls |\n';
+  out += '|------|-----------|----------|\n';
+  out += '| LOW | /bugfix, /review, /docs | Agent acts, summary post-action |\n';
+  out += '| MEDIUM | /feature, /sprint, /refactor | Plan required before action, user validates |\n';
+  out += '| HIGH | /release, /hotfix, /mvp, /upgrade | Risk assessment + rollback plan + explicit approval gate |\n\n';
+  out += 'For HIGH risk workflows:\n';
+  out += '- Produce a `risk-assessment.md` before implementation\n';
+  out += '- Include a rollback strategy in the plan\n';
+  out += '- Require explicit user approval at each phase transition\n\n';
+
+  // Section 3: Quality Checkpoints (inspired by DORA Metrics)
+  out += '## 3. Quality Checkpoints\n\n';
+  out += 'At the end of every COMPLEX workflow (4+ steps), produce `_quality.md` containing:\n\n';
+  out += '- **Delivered**: list of deliverables produced\n';
+  out += '- **Validated**: what was reviewed and approved by the user\n';
+  out += '- **Risks remaining**: open risks, known limitations, technical debt introduced\n';
+  out += '- **Lessons learned**: what worked well, what should be improved\n';
+  out += '- **Metrics** (if measurable): lead time, number of steps, agents involved\n\n';
+
+  if (level === 'standard') {
+    out += '## Standard Level Behavior\n\n';
+    out += '- Decision gates are enforced for MODERATE and COMPLEX tasks\n';
+    out += '- Risk assessment is required for HIGH risk workflows\n';
+    out += '- Quality checkpoint (_quality.md) is produced for workflows with 4+ steps\n';
+    out += '- Post-mortem is optional — Jarvis offers it at workflow completion\n';
+  }
+
+  return out;
+}
+
 /** Build agentLookup map from agents array */
 function buildAgentLookup(agents) {
   const lookup = {};
@@ -460,5 +519,6 @@ module.exports = {
   renderCommandRegistry,
   renderRoutingRules,
   renderCompactHelp,
+  renderGovernanceRules,
   buildAgentLookup,
 };

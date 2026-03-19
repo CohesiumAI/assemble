@@ -72,6 +72,19 @@ Produire `tasks.md` : découpage en tâches, estimation, dépendances, priorité
 ### Phase 4 — IMPLEMENT (Agents de développement)
 Exécuter les tâches selon le plan. Produire code + tests + livrables.
 
+### Phase 5 — CLOSE (Jarvis)
+Produire `_quality.md` : ce qui a été livré, validé, les risques restants, les leçons apprises.
+→ Automatique pour les workflows de 4+ étapes. Pas de validation requise.
+
+## Gouvernance
+
+Si le projet définit `governance: standard` dans `.assemble.yaml`, charger et appliquer les règles depuis `.claude/rules/governance/governance.md`. Cela inclut :
+- **Decision gates** : validation utilisateur obligatoire entre les phases MODERATE et COMPLEX
+- **Risk assessment** : évaluation du risque avant les workflows HIGH (release, hotfix, mvp)
+- **Quality checkpoints** : production de `_quality.md` en fin de workflow complexe
+
+Si `governance: none` (défaut), aucune règle de gouvernance supplémentaire n'est appliquée.
+
 ## Catalogue des agents disponibles
 
 | Agent | Nom Marvel | Domaine | @mention |
