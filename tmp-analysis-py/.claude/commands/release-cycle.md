@@ -1,0 +1,59 @@
+Lance le workflow défini dans le fichier suivant :
+
+```yaml
+name: release-cycle
+description: "Cycle de mise en production — validation, déploiement et communication"
+trigger: /release
+output_dir: "{cohesium_output}/release_{timestamp}"
+steps:
+  - step: 1
+    agent: scrum
+    action: "Préparer la checklist de release et valider la complétion du scope"
+    outputs: [release-checklist.md, scope-validation.md]
+  - step: 2
+    agent: qa
+    action: "Effectuer la validation finale et exécuter les tests de non-régression"
+    inputs: [01-scrum/release-checklist.md, 01-scrum/scope-validation.md]
+    outputs: [qa-sign-off.md, regression-results.md]
+    depends_on: [1]
+  - step: 3
+    agent: security
+    action: "Valider la conformité sécuritaire avant mise en production"
+    inputs: [02-qa/qa-sign-off.md, 02-qa/regression-results.md, 01-scrum/release-checklist.md]
+    outputs: [security-clearance.md, final-audit.md]
+    depends_on: [2]
+  - step: 4
+    agent: legal
+    action: "Vérifier la conformité réglementaire de la release (RGPD, CGU, mentions légales)"
+    inputs: [01-scrum/scope-validation.md, 03-security/security-clearance.md]
+    outputs: [compliance-sign-off.md, legal-notes.md]
+    depends_on: [3]
+  - step: 5
+    agent: devops
+    action: "Préparer le runbook de déploiement et le plan de rollback"
+    inputs: [03-security/security-clearance.md, 04-legal/compliance-sign-off.md, 02-qa/qa-sign-off.md]
+    outputs: [deploy-runbook.md, rollback-plan.md]
+    depends_on: [3, 4]
+  # Steps 6 and 7 can run in parallel after deployment
+  - step: 6
+    agent: marketing
+    action: "Rédiger l'annonce de la release et le changelog public"
+    inputs: [05-devops/deploy-runbook.md, 01-scrum/scope-validation.md]
+    outputs: [announcement.md, changelog.md]
+    depends_on: [5]
+  - step: 7
+    agent: pr-comms
+    action: "Préparer le communiqué de presse et le plan de communication externe"
+    inputs: [06-marketing/announcement.md, 01-scrum/scope-validation.md]
+    outputs: [press-release.md, comms-plan.md]
+    depends_on: [6]
+  - step: 8
+    agent: customer-success
+    action: "Préparer la communication client et le plan d'accompagnement post-release"
+    inputs: [06-marketing/announcement.md, 06-marketing/changelog.md]
+    outputs: [customer-notification.md, adoption-plan.md]
+    depends_on: [6]
+
+```
+
+Suis les étapes dans l'ordre, en respectant les dépendances et le chaînage des livrables.

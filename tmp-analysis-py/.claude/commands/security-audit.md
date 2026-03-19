@@ -1,0 +1,34 @@
+Lance le workflow défini dans le fichier suivant :
+
+```yaml
+name: security-audit
+description: "Audit de sécurité complet — détection des vulnérabilités, remédiation et conformité"
+trigger: /security-audit
+output_dir: "{cohesium_output}/security-audit_{timestamp}"
+steps:
+  - step: 1
+    agent: security
+    action: "Scanner et identifier les vulnérabilités dans le code et l'infrastructure"
+    outputs: [vulnerability-report.md, threat-model.md]
+  - step: 2
+    agent: dev-backend
+    action: "Élaborer le plan de remédiation pour les vulnérabilités identifiées"
+    inputs: [01-security/vulnerability-report.md, 01-security/threat-model.md]
+    outputs: [remediation-plan.md, patching-schedule.md]
+    depends_on: [1]
+  - step: 3
+    agent: devops
+    action: "Renforcer la sécurité de l'infrastructure et des configurations"
+    inputs: [01-security/vulnerability-report.md, 02-dev-backend/remediation-plan.md]
+    outputs: [infrastructure-hardening.md, security-config.md]
+    depends_on: [2]
+  - step: 4
+    agent: legal
+    action: "Vérifier la conformité réglementaire et les obligations légales"
+    inputs: [01-security/vulnerability-report.md, 03-devops/infrastructure-hardening.md, 02-dev-backend/remediation-plan.md]
+    outputs: [compliance-check.md, regulatory-summary.md]
+    depends_on: [3]
+
+```
+
+Suis les étapes dans l'ordre, en respectant les dépendances et le chaînage des livrables.

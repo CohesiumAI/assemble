@@ -1,0 +1,34 @@
+Lance le workflow défini dans le fichier suivant :
+
+```yaml
+name: seo-content-pipeline
+description: "Pipeline de création de contenu SEO — de la recherche de mots-clés à l'optimisation GEO/AIO"
+trigger: /seo-pipeline
+output_dir: "{cohesium_output}/seo-content_{timestamp}"
+steps:
+  - step: 1
+    agent: seo
+    action: "Effectuer la recherche de mots-clés et définir la stratégie de contenu"
+    outputs: [keyword-research.md, content-strategy.md]
+  - step: 2
+    agent: content-seo
+    action: "Rédiger le brief de contenu et structurer la sémantique"
+    inputs: [01-seo/keyword-research.md, 01-seo/content-strategy.md]
+    outputs: [content-brief.md, semantic-structure.md]
+    depends_on: [1]
+  - step: 3
+    agent: copywriter
+    action: "Rédiger le brouillon de l'article optimisé pour le SEO"
+    inputs: [02-content-seo/content-brief.md, 02-content-seo/semantic-structure.md, 01-seo/keyword-research.md]
+    outputs: [article-draft.md, meta-tags.md]
+    depends_on: [2]
+  - step: 4
+    agent: geo-aio
+    action: "Optimiser le contenu pour la recherche géolocalisée et l'IA générative"
+    inputs: [03-copywriter/article-draft.md, 01-seo/keyword-research.md, 02-content-seo/semantic-structure.md]
+    outputs: [geo-optimization.md, aio-recommendations.md]
+    depends_on: [3]
+
+```
+
+Suis les étapes dans l'ordre, en respectant les dépendances et le chaînage des livrables.

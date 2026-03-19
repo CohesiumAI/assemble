@@ -6,7 +6,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { prepareAgent, renderAgent, renderOrchestrator, agentId, marvelSlug, marvelDisplayName, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions } = require('../../lib/template-engine');
+const { prepareAgent, renderAgent, renderOrchestrator, agentId, marvelSlug, marvelDisplayName, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions, renderCommandRegistry } = require('../../lib/template-engine');
 
 module.exports = {
   name: 'gemini-cli',
@@ -93,6 +93,8 @@ module.exports = {
       const desc = workflowField(workflow.raw, 'description');
       gemini += `- **${slug}** — ${desc}\n`;
     }
+
+    gemini += '\n' + renderCommandRegistry(agents, skills, workflows);
 
     gemini += `\n## Répertoire de sortie\n\nLes livrables sont produits dans : \`${config.output_dir || './cohesium-output'}\`\n`;
 

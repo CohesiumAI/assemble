@@ -1,0 +1,59 @@
+Lance le workflow défini dans le fichier suivant :
+
+```yaml
+name: marketing-campaign
+description: "Lancement de campagne marketing — de la stratégie à l'exécution multi-canal"
+trigger: /marketing
+output_dir: "{cohesium_output}/marketing_{timestamp}"
+steps:
+  - step: 1
+    agent: marketing
+    action: "Définir la stratégie de campagne et identifier l'audience cible"
+    outputs: [campaign-strategy.md, target-audience.md]
+  - step: 2
+    agent: finance
+    action: "Valider le budget de la campagne et définir les KPIs financiers (CAC cible, ROAS)"
+    inputs: [01-marketing/campaign-strategy.md, 01-marketing/target-audience.md]
+    outputs: [campaign-budget.md, financial-kpis.md]
+    depends_on: [1]
+  - step: 3
+    agent: brand
+    action: "Établir les directives de marque et le positionnement du message"
+    inputs: [01-marketing/campaign-strategy.md, 01-marketing/target-audience.md]
+    outputs: [brand-guidelines.md, messaging.md]
+    depends_on: [1]
+  - step: 4
+    agent: copywriter
+    action: "Rédiger les assets textuels pour tous les canaux de la campagne"
+    inputs: [03-brand/brand-guidelines.md, 03-brand/messaging.md, 01-marketing/target-audience.md]
+    outputs: [copy-assets.md, tone-of-voice.md]
+    depends_on: [3]
+  # Steps 5, 6 and 7 can run in parallel after copywriting
+  - step: 5
+    agent: ads
+    action: "Configurer les campagnes publicitaires et allouer le budget"
+    inputs: [01-marketing/campaign-strategy.md, 01-marketing/target-audience.md, 04-copywriter/copy-assets.md, 02-finance/campaign-budget.md]
+    outputs: [ad-setup.md, budget-allocation.md]
+    depends_on: [4, 2]
+  - step: 6
+    agent: social
+    action: "Planifier le calendrier éditorial et le contenu des réseaux sociaux"
+    inputs: [04-copywriter/copy-assets.md, 03-brand/brand-guidelines.md, 01-marketing/campaign-strategy.md]
+    outputs: [social-calendar.md, content-plan.md]
+    depends_on: [4]
+  - step: 7
+    agent: pr-comms
+    action: "Préparer le communiqué de presse et la stratégie earned media de la campagne"
+    inputs: [04-copywriter/copy-assets.md, 03-brand/messaging.md, 01-marketing/campaign-strategy.md]
+    outputs: [press-release.md, media-plan.md]
+    depends_on: [4]
+  - step: 8
+    agent: growth
+    action: "Définir les métriques de croissance et les expérimentations"
+    inputs: [05-ads/ad-setup.md, 05-ads/budget-allocation.md, 06-social/social-calendar.md, 02-finance/financial-kpis.md]
+    outputs: [growth-metrics.md, experiment-plan.md]
+    depends_on: [5, 6]
+
+```
+
+Suis les étapes dans l'ordre, en respectant les dépendances et le chaînage des livrables.

@@ -6,7 +6,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { prepareAgent, agentId, marvelSlug, marvelDisplayName, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions } = require('../../lib/template-engine');
+const { prepareAgent, agentId, marvelSlug, marvelDisplayName, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions, renderCommandRegistry } = require('../../lib/template-engine');
 
 module.exports = {
   name: 'auggie',

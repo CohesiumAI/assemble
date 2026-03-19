@@ -5,7 +5,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { prepareAgent, renderAgent, renderOrchestrator, marvelSlug, marvelDisplayName, agentId, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions } = require('../../lib/template-engine');
+const { prepareAgent, renderAgent, renderOrchestrator, marvelSlug, marvelDisplayName, agentId, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions, renderCommandRegistry } = require('../../lib/template-engine');
 
 module.exports = {
   name: 'cursor',
@@ -68,6 +68,8 @@ module.exports = {
       const desc = workflowField(workflow.raw, 'description');
       rules += `- **${slug}** — ${desc}\n`;
     }
+
+    rules += '\n' + renderCommandRegistry(agents, skills, workflows);
 
     rules += `\n## Répertoire de sortie\n\nLes livrables → \`${config.output_dir || './cohesium-output'}\`\n`;
     fs.writeFileSync(path.join(projectDir, '.cursorrules'), rules, 'utf-8');

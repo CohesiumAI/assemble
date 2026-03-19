@@ -239,6 +239,86 @@ function renderWorkflowInstructions(workflow, agentLookup, config) {
   return out;
 }
 
+/**
+ * Generate a complete command registry as markdown.
+ * Included in every platform's rules so the AI knows how to respond to slash commands.
+ */
+function renderCommandRegistry(agents, skills, workflows) {
+  const allSkills = [...(skills.shared || []), ...(skills.specific || [])];
+  let out = '## Command Reference\n\n';
+  out += 'When the user types a command starting with `/`, execute it as described below.\n\n';
+
+  // Agent commands
+  out += '### Agent Commands\n\n';
+  out += 'Invoke a specialist. Adopt their full role, expertise, and Marvel personality.\n\n';
+  out += '| Command | Agent | Marvel Name | Role |\n';
+  out += '|---------|-------|-------------|------|\n';
+  for (const agent of agents) {
+    const id = agentId(agent);
+    const slug = marvelSlug(agent);
+    const display = marvelDisplayName(agent);
+    const desc = (agent.meta.description || '').split('—')[0].trim();
+    out += `| \`/agent-${id}\` | ${slug} | ${display} | ${desc} |\n`;
+  }
+
+  // Workflow commands
+  out += '\n### Workflow Commands\n\n';
+  out += 'Launch a multi-agent workflow. Execute steps in order, respecting dependencies.\n\n';
+  out += '| Command | Workflow | Description |\n';
+  out += '|---------|----------|-------------|\n';
+  for (const wf of workflows) {
+    const slug = workflowSlug(wf);
+    const desc = workflowField(wf.raw, 'description');
+    out += `| \`/${slug}\` | ${workflowField(wf.raw, 'name') || slug} | ${desc} |\n`;
+  }
+
+  // Skill commands
+  out += '\n### Skill Commands\n\n';
+  out += '| Command | Skill |\n';
+  out += '|---------|-------|\n';
+  for (const skill of allSkills) {
+    const slug = skillSlug(skill);
+    const desc = (skill.meta.description || '').split('—')[0].trim();
+    out += `| \`/${slug}\` | ${desc} |\n`;
+  }
+
+  // Session commands
+  out += '\n### Session Commands (Party Mode)\n\n';
+  out += '| Command | Action |\n';
+  out += '|---------|--------|\n';
+  out += '| `/party <request>` | Open persistent multi-agent session — Jarvis selects relevant agents |\n';
+  out += '| `/party <team> <request>` | Open session with specific team(s) |\n';
+  out += '| `/party all <request>` | Open session with all 31 agents |\n';
+  out += '| `/summon <agent>` | Add an agent to the current session |\n';
+  out += '| `/dismiss <agent>` | Remove an agent from the session |\n';
+  out += '| `/dismiss` | Close the entire session |\n';
+  out += '| `/who` | Show agents currently in session |\n';
+
+  // Meta commands
+  out += '\n### Meta Commands\n\n';
+  out += '| Command | Action |\n';
+  out += '|---------|--------|\n';
+  out += '| `/team` | Display full team roster |\n';
+  out += '| `/team-dev` | Display Dev team |\n';
+  out += '| `/team-ops` | Display Ops & Quality team |\n';
+  out += '| `/team-product` | Display Product & Strategy team |\n';
+  out += '| `/team-marketing` | Display Marketing & Growth team |\n';
+  out += '| `/team-content` | Display Content & Communication team |\n';
+  out += '| `/team-data` | Display Data & AI team |\n';
+  out += '| `/team-business` | Display Business & Operations team |\n';
+  out += '| `/team-design` | Display Design team |\n';
+  out += '| `/status` | Show current workflow status |\n';
+  out += '| `/help` | Show this command reference |\n';
+  out += '| `/agents` | List all available agents |\n';
+  out += '| `/skills` | List all available skills |\n';
+  out += '| `/workflows` | List all available workflows |\n';
+  out += '| `/handoff <agent>` | Manual handoff to a specific agent |\n';
+  out += '| `/update` | Regenerate from .cohesium.yaml |\n';
+  out += '| `/reconfigure` | Relaunch configuration wizard |\n';
+
+  return out;
+}
+
 /** Build agentLookup map from agents array */
 function buildAgentLookup(agents) {
   const lookup = {};
@@ -270,5 +350,6 @@ module.exports = {
   workflowField,
   parseWorkflowSteps,
   renderWorkflowInstructions,
+  renderCommandRegistry,
   buildAgentLookup,
 };

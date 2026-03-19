@@ -1,0 +1,46 @@
+Lance le workflow défini dans le fichier suivant :
+
+```yaml
+name: feature-development
+description: "Développement d'une nouvelle fonctionnalité — de la spécification à la validation"
+trigger: /feature
+output_dir: "{cohesium_output}/feature_{timestamp}"
+steps:
+  - step: 1
+    agent: pm
+    action: "Rédiger la spécification fonctionnelle de la nouvelle fonctionnalité"
+    outputs: [feature-spec.md, acceptance-criteria.md]
+  - step: 2
+    agent: analyst
+    action: "Analyser les exigences techniques et métier"
+    inputs: [01-pm/feature-spec.md, 01-pm/acceptance-criteria.md]
+    outputs: [requirements.md, impact-analysis.md]
+    depends_on: [1]
+  - step: 3
+    agent: architect
+    action: "Concevoir la solution technique et les choix d'architecture"
+    inputs: [02-analyst/requirements.md, 01-pm/feature-spec.md]
+    outputs: [technical-design.md, integration-plan.md]
+    depends_on: [2]
+  - step: 4
+    agent: dev-backend
+    action: "Implémenter la logique métier et les endpoints API"
+    inputs: [03-architect/technical-design.md, 02-analyst/requirements.md]
+    outputs: [implementation-notes.md, api-changes.md]
+    depends_on: [3]
+  - step: 5
+    agent: dev-frontend
+    action: "Implémenter l'interface utilisateur de la fonctionnalité"
+    inputs: [03-architect/technical-design.md, 04-dev-backend/api-changes.md, 01-pm/feature-spec.md]
+    outputs: [ui-implementation.md, component-list.md]
+    depends_on: [3, 4]
+  - step: 6
+    agent: qa
+    action: "Valider la fonctionnalité avec des tests fonctionnels et de non-régression"
+    inputs: [04-dev-backend/implementation-notes.md, 05-dev-frontend/ui-implementation.md, 01-pm/acceptance-criteria.md]
+    outputs: [test-report.md, validation-summary.md]
+    depends_on: [4, 5]
+
+```
+
+Suis les étapes dans l'ordre, en respectant les dépendances et le chaînage des livrables.

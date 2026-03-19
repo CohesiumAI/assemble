@@ -1,0 +1,34 @@
+Lance le workflow défini dans le fichier suivant :
+
+```yaml
+name: tech-debt-reduction
+description: "Réduction de la dette technique — inventaire, refactoring et validation"
+trigger: /tech-debt
+output_dir: "{cohesium_output}/tech-debt_{timestamp}"
+steps:
+  - step: 1
+    agent: architect
+    action: "Inventorier la dette technique et analyser son impact sur le système"
+    outputs: [debt-inventory.md, impact-analysis.md]
+  - step: 2
+    agent: dev-fullstack
+    action: "Élaborer le plan de refactoring et le guide de migration"
+    inputs: [01-architect/debt-inventory.md, 01-architect/impact-analysis.md]
+    outputs: [refactoring-plan.md, migration-guide.md]
+    depends_on: [1]
+  - step: 3
+    agent: qa
+    action: "Vérifier la couverture de tests et valider les régressions post-refactoring"
+    inputs: [02-dev-fullstack/refactoring-plan.md, 02-dev-fullstack/migration-guide.md, 01-architect/debt-inventory.md]
+    outputs: [test-coverage.md, regression-report.md]
+    depends_on: [2]
+  - step: 4
+    agent: devops
+    action: "Planifier le déploiement des changements de refactoring"
+    inputs: [02-dev-fullstack/refactoring-plan.md, 03-qa/test-coverage.md, 03-qa/regression-report.md]
+    outputs: [deployment-plan.md, rollback-strategy.md]
+    depends_on: [3]
+
+```
+
+Suis les étapes dans l'ordre, en respectant les dépendances et le chaînage des livrables.

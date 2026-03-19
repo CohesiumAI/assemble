@@ -1,0 +1,40 @@
+Lance le workflow défini dans le fichier suivant :
+
+```yaml
+name: hotfix-release
+description: "Correction d'urgence en production — diagnostic rapide, patch, validation minimale et déploiement"
+trigger: /hotfix
+output_dir: "{cohesium_output}/hotfix_{timestamp}"
+steps:
+  - step: 1
+    agent: qa
+    action: "Diagnostiquer l'incident en production et documenter les conditions de reproduction"
+    outputs: [incident-report.md, reproduction-steps.md]
+  - step: 2
+    agent: security
+    action: "Évaluer l'impact sécurité de l'incident et prioriser la correction"
+    inputs: [01-qa/incident-report.md]
+    outputs: [security-assessment.md, priority-level.md]
+    depends_on: [1]
+  - step: 3
+    agent: dev-fullstack
+    action: "Implémenter le patch correctif minimal"
+    inputs: [01-qa/incident-report.md, 01-qa/reproduction-steps.md, 02-security/priority-level.md]
+    outputs: [hotfix-patch.md, rollback-plan.md]
+    depends_on: [1, 2]
+  - step: 4
+    agent: qa
+    action: "Valider le patch avec un sous-ensemble de tests de non-régression critiques"
+    inputs: [03-dev-fullstack/hotfix-patch.md, 01-qa/reproduction-steps.md]
+    outputs: [minimal-test-report.md, validation-status.md]
+    depends_on: [3]
+  - step: 5
+    agent: devops
+    action: "Déployer le hotfix en production avec rollback prêt et monitoring renforcé"
+    inputs: [03-dev-fullstack/hotfix-patch.md, 03-dev-fullstack/rollback-plan.md, 04-qa/validation-status.md]
+    outputs: [deployment-log.md, monitoring-checklist.md]
+    depends_on: [4]
+
+```
+
+Suis les étapes dans l'ordre, en respectant les dépendances et le chaînage des livrables.

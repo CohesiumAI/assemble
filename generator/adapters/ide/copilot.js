@@ -6,7 +6,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { prepareAgent, renderAgent, renderOrchestrator, marvelSlug, marvelDisplayName, agentId, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions } = require('../../lib/template-engine');
+const { prepareAgent, renderAgent, renderOrchestrator, marvelSlug, marvelDisplayName, agentId, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions, renderCommandRegistry } = require('../../lib/template-engine');
 
 module.exports = {
   name: 'copilot',
@@ -65,6 +65,8 @@ module.exports = {
       const desc = workflowField(workflow.raw, 'description');
       main += `- **${slug}** — ${desc}\n`;
     }
+
+    main += '\n' + renderCommandRegistry(agents, skills, workflows);
 
     main += `\n## Répertoire de sortie\n\nLivrables → \`${config.output_dir || './cohesium-output'}\`\n`;
     fs.writeFileSync(path.join(githubDir, 'copilot-instructions.md'), main, 'utf-8');

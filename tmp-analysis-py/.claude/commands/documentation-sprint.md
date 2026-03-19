@@ -1,0 +1,41 @@
+Lance le workflow défini dans le fichier suivant :
+
+```yaml
+name: documentation-sprint
+description: "Sprint de documentation — inventaire, rédaction, revue et publication"
+trigger: /doc-sprint
+output_dir: "{cohesium_output}/doc-sprint_{timestamp}"
+steps:
+  - step: 1
+    agent: analyst
+    action: "Inventorier la documentation existante, identifier les manques et prioriser"
+    outputs: [doc-inventory.md, gap-analysis.md, doc-plan.md]
+  # Steps 2 and 3 can run in parallel
+  - step: 2
+    agent: architect
+    action: "Rédiger ou mettre à jour la documentation d'architecture (ADR, diagrammes, stack)"
+    inputs: [01-analyst/doc-plan.md, 01-analyst/gap-analysis.md]
+    outputs: [architecture-docs.md, adr-index.md]
+    depends_on: [1]
+  - step: 3
+    agent: dev-fullstack
+    action: "Rédiger ou mettre à jour la documentation technique (API, README, guides de contribution)"
+    inputs: [01-analyst/doc-plan.md, 01-analyst/gap-analysis.md]
+    outputs: [api-docs.md, readme-update.md, contributing-guide.md]
+    depends_on: [1]
+  - step: 4
+    agent: copywriter
+    action: "Relire, clarifier et harmoniser le style de toute la documentation produite"
+    inputs: [02-architect/architecture-docs.md, 03-dev-fullstack/api-docs.md, 03-dev-fullstack/readme-update.md]
+    outputs: [edited-docs.md, style-notes.md]
+    depends_on: [2, 3]
+  - step: 5
+    agent: devops
+    action: "Publier la documentation sur le site de docs et configurer la CI/CD docs"
+    inputs: [04-copywriter/edited-docs.md, 03-dev-fullstack/api-docs.md]
+    outputs: [docs-deployment.md, ci-docs-config.md]
+    depends_on: [4]
+
+```
+
+Suis les étapes dans l'ordre, en respectant les dépendances et le chaînage des livrables.

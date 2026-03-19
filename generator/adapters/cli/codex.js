@@ -6,7 +6,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { prepareAgent, renderAsRules, renderOrchestrator, agentId, marvelDisplayName, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions } = require('../../lib/template-engine');
+const { prepareAgent, renderAsRules, renderOrchestrator, agentId, marvelDisplayName, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions, renderCommandRegistry } = require('../../lib/template-engine');
 
 module.exports = {
   name: 'codex',
@@ -69,6 +69,8 @@ module.exports = {
         content += renderWorkflowInstructions(workflow, agentLookup, config);
       }
     }
+
+    content += renderCommandRegistry(agents, skills, workflows);
 
     fs.writeFileSync(path.join(projectDir, 'AGENTS.md'), content, 'utf-8');
   },

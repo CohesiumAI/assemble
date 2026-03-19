@@ -6,7 +6,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { prepareAgent, agentId, marvelSlug, marvelDisplayName, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions, renderOrchestrator } = require('../../lib/template-engine');
+const { prepareAgent, agentId, marvelSlug, marvelDisplayName, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions, renderOrchestrator, renderCommandRegistry } = require('../../lib/template-engine');
 
 module.exports = {
   name: 'kiro',
@@ -88,6 +88,9 @@ module.exports = {
       teams += `- **${display}** (${marvelSlug(agent)}) — ${id} — ${desc}\n`;
     }
     fs.writeFileSync(path.join(kiroSteeringDir, 'teams.md'), teams, 'utf-8');
+
+    // ── Command registry ───────────────────────────────────────────────
+    fs.writeFileSync(path.join(kiroSteeringDir, 'commands.md'), renderCommandRegistry(agents, skills, workflows), 'utf-8');
   },
 
   validate(projectDir) {

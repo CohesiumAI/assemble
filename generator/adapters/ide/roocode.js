@@ -6,7 +6,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { prepareAgent, renderAgent, renderOrchestrator, marvelSlug, marvelDisplayName, agentId, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions } = require('../../lib/template-engine');
+const { prepareAgent, renderAgent, renderOrchestrator, marvelSlug, marvelDisplayName, agentId, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions, renderCommandRegistry } = require('../../lib/template-engine');
 
 module.exports = {
   name: 'roocode',
@@ -99,6 +99,9 @@ module.exports = {
       content += renderWorkflowInstructions(workflow, agentLookup, config);
       fs.writeFileSync(path.join(rooDir, `rules-workflow-${slug}.md`), content, 'utf-8');
     }
+
+    // ── Command registry ────────────────────────────────────────────────
+    fs.writeFileSync(path.join(rooDir, 'rules-commands.md'), renderCommandRegistry(agents, skills, workflows), 'utf-8');
 
     // ── .roomodes JSON ────────────────────────────────────────────────────
     fs.writeFileSync(

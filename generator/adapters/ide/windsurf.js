@@ -7,7 +7,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { prepareAgent, renderAgent, renderWorkflow, renderOrchestrator, marvelSlug, marvelDisplayName, agentId, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions } = require('../../lib/template-engine');
+const { prepareAgent, renderAgent, renderWorkflow, renderOrchestrator, marvelSlug, marvelDisplayName, agentId, skillSlug, workflowSlug, workflowField, buildAgentLookup, renderWorkflowInstructions, renderCommandRegistry } = require('../../lib/template-engine');
 
 module.exports = {
   name: 'windsurf',
@@ -67,6 +67,8 @@ module.exports = {
       const desc = workflowField(workflow.raw, 'description');
       rules += `- **${slug}** — ${desc}\n`;
     }
+
+    rules += '\n' + renderCommandRegistry(agents, skills, workflows);
 
     rules += `\n## Output\n\nLivrables → \`${config.output_dir || './cohesium-output'}\`\n`;
     fs.writeFileSync(path.join(projectDir, '.windsurfrules'), rules, 'utf-8');

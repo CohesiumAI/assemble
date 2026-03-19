@@ -190,7 +190,176 @@ module.exports = {
       fs.writeFileSync(path.join(skillDir, 'SKILL.md'), content, 'utf-8');
     }
 
-    // ── 4. .claude/rules/orchestrator.md ──────────────────────────────────────
+    // ── 4. Agent invocation skills (.claude/skills/agent-{id}/SKILL.md) ──────
+
+    for (const agent of agents) {
+      const id = this._agentId(agent);
+      const marvelSlug = this._marvelSlug(agent);
+      const displayName = this._marvelDisplayName(agent);
+      const desc = agent.meta.description || '';
+
+      const skillDir = path.join(skillsDir, `agent-${id}`);
+      fs.mkdirSync(skillDir, { recursive: true });
+
+      let content = '---\n';
+      content += `name: agent-${id}\n`;
+      content += `description: "Invoke ${displayName} — ${desc.replace(/"/g, '\\"')}"\n`;
+      content += `user-invocable: true\n`;
+      content += '---\n\n';
+      content += `Read and adopt the full role defined in \`.claude/agents/${marvelSlug}/AGENT.md\`.\n\n`;
+      content += `You are **${displayName}**. Respond in character with this agent's expertise, posture, frameworks, and output format.\n\n`;
+      content += `Apply this role to the following request:\n\n`;
+      content += `$ARGUMENTS\n`;
+
+      fs.writeFileSync(path.join(skillDir, 'SKILL.md'), content, 'utf-8');
+    }
+
+    // ── 5. Session command skills ─────────────────────────────────────────
+
+    const sessionCommands = {
+      summon: {
+        desc: 'Add an agent or team to the current party mode session',
+        body: 'Add the specified agent or team to the current active session.\n\nThe agent joins the conversation and can see the full history. Update the session footer.\n\nAgent or team to add: $ARGUMENTS',
+      },
+      dismiss: {
+        desc: 'Remove an agent from session, or close the entire session',
+        body: 'If an agent name is provided, remove that agent from the session and update the footer.\nIf no argument is provided, close the entire session — all agents leave and the footer is removed.\n\n$ARGUMENTS',
+      },
+      who: {
+        desc: 'Display all agents currently active in the session',
+        body: 'Display a detailed table of all agents currently in the active party mode session, including their Marvel name, role, and when they joined.',
+      },
+    };
+
+    for (const [cmd, info] of Object.entries(sessionCommands)) {
+      const skillDir = path.join(skillsDir, cmd);
+      fs.mkdirSync(skillDir, { recursive: true });
+      let content = '---\n';
+      content += `name: ${cmd}\n`;
+      content += `description: "${info.desc}"\n`;
+      content += `user-invocable: true\n`;
+      content += '---\n\n';
+      content += info.body + '\n';
+      fs.writeFileSync(path.join(skillDir, 'SKILL.md'), content, 'utf-8');
+    }
+
+    // ── 6. Meta command skills ────────────────────────────────────────────
+
+    const metaCommands = {
+      team: { desc: 'Display the full Cohesium AI team roster', body: '' },
+      'team-dev': { desc: 'Display the Dev team', body: '' },
+      'team-ops': { desc: 'Display the Ops & Quality team', body: '' },
+      'team-product': { desc: 'Display the Product & Strategy team', body: '' },
+      'team-marketing': { desc: 'Display the Marketing & Growth team', body: '' },
+      'team-content': { desc: 'Display the Content & Communication team', body: '' },
+      'team-data': { desc: 'Display the Data & AI team', body: '' },
+      'team-business': { desc: 'Display the Business & Operations team', body: '' },
+      'team-design': { desc: 'Display the Design team', body: '' },
+      status: { desc: 'Show current workflow or session status', body: 'Display the status of the current workflow or party mode session. If no workflow/session is active, say so.' },
+      help: { desc: 'Show the complete command catalog', body: '' },
+      agents: { desc: 'List all available agents', body: '' },
+      skills: { desc: 'List all available skills', body: '' },
+      workflows: { desc: 'List all available workflows', body: '' },
+      handoff: { desc: 'Manual handoff to a specific agent', body: 'Transfer the current task to the specified agent. Read their definition and continue the work in their persona.\n\nAgent: $ARGUMENTS' },
+    };
+
+    // Build team roster for team commands
+    let teamRoster = '# Cohesium AI — Team Roster\n\n';
+    teamRoster += 'Display the following team roster:\n\n';
+    for (const agent of agents) {
+      const slug = this._marvelSlug(agent);
+      const display = this._marvelDisplayName(agent);
+      const id = this._agentId(agent);
+      const desc = (agent.meta.description || '').split('—')[0].trim();
+      teamRoster += `- **${display}** (\`@${slug}\` / \`/agent-${id}\`) — ${desc}\n`;
+    }
+
+    // Build command catalog for /help
+    let helpContent = '# Cohesium AI — Command Catalog\n\n';
+    helpContent += 'Display this complete command reference to the user:\n\n';
+    helpContent += '## Agent Commands (31)\n\n';
+    for (const agent of agents) {
+      const id = this._agentId(agent);
+      const display = this._marvelDisplayName(agent);
+      helpContent += `- \`/agent-${id}\` — ${display}\n`;
+    }
+    helpContent += '\n## Workflow Commands (15)\n\n';
+    for (const workflow of workflows) {
+      const slug = this._workflowSlug(workflow);
+      const desc = this._yamlField(workflow.raw, 'description');
+      helpContent += `- \`/${slug}\` — ${desc}\n`;
+    }
+    helpContent += '\n## Skill Commands\n\n';
+    for (const skill of allSkills) {
+      const slug = this._skillSlug(skill);
+      const desc = (skill.meta.description || '').split('—')[0].trim();
+      helpContent += `- \`/${slug}\` — ${desc}\n`;
+    }
+    helpContent += '\n## Session Commands\n\n';
+    helpContent += '- `/party <request>` — Open multi-agent session\n';
+    helpContent += '- `/summon <agent>` — Add agent to session\n';
+    helpContent += '- `/dismiss [agent]` — Remove agent or close session\n';
+    helpContent += '- `/who` — Show active agents\n';
+    helpContent += '\n## Meta Commands\n\n';
+    helpContent += '- `/team` — Full roster · `/team-<name>` — Specific team\n';
+    helpContent += '- `/status` — Workflow status · `/help` — This catalog\n';
+    helpContent += '- `/agents` · `/skills` · `/workflows` — List available items\n';
+    helpContent += '- `/handoff <agent>` — Transfer task to agent\n';
+
+    // Agent listing for /agents
+    let agentsListContent = '# Available Agents\n\nDisplay this list:\n\n';
+    for (const agent of agents) {
+      const slug = this._marvelSlug(agent);
+      const display = this._marvelDisplayName(agent);
+      const id = this._agentId(agent);
+      const desc = (agent.meta.description || '').split('—')[0].trim();
+      agentsListContent += `- **${display}** (\`@${slug}\`) — ${id} — ${desc}\n`;
+    }
+
+    // Skills listing for /skills
+    let skillsListContent = '# Available Skills\n\nDisplay this list:\n\n';
+    for (const skill of allSkills) {
+      const slug = this._skillSlug(skill);
+      const desc = (skill.meta.description || '').split('—')[0].trim();
+      skillsListContent += `- \`/${slug}\` — ${desc}\n`;
+    }
+
+    // Workflows listing for /workflows
+    let workflowsListContent = '# Available Workflows\n\nDisplay this list:\n\n';
+    for (const workflow of workflows) {
+      const slug = this._workflowSlug(workflow);
+      const desc = this._yamlField(workflow.raw, 'description');
+      workflowsListContent += `- \`/${slug}\` — ${desc}\n`;
+    }
+
+    // Assign specific content to meta commands
+    metaCommands.team.body = teamRoster;
+    metaCommands['team-dev'].body = teamRoster + '\nFilter: show only Dev team agents (architect, dev-backend, dev-frontend, dev-fullstack, dev-mobile, db).';
+    metaCommands['team-ops'].body = teamRoster + '\nFilter: show only Ops team agents (devops, qa, security, automation).';
+    metaCommands['team-product'].body = teamRoster + '\nFilter: show only Product team agents (pm, analyst, scrum, legal).';
+    metaCommands['team-marketing'].body = teamRoster + '\nFilter: show only Marketing team agents (marketing, growth, ads, seo, content-seo, geo-aio).';
+    metaCommands['team-content'].body = teamRoster + '\nFilter: show only Content team agents (copywriter, brand, storytelling, social).';
+    metaCommands['team-data'].body = teamRoster + '\nFilter: show only Data team agents (data, ai-engineer).';
+    metaCommands['team-business'].body = teamRoster + '\nFilter: show only Business team agents (customer-success, finance, pr-comms).';
+    metaCommands['team-design'].body = teamRoster + '\nFilter: show only Design team agents (ux).';
+    metaCommands.help.body = helpContent;
+    metaCommands.agents.body = agentsListContent;
+    metaCommands.skills.body = skillsListContent;
+    metaCommands.workflows.body = workflowsListContent;
+
+    for (const [cmd, info] of Object.entries(metaCommands)) {
+      const skillDir = path.join(skillsDir, cmd);
+      fs.mkdirSync(skillDir, { recursive: true });
+      let content = '---\n';
+      content += `name: ${cmd}\n`;
+      content += `description: "${info.desc}"\n`;
+      content += `user-invocable: true\n`;
+      content += '---\n\n';
+      content += info.body + '\n';
+      fs.writeFileSync(path.join(skillDir, 'SKILL.md'), content, 'utf-8');
+    }
+
+    // ── 7. .claude/rules/orchestrator.md ──────────────────────────────────────
 
     if (orchestrator) {
       const orchestratorContent = renderOrchestrator(orchestrator, config);
