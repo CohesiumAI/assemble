@@ -59,6 +59,21 @@ function print(msg) {
 async function runUpdate(projectDir) {
   const fs = require('fs');
   const configPath = path.join(projectDir, '.assemble.yaml');
+  const legacyPath = path.join(projectDir, '.cohesium.yaml');
+
+  // Migration: rename old .cohesium.yaml → .assemble.yaml
+  if (!fs.existsSync(configPath) && fs.existsSync(legacyPath)) {
+    print('\x1b[33m  🔄 Migrating .cohesium.yaml → .assemble.yaml\x1b[0m');
+    let content = fs.readFileSync(legacyPath, 'utf-8');
+    content = content
+      .replace(/cohesium-output/g, 'assemble-output')
+      .replace(/Cohesium AI/g, 'Assemble')
+      .replace(/cohesium\.yaml/g, 'assemble.yaml');
+    fs.writeFileSync(configPath, content, 'utf-8');
+    fs.unlinkSync(legacyPath);
+    print('\x1b[32m  ✓ Config migrated\x1b[0m');
+  }
+
   if (!fs.existsSync(configPath)) {
     print('\x1b[31m  ✗ No installation found (.assemble.yaml missing)\x1b[0m');
     rl.close();
@@ -125,8 +140,8 @@ async function main() {
     return;
   }
 
-  if (fs.existsSync('.assemble.yaml')) {
-    print('📄 Existing installation detected: .assemble.yaml\n');
+  if (fs.existsSync('.assemble.yaml') || fs.existsSync('.cohesium.yaml')) {
+    print('📄 Existing installation detected\n');
     print('  1) Update (keeps your preferences)');
     print('  2) New installation\n');
     const choice = await ask('Your choice', '1');

@@ -177,6 +177,20 @@ function generate() {
 
   // ─── Mode update : lire .assemble.yaml existant ─────────────────────────
   if (args.update) {
+    // Migration: rename old .cohesium.yaml → .assemble.yaml if needed
+    const legacyConfigPath = path.join(projectDir, '.cohesium.yaml');
+    if (!fs.existsSync(configPath) && fs.existsSync(legacyConfigPath)) {
+      console.log('🔄 Migrating .cohesium.yaml → .assemble.yaml');
+      let legacyContent = fs.readFileSync(legacyConfigPath, 'utf-8');
+      legacyContent = legacyContent
+        .replace(/cohesium-output/g, 'assemble-output')
+        .replace(/Cohesium AI/g, 'Assemble')
+        .replace(/cohesium\.yaml/g, 'assemble.yaml');
+      fs.writeFileSync(configPath, legacyContent, 'utf-8');
+      fs.unlinkSync(legacyConfigPath);
+      console.log('  ✓ Config migrated successfully');
+    }
+
     if (!fs.existsSync(configPath)) {
       console.error('❌ No installation found (.assemble.yaml missing).');
       console.error('   Run an installation first: npx create-assemble');
