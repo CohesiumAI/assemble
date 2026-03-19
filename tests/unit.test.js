@@ -73,6 +73,14 @@ test('agency profile selects marketing-focused agents', () => {
   assert(result.agents.includes('seo'), 'agency should include seo');
 });
 
+test('enterprise profile governance can be overridden to none via explicit key', () => {
+  // Simulates: user picks enterprise, then forces governance: none in wizard
+  // The yaml will have governance: "none" explicitly → _explicitKeys has it → profile doesn't override
+  const config = { profile: 'enterprise', governance: 'none', _explicitKeys: new Set(['profile', 'governance']) };
+  const result = resolveProfile(config);
+  assert(result.governance === 'none', `explicit governance: none should win over enterprise default strict, got: ${result.governance}`);
+});
+
 test('unknown profile returns config unchanged', () => {
   const config = { profile: 'nonexistent', agents: 'all' };
   const result = resolveProfile(config);

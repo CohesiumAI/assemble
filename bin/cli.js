@@ -293,12 +293,10 @@ async function main() {
   if (profile === 'custom') {
     lines.push('agents: all');
     lines.push('workflows: all');
-    lines.push(`governance: "${governance}"`);
   }
-  // If a non-custom profile is selected but governance was explicitly changed, write it
-  if (profile !== 'custom' && governance !== 'none') {
-    lines.push(`governance: "${governance}"`);
-  }
+  // Always write governance — it's an explicit user choice from the wizard,
+  // even for non-custom profiles (e.g. enterprise user forcing none)
+  lines.push(`governance: "${governance}"`);
   lines.push(`mcp: ${mcp ? 'true' : 'false'}`);
   lines.push(`memory: ${memory ? 'true' : 'false'}`);
   lines.push(`metrics: ${metrics ? 'true' : 'false'}`);
