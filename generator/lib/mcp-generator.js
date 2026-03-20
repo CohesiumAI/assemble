@@ -162,22 +162,23 @@ const DOMAIN_KEYWORDS = {
   "iron-fist": ["pricing", "budget", "p&l", "finance"],
 };
 
-// Workflow keyword mapping for direct workflow matching
+// Workflow keyword mapping — generated dynamically from actual workflow files
 const WORKFLOW_KEYWORDS = {
-  "mvp": ["mvp", "new product", "launch product", "nouveau produit"],
-  "feature": ["feature", "functionality", "fonctionnalité", "add feature"],
-  "bugfix": ["bug", "fix", "error", "erreur", "corriger"],
-  "review": ["review", "code review", "revue de code"],
-  "security": ["security", "audit", "vulnerability", "pentest", "red team", "hacking"],
-  "seo": ["seo", "search engine", "ranking", "indexation"],
-  "campaign": ["campaign", "marketing campaign", "campagne"],
-  "sprint": ["sprint", "iteration", "planning", "agile"],
-  "refactor": ["refactor", "tech debt", "dette technique", "migration"],
-  "release": ["release", "deploy", "production", "mise en production"],
-  "hotfix": ["hotfix", "urgent fix", "incident", "patch"],
-  "upgrade": ["upgrade", "dependency", "npm update", "cve"],
-  "docs": ["documentation", "doc sprint", "readme"],
-  "experiment": ["experiment", "a/b test", "hypothesis", "feature flag"],
+${workflows.map(wf => {
+    const raw = wf.raw || '';
+    const triggerMatch = raw.match(/trigger:\s*\/?([\w-]+)/);
+    const trigger = triggerMatch ? triggerMatch[1] : wf.fileName.replace(/\.(yaml|yml)$/, '');
+    const nameMatch = raw.match(/name:\s*"?([^"\n]+)"?/);
+    const name = nameMatch ? nameMatch[1].trim().toLowerCase() : trigger;
+    const descMatch = raw.match(/description:\s*"?([^"\n]+)"?/);
+    const desc = descMatch ? descMatch[1].trim().toLowerCase() : '';
+    // Build keyword list from trigger, name words, and description words
+    const keywords = new Set([trigger.replace(/-/g, ' ')]);
+    name.split(/[\s—,]+/).filter(w => w.length > 3).forEach(w => keywords.add(w));
+    desc.split(/[\s—,]+/).filter(w => w.length > 3).forEach(w => keywords.add(w));
+    const kwArray = [...keywords].map(k => `"${k.replace(/"/g, '\\"')}"`).join(', ');
+    return `    "${trigger}": [${kwArray}]`;
+  }).join(',\n')}
 };
 
 function routeRequest(request) {
@@ -204,7 +205,7 @@ function routeRequest(request) {
     const wfScore = keywords.filter(kw => lower.includes(kw)).length;
     if (wfScore > bestWfScore) {
       bestWfScore = wfScore;
-      matchedWorkflow = "/" + wf;
+      matchedWorkflow = wf.startsWith("/") ? wf : "/" + wf;
     }
   }
 

@@ -288,7 +288,11 @@ async function main() {
 
     const groupLabels = { 0: 'IDE:', [PLATFORMS.ide.length]: 'CLI:' };
     const allIndices = new Set(ALL_PLATFORMS.map((_, i) => i));
-    const platformSelections = await multiSelect(ALL_PLATFORMS, groupLabels, allIndices);
+    let platformSelections = await multiSelect(ALL_PLATFORMS, groupLabels, allIndices);
+    if (platformSelections.length === 0) {
+      platformSelections = ALL_PLATFORMS.map((p, i) => p);
+      process.stdout.write('\x1b[33m  ⚠️  No platform selected. Defaulting to all.\x1b[0m\n');
+    }
     selectedPlatforms = platformSelections.map(p => p[0]);
 
     rl.resume();
@@ -310,6 +314,10 @@ async function main() {
         const idx = parseInt(n) - 1;
         return idx >= 0 && idx < ALL_PLATFORMS.length ? ALL_PLATFORMS[idx][0] : null;
       }).filter(Boolean);
+    }
+    if (selectedPlatforms.length === 0) {
+      print('\x1b[33m  ⚠️  No valid platform selected. Defaulting to all platforms.\x1b[0m');
+      selectedPlatforms = ALL_PLATFORMS.map(p => p[0]);
     }
     print(`\x1b[32m  ✓ ${selectedPlatforms.length} platforms selected\x1b[0m`);
   }

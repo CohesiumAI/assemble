@@ -926,6 +926,47 @@ console.log('\nTest 25: Audit trail for governance strict');
   cleanTmpDir();
 }
 
+// ── Test 26: MCP routing covers all workflows ────────────────────────────
+
+console.log('\nTest 26: MCP routing workflow coverage');
+{
+  const dir = createTmpDir();
+  fs.mkdirSync(dir, { recursive: true });
+  const configContent = `version: "1.0.0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nmcp: true\ninstalled_at: "2026-03-19"\n`;
+  fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
+  run(['--project', dir, '--update']);
+
+  test('MCP: WORKFLOW_KEYWORDS covers all 15 workflows', () => {
+    const mcpContent = fs.readFileSync(path.join(dir, '.assemble', 'mcp-server.js'), 'utf-8');
+    // Check that all workflow triggers from src/workflows/ appear in WORKFLOW_KEYWORDS
+    const wfDir = path.join(ROOT, 'src', 'workflows');
+    const wfFiles = fs.readdirSync(wfDir).filter(f => f.endsWith('.yaml'));
+    const missing = [];
+    for (const file of wfFiles) {
+      const raw = fs.readFileSync(path.join(wfDir, file), 'utf-8');
+      const triggerMatch = raw.match(/trigger:\s*\/?([\w-]+)/);
+      const trigger = triggerMatch ? triggerMatch[1] : file.replace(/\.yaml$/, '');
+      // The trigger should appear as a key in WORKFLOW_KEYWORDS
+      if (!mcpContent.includes(`"${trigger}":`)) {
+        missing.push(trigger);
+      }
+    }
+    assert(missing.length === 0, `WORKFLOW_KEYWORDS missing: ${missing.join(', ')}`);
+  });
+
+  test('MCP: routeRequest returns matched_workflow', () => {
+    const mcpContent = fs.readFileSync(path.join(dir, '.assemble', 'mcp-server.js'), 'utf-8');
+    assert(mcpContent.includes('matched_workflow'), 'Should contain matched_workflow in routing response');
+  });
+
+  test('MCP: routeRequest uses weighted scoring', () => {
+    const mcpContent = fs.readFileSync(path.join(dir, '.assemble', 'mcp-server.js'), 'utf-8');
+    assert(mcpContent.includes('kw.length'), 'Should use keyword length for weighted scoring');
+  });
+
+  cleanTmpDir();
+}
+
 // ── Summary ──────────────────────────────────────────────────────────────────
 
 console.log('');
