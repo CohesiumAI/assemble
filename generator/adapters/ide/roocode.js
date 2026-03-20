@@ -43,12 +43,12 @@ module.exports = {
       const id = agentId(agent);
       const description = agent.meta.description || '';
 
-      const roleDefinition = (agent.sections || {})['Identité']
-        || (agent.sections || {})['Identity']
+      const roleDefinition = (agent.sections || {})['Identity']
+        || (agent.sections || {})['Identité']  // legacy FR fallback
         || description;
 
-      const customInstructions = (agent.sections || {})['Posture']
-        || (agent.sections || {})['Approach']
+      const customInstructions = (agent.sections || {})['Approach']
+        || (agent.sections || {})['Posture']  // legacy FR fallback
         || '';
 
       customModes.push({
@@ -65,8 +65,8 @@ module.exports = {
 
     // ── Orchestrator mode ─────────────────────────────────────────────────
     if (orchestrator) {
-      const orchRole = (orchestrator.sections || {})['Identité']
-        || (orchestrator.sections || {})['Identity']
+      const orchRole = (orchestrator.sections || {})['Identity']
+        || (orchestrator.sections || {})['Identité']  // legacy FR fallback
         || (orchestrator.meta || {}).description || 'Project Orchestrator';
 
       customModes.push({
