@@ -102,14 +102,14 @@ $ npx create-assemble
 
 🦸 Assemble — AI Agent Orchestrator
 
-▸ 1/11 — Team language
+▸ 1/12 — Team language
   Team language: english
 
-▸ 3/11 — Team profile
+▸ 3/12 — Team profile
   1) startup   2) enterprise   3) agency   4) custom
   Profile: 4
 
-▸ 4/11 — IDE/CLI selection
+▸ 4/12 — IDE/CLI selection
   Your choice: 0    # → all 21 platforms
 
 ✅ Installation complete!
@@ -347,7 +347,7 @@ assemble/
       template-engine.js      # Template rendering (memory, metrics, governance strict)
     adapters/           # 20 platform adapters (IDE + CLI)
   bin/
-    cli.js              # Interactive installer (11-step wizard)
+    cli.js              # Interactive installer (12-step wizard)
     doctor.js           # Health check (npx create-assemble doctor)
     diff.js             # Dry run diff (npx create-assemble diff)
     ls.js               # List active config (npx create-assemble ls)
