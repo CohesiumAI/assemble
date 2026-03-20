@@ -470,6 +470,16 @@ function renderRoutingRules(agents, workflows, config) {
     out += '- Cross-session memory (if enabled)\n\n';
   }
 
+  // Escalation Protocol
+  out += '## Escalation Protocol — Doctor Doom\n\n';
+  out += '`@doctor-doom` is the team\'s strategic stress-tester — a circuit-breaker for critical decisions.\n';
+  out += 'He is NOT in the domain mapping and is NOT auto-selected. Invoke him only when:\n';
+  out += '- An irreversible decision needs formal demolition (architecture, pricing, production deploy)\n';
+  out += '- @deadpool flags RED and recommends escalation\n';
+  out += '- The user explicitly requests `@doctor-doom` or `/doom`\n';
+  out += '- A workflow is HIGH risk and touches production\n\n';
+  out += 'When both @deadpool (RED) and @doctor-doom (REJECTED) flag the same proposal, the decision is **BLOCKED**.\n\n';
+
   // Sub-Agent Delegation
   out += '## Sub-Agent Delegation\n\n';
   out += 'When a task requires a specific agent\'s expertise during workflow execution:\n';
@@ -529,7 +539,7 @@ function renderCompactHelp(agents, workflows) {
     'Data': ['data', 'ai-engineer'],
     'Design': ['ux'],
     'Business': ['customer-success', 'finance', 'pr-comms'],
-    'Meta': ['contrarian'],
+    'Meta': ['contrarian', 'doom'],
   };
 
   const agentMap = {};

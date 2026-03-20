@@ -1,6 +1,6 @@
 # Agent Catalog — 33 Specialized Agents
 
-> **33 agents** (30 specialists + 1 red team + 1 contrarian + 1 orchestrator) organized into **9 teams**.
+> **34 agents** (30 specialists + 1 red team + 1 contrarian + 1 stress-tester + 1 orchestrator) organized into **9 teams**.
 
 ---
 
@@ -39,8 +39,9 @@
 | 29 | `customer-success` | Pepper Potts | Senior Customer Success Manager | `@pepper-potts` | business |
 | 30 | `finance` | Iron Fist | Senior CFO / Financial Director | `@iron-fist` | business |
 | 31 | `pr-comms` | Phil Coulson | Senior Communications Director | `@phil-coulson` | business |
-| 32 | `contrarian` | Deadpool | Devil's Advocate | `@deadpool` | meta |
-| 33 | `jarvis` | Jarvis (J.A.R.V.I.S.) | Chief Orchestrator | `@jarvis` | meta |
+| 32 | `contrarian` | Deadpool | Devil's Advocate (permanent) | `@deadpool` | meta |
+| 33 | `doom` | Doctor Doom | Strategic Stress-Tester (on-demand) | `@doctor-doom` | meta |
+| 34 | `jarvis` | Jarvis (J.A.R.V.I.S.) | Chief Orchestrator | `@jarvis` | meta |
 
 ---
 

@@ -1,6 +1,6 @@
 # Command Reference — 10 Commands
 
-> **10 primary commands** that expose the full power of 33 agents, 15 workflows, and 28 skills. Jarvis smart routing handles complexity assessment and agent selection.
+> **10 primary commands** that expose the full power of 34 agents, 15 workflows, and 28 skills. Jarvis smart routing handles complexity assessment and agent selection.
 
 ---
 
@@ -82,7 +82,7 @@ When you type `/go <request>`, Jarvis:
    - **IMPLEMENT** (Dev agents) → code + tests
    - **CLOSE** (Jarvis) → produces `_quality.md` (automatic)
 
-3. **Selects and chains agents** from the 33-agent roster based on domain matching.
+3. **Selects and chains agents** from the 34-agent roster based on domain matching.
 
 4. **If YOLO mode is enabled** (`yolo: true` in `.assemble.yaml`):
    - Executes all steps autonomously without pausing for validation

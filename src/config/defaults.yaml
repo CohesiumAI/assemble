@@ -76,6 +76,7 @@ agents:
     - finance
     - pr-comms
     - redteam
+    - doom
 
 # Workflows enabled by default
 workflows:
