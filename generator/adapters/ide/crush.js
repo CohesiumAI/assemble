@@ -35,7 +35,7 @@ module.exports = {
       fs.writeFileSync(path.join(projectDir, '.crush', 'workflows', `${slug}.md`), content, 'utf-8');
     }
 
-    fs.writeFileSync(path.join(projectDir, '.crush', 'commands.md'), renderCommandRegistry(agents, skills, workflows, config.governance), 'utf-8');
+    fs.writeFileSync(path.join(projectDir, '.crush', 'commands.md'), renderCommandRegistry(agents, skills, workflows, config.governance, config.yolo), 'utf-8');
     if (orchestrator) {
       fs.writeFileSync(path.join(projectDir, '.crush', 'orchestrator.md'), renderOrchestrator(orchestrator, config), 'utf-8');
     }

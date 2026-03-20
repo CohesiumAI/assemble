@@ -16,6 +16,7 @@ const PROFILES = {
       'hotfix-release', 'experimentation',
     ],
     governance: 'none',
+    yolo: true,
   },
   enterprise: {
     description: 'Full team with governance for regulated environments',

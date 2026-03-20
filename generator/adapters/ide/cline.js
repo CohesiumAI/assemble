@@ -68,7 +68,7 @@ module.exports = {
       rules += `- **${slug}** — ${desc}\n`;
     }
 
-    rules += '\n' + renderCommandRegistry(agents, skills, workflows, config.governance);
+    rules += '\n' + renderCommandRegistry(agents, skills, workflows, config.governance, config.yolo);
 
     rules += `\n## Output Directory\n\nDeliverables → \`${config.output_dir || './assemble-output'}\`\n`;
     fs.writeFileSync(path.join(projectDir, '.clinerules'), rules, 'utf-8');

@@ -66,7 +66,7 @@ module.exports = {
       }
     }
 
-    content += renderCommandRegistry(agents, skills, workflows, config.governance);
+    content += renderCommandRegistry(agents, skills, workflows, config.governance, config.yolo);
 
     fs.writeFileSync(path.join(projectDir, 'AGENTS.md'), content, 'utf-8');
   },

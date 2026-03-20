@@ -210,6 +210,7 @@ function generate() {
   config.mcp = config.mcp === true || config.mcp === 'true';
   config.memory = config.memory === true || config.memory === 'true';
   config.metrics = config.metrics === true || config.metrics === 'true';
+  config.yolo = config.yolo === true || config.yolo === 'true';
 
   console.log('🚀 Assemble — Configuration Generator');
   console.log(`📁 Project: ${projectDir}`);
@@ -542,6 +543,7 @@ platforms: [${config.platforms.join(', ')}]
 agents: ${config.agents || 'all'}
 workflows: ${config.workflows || 'all'}
 governance: "${config.governance || 'none'}"
+yolo: ${config.yolo ? 'true' : 'false'}
 mcp: ${config.mcp ? 'true' : 'false'}
 memory: ${config.memory ? 'true' : 'false'}
 metrics: ${config.metrics ? 'true' : 'false'}

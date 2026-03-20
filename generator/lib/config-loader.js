@@ -11,7 +11,8 @@ const DEFAULTS = {
   output_dir: './assemble-output',
   platforms: [],
   agents: 'all',
-  workflows: 'all'
+  workflows: 'all',
+  yolo: false
 };
 
 /**

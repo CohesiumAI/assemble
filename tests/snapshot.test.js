@@ -967,6 +967,64 @@ console.log('\nTest 26: MCP routing workflow coverage');
   cleanTmpDir();
 }
 
+// ── Test 27: YOLO mode ───────────────────────────────────────────────────
+
+console.log('\nTest 27: YOLO mode');
+{
+  // 27a: yolo: false — no YOLO section
+  const dirOff = createTmpDir();
+  fs.mkdirSync(dirOff, { recursive: true });
+  const configOff = `version: "1.0.0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code, cursor]\nagents: all\nworkflows: all\ngovernance: "none"\nyolo: false\ninstalled_at: "2026-03-20"\n`;
+  fs.writeFileSync(path.join(dirOff, '.assemble.yaml'), configOff);
+  run(['--project', dirOff, '--update']);
+
+  test('yolo: false — no YOLO section in routing.md', () => {
+    const routing = fs.readFileSync(path.join(dirOff, '.claude', 'rules', 'routing.md'), 'utf-8');
+    assert(!routing.includes('YOLO Mode'), 'routing.md should NOT contain YOLO Mode when yolo: false');
+  });
+
+  test('yolo: false — no YOLO section in .cursorrules', () => {
+    const rules = fs.readFileSync(path.join(dirOff, '.cursorrules'), 'utf-8');
+    assert(!rules.includes('YOLO Mode'), '.cursorrules should NOT contain YOLO Mode when yolo: false');
+  });
+
+  cleanTmpDir();
+
+  // 27b: yolo: true — YOLO section present
+  const dirOn = createTmpDir();
+  fs.mkdirSync(dirOn, { recursive: true });
+  const configOn = `version: "1.0.0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code, cursor]\nagents: all\nworkflows: all\ngovernance: "none"\nyolo: true\ninstalled_at: "2026-03-20"\n`;
+  fs.writeFileSync(path.join(dirOn, '.assemble.yaml'), configOn);
+  run(['--project', dirOn, '--update']);
+
+  test('yolo: true — YOLO section in routing.md', () => {
+    const routing = fs.readFileSync(path.join(dirOn, '.claude', 'rules', 'routing.md'), 'utf-8');
+    assert(routing.includes('YOLO Mode'), 'routing.md should contain YOLO Mode');
+    assert(routing.includes('autonomous execution'), 'should mention autonomous execution');
+    assert(routing.includes('MANDATORY STOPS'), 'should contain mandatory stop conditions');
+  });
+
+  test('yolo: true — YOLO section in .cursorrules', () => {
+    const rules = fs.readFileSync(path.join(dirOn, '.cursorrules'), 'utf-8');
+    assert(rules.includes('YOLO Mode'), '.cursorrules should contain YOLO Mode');
+  });
+
+  test('yolo: true — mandatory stops include production safety', () => {
+    const routing = fs.readFileSync(path.join(dirOn, '.claude', 'rules', 'routing.md'), 'utf-8');
+    assert(routing.includes('Destructive production'), 'should mention destructive production actions');
+    assert(routing.includes('Missing information'), 'should mention missing information');
+  });
+
+  test('yolo: true — traceability preserved', () => {
+    const routing = fs.readFileSync(path.join(dirOn, '.claude', 'rules', 'routing.md'), 'utf-8');
+    assert(routing.includes('_manifest.yaml'), 'should preserve manifest tracking');
+    assert(routing.includes('_summary.md'), 'should preserve summary');
+    assert(routing.includes('_quality.md'), 'should preserve quality checkpoint');
+  });
+
+  cleanTmpDir();
+}
+
 // ── Summary ──────────────────────────────────────────────────────────────────
 
 console.log('');

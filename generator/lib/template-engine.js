@@ -247,7 +247,7 @@ function renderWorkflowInstructions(workflow, agentLookup, config) {
  * @param {Array} workflows - Workflow list
  * @param {string} governance - Governance level ('none' or 'standard')
  */
-function renderCommandRegistry(agents, skills, workflows, governance = 'none') {
+function renderCommandRegistry(agents, skills, workflows, governance = 'none', yolo = false) {
   let out = '## Command Reference\n\n';
   out += 'When the user types a command starting with `/`, execute it as described below.\n\n';
 
@@ -289,6 +289,28 @@ function renderCommandRegistry(agents, skills, workflows, governance = 'none') {
   out += '  4. IMPLEMENT → code + tests\n';
   out += '  5. CLOSE → `_quality.md` (delivered, validated, risks remaining, lessons learned)\n\n';
   out += 'Phase 5 CLOSE is automatic for all COMPLEX workflows (4+ steps).\n';
+
+  // YOLO mode (if enabled)
+  if (yolo) {
+    out += '\n### YOLO Mode (ACTIVE)\n\n';
+    out += 'This project has YOLO mode enabled. Jarvis operates **autonomously**:\n\n';
+    out += '**Autonomous execution:**\n';
+    out += '- Execute ALL workflow steps sequentially without waiting for user validation between steps\n';
+    out += '- For COMPLEX tasks: produce spec.md, plan.md, tasks.md and proceed to IMPLEMENT immediately — do NOT pause for approval\n';
+    out += '- Chain agents automatically: each agent reads the previous agent\'s outputs and continues\n';
+    out += '- If a step produces incomplete output, iterate and fix before moving to the next step\n\n';
+    out += '**Mandatory stop conditions — ALWAYS pause and ask the user:**\n';
+    out += '- 🔴 **Destructive production actions**: deployments to production, database migrations on live data, irreversible deletions\n';
+    out += '- 🔴 **Missing information**: when the agent cannot proceed without human input (credentials, business decisions, ambiguous requirements)\n';
+    out += '- 🔴 **External side effects**: sending emails, posting to external APIs, creating cloud resources with cost implications\n\n';
+    out += '**What stays active in YOLO:**\n';
+    out += '- `_manifest.yaml` updated after every step (traceability)\n';
+    out += '- `_summary.md` produced at workflow end (review point)\n';
+    out += '- `_quality.md` produced for all workflows with 2+ steps\n';
+    out += '- Cross-session memory updated (if enabled)\n';
+    out += '- All agent context injection (inputs/outputs chain preserved)\n';
+    out += '- Pre-execution validation (structural checks still enforced)\n';
+  }
 
   // Governance (if enabled)
   if (governance && governance !== 'none') {
@@ -424,6 +446,29 @@ function renderRoutingRules(agents, workflows, config) {
   out += '`.claude/rules/governance/governance.md` — decision gates, risk assessment, and quality checkpoints.\n';
   out += 'Strict adds: audit trail (`_audit.md`), RBAC for sensitive agents, NIST AI RMF mapping.\n';
   out += 'Default: no governance overhead.\n\n';
+
+  // YOLO mode
+  if (config && config.yolo) {
+    out += '## YOLO Mode (ACTIVE)\n\n';
+    out += 'This project runs in **autonomous execution mode**. Jarvis orchestrates the full workflow without pausing for human validation.\n\n';
+    out += '**Behavior:**\n';
+    out += '- Execute all workflow steps end-to-end without stopping between steps\n';
+    out += '- For COMPLEX tasks: produce spec.md → plan.md → tasks.md → implement — all in one continuous flow\n';
+    out += '- Each agent reads the previous agent\'s outputs and proceeds immediately\n';
+    out += '- If a step produces incomplete or incorrect output, iterate and fix before moving on\n';
+    out += '- Use all available tools (Agent tool, MCP servers, file system) to verify your own work\n\n';
+    out += '**MANDATORY STOPS — always pause and ask the human:**\n';
+    out += '- 🔴 Destructive production actions (deploy to prod, migrate live DB, irreversible deletes)\n';
+    out += '- 🔴 Missing information only a human can provide (credentials, business decisions, ambiguous requirements)\n';
+    out += '- 🔴 External side effects with real-world impact (sending emails, creating cloud resources, posting to APIs)\n\n';
+    out += '**Always active even in YOLO:**\n';
+    out += '- `_manifest.yaml` updated after every step\n';
+    out += '- `_summary.md` at workflow end\n';
+    out += '- `_quality.md` for all workflows with 2+ steps\n';
+    out += '- Pre-execution validation (structural checks)\n';
+    out += '- Agent context injection (input/output chain)\n';
+    out += '- Cross-session memory (if enabled)\n\n';
+  }
 
   // Sub-Agent Delegation
   out += '## Sub-Agent Delegation\n\n';

@@ -96,7 +96,7 @@ module.exports = {
     fs.writeFileSync(
       path.join(commandsDir, '_commands.md'),
       '---\nname: "Command Reference"\nslug: help\ndescription: "Show command catalog and methodology"\ncategory: "meta"\n---\n\n' +
-      renderCommandRegistry(agents, skills, workflows, config.governance),
+      renderCommandRegistry(agents, skills, workflows, config.governance, config.yolo),
       'utf-8'
     );
   },

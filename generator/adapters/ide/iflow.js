@@ -47,7 +47,7 @@ module.exports = {
       fs.writeFileSync(path.join(projectDir, '.iflow', 'flows', `${slug}.md`), content, 'utf-8');
     }
 
-    fs.writeFileSync(path.join(projectDir, '.iflow', 'commands.md'), renderCommandRegistry(agents, skills, workflows, config.governance), 'utf-8');
+    fs.writeFileSync(path.join(projectDir, '.iflow', 'commands.md'), renderCommandRegistry(agents, skills, workflows, config.governance, config.yolo), 'utf-8');
     if (orchestrator) {
       fs.writeFileSync(path.join(projectDir, '.iflow', 'orchestrator.md'), renderOrchestrator(orchestrator, config), 'utf-8');
     }

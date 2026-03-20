@@ -66,7 +66,7 @@ module.exports = {
       main += `- **${slug}** — ${desc}\n`;
     }
 
-    main += '\n' + renderCommandRegistry(agents, skills, workflows, config.governance);
+    main += '\n' + renderCommandRegistry(agents, skills, workflows, config.governance, config.yolo);
 
     main += `\n## Output Directory\n\nDeliverables → \`${config.output_dir || './assemble-output'}\`\n`;
     fs.writeFileSync(path.join(githubDir, 'copilot-instructions.md'), main, 'utf-8');

@@ -94,7 +94,7 @@ module.exports = {
       gemini += `- **${slug}** — ${desc}\n`;
     }
 
-    gemini += '\n' + renderCommandRegistry(agents, skills, workflows, config.governance);
+    gemini += '\n' + renderCommandRegistry(agents, skills, workflows, config.governance, config.yolo);
 
     gemini += `\n## Output Directory\n\nDeliverables are produced in: \`${config.output_dir || './assemble-output'}\`\n`;
 

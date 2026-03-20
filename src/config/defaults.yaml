@@ -20,6 +20,9 @@ profile: "custom"
 # Governance (none = no overhead, standard = decision gates + risk assessment, strict = audit + RBAC + NIST)
 governance: "none"
 
+# YOLO mode (false = standard with validation gates, true = autonomous execution)
+yolo: false
+
 # MCP Server (false = disabled, true = generates mcp-server.js in .assemble/)
 mcp: false
 

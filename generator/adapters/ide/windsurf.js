@@ -62,7 +62,7 @@ module.exports = {
     fs.writeFileSync(path.join(projectDir, '.windsurfrules'), rules, 'utf-8');
 
     // ── Command registry in .windsurf/rules/ (not in .windsurfrules) ─────
-    fs.writeFileSync(path.join(rulesDir, 'commands.md'), renderCommandRegistry(agents, skills, workflows, config.governance), 'utf-8');
+    fs.writeFileSync(path.join(rulesDir, 'commands.md'), renderCommandRegistry(agents, skills, workflows, config.governance, config.yolo), 'utf-8');
 
     const allSkills = [...(skills.shared || []), ...(skills.specific || [])];
 
