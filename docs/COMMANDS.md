@@ -84,7 +84,13 @@ When you type `/go <request>`, Jarvis:
 
 3. **Selects and chains agents** from the 33-agent roster based on domain matching.
 
-4. **If governance is enabled** (`governance: "standard"` in `.assemble.yaml`):
+4. **If YOLO mode is enabled** (`yolo: true` in `.assemble.yaml`):
+   - Executes all steps autonomously without pausing for validation
+   - Chains agents end-to-end — you get the finished result
+   - Only stops for: destructive prod actions, missing human info, external side effects
+   - Full traceability preserved (`_manifest.yaml`, `_summary.md`, `_quality.md`)
+
+5. **If governance is enabled** (`governance: "standard"` in `.assemble.yaml`):
    - Applies change risk assessment (LOW/MEDIUM/HIGH) per workflow
    - Enforces decision gates before phase transitions
    - Produces quality checkpoints for workflows with 4+ steps

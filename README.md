@@ -26,7 +26,23 @@ Assemble by Cohesium AI is a multi-agent orchestration system that turns your de
 
 The system uses an **adapter pattern**: agent definitions, skills, and workflows are maintained as platform-agnostic source files, then a generator produces the correct configuration files for each target platform — Cursor rules, Claude Code commands, GitHub Copilot agents, and 17 others.
 
-An orchestrator named **Jarvis** serves as the single entry point. Use `/go <request>` and Jarvis assesses complexity (trivial/moderate/complex), selects the right agents, and for complex tasks applies a spec-driven methodology with gated phases (SPECIFY → PLAN → TASKS → IMPLEMENT). All 33 agents remain accessible via `@marvel-name` mentions.
+An orchestrator named **Jarvis** serves as the single entry point. **Just type `/go` and describe what you need** — Jarvis does the rest. He assesses complexity (trivial/moderate/complex), selects the right agents, chains them in the correct order, and for complex tasks applies a spec-driven methodology with gated phases (SPECIFY → PLAN → TASKS → IMPLEMENT).
+
+With **YOLO mode** (`yolo: true`), Jarvis runs the entire workflow autonomously end-to-end — no human validation between steps. He only stops for destructive production actions or when he needs information only you can provide.
+
+All 33 agents remain accessible via `@marvel-name` mentions.
+
+### `/go` — The only command you need
+
+```
+/go build a REST API for user management
+/go fix the auth bug in the login flow
+/go review the last PR for security issues
+/go develop all 5 stories from the current sprint
+/go create a complete SaaS MVP with auth, billing, and dashboard
+```
+
+Jarvis analyzes your request, picks the right agents and workflow, and executes. In YOLO mode, he chains everything autonomously — you come back to a finished result with a full audit trail.
 
 ### Why Marvel?
 
@@ -390,6 +406,7 @@ platforms: [claude-code, cursor]  # Target platforms
 agents: all                       # Activated agents (all or list)
 workflows: all                    # Activated workflows (all or list)
 governance: "none"                # none | standard | strict
+yolo: false                       # Autonomous execution (no validation gates)
 mcp: false                        # MCP server generation
 memory: false                     # Cross-session _memory.md
 metrics: false                    # Workflow _metrics.md
@@ -447,6 +464,27 @@ Set `memory: true` to enable persistent context across sessions. Generates `_mem
 ### Metrics (opt-in)
 
 Set `metrics: true` to track workflow execution metrics. Generates `_metrics.md` with tables for workflow performance and agent statistics.
+
+### YOLO Mode — Autonomous Execution (opt-in)
+
+Set `yolo: true` to enable fully autonomous workflow execution. Jarvis orchestrates the entire workflow end-to-end without pausing for human validation between steps.
+
+```yaml
+yolo: true   # Jarvis runs autonomously
+```
+
+**What changes:**
+- All workflow steps execute sequentially without "do you want to continue?" prompts
+- COMPLEX tasks: spec → plan → tasks → implement in one continuous flow
+- Agents chain automatically, each reading the previous agent's outputs
+- If a step produces incomplete output, Jarvis iterates and self-corrects
+
+**Mandatory stops (Jarvis ALWAYS pauses for these):**
+- Destructive production actions (deploy to prod, migrate live DB, irreversible deletes)
+- Missing information only a human can provide (credentials, business decisions)
+- External side effects with real-world impact (sending emails, creating cloud resources)
+
+**What stays active:** `_manifest.yaml`, `_summary.md`, `_quality.md`, pre-execution validation, agent context injection, cross-session memory. Full traceability — you review the result, not every step.
 
 ---
 

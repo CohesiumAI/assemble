@@ -108,9 +108,9 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 
 ---
 
-### 4. Code Review Pipeline (`/review-pipeline`)
+### 4. Code Review Pipeline (`/review`)
 
-**Description:** Multi-perspective code review pipeline. The fullstack developer summarizes changes, QA evaluates quality, Security audits for vulnerabilities, and the Contrarian challenges technical choices.
+**Description:** Multi-perspective code review pipeline with offensive security testing. Fullstack summarizes, QA evaluates quality, Security audits, Red Team attempts exploitation, and Contrarian challenges.
 
 **Output directory:** `{assemble_output}/code-review_{timestamp}/`
 
@@ -119,26 +119,28 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 | 1 | `dev-fullstack` | Summarize changes and document decisions | — | `code-summary.md`, `change-rationale.md` |
 | 2 | `qa` | Evaluate code quality and test coverage | code-summary, change-rationale | `quality-report.md`, `recommendations.md` |
 | 3 | `security` | Audit the code for vulnerabilities | code-summary, quality-report | `security-findings.md`, `risk-assessment.md` |
-| 4 | `contrarian` | Challenge technical choices and propose alternatives | code-summary, quality-report, security-findings | `devil-advocate-report.md`, `alternative-approaches.md` |
+| 4 | `redteam` | Attempt exploitation of findings and find missed vulnerabilities | code-summary, security-findings | `exploit-report.md`, `attack-vectors.md` |
+| 5 | `contrarian` | Challenge technical choices and propose alternatives | code-summary, quality-report, security-findings, exploit-report | `devil-advocate-report.md`, `alternative-approaches.md` |
 
-**Key deliverables:** Code summary, quality report, security findings, Devil's Advocate report with alternatives.
+**Key deliverables:** Code summary, quality report, security findings, exploit report, Devil's Advocate report.
 
 ---
 
-### 5. Security Audit (`/audit-security`)
+### 5. Security Audit (`/security`)
 
-**Description:** Comprehensive security audit covering vulnerability detection, remediation planning, infrastructure hardening, and regulatory compliance.
+**Description:** Full security audit with red team pentest, remediation, infrastructure hardening, and regulatory compliance.
 
 **Output directory:** `{assemble_output}/security-audit_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
-| 1 | `security` | Scan and identify vulnerabilities | — | `vulnerability-report.md`, `threat-model.md` |
-| 2 | `dev-backend` | Develop the remediation plan | vulnerability-report, threat-model | `remediation-plan.md`, `patching-schedule.md` |
-| 3 | `devops` | Harden infrastructure security | vulnerability-report, remediation-plan | `infrastructure-hardening.md`, `security-config.md` |
-| 4 | `legal` | Verify regulatory compliance | vulnerability-report, infrastructure-hardening, remediation-plan | `compliance-check.md`, `regulatory-summary.md` |
+| 1 | `security` | Scan and identify vulnerabilities (blue team audit) | — | `vulnerability-report.md`, `threat-model.md` |
+| 2 | `redteam` | Offensive pentest: exploit findings + find missed vulnerabilities | vulnerability-report, threat-model | `pentest-report.md`, `exploit-chains.md` |
+| 3 | `dev-backend` | Develop the remediation plan for all findings | vulnerability-report, pentest-report, exploit-chains | `remediation-plan.md`, `patching-schedule.md` |
+| 4 | `devops` | Harden infrastructure security | vulnerability-report, remediation-plan | `infrastructure-hardening.md`, `security-config.md` |
+| 5 | `legal` | Verify regulatory compliance | vulnerability-report, pentest-report, infrastructure-hardening, remediation-plan | `compliance-check.md`, `regulatory-summary.md` |
 
-**Key deliverables:** Vulnerability report, threat model, remediation plan, infrastructure hardening, compliance check.
+**Key deliverables:** Vulnerability report, pentest report, exploit chains, remediation plan, infrastructure hardening, compliance check.
 
 ---
 
