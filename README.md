@@ -18,7 +18,7 @@
 
 ---
 
-> Transform any IDE or CLI into a full interdisciplinary team of **33 specialized AI agents**, organized in **9 teams**, with **15 automated workflows**, **28 skills**, and **10 commands** — deployable across **21 platforms** (15 IDE + 6 CLI). Powered by Jarvis smart routing, spec-driven methodology, MCP server, cross-session memory, and enterprise governance.
+> Transform any IDE or CLI into a full interdisciplinary team of **33 specialized AI agents**, organized in **9 teams**, with **15 automated workflows**, **28 skills**, and **10 commands** — deployable across **21 platforms** (16 IDE + 5 CLI). Powered by Jarvis smart routing, spec-driven methodology, MCP server, cross-session memory, and enterprise governance.
 
 ## What is Assemble by Cohesium AI?
 
@@ -286,9 +286,9 @@ Specialized capabilities tied to a primary agent.
 
 ---
 
-## Supported Platforms (20)
+## Supported Platforms (21)
 
-### IDE Platforms (15)
+### IDE Platforms (16)
 
 | Platform | Configuration Files |
 |----------|--------------------|
@@ -307,13 +307,13 @@ Specialized capabilities tied to a primary agent.
 | OpenCode | `.opencode/agents/`, `.opencode/skills/`, `.opencode/workflows/` |
 | QwenCoder | `.qwencoder/agents/`, `.qwencoder/skills/`, `.qwencoder/workflows/` |
 | Rovo Dev | `.rovo/agents/`, `.rovo/skills/`, `.rovo/workflows/` |
+| Claude Code Desktop | `CLAUDE.md` (self-contained), `.claude/skills/*/SKILL.md` (43 — agents as `/skills`) |
 
-### CLI Platforms (6)
+### CLI Platforms (5)
 
 | Platform | Configuration Files |
 |----------|--------------------|
-| Claude Code (CLI) | `CLAUDE.md` (compact, @imports), `.claude/agents/*/AGENT.md`, `.claude/skills/*/SKILL.md` (10), `.claude/rules/` |
-| Claude Code (Desktop) | `CLAUDE.md` (self-contained), `.claude/skills/*/SKILL.md` (43 — agents as skills), `.claude/rules/` |
+| Claude Code (CLI) | `CLAUDE.md` (@imports), `.claude/agents/*/AGENT.md`, `.claude/skills/*/SKILL.md` (10), `.claude/rules/` |
 | Codex (OpenAI) | `AGENTS.md` |
 | Gemini CLI | `GEMINI.md`, `.gemini/agents/`, `.gemini/skills/`, `.gemini/workflows/` |
 | Auggie | `.augment/commands/*.md` |

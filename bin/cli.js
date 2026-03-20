@@ -31,10 +31,10 @@ const PLATFORMS = {
     ['opencode', 'OpenCode'],
     ['qwencoder', 'QwenCoder'],
     ['rovodev', 'Rovo Dev'],
+    ['claude-code-desktop', 'Claude Code (Desktop/VS Code)'],
   ],
   cli: [
     ['claude-code', 'Claude Code (CLI)'],
-    ['claude-code-desktop', 'Claude Code (Desktop/VS Code)'],
     ['codex', 'Codex'],
     ['gemini-cli', 'Gemini CLI'],
     ['auggie', 'Auggie'],

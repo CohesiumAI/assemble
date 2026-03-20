@@ -30,7 +30,7 @@ const {
 module.exports = {
   name: 'claude-code-desktop',
   displayName: 'Claude Code Desktop',
-  type: 'cli',
+  type: 'ide',
 
   _agentId(agent) {
     return agent.fileName.replace(/^AGENT-/, '').replace(/\.md$/, '');

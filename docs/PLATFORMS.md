@@ -1,6 +1,6 @@
 # Platform Support — 20 Supported Platforms
 
-> **21 platforms** supported: 15 IDE and 6 CLI. The generator automatically adapts agent, skill, and workflow files to the native format of each platform.
+> **21 platforms** supported: 16 IDE and 5 CLI. The generator automatically adapts agent, skill, and workflow files to the native format of each platform.
 
 ---
 
@@ -23,8 +23,8 @@
 | 13 | OpenCode | IDE | `.opencode/` |
 | 14 | QwenCoder | IDE | `.qwencoder/` |
 | 15 | Rovo Dev | IDE | `.rovo/` |
-| 16 | Claude Code (CLI) | CLI | `CLAUDE.md` (@imports) + `.claude/agents/*/AGENT.md` + `.claude/skills/*/SKILL.md` (10) + `.claude/rules/` |
-| 17 | Claude Code (Desktop) | CLI | `CLAUDE.md` (self-contained) + `.claude/skills/*/SKILL.md` (43 — agents as skills) + `.claude/rules/` |
+| 16 | Claude Code Desktop | IDE | `CLAUDE.md` (self-contained) + `.claude/skills/*/SKILL.md` (43 — agents as skills) + `.claude/rules/` |
+| 17 | Claude Code (CLI) | CLI | `CLAUDE.md` (@imports) + `.claude/agents/*/AGENT.md` + `.claude/skills/*/SKILL.md` (10) + `.claude/rules/` |
 | 18 | Codex | CLI | `AGENTS.md` |
 | 19 | Gemini CLI | CLI | `GEMINI.md` + `.gemini/` |
 | 20 | Auggie | CLI | `.augment/commands/*.md` |
@@ -32,7 +32,7 @@
 
 ---
 
-## IDE Platforms (15)
+## IDE Platforms (16)
 
 ### 1. Cursor
 
@@ -270,9 +270,30 @@
 
 ---
 
-## CLI Platforms (6)
+### 16. Claude Code Desktop / VS Code
 
-### 16. Claude Code (CLI)
+**Description:** Claude Code Desktop and VS Code extension — adapted for environments where `@agent` mentions are not supported. Agents are invoked via **slash commands** (`/tony-stark`, `/professor-x`) instead of `@mentions`.
+
+**Generated files:**
+
+| File / Directory | Content |
+|------------------|---------|
+| `CLAUDE.md` | Self-contained (no @imports), team roster with `/slug` syntax |
+| `.claude/skills/*/SKILL.md` | **43 skill directories**: 10 system + 33 agent skills (one per agent) |
+| `.claude/rules/orchestrator.md` | Full orchestrator instructions |
+| `.claude/rules/governance/governance.md` | *(optional)* Governance rules when enabled |
+
+**Format:** Markdown
+
+**Notes:** Each agent becomes a user-invocable skill with its full instructions embedded. `/go` embeds the complete routing rules directly (no external file reference). The CLAUDE.md file contains the team roster with `/slug` syntax instead of `@slug`. Compatible with Claude Code Desktop, VS Code extension, and any environment that supports skills but not agent teams.
+
+**Key difference from CLI:** CLI uses `@tony-stark` (agent mention) → Desktop uses `/tony-stark` (skill invocation). Same content, different invocation mechanism.
+
+---
+
+## CLI Platforms (5)
+
+### 17. Claude Code (CLI)
 
 **Description:** Claude Code CLI (Anthropic) — The **reference platform** with the most complete adapter. Uses a Jarvis-first architecture with 10 commands, 33 agents via @mention, and spec-driven methodology.
 
@@ -291,27 +312,6 @@
 **Format:** Markdown
 
 **Notes:** `CLAUDE.md` is kept under 30 lines to minimize permanent context token usage (~400 tokens/turn instead of ~1500). Agents are accessed via `@marvel-name` mentions. The 10 SKILL.md files cover: 4 system commands (`/go`, `/party`, `/dismiss`, `/help`) and 6 workflow shortcuts (`/review`, `/bugfix`, `/feature`, `/sprint`, `/release`, `/mvp`). Hidden shortcuts like `/refactor`, `/hotfix`, `/upgrade` also work. Governance rules are loaded on-demand when enabled.
-
----
-
-### 17. Claude Code (Desktop / VS Code)
-
-**Description:** Claude Code Desktop and VS Code extension — adapted for environments where `@agent` mentions are not supported. Agents are invoked via **slash commands** (`/tony-stark`, `/professor-x`) instead of `@mentions`.
-
-**Generated files:**
-
-| File / Directory | Content |
-|------------------|---------|
-| `CLAUDE.md` | Self-contained (no @imports), team roster with `/slug` syntax |
-| `.claude/skills/*/SKILL.md` | **43 skill directories**: 10 system + 33 agent skills (one per agent) |
-| `.claude/rules/orchestrator.md` | Full orchestrator instructions |
-| `.claude/rules/governance/governance.md` | *(optional)* Governance rules when enabled |
-
-**Format:** Markdown
-
-**Notes:** Each agent becomes a user-invocable skill with its full instructions embedded. `/go` embeds the complete routing rules directly (no external file reference). The CLAUDE.md file contains the team roster with `/slug` syntax instead of `@slug`. Compatible with Claude Code Desktop, VS Code extension, and any environment that supports skills but not agent teams.
-
-**Key difference from CLI:** CLI uses `@tony-stark` (agent mention) → Desktop uses `/tony-stark` (skill invocation). Same content, different invocation mechanism.
 
 ---
 
