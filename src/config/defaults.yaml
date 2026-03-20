@@ -149,6 +149,9 @@ platforms:
     - name: claude-code
       config_files: ["CLAUDE.md", ".claude/agents/*/AGENT.md", ".claude/skills/*/SKILL.md", ".claude/rules/"]
       description: "Claude Code CLI"
+    - name: claude-code-desktop
+      config_files: ["CLAUDE.md", ".claude/skills/*/SKILL.md", ".claude/rules/"]
+      description: "Claude Code Desktop / VS Code (agents as skills, no @imports)"
     - name: codex
       config_files: ["AGENTS.md"]
       description: "Codex CLI (OpenAI)"

@@ -33,7 +33,8 @@ const PLATFORMS = {
     ['rovodev', 'Rovo Dev'],
   ],
   cli: [
-    ['claude-code', 'Claude Code'],
+    ['claude-code', 'Claude Code (CLI)'],
+    ['claude-code-desktop', 'Claude Code (Desktop/VS Code)'],
     ['codex', 'Codex'],
     ['gemini-cli', 'Gemini CLI'],
     ['auggie', 'Auggie'],
