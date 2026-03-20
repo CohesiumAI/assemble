@@ -2,6 +2,10 @@ tmp-analysis/
 tmp-analysis-2/
 tmp-analysis-py/
 tmp-migrate-check/
+tmp-gov-*/
+
+# Generated output (deliverables, memory, metrics, audit)
+assemble-output/
 
 # MCP generated files
 .assemble/mcp-server.js

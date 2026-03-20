@@ -1,6 +1,6 @@
 name: onboarding-project
 description: "New project onboarding — scoping, analysis, and team setup"
-trigger: /onboarding
+trigger: /onboard
 output_dir: "{assemble_output}/onboarding_{timestamp}"
 steps:
   - step: 1
