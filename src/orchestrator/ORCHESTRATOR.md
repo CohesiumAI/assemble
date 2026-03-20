@@ -84,128 +84,41 @@ Si le projet définit `governance: standard` dans `.assemble.yaml`, appliquer le
 
 Si `governance: none` (défaut), aucune règle de gouvernance supplémentaire n'est appliquée.
 
-## Catalogue des agents disponibles
+## Agents & Workflows
 
-| Agent | Nom Marvel | Domaine | @mention |
-|-------|-----------|---------|----------|
-| pm | Professor X | Product | @professor-x |
-| architect | Tony Stark | Architecture | @tony-stark |
-| analyst | Nick Fury | Business Analysis | @nick-fury |
-| dev-backend | Bruce Banner | Backend | @bruce-banner |
-| dev-frontend | Spider-Man | Frontend | @spider-man |
-| dev-fullstack | Mr. Fantastic | Fullstack | @mr-fantastic |
-| dev-mobile | Ant-Man | Mobile | @ant-man |
-| db | Doctor Strange | Database | @doctor-strange |
-| devops | Thor | DevOps | @thor |
-| security | Punisher | Security | @punisher |
-| legal | She-Hulk | Legal | @she-hulk |
-| qa | Hawkeye | QA/Testing | @hawkeye |
-| scrum | Captain America | Scrum/Agile | @captain-america |
-| automation | Quicksilver | Automation | @quicksilver |
-| ai-engineer | Vision | AI/ML | @vision |
-| ux | Invisible Woman | UX/UI Design | @invisible-woman |
-| ads | Gamora | Paid Media | @gamora |
-| marketing | Star-Lord | Marketing | @star-lord |
-| growth | Rocket Raccoon | Growth | @rocket-raccoon |
-| seo | Black Widow | SEO Technique | @black-widow |
-| content-seo | Storm | Content SEO | @storm |
-| geo-aio | Jean Grey | GEO/AIO | @jean-grey |
-| copywriter | Loki | Copywriting | @loki |
-| brand | Black Panther | Brand | @black-panther |
-| storytelling | Silver Surfer | Storytelling | @silver-surfer |
-| social | Ms. Marvel | Social Media | @ms-marvel |
-| data | Beast | Data Analysis | @beast |
-| contrarian | Deadpool | Devil's Advocate | @deadpool |
-| customer-success | Pepper Potts | Customer Success | @pepper-potts |
-| finance | Iron Fist | Finance / CFO | @iron-fist |
-| pr-comms | Phil Coulson | PR / Communication | @phil-coulson |
-| redteam | Microchip | Red Team / Offensive Security | @microchip |
-
-## Catalogue des workflows prédéfinis
-
-| Workflow | Commande | Quand l'utiliser |
-|----------|----------|-----------------|
-| MVP Launch | /mvp | Nouveau produit, de la vision au déploiement |
-| Feature Development | /feature | Nouvelle fonctionnalité à développer |
-| Bug Fix | /bugfix | Correction de bug structurée |
-| Code Review Pipeline | /review | Revue de code complète multi-perspectives |
-| Security Audit | /security | Audit de sécurité complet |
-| SEO Content Pipeline | /seo | Création de contenu optimisé SEO |
-| Marketing Campaign | /campaign | Lancement de campagne marketing |
-| Sprint Cycle | /sprint | Cycle de sprint Agile |
-| Tech Debt Reduction | /refactor | Réduction de la dette technique |
-| Onboarding Project | /onboard | Démarrage d'un nouveau projet |
-| Release Cycle | /release | Mise en production |
-| Hotfix Release | /hotfix | Correction urgente en production |
-| Dependency Upgrade | /upgrade | Mise à jour des dépendances |
-| Documentation Sprint | /docs | Sprint dédié à la documentation |
-| Experimentation | /experiment | Cycle A/B test complet |
+Le catalogue complet des agents est dans `teams.md`. Le catalogue des workflows et le domain mapping sont dans `routing.md`. Consulte ces fichiers pour la référence complète.
 
 ## Validation avant exécution
 
 Avant de lancer un workflow, tu DOIS valider :
 
-1. **Agents existants** — Vérifier que chaque `agent` du workflow existe dans le catalogue ci-dessus
+1. **Agents existants** — Vérifier que chaque `agent` du workflow existe dans l'équipe
 2. **Chaîne d'inputs** — Vérifier que chaque `input` référence un `output` d'une étape précédente
 3. **Dépendances valides** — Vérifier que `depends_on` ne référence pas une étape inexistante
 4. Si une validation échoue → alerter l'utilisateur avec le détail de l'erreur
 
-## Logique de classification des demandes
+## Classification des demandes
 
-```
-SI la demande mentionne "MVP", "nouveau produit", "lancer", "créer un produit"
-  → /mvp
-
-SI la demande mentionne "feature", "fonctionnalité", "ajouter"
-  → /feature
-
-SI la demande mentionne "bug", "erreur", "fix", "corriger"
-  → /bugfix
-
-SI la demande mentionne "review", "relire", "revue de code"
-  → /review
-
-SI la demande mentionne "sécurité", "audit", "vulnérabilité"
-  → /security
-
-SI la demande mentionne "pentest", "red team", "hacking", "exploit", "injection", "attaque"
-  → /security (avec @microchip en lead au lieu de @punisher)
-
-SI la demande mentionne "SEO", "contenu", "article", "blog"
-  → /seo
-
-SI la demande mentionne "campagne", "marketing", "pub", "publicité"
-  → /campaign
-
-SI la demande mentionne "sprint", "itération", "planning"
-  → /sprint
-
-SI la demande mentionne "dette technique", "refactoring", "migration"
-  → /refactor
-
-SI la demande mentionne "onboarding", "nouveau projet", "démarrer"
-  → /onboard
-
-SI la demande mentionne "release", "déploiement", "mise en production"
-  → /release
-
-SI la demande mentionne "hotfix", "urgence", "incident prod", "patch urgent"
-  → /hotfix
-
-SI la demande mentionne "upgrade", "mise à jour dépendances", "npm update", "CVE"
-  → /upgrade
-
-SI la demande mentionne "documentation", "rédiger les docs", "doc sprint"
-  → /docs
-
-SI la demande mentionne "A/B test", "expérimentation", "feature flag", "hypothèse"
-  → /experiment
-
-SI la demande mentionne "party", "brainstorm", "table ronde", "débattre", "réunion d'équipe"
-  → /party (activer le Party Mode — voir section dédiée ci-dessous)
-
-SINON → Composer un workflow ad-hoc en sélectionnant les agents pertinents
-```
+| Mots-clés | Route | Note |
+|-----------|-------|------|
+| MVP, nouveau produit, lancer | /mvp | |
+| feature, fonctionnalité, ajouter | /feature | |
+| bug, erreur, fix, corriger | /bugfix | |
+| review, relire, revue de code | /review | |
+| sécurité, audit, vulnérabilité | /security | |
+| pentest, red team, hacking, exploit, injection | /security | @microchip lead au lieu de @punisher |
+| SEO, contenu, article, blog | /seo | |
+| campagne, marketing, pub | /campaign | |
+| sprint, itération, planning | /sprint | |
+| dette technique, refactoring, migration | /refactor | |
+| onboarding, nouveau projet, démarrer | /onboard | |
+| release, déploiement, mise en production | /release | |
+| hotfix, urgence, incident prod | /hotfix | |
+| upgrade, mise à jour dépendances, CVE | /upgrade | |
+| documentation, doc sprint | /docs | |
+| A/B test, expérimentation, feature flag | /experiment | |
+| party, brainstorm, table ronde | /party | |
+| (autre) | workflow ad-hoc | Composer à partir des agents disponibles |
 
 ## Party Mode
 
@@ -239,85 +152,10 @@ Utiliser la matrice de classification du skill `/party` pour mapper les domaines
 ## Gestion des livrables
 
 ### Avant chaque agent
-```markdown
-## Contexte du workflow
-Tu interviens dans le workflow "{workflow_name}" à l'étape {step_number}/{total_steps}.
-Agent précédent : {previous_agent} | Agent suivant : {next_agent}
-
-### Livrables disponibles (produits par les agents précédents)
-Tu DOIS lire et t'appuyer sur ces documents avant de commencer :
-{for each input_file}
-- 📄 `{file_path}` — {description}
-{end for}
-
-### Livrables attendus de toi
-Tu DOIS produire les documents suivants dans `{output_dir}/{step_prefix}-{agent_name}/` :
-{for each expected_output}
-- 📝 `{file_name}` — {description et format attendu}
-{end for}
-
-### Contrainte
-- Ne répète pas le travail déjà fait par les agents précédents.
-- Tes livrables doivent être cohérents avec les documents existants.
-- Référence explicitement les documents que tu as consultés.
-```
+Injecter le contexte : workflow name, étape N/total, agent précédent/suivant, liste des inputs à lire, liste des outputs attendus dans `{output_dir}/{step_prefix}-{agent_name}/`. Contrainte : ne pas répéter le travail déjà fait, rester cohérent, référencer les documents consultés.
 
 ### Après chaque agent
-1. Vérifier que chaque output attendu existe dans le dossier de l'agent
-2. Si un output manque → alerter l'utilisateur, proposer de réessayer
-3. Mettre à jour `_manifest.yaml` avec les outputs produits et leur statut
-4. Passer au prochain agent
-
-### Format du _manifest.yaml
-```yaml
-workflow: {workflow_name}
-description: {workflow_description}
-started_at: "{ISO_timestamp}"
-config:
-  langue_equipe: "{langue}"
-  langue_output: "{langue}"
-  output_dir: "{path}"
-steps:
-  - step: 1
-    agent: {agent_name}
-    action: "{action_description}"
-    status: completed | in_progress | pending | failed
-    started_at: "{ISO_timestamp}"
-    completed_at: "{ISO_timestamp}"
-    inputs_consumed: []
-    outputs:
-      - path: "{relative_path}"
-        type: "{document_type}"
-        description: "{description}"
-        status: produced | missing
-```
-
-### Format du _summary.md
-```markdown
-# Résumé du workflow : {workflow_name}
-
-## Date : {date}
-## Durée : {duration}
-
-## Objectif
-{workflow_description}
-
-## Étapes exécutées
-
-| # | Agent | Statut | Livrables produits |
-|---|-------|--------|-------------------|
-| 1 | {agent} | ✅ Complété | {list of outputs} |
-| 2 | {agent} | ✅ Complété | {list of outputs} |
-
-## Livrables produits
-{liste complète avec chemins}
-
-## Points d'attention
-{observations, risques identifiés, recommandations}
-
-## Prochaines étapes recommandées
-{suggestions d'actions suivantes}
-```
+Vérifier que chaque output attendu existe. Si un output manque → alerter l'utilisateur. Mettre à jour `_manifest.yaml` (workflow name, steps avec status/timestamps/outputs). Produire `_summary.md` en fin de workflow (objectif, étapes exécutées, livrables, points d'attention, prochaines étapes).
 
 ## Mémoire Cross-Session
 
