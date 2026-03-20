@@ -277,22 +277,42 @@ async function main() {
   const profileMap = { '1': 'startup', '2': 'enterprise', '3': 'agency', '4': 'custom' };
   const profile = profileMap[profileChoice] || 'custom';
 
-  // 4. Platforms (interactive multi-select)
+  // 4. Platforms (interactive multi-select or fallback for non-TTY)
   print('\n\x1b[1m\x1b[34m▸ 4/11 — IDE/CLI selection\x1b[0m\n');
 
-  // Temporarily close readline so raw mode works
-  rl.pause();
+  let selectedPlatforms;
 
-  const groupLabels = { 0: 'IDE:', [PLATFORMS.ide.length]: 'CLI:' };
-  // Pre-select all by default
-  const allIndices = new Set(ALL_PLATFORMS.map((_, i) => i));
-  const platformSelections = await multiSelect(ALL_PLATFORMS, groupLabels, allIndices);
-  const selectedPlatforms = platformSelections.map(p => p[0]);
+  if (process.stdin.isTTY && typeof process.stdin.setRawMode === 'function') {
+    // Interactive multi-select (TTY mode)
+    rl.pause();
 
-  // Resume readline for subsequent prompts
-  rl.resume();
+    const groupLabels = { 0: 'IDE:', [PLATFORMS.ide.length]: 'CLI:' };
+    const allIndices = new Set(ALL_PLATFORMS.map((_, i) => i));
+    const platformSelections = await multiSelect(ALL_PLATFORMS, groupLabels, allIndices);
+    selectedPlatforms = platformSelections.map(p => p[0]);
 
-  print(`\x1b[32m  ✓ ${selectedPlatforms.length} platform${selectedPlatforms.length > 1 ? 's' : ''} selected: ${platformSelections.map(p => p[1]).join(', ')}\x1b[0m`);
+    rl.resume();
+
+    print(`\x1b[32m  ✓ ${selectedPlatforms.length} platform${selectedPlatforms.length > 1 ? 's' : ''} selected: ${platformSelections.map(p => p[1]).join(', ')}\x1b[0m`);
+  } else {
+    // Fallback for non-TTY (CI/CD, piped input)
+    print('  IDE:');
+    PLATFORMS.ide.forEach(([, name], i) => print(`  ${String(i + 1).padStart(2)}) ${name}`));
+    print('\n  CLI:');
+    PLATFORMS.cli.forEach(([, name], i) => print(`  ${String(i + PLATFORMS.ide.length + 1).padStart(2)}) ${name}`));
+    print('\n   0) Select all\n');
+
+    const platformChoice = await ask('Your choice (space-separated numbers)', '0');
+    if (platformChoice === '0') {
+      selectedPlatforms = ALL_PLATFORMS.map(p => p[0]);
+    } else {
+      selectedPlatforms = platformChoice.split(/\s+/).map(n => {
+        const idx = parseInt(n) - 1;
+        return idx >= 0 && idx < ALL_PLATFORMS.length ? ALL_PLATFORMS[idx][0] : null;
+      }).filter(Boolean);
+    }
+    print(`\x1b[32m  ✓ ${selectedPlatforms.length} platforms selected\x1b[0m`);
+  }
 
   // 5. Directory
   print('\n\x1b[1m\x1b[34m▸ 5/11 — Project directory\x1b[0m\n');

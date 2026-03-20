@@ -162,28 +162,78 @@ const DOMAIN_KEYWORDS = {
   "iron-fist": ["pricing", "budget", "p&l", "finance"],
 };
 
+// Workflow keyword mapping for direct workflow matching
+const WORKFLOW_KEYWORDS = {
+  "mvp": ["mvp", "new product", "launch product", "nouveau produit"],
+  "feature": ["feature", "functionality", "fonctionnalité", "add feature"],
+  "bugfix": ["bug", "fix", "error", "erreur", "corriger"],
+  "review": ["review", "code review", "revue de code"],
+  "security": ["security", "audit", "vulnerability", "pentest", "red team", "hacking"],
+  "seo": ["seo", "search engine", "ranking", "indexation"],
+  "campaign": ["campaign", "marketing campaign", "campagne"],
+  "sprint": ["sprint", "iteration", "planning", "agile"],
+  "refactor": ["refactor", "tech debt", "dette technique", "migration"],
+  "release": ["release", "deploy", "production", "mise en production"],
+  "hotfix": ["hotfix", "urgent fix", "incident", "patch"],
+  "upgrade": ["upgrade", "dependency", "npm update", "cve"],
+  "docs": ["documentation", "doc sprint", "readme"],
+  "experiment": ["experiment", "a/b test", "hypothesis", "feature flag"],
+};
+
 function routeRequest(request) {
   const lower = request.toLowerCase();
-  const matches = [];
+
+  // 1. Match agents by keyword scoring (weighted: exact match > partial)
+  const agentMatches = [];
   for (const [slug, keywords] of Object.entries(DOMAIN_KEYWORDS)) {
-    const score = keywords.filter(kw => lower.includes(kw)).length;
-    if (score > 0) matches.push({ slug, score });
+    let score = 0;
+    for (const kw of keywords) {
+      if (lower.includes(kw)) {
+        // Longer keywords get higher weight (more specific = more relevant)
+        score += kw.length;
+      }
+    }
+    if (score > 0) agentMatches.push({ slug, score });
   }
-  matches.sort((a, b) => b.score - a.score);
-  const agents = matches.length > 0 ? matches.slice(0, 3).map(m => m.slug) : Object.keys(AGENT_REGISTRY).slice(0, 3);
-  const complexity = matches.length === 0 ? "TRIVIAL" : matches.length <= 2 ? "MODERATE" : "COMPLEX";
-  return { agents, complexity };
+  agentMatches.sort((a, b) => b.score - a.score);
+
+  // 2. Match workflows by keyword
+  let matchedWorkflow = null;
+  let bestWfScore = 0;
+  for (const [wf, keywords] of Object.entries(WORKFLOW_KEYWORDS)) {
+    const wfScore = keywords.filter(kw => lower.includes(kw)).length;
+    if (wfScore > bestWfScore) {
+      bestWfScore = wfScore;
+      matchedWorkflow = "/" + wf;
+    }
+  }
+
+  // 3. Determine complexity from agent diversity
+  const uniqueDomains = agentMatches.length;
+  const complexity = uniqueDomains === 0 ? "TRIVIAL"
+    : uniqueDomains === 1 ? "TRIVIAL"
+    : uniqueDomains <= 3 ? "MODERATE"
+    : "COMPLEX";
+
+  // 4. Select top agents (up to 5 for COMPLEX, 3 for MODERATE, 1 for TRIVIAL)
+  const maxAgents = complexity === "COMPLEX" ? 5 : complexity === "MODERATE" ? 3 : 1;
+  const agents = agentMatches.length > 0
+    ? agentMatches.slice(0, maxAgents).map(m => m.slug)
+    : Object.keys(AGENT_REGISTRY).slice(0, 1);
+
+  return { agents, complexity, matchedWorkflow };
 }
 
 server.tool("jarvis-route", "Jarvis smart routing — analyzes request, assesses complexity, selects agents", { request: { type: "string", description: "User request to route" } }, async ({ request }) => {
   const workflows = {
 ${workflowTriggers}
   };
-  const { agents: suggestedAgents, complexity } = routeRequest(request);
+  const { agents: suggestedAgents, complexity, matchedWorkflow } = routeRequest(request);
   const routing = {
     request,
     complexity,
     suggested_agents: suggestedAgents,
+    matched_workflow: matchedWorkflow,
     available_workflows: workflows,
     agent_count: Object.keys(AGENT_REGISTRY).length,
     methodology: complexity === "TRIVIAL" ? "Single agent, direct answer"

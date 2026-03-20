@@ -149,20 +149,22 @@ test('memory: false returns empty string', () => {
   assert(renderMemoryInstructions({ memory: false }) === '', 'should be empty');
 });
 
-test('memory: true returns instructions with _memory.md', () => {
+test('memory: true returns instructions with _memory.md and validation', () => {
   const out = renderMemoryInstructions({ memory: true, output_dir: './out' });
   assert(out.includes('Cross-Session Memory'), 'missing header');
   assert(out.includes('./out/_memory.md'), 'missing path');
+  assert(out.includes('Validation'), 'missing validation instruction');
 });
 
 test('metrics: false returns empty string', () => {
   assert(renderMetricsTemplate({ metrics: false }) === '', 'should be empty');
 });
 
-test('metrics: true returns instructions with _metrics.md', () => {
+test('metrics: true returns instructions with _metrics.md and validation', () => {
   const out = renderMetricsTemplate({ metrics: true, output_dir: './out' });
   assert(out.includes('Metrics & Observability'), 'missing header');
   assert(out.includes('./out/_metrics.md'), 'missing path');
+  assert(out.includes('Validation'), 'missing validation instruction');
 });
 
 // ─── renderRoutingRules ─────────────────────────────────────────────────

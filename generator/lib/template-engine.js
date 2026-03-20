@@ -318,13 +318,18 @@ function renderCommandRegistry(agents, skills, workflows, governance = 'none') {
  */
 function renderMemoryInstructions(config) {
   if (!config.memory) return '';
+  const memPath = `${config.output_dir || './assemble-output'}/_memory.md`;
   return `\n## Cross-Session Memory\n\n` +
-    `This project has cross-session memory enabled. After each workflow or significant interaction:\n` +
-    `- Read \`${config.output_dir || './assemble-output'}/_memory.md\` at the start of each session\n` +
+    `This project has cross-session memory enabled.\n\n` +
+    `**At session start:**\n` +
+    `- Read \`${memPath}\` for persistent context from previous sessions\n\n` +
+    `**After each workflow or significant interaction:**\n` +
     `- Append key decisions, blockers, and outcomes to the Session Log section\n` +
     `- Update Active Context with current project state\n` +
     `- Record important decisions with rationale in Key Decisions\n` +
-    `- Keep entries concise — this file persists across sessions\n\n`;
+    `- Keep entries concise — this file persists across sessions\n\n` +
+    `**Validation:** After updating, verify the file was modified by reading it back. ` +
+    `If the Session Log section still contains only the HTML comment placeholder, the update failed — retry.\n\n`;
 }
 
 /**
@@ -334,11 +339,14 @@ function renderMemoryInstructions(config) {
  */
 function renderMetricsTemplate(config) {
   if (!config.metrics) return '';
+  const metricsPath = `${config.output_dir || './assemble-output'}/_metrics.md`;
   return `\n## Metrics & Observability\n\n` +
     `This project has workflow metrics enabled. After each workflow completion:\n` +
-    `- Append a row to \`${config.output_dir || './assemble-output'}/_metrics.md\` with: workflow name, timestamps, duration, steps, agents, status\n` +
+    `- Append a row to \`${metricsPath}\` with: workflow name, timestamps, duration, steps, agents, status\n` +
     `- Update agent performance metrics periodically\n` +
-    `- Use metrics to identify bottlenecks and improve workflow efficiency\n\n`;
+    `- Use metrics to identify bottlenecks and improve workflow efficiency\n\n` +
+    `**Validation:** After appending, read \`${metricsPath}\` and verify the new row appears in the Metrics Format table. ` +
+    `If the table still contains only the HTML comment placeholder, the append failed — retry.\n\n`;
 }
 
 /**
