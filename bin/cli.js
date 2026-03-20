@@ -156,8 +156,32 @@ function multiSelect(items, groupLabels = {}, preselected = new Set()) {
   });
 }
 
+function printLogo() {
+  const P  = "\x1b[34m";
+  const C  = "\x1b[36m";
+  const M  = "\x1b[35m";
+  const CB = "\x1b[1;36m";
+  const R  = "\x1b[0m";
+  const D  = "\x1b[2m";
+  print("");
+  print(P + "           " + C + "\u00b7  " + P + "\u00b7" + R);
+  print(P + "         " + C + "\u00b7" + P + "      " + C + "\u00b7" + R);
+  print(P + "        \u256d\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e" + R);
+  print(P + "    " + M + "\u00b7" + P + "   \u2502    " + CB + "/\\" + R + P + "    \u2502   " + M + "\u00b7" + R);
+  print(P + "        \u2502   " + CB + "/  \\" + R + P + "   \u2502" + R);
+  print(P + "    " + M + "\u00b7" + P + "   \u2502  " + CB + "/\u2500\u2500\u2500\u2500\\" + R + P + "  \u2502   " + M + "\u00b7" + R);
+  print(P + "        \u2502 " + CB + "/      \\" + R + P + " \u2502" + R);
+  print(P + "        \u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f" + R);
+  print(P + "         " + C + "\u00b7" + P + "      " + C + "\u00b7" + R);
+  print("");
+  print(CB + "    Assemble" + R + " " + D + "by Cohesium AI" + R);
+  print(D + "    Your 34-agent AI team" + R);
+  print("");
+}
+
 async function runUpdate(projectDir) {
   const fs = require('fs');
+  printLogo();
   const configPath = path.join(projectDir, '.assemble.yaml');
   const legacyPath = path.join(projectDir, '.cohesium.yaml');
 
@@ -254,12 +278,7 @@ async function main() {
     }
   }
 
-  print('');
-  print('\x1b[36m═══════════════════════════════════════════════════════\x1b[0m');
-  print('\x1b[1m\x1b[34m   🦸 Assemble — AI Agent Orchestrator\x1b[0m');
-  print('\x1b[36m   Installation & Configuration (npx)\x1b[0m');
-  print('\x1b[36m═══════════════════════════════════════════════════════\x1b[0m');
-  print('');
+  printLogo();
 
   // Detect --update flag or existing installation
   if (process.argv.includes('--update') || process.argv.includes('-u')) {
