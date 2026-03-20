@@ -147,7 +147,7 @@ const DOMAIN_KEYWORDS = {
   "mr-fantastic": ["fullstack", "mvp", "debug", "integration"],
   "ant-man": ["mobile", "react native", "flutter", "ios", "android"],
   "thor": ["ci/cd", "docker", "kubernetes", "deploy", "devops"],
-  "hawkeye": ["test", "qa", "regression", "coverage"],
+  "hawkeye": ["test", "qa", "regression", "coverage", "e2e", "end-to-end", "playwright", "cypress"],
   "punisher": ["security", "vulnerability", "audit", "compliance"],
   "microchip": ["red team", "hacking", "exploit", "injection", "pentest", "offensive"],
   "professor-x": ["product", "roadmap", "okr", "user story"],

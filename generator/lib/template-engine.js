@@ -381,7 +381,7 @@ function renderRoutingRules(agents, workflows, config) {
   out += 'fullstack, MVP, debug, integration → @mr-fantastic\n';
   out += 'mobile, React Native, Flutter → @ant-man\n';
   out += 'CI/CD, Docker, Kubernetes, deploy → @thor\n';
-  out += 'tests, QA, regression, coverage → @hawkeye\n';
+  out += 'tests, QA, regression, coverage, E2E, end-to-end, Playwright, Cypress → @hawkeye\n';
   out += 'security, vulnerability, pentest, audit → @punisher\n';
   out += 'red team, hacking, exploit, injection, offensive security → @microchip\n';
   out += 'automation, workflow, RPA → @quicksilver\n';
