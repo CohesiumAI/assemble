@@ -4,10 +4,10 @@
  * Assemble — Snapshot Tests
  *
  * Verifies that the generator produces the expected file structure
- * for all 20 platforms. Run with: node tests/snapshot.test.js
+ * for all 21 platforms. Run with: node tests/snapshot.test.js
  *
  * Tests:
- *   1. Generation succeeds for all 20 platforms (exit code 0)
+ *   1. Generation succeeds for all 21 platforms (exit code 0)
  *   2. Each platform produces the expected file types and counts
  *   3. No empty files are generated
  *   4. Validation passes for all platforms (adapter.validate())
@@ -119,16 +119,16 @@ console.log('  Assemble — Snapshot Tests');
 console.log('═══════════════════════════════════════════════════════');
 console.log('');
 
-// ── Test 1: Generation for all 20 platforms ──────────────────────────────────
+// ── Test 1: Generation for all 21 platforms ──────────────────────────────────
 
-console.log('Test 1: Full generation (all 20 platforms)');
+console.log('Test 1: Full generation (all 21 platforms)');
 {
   const dir = createTmpDir();
   const platforms = [
     'cursor', 'windsurf', 'cline', 'roocode', 'copilot',
     'kiro', 'trae', 'antigravity', 'codebuddy', 'crush',
     'iflow', 'kilocoder', 'opencode', 'qwencoder', 'rovodev',
-    'claude-code', 'codex', 'gemini-cli', 'auggie', 'pi',
+    'claude-code', 'claude-code-desktop', 'codex', 'gemini-cli', 'auggie', 'pi',
   ];
 
   test('Generation exits with code 0', () => {

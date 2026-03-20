@@ -12,13 +12,13 @@
 <p align="center">
   <a href="#quick-start"><img src="https://img.shields.io/badge/npx-create--assemble-6366f1?style=flat-square" alt="npx create-assemble" /></a>
   <img src="https://img.shields.io/badge/agents-33-8b5cf6?style=flat-square" alt="33 agents" />
-  <img src="https://img.shields.io/badge/platforms-20-3b82f6?style=flat-square" alt="20 platforms" />
+  <img src="https://img.shields.io/badge/platforms-21-3b82f6?style=flat-square" alt="21 platforms" />
   <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License" />
 </p>
 
 ---
 
-> Transform any IDE or CLI into a full interdisciplinary team of **33 specialized AI agents**, organized in **9 teams**, with **15 automated workflows**, **28 skills**, and **10 commands** — deployable across **20 platforms** (15 IDE + 5 CLI). Powered by Jarvis smart routing, spec-driven methodology, MCP server, cross-session memory, and enterprise governance.
+> Transform any IDE or CLI into a full interdisciplinary team of **33 specialized AI agents**, organized in **9 teams**, with **15 automated workflows**, **28 skills**, and **10 commands** — deployable across **21 platforms** (15 IDE + 6 CLI). Powered by Jarvis smart routing, spec-driven methodology, MCP server, cross-session memory, and enterprise governance.
 
 ## What is Assemble by Cohesium AI?
 
@@ -110,10 +110,10 @@ $ npx create-assemble
   Profile: 4
 
 ▸ 4/11 — IDE/CLI selection
-  Your choice: 0    # → all 20 platforms
+  Your choice: 0    # → all 21 platforms
 
 ✅ Installation complete!
-  149+ tests passing | 20 platforms | 33 agents
+  149+ tests passing | 21 platforms | 33 agents
 ```
 
 ---
@@ -308,11 +308,12 @@ Specialized capabilities tied to a primary agent.
 | QwenCoder | `.qwencoder/agents/`, `.qwencoder/skills/`, `.qwencoder/workflows/` |
 | Rovo Dev | `.rovo/agents/`, `.rovo/skills/`, `.rovo/workflows/` |
 
-### CLI Platforms (5)
+### CLI Platforms (6)
 
 | Platform | Configuration Files |
 |----------|--------------------|
-| Claude Code | `CLAUDE.md`, `.claude/agents/*/AGENT.md`, `.claude/skills/*/SKILL.md`, `.claude/rules/` |
+| Claude Code (CLI) | `CLAUDE.md` (compact, @imports), `.claude/agents/*/AGENT.md`, `.claude/skills/*/SKILL.md` (10), `.claude/rules/` |
+| Claude Code (Desktop) | `CLAUDE.md` (self-contained), `.claude/skills/*/SKILL.md` (43 — agents as skills), `.claude/rules/` |
 | Codex (OpenAI) | `AGENTS.md` |
 | Gemini CLI | `GEMINI.md`, `.gemini/agents/`, `.gemini/skills/`, `.gemini/workflows/` |
 | Auggie | `.augment/commands/*.md` |
@@ -490,7 +491,7 @@ yolo: true   # Jarvis runs autonomously
 
 ## Governance (optional)
 
-Assemble includes an opt-in governance layer that adds **decision gates** and **change risk assessment** to workflows. Governance rules are injected into the command registry generated for all 20 platforms. **Disabled by default** — zero overhead when not needed.
+Assemble includes an opt-in governance layer that adds **decision gates** and **change risk assessment** to workflows. Governance rules are injected into the command registry generated for all 21 platforms. **Disabled by default** — zero overhead when not needed.
 
 > **Note:** `_quality.md` (deliverables, validations, remaining risks, lessons learned) is always produced at the end of COMPLEX workflows (4+ steps) as part of Phase 5 CLOSE — this is baseline behavior, not governance-specific. Governance adds the **gates** and **risk controls** that govern _how_ you get there.
 

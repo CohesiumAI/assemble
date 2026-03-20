@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Full integration test: 20 platforms + all features enabled
+ * Full integration test: 21 platforms + all features enabled
  * (governance:strict, mcp:true, memory:true, metrics:true)
  */
 const fs = require('fs');
@@ -17,7 +17,7 @@ profile: "custom"
 langue_equipe: "english"
 langue_output: "english"
 output_dir: "./assemble-output"
-platforms: [cursor, windsurf, cline, roocode, copilot, kiro, trae, antigravity, codebuddy, crush, iflow, kilocoder, opencode, qwencoder, rovodev, claude-code, codex, gemini-cli, auggie, pi]
+platforms: [cursor, windsurf, cline, roocode, copilot, kiro, trae, antigravity, codebuddy, crush, iflow, kilocoder, opencode, qwencoder, rovodev, claude-code, claude-code-desktop, codex, gemini-cli, auggie, pi]
 agents: all
 workflows: all
 governance: "strict"
