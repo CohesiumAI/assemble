@@ -1,59 +1,59 @@
 ---
 name: backend-api-scaffold
-description: Scaffolding complet d'une API backend avec structure, routes, contrôleurs et documentation
+description: Complete backend API scaffolding with structure, routes, controllers, and documentation
 agents: [dev-backend, dev-fullstack, architect]
 trigger: /scaffold-api
 ---
 
 # Skill : Backend API Scaffold
 
-## Objectif
-Générer la structure complète d'une API backend incluant les routes, contrôleurs, modèles, middlewares, validateurs et documentation OpenAPI. Le scaffolding produit un code prêt à l'emploi respectant les bonnes pratiques REST et les conventions du projet.
+## Objective
+Generate the complete structure of a backend API including routes, controllers, models, middlewares, validators, and OpenAPI documentation. The scaffolding produces ready-to-use code following REST best practices and project conventions.
 
-## Quand l'utiliser
-- Lors de la création d'un nouveau service ou microservice backend
-- Quand une nouvelle ressource API doit être exposée avec les opérations CRUD
-- Pour initialiser un module backend avec toutes les couches (route, contrôleur, service, repository)
-- Lors de l'ajout d'un nouveau domaine métier nécessitant des endpoints dédiés
+## When to use
+- When creating a new backend service or microservice
+- When a new API resource needs to be exposed with CRUD operations
+- To initialize a backend module with all layers (route, controller, service, repository)
+- When adding a new business domain requiring dedicated endpoints
 
-## Étapes
-1. **Analyser les spécifications** — Identifier la ressource, ses attributs, ses relations et les opérations requises (GET, POST, PUT, PATCH, DELETE).
-2. **Définir le modèle de données** — Créer le schéma/modèle avec les types, validations, valeurs par défaut et index nécessaires.
-3. **Générer les routes** — Créer le fichier de routes avec les endpoints RESTful, les middlewares d'authentification et de validation.
-4. **Implémenter les contrôleurs** — Écrire les fonctions de contrôleur pour chaque endpoint avec gestion des erreurs standardisée.
-5. **Créer la couche service** — Implémenter la logique métier dans une couche service découplée des contrôleurs.
-6. **Ajouter les validateurs** — Définir les schémas de validation des entrées (body, query, params) avec Zod, Joi ou class-validator.
-7. **Écrire les tests unitaires** — Créer les fichiers de test pour les contrôleurs et services avec les cas nominaux et les cas d'erreur.
-8. **Générer la documentation OpenAPI** — Ajouter les annotations Swagger/OpenAPI pour chaque endpoint avec exemples de requêtes et réponses.
+## Steps
+1. **Analyze specifications** — Identify the resource, its attributes, relationships, and required operations (GET, POST, PUT, PATCH, DELETE).
+2. **Define the data model** — Create the schema/model with types, validations, default values, and required indexes.
+3. **Generate routes** — Create the routes file with RESTful endpoints, authentication and validation middlewares.
+4. **Implement controllers** — Write controller functions for each endpoint with standardized error handling.
+5. **Create the service layer** — Implement business logic in a service layer decoupled from controllers.
+6. **Add validators** — Define input validation schemas (body, query, params) with Zod, Joi, or class-validator.
+7. **Write unit tests** — Create test files for controllers and services with nominal and error cases.
+8. **Generate OpenAPI documentation** — Add Swagger/OpenAPI annotations for each endpoint with request and response examples.
 
-## Checklist de sortie
-- [ ] Tous les endpoints CRUD sont définis et fonctionnels
-- [ ] Les validations d'entrée sont en place pour chaque route
-- [ ] La gestion des erreurs est standardisée (codes HTTP, format de réponse)
-- [ ] Les middlewares d'authentification et d'autorisation sont appliqués
-- [ ] Les tests unitaires couvrent les cas nominaux et les cas limites
-- [ ] La documentation OpenAPI est complète et à jour
-- [ ] Le code respecte les conventions de nommage du projet
-- [ ] Les variables d'environnement nécessaires sont documentées
+## Exit Checklist
+- [ ] All CRUD endpoints are defined and functional
+- [ ] Input validations are in place for each route
+- [ ] Error handling is standardized (HTTP codes, response format)
+- [ ] Authentication and authorization middlewares are applied
+- [ ] Unit tests cover nominal and edge cases
+- [ ] OpenAPI documentation is complete and up to date
+- [ ] Code follows the project naming conventions
+- [ ] Required environment variables are documented
 
-## Format de sortie
+## Output Format
 ```
 📁 src/modules/<resource>/
-├── <resource>.controller.ts    — Contrôleurs des endpoints
-├── <resource>.service.ts       — Logique métier
-├── <resource>.repository.ts    — Accès aux données
-├── <resource>.model.ts         — Définition du modèle/schéma
-├── <resource>.routes.ts        — Définition des routes
-├── <resource>.validator.ts     — Schémas de validation
-├── <resource>.types.ts         — Interfaces et types TypeScript
-├── <resource>.test.ts          — Tests unitaires
-└── <resource>.docs.ts          — Documentation OpenAPI
+├── <resource>.controller.ts    — Endpoint controllers
+├── <resource>.service.ts       — Business logic
+├── <resource>.repository.ts    — Data access
+├── <resource>.model.ts         — Model/schema definition
+├── <resource>.routes.ts        — Route definitions
+├── <resource>.validator.ts     — Validation schemas
+├── <resource>.types.ts         — TypeScript interfaces and types
+├── <resource>.test.ts          — Unit tests
+└── <resource>.docs.ts          — OpenAPI documentation
 
-Routes créées :
-  GET    /api/v1/<resources>        — Liste avec pagination et filtres
-  GET    /api/v1/<resources>/:id    — Détail d'une ressource
-  POST   /api/v1/<resources>        — Création d'une ressource
-  PUT    /api/v1/<resources>/:id    — Mise à jour complète
-  PATCH  /api/v1/<resources>/:id    — Mise à jour partielle
-  DELETE /api/v1/<resources>/:id    — Suppression d'une ressource
+Created routes :
+  GET    /api/v1/<resources>        — List with pagination and filters
+  GET    /api/v1/<resources>/:id    — Resource detail
+  POST   /api/v1/<resources>        — Create a resource
+  PUT    /api/v1/<resources>/:id    — Full update
+  PATCH  /api/v1/<resources>/:id    — Partial update
+  DELETE /api/v1/<resources>/:id    — Delete a resource
 ```

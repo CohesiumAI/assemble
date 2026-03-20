@@ -1,14 +1,14 @@
 /**
- * Assemble — Parser de fichiers agents/skills/workflows
- * Parse les fichiers .md (frontmatter YAML + contenu) et .yaml
+ * Assemble — Agent/skill/workflow file parser
+ * Parses .md files (YAML frontmatter + content) and .yaml files
  */
 
 const fs = require('fs');
 const path = require('path');
 
 /**
- * Parse un fichier Markdown avec frontmatter YAML
- * @param {string} filePath - Chemin du fichier .md
+ * Parse a Markdown file with YAML frontmatter
+ * @param {string} filePath - Path to the .md file
  * @returns {{ meta: object, content: string, sections: object }}
  */
 function parseMarkdown(filePath) {
@@ -27,8 +27,8 @@ function parseMarkdown(filePath) {
 }
 
 /**
- * Parse simple du YAML (sans dépendance externe)
- * Gère : clés simples, listes inline [a, b], strings multilignes
+ * Simple YAML parser (no external dependency)
+ * Handles: simple keys, inline lists [a, b], multiline strings
  */
 function parseYamlSimple(yamlStr) {
   const result = {};
@@ -45,7 +45,7 @@ function parseYamlSimple(yamlStr) {
     if (value.startsWith('[') && value.endsWith(']')) {
       value = value.slice(1, -1).split(',').map(v => v.trim().replace(/^["']|["']$/g, ''));
     }
-    // Booléen
+    // Boolean
     else if (value === 'true') value = true;
     else if (value === 'false') value = false;
     // Nombre
@@ -86,20 +86,20 @@ function parseSections(content) {
  */
 function parseYamlFile(filePath) {
   const raw = fs.readFileSync(filePath, 'utf-8').replace(/^\uFEFF/, '');
-  // Pour les fichiers YAML complexes, on utilise un parsing simplifié
-  // En production, utiliser js-yaml
+  // For complex YAML files, use simplified parsing
+  // In production, use js-yaml
   try {
-    // Tente un parsing JSON si c'est du JSON
+    // Attempt JSON parsing if it's JSON
     return JSON.parse(raw);
   } catch {
-    // Sinon, retourne le contenu brut pour traitement par l'adaptateur
+    // Otherwise, return raw content for adapter processing
     return { raw, filePath };
   }
 }
 
 /**
- * Charge tous les agents depuis un répertoire
- * @param {string} agentsDir - Chemin vers src/agents/
+ * Loads all agents from a directory
+ * @param {string} agentsDir - Path to src/agents/
  * @returns {Array<{ meta, content, sections, fileName }>}
  */
 function loadAgents(agentsDir) {
@@ -111,8 +111,8 @@ function loadAgents(agentsDir) {
 }
 
 /**
- * Charge toutes les skills depuis un répertoire (shared + specific)
- * @param {string} skillsDir - Chemin vers src/skills/
+ * Loads all skills from a directory (shared + specific)
+ * @param {string} skillsDir - Path to src/skills/
  * @returns {{ shared: Array, specific: Array }}
  */
 function loadSkills(skillsDir) {
@@ -133,8 +133,8 @@ function loadSkills(skillsDir) {
 }
 
 /**
- * Charge tous les workflows depuis un répertoire
- * @param {string} workflowsDir - Chemin vers src/workflows/
+ * Loads all workflows from a directory
+ * @param {string} workflowsDir - Path to src/workflows/
  * @returns {Array}
  */
 function loadWorkflows(workflowsDir) {
@@ -148,9 +148,9 @@ function loadWorkflows(workflowsDir) {
 }
 
 /**
- * Charge le registre de commandes
- * @param {string} commandsFile - Chemin vers commands.yaml
- * @returns {string} - Contenu brut YAML
+ * Loads the command registry
+ * @param {string} commandsFile - Path to commands.yaml
+ * @returns {string} - Raw YAML content
  */
 function loadCommands(commandsFile) {
   if (!fs.existsSync(commandsFile)) return '';
@@ -158,8 +158,8 @@ function loadCommands(commandsFile) {
 }
 
 /**
- * Charge l'orchestrateur
- * @param {string} orchestratorDir - Chemin vers src/orchestrator/
+ * Loads the orchestrator
+ * @param {string} orchestratorDir - Path to src/orchestrator/
  * @returns {object|null}
  */
 function loadOrchestrator(orchestratorDir) {

@@ -1,4 +1,4 @@
-# Assemble — Registre des commandes
+# Assemble — Command registry
 # Architecture: 10 primary commands + hidden shortcuts + internal skills + agents via @mention
 
 # ═══════════════════════════════════════════
@@ -75,55 +75,55 @@ hidden_shortcuts:
   - name: /refactor
     type: shortcut
     workflow: tech-debt-reduction
-    description: "Réduction de la dette technique (Architect → Fullstack → QA → DevOps)"
+    description: "Tech debt reduction (Architect → Fullstack → QA → DevOps)"
     visible: false
 
   - name: /hotfix
     type: shortcut
     workflow: hotfix-release
-    description: "Hotfix production (QA → Security → Fullstack → QA → DevOps)"
+    description: "Production hotfix (QA → Security → Fullstack → QA → DevOps)"
     visible: false
 
   - name: /upgrade
     type: shortcut
     workflow: dependency-upgrade
-    description: "Mise à jour des dépendances (Architect → Security → Fullstack → QA → DevOps)"
+    description: "Dependency upgrade (Architect → Security → Fullstack → QA → DevOps)"
     visible: false
 
   - name: /campaign
     type: shortcut
     workflow: marketing-campaign
-    description: "Campagne marketing (Marketing → Finance → Brand → Copy → Ads + Social + PR → Growth)"
+    description: "Marketing campaign (Marketing → Finance → Brand → Copy → Ads + Social + PR → Growth)"
     visible: false
 
   - name: /seo
     type: shortcut
     workflow: seo-content-pipeline
-    description: "Pipeline SEO/contenu (SEO → Content-SEO → Copywriter → GEO)"
+    description: "SEO/content pipeline (SEO → Content-SEO → Copywriter → GEO)"
     visible: false
 
   - name: /experiment
     type: shortcut
     workflow: experimentation
-    description: "Cycle d'expérimentation A/B (PM → Data → Fullstack → QA → Growth)"
+    description: "A/B experimentation cycle (PM → Data → Fullstack → QA → Growth)"
     visible: false
 
   - name: /onboard
     type: shortcut
     workflow: onboarding-project
-    description: "Onboarding projet (PM → Analyst → Architect → Scrum)"
+    description: "Project onboarding (PM → Analyst → Architect → Scrum)"
     visible: false
 
   - name: /docs
     type: shortcut
     workflow: documentation-sprint
-    description: "Sprint documentation (Analyst → Architect → Fullstack → Copywriter → DevOps)"
+    description: "Documentation sprint (Analyst → Architect → Fullstack → Copywriter → DevOps)"
     visible: false
 
   - name: /security
     type: shortcut
     workflow: security-audit
-    description: "Audit de sécurité (Security → Backend → DevOps → Legal)"
+    description: "Security audit (Security → Backend → DevOps → Legal)"
     visible: false
 
 # ═══════════════════════════════════════════
@@ -136,164 +136,164 @@ internal_skills:
   - name: code-review
     type: skill
     skill: code-review
-    description: "Revue de code structurée"
+    description: "Structured code review"
     visible: false
 
   - name: git-workflow
     type: skill
     skill: git-workflow
-    description: "Gestion du workflow Git"
+    description: "Git workflow management"
     visible: false
 
   - name: documentation
     type: skill
     skill: documentation
-    description: "Générer de la documentation"
+    description: "Generate documentation"
     visible: false
 
   - name: testing
     type: skill
     skill: testing
-    description: "Stratégie de tests"
+    description: "Testing strategy"
     visible: false
 
   - name: security-check
     type: skill
     skill: security-check
-    description: "Vérification de sécurité rapide"
+    description: "Quick security check"
     visible: false
 
   - name: performance-audit
     type: skill
     skill: performance-audit
-    description: "Audit de performance"
+    description: "Performance audit"
     visible: false
 
   - name: api-design
     type: skill
     skill: api-design
-    description: "Conception d'API"
+    description: "API design"
     visible: false
 
   - name: database-query
     type: skill
     skill: database-query
-    description: "Optimisation base de données"
+    description: "Database optimization"
     visible: false
 
   - name: ci-cd
     type: skill
     skill: ci-cd
-    description: "Configuration CI/CD"
+    description: "CI/CD configuration"
     visible: false
 
   - name: monitoring
     type: skill
     skill: monitoring
-    description: "Mise en place du monitoring"
+    description: "Monitoring setup"
     visible: false
 
   - name: seo-audit
     type: skill
     skill: seo-audit
-    description: "Audit SEO technique"
+    description: "Technical SEO audit"
     visible: false
 
   - name: content-brief
     type: skill
     skill: content-brief
-    description: "Créer un brief de contenu"
+    description: "Create a content brief"
     visible: false
 
   - name: competitive-analysis
     type: skill
     skill: competitive-analysis
-    description: "Analyse concurrentielle"
+    description: "Competitive analysis"
     visible: false
 
   - name: reporting
     type: skill
     skill: reporting
-    description: "Générer un rapport"
+    description: "Generate a report"
     visible: false
 
   # Specific skills (14)
   - name: backend-api-scaffold
     type: skill
     skill: backend-api-scaffold
-    description: "Scaffolder une API backend complète"
+    description: "Scaffold a complete backend API"
     visible: false
 
   - name: frontend-component
     type: skill
     skill: frontend-component
-    description: "Créer un composant React/Next.js"
+    description: "Create a React/Next.js component"
     visible: false
 
   - name: mobile-screen
     type: skill
     skill: mobile-screen
-    description: "Créer un écran mobile"
+    description: "Create a mobile screen"
     visible: false
 
   - name: db-migration
     type: skill
     skill: db-migration
-    description: "Créer une migration de base de données"
+    description: "Create a database migration"
     visible: false
 
   - name: devops-pipeline
     type: skill
     skill: devops-pipeline
-    description: "Créer un pipeline CI/CD"
+    description: "Create a CI/CD pipeline"
     visible: false
 
   - name: pentest-scan
     type: skill
     skill: pentest-scan
-    description: "Lancer un scan de sécurité"
+    description: "Launch a security scan"
     visible: false
 
   - name: legal-compliance-check
     type: skill
     skill: legal-compliance-check
-    description: "Vérification conformité RGPD/AI Act"
+    description: "GDPR/AI Act compliance check"
     visible: false
 
   - name: ad-campaign-setup
     type: skill
     skill: ad-campaign-setup
-    description: "Configurer une campagne publicitaire"
+    description: "Set up an advertising campaign"
     visible: false
 
   - name: growth-experiment
     type: skill
     skill: growth-experiment
-    description: "Designer une expérience growth"
+    description: "Design a growth experiment"
     visible: false
 
   - name: ux-wireframe
     type: skill
     skill: ux-wireframe
-    description: "Créer des wireframes"
+    description: "Create wireframes"
     visible: false
 
   - name: sprint-planning
     type: skill
     skill: sprint-planning
-    description: "Planifier un sprint"
+    description: "Plan a sprint"
     visible: false
 
   - name: qa-test-plan
     type: skill
     skill: qa-test-plan
-    description: "Créer un plan de test"
+    description: "Create a test plan"
     visible: false
 
   - name: automation-workflow
     type: skill
     skill: automation-workflow
-    description: "Concevoir un workflow d'automatisation"
+    description: "Design an automation workflow"
     visible: false
 
   - name: party-mode
@@ -308,195 +308,195 @@ internal_skills:
 
 agents:
 
-  # Équipe Produit & Stratégie
+  # Product & Strategy Team
   - id: pm
     marvel: professor-x
     name: Professor X
-    description: "Product Manager Senior"
+    description: "Senior Product Manager"
     category: product
 
   - id: analyst
     marvel: nick-fury
     name: Nick Fury
-    description: "Business Analyst Senior"
+    description: "Senior Business Analyst"
     category: product
 
   - id: scrum
     marvel: captain-america
     name: Captain America
-    description: "Scrum Master Senior"
+    description: "Senior Scrum Master"
     category: product
 
   - id: legal
     marvel: she-hulk
     name: She-Hulk
-    description: "Expert Legal/Compliance"
+    description: "Legal/Compliance Expert"
     category: product
 
-  # Équipe Développement
+  # Development Team
   - id: architect
     marvel: tony-stark
     name: Tony Stark
-    description: "Architecte Système Senior"
+    description: "Senior System Architect"
     category: dev
 
   - id: dev-backend
     marvel: bruce-banner
     name: Bruce Banner
-    description: "Développeur Backend Senior"
+    description: "Senior Backend Developer"
     category: dev
 
   - id: dev-frontend
     marvel: spider-man
     name: Spider-Man
-    description: "Développeur Frontend Senior"
+    description: "Senior Frontend Developer"
     category: dev
 
   - id: dev-fullstack
     marvel: mr-fantastic
     name: Mr. Fantastic
-    description: "Développeur Fullstack Senior"
+    description: "Senior Fullstack Developer"
     category: dev
 
   - id: dev-mobile
     marvel: ant-man
     name: Ant-Man
-    description: "Développeur Mobile Senior"
+    description: "Senior Mobile Developer"
     category: dev
 
   - id: db
     marvel: doctor-strange
     name: Doctor Strange
-    description: "Architecte BDD Senior"
+    description: "Senior Database Architect"
     category: dev
 
-  # Équipe Ops & Qualité
+  # Ops & Quality Team
   - id: devops
     marvel: thor
     name: Thor
-    description: "DevOps / SRE Senior"
+    description: "Senior DevOps / SRE"
     category: ops
 
   - id: qa
     marvel: hawkeye
     name: Hawkeye
-    description: "QA / Testing Senior"
+    description: "Senior QA / Testing"
     category: ops
 
   - id: security
     marvel: punisher
     name: Punisher
-    description: "Expert Sécurité Senior"
+    description: "Senior Security Expert"
     category: ops
 
   - id: automation
     marvel: quicksilver
     name: Quicksilver
-    description: "Expert Automation Senior"
+    description: "Senior Automation Expert"
     category: ops
 
-  # Équipe Data & IA
+  # Data & AI Team
   - id: ai-engineer
     marvel: vision
     name: Vision
-    description: "AI Engineer Senior"
+    description: "Senior AI Engineer"
     category: data
 
   - id: data
     marvel: beast
     name: Beast
-    description: "Data Analyst Senior"
+    description: "Senior Data Analyst"
     category: data
 
-  # Équipe Marketing & Growth
+  # Marketing & Growth Team
   - id: marketing
     marvel: star-lord
     name: Star-Lord
-    description: "Marketing Manager Senior"
+    description: "Senior Marketing Manager"
     category: marketing
 
   - id: ads
     marvel: gamora
     name: Gamora
-    description: "Expert Paid Media Senior"
+    description: "Senior Paid Media Expert"
     category: marketing
 
   - id: growth
     marvel: rocket-raccoon
     name: Rocket Raccoon
-    description: "Growth Hacker Senior"
+    description: "Senior Growth Hacker"
     category: marketing
 
   - id: seo
     marvel: black-widow
     name: Black Widow
-    description: "Expert SEO Technique Senior"
+    description: "Senior Technical SEO Expert"
     category: marketing
 
   - id: content-seo
     marvel: storm
     name: Storm
-    description: "Expert Content SEO Senior"
+    description: "Senior Content SEO Expert"
     category: marketing
 
   - id: geo-aio
     marvel: jean-grey
     name: Jean Grey
-    description: "Expert GEO/AIO Senior"
+    description: "Senior GEO/AIO Expert"
     category: marketing
 
-  # Équipe Contenu & Communication
+  # Content & Communication Team
   - id: copywriter
     marvel: loki
     name: Loki
-    description: "Copywriter Senior"
+    description: "Senior Copywriter"
     category: content
 
   - id: brand
     marvel: black-panther
     name: Black Panther
-    description: "Brand Strategist Senior"
+    description: "Senior Brand Strategist"
     category: content
 
   - id: storytelling
     marvel: silver-surfer
     name: Silver Surfer
-    description: "Expert Storytelling Senior"
+    description: "Senior Storytelling Expert"
     category: content
 
   - id: social
     marvel: ms-marvel
     name: Ms. Marvel
-    description: "Social Media Manager Senior"
+    description: "Senior Social Media Manager"
     category: content
 
-  # Équipe Design
+  # Design Team
   - id: ux
     marvel: invisible-woman
     name: Invisible Woman
-    description: "UX/UI Designer Senior"
+    description: "Senior UX/UI Designer"
     category: design
 
-  # Équipe Business & Operations
+  # Business & Operations Team
   - id: customer-success
     marvel: pepper-potts
     name: Pepper Potts
-    description: "Customer Success Manager Senior"
+    description: "Senior Customer Success Manager"
     category: business
 
   - id: finance
     marvel: iron-fist
     name: Iron Fist
-    description: "Directeur Financier / CFO Senior"
+    description: "Senior Chief Financial Officer / CFO"
     category: business
 
   - id: pr-comms
     marvel: phil-coulson
     name: Phil Coulson
-    description: "Directeur Communication / PR Senior"
+    description: "Senior Communications Director / PR"
     category: business
 
-  # Agent Transversal
+  # Cross-functional Agent
   - id: contrarian
     marvel: deadpool
     name: Deadpool

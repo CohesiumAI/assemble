@@ -1,41 +1,41 @@
 ---
 name: frontend-component
-description: Création de composant React/Next.js intégré au design system avec accessibilité et tests
+description: React/Next.js component creation integrated with design system, accessibility, and tests
 agents: [dev-frontend, dev-fullstack]
 trigger: /component
 ---
 
 # Skill : Frontend Component
 
-## Objectif
-Créer un composant React/Next.js complet, réutilisable et accessible, intégré au design system du projet. Le composant inclut les variantes, les états, la documentation Storybook et les tests.
+## Objective
+Create a complete, reusable, and accessible React/Next.js component integrated with the project's design system. The component includes variants, states, Storybook documentation, and tests.
 
-## Quand l'utiliser
-- Lors de la création d'un nouveau composant UI pour l'application
-- Quand un composant existant doit être refactorisé en composant réutilisable
-- Pour ajouter un élément d'interface respectant le design system
-- Lors de l'implémentation d'une maquette Figma en code
+## When to use
+- When creating a new UI component for the application
+- When an existing component needs to be refactored into a reusable component
+- To add an interface element following the design system
+- When implementing a Figma mockup in code
 
-## Étapes
-1. **Analyser les spécifications visuelles** — Étudier la maquette, identifier les variantes (taille, couleur, état), les props requises et les comportements interactifs.
-2. **Définir l'interface TypeScript** — Créer les types pour les props du composant avec les valeurs par défaut et les props optionnelles.
-3. **Implémenter le composant** — Coder le composant avec les bonnes pratiques React (composition, forwarding refs, slots) en utilisant les tokens du design system.
-4. **Appliquer les styles** — Utiliser le système de styling du projet (Tailwind CSS, CSS Modules, styled-components) avec les tokens de design (couleurs, espacements, typographie).
-5. **Assurer l'accessibilité** — Ajouter les attributs ARIA, gérer la navigation clavier, vérifier les contrastes et tester avec un lecteur d'écran.
-6. **Créer les stories Storybook** — Documenter toutes les variantes, états et cas d'utilisation dans Storybook avec les contrôles interactifs.
-7. **Écrire les tests** — Rédiger les tests unitaires (React Testing Library) et les tests visuels (snapshot ou visual regression).
+## Steps
+1. **Analyze visual specifications** — Study the mockup, identify variants (size, color, state), required props, and interactive behaviors.
+2. **Define the TypeScript interface** — Create types for the component props with default values and optional props.
+3. **Implement the component** — Code the component with React best practices (composition, forwarding refs, slots) using design system tokens.
+4. **Apply styles** — Use the project's styling system (Tailwind CSS, CSS Modules, styled-components) with design tokens (colors, spacing, typography).
+5. **Ensure accessibility** — Add ARIA attributes, handle keyboard navigation, verify contrasts, and test with a screen reader.
+6. **Create Storybook stories** — Document all variants, states, and use cases in Storybook with interactive controls.
+7. **Write tests** — Write unit tests (React Testing Library) and visual tests (snapshot or visual regression).
 
-## Checklist de sortie
-- [ ] Le composant accepte toutes les variantes définies dans le design system
-- [ ] Les props TypeScript sont correctement typées avec JSDoc
-- [ ] L'accessibilité est conforme WCAG 2.1 AA (rôles ARIA, clavier, contraste)
-- [ ] Les styles utilisent exclusivement les tokens du design system
-- [ ] Les stories Storybook couvrent toutes les variantes et états
-- [ ] Les tests unitaires couvrent les interactions et le rendu conditionnel
-- [ ] Le composant est responsive et fonctionne sur mobile
-- [ ] Le composant est exporté dans le barrel file (index.ts)
+## Exit Checklist
+- [ ] The component accepts all variants defined in the design system
+- [ ] TypeScript props are correctly typed with JSDoc
+- [ ] Accessibility is WCAG 2.1 AA compliant (ARIA roles, keyboard, contrast)
+- [ ] Styles exclusively use design system tokens
+- [ ] Storybook stories cover all variants and states
+- [ ] Unit tests cover interactions and conditional rendering
+- [ ] The component is responsive and works on mobile
+- [ ] The component is exported in the barrel file (index.ts)
 
-## Format de sortie
+## Output Format
 ```
 📁 src/components/<ComponentName>/
 ├── <ComponentName>.tsx          — Composant principal
@@ -54,6 +54,6 @@ Props principales :
 
 Exemple d'utilisation :
   <ComponentName variant="primary" size="md">
-    Contenu
+    Content
   </ComponentName>
 ```

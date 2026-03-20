@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 /**
- * Assemble — Générateur principal
- * Transforme les agents/skills/workflows source en fichiers natifs par plateforme
+ * Assemble — Main Generator
+ * Transforms source agents/skills/workflows into native files per platform
  *
  * Usage:
  *   node generate.js --config .assemble.yaml --project /path/to/project
- *   node generate.js --platforms cursor,claude-code --lang-team français --lang-output english
+ *   node generate.js --platforms cursor,claude-code --lang-team english --lang-output english
  */
 
 const fs = require('fs');
@@ -19,11 +19,11 @@ const { generateMCPServer } = require('./lib/mcp-generator');
 const { generateUniversalAgentsMd } = require('./lib/agents-md-generator');
 const { loadConfig: _loadConfig, DEFAULTS: _DEFAULTS } = require('./lib/config-loader');
 
-// ─── Configuration par défaut ───────────────────────────────────────────────
+// ─── Default configuration ──────────────────────────────────────────────────
 
 const DEFAULTS = _DEFAULTS;
 
-// ─── Résolution des chemins ──────────────────────────────────────────────────
+// ─── Path resolution ────────────────────────────────────────────────────────
 
 const SRC_DIR = path.resolve(__dirname, '..', 'src');
 const AGENTS_DIR = path.join(SRC_DIR, 'agents');
@@ -33,7 +33,7 @@ const COMMANDS_FILE = path.join(SRC_DIR, 'commands', 'commands.yaml');
 const ORCHESTRATOR_DIR = path.join(SRC_DIR, 'orchestrator');
 const ADAPTERS_DIR = path.join(__dirname, 'adapters');
 
-// ─── Chargement des adaptateurs ──────────────────────────────────────────────
+// ─── Adapter loading ────────────────────────────────────────────────────────
 
 function loadAdapters(projectDir) {
   const adapters = {};
@@ -75,11 +75,11 @@ function loadAdapters(projectDir) {
   return adapters;
 }
 
-// ─── Chargement de la configuration ──────────────────────────────────────────
+// ─── Configuration loading ──────────────────────────────────────────────────
 
 const loadConfig = _loadConfig;
 
-// ─── Parsing des arguments CLI ───────────────────────────────────────────────
+// ─── CLI argument parsing ───────────────────────────────────────────────────
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -131,36 +131,36 @@ function parseArgs() {
 
 function printHelp() {
   console.log(`
-Assemble — Générateur de configurations
+Assemble — Configuration Generator
 
 Usage:
   node generate.js [options]
 
 Options:
-  --config, -c <path>     Chemin vers le fichier .assemble.yaml
-  --project, -p <path>    Répertoire du projet cible (défaut: .)
-  --platforms <list>       Plateformes cibles, séparées par des virgules
-  --lang-team <lang>       Langue de l'équipe (défaut: français)
-  --lang-output <lang>     Langue des livrables (défaut: français)
-  --output-dir, -o <path>  Répertoire de sortie des livrables
-  --update, -u             Mettre à jour une installation existante (lit .assemble.yaml)
-  --validate               Valider les fichiers générés sans régénérer
-  --help, -h               Afficher cette aide
+  --config, -c <path>     Path to the .assemble.yaml file
+  --project, -p <path>    Target project directory (default: .)
+  --platforms <list>       Target platforms, comma-separated
+  --lang-team <lang>       Team language (default: english)
+  --lang-output <lang>     Deliverable language (default: english)
+  --output-dir, -o <path>  Deliverable output directory
+  --update, -u             Update an existing installation (reads .assemble.yaml)
+  --validate               Validate generated files without regenerating
+  --help, -h               Show this help
 
-Plateformes supportées:
+Supported platforms:
   IDE: cursor, windsurf, cline, roocode, copilot, kiro, trae, antigravity,
        codebuddy, crush, iflow, kilocoder, opencode, qwencoder, rovodev
   CLI: claude-code, codex, gemini-cli, auggie, pi
 
-Exemples:
-  node generate.js --platforms cursor,claude-code --lang-team français
+Examples:
+  node generate.js --platforms cursor,claude-code --lang-team english
   node generate.js --config .assemble.yaml --project /my/project
   node generate.js --update --project /my/project
   node generate.js --validate --project /my/project
 `);
 }
 
-// ─── Génération principale ───────────────────────────────────────────────────
+// ─── Main generation ────────────────────────────────────────────────────────
 
 function generate() {
   const args = parseArgs();
@@ -168,7 +168,7 @@ function generate() {
   const projectDir = path.resolve(args.projectDir || '.');
   const configPath = args.configPath || path.join(projectDir, '.assemble.yaml');
 
-  // ─── Mode update : lire .assemble.yaml existant ─────────────────────────
+  // ─── Update mode: read existing .assemble.yaml ─────────────────────────
   if (args.update) {
     // Migration: rename old .cohesium.yaml → .assemble.yaml if needed
     const legacyConfigPath = path.join(projectDir, '.cohesium.yaml');
@@ -193,13 +193,13 @@ function generate() {
     console.log(`📄 Config loaded: ${configPath}`);
   }
 
-  // Charger la config
+  // Load config
   let config = loadConfig(configPath);
 
-  // Résoudre le profil (les valeurs du profil sont des defaults, config explicite gagne)
+  // Resolve profile (profile values are defaults, explicit config wins)
   config = resolveProfile(config);
 
-  // Surcharger avec les arguments CLI (sauf en mode update pur)
+  // Override with CLI arguments (except in pure update mode)
   if (args.platforms) config.platforms = args.platforms;
   if (args.langue_equipe) config.langue_equipe = args.langue_equipe;
   if (args.langue_output) config.langue_output = args.langue_output;
@@ -219,7 +219,7 @@ function generate() {
   console.log(`🎯 Platforms: ${config.platforms.join(', ') || 'none selected'}`);
   console.log('');
 
-  // Mode validation uniquement
+  // Validation-only mode
   if (args.validateOnly) {
     console.log('🔍 Validating generated files...');
     const validation = validateOutput(projectDir, config.platforms);
@@ -236,7 +236,7 @@ function generate() {
     process.exit(validation.valid ? 0 : 1);
   }
 
-  // Vérifier qu'il y a des plateformes
+  // Check that platforms are selected
   if (!config.platforms || config.platforms.length === 0) {
     console.error('❌ No platform selected. Use --platforms or configure .assemble.yaml');
     process.exit(1);
@@ -258,7 +258,7 @@ function generate() {
   }
   console.log(`  ✓ ${agents.length} agents loaded`);
 
-  // Charger les custom agents depuis .assemble/agents/
+  // Load custom agents from .assemble/agents/
   const customAgentsDir = path.join(projectDir, '.assemble', 'agents');
   if (fs.existsSync(customAgentsDir)) {
     const customAgents = loadAgents(customAgentsDir);
@@ -282,7 +282,7 @@ function generate() {
   const skills = loadSkills(SKILLS_DIR);
   console.log(`  ✓ ${skills.shared.length} shared skills, ${skills.specific.length} specific skills`);
 
-  // Charger les custom skills depuis .assemble/skills/
+  // Load custom skills from .assemble/skills/
   const customSkillsDir = path.join(projectDir, '.assemble', 'skills');
   if (fs.existsSync(customSkillsDir)) {
     const customSkillFiles = fs.readdirSync(customSkillsDir).filter(f => f.endsWith('.md'));
@@ -316,7 +316,7 @@ function generate() {
   }
   console.log(`  ✓ ${workflows.length} workflows loaded`);
 
-  // Charger les custom workflows depuis .assemble/workflows/
+  // Load custom workflows from .assemble/workflows/
   const customWorkflowsDir = path.join(projectDir, '.assemble', 'workflows');
   if (fs.existsSync(customWorkflowsDir)) {
     const customWfFiles = fs.readdirSync(customWorkflowsDir).filter(f => f.endsWith('.yaml') || f.endsWith('.yml'));
@@ -344,10 +344,10 @@ function generate() {
   const orchestrator = loadOrchestrator(ORCHESTRATOR_DIR);
   console.log(`  ✓ Orchestrator loaded`);
 
-  // Préparer les agents (injection langue + output)
+  // Prepare agents (language + output injection)
   const preparedAgents = agents.map(a => prepareAgent(a, config));
 
-  // Charger les adaptateurs (built-in + plugins from .assemble/adapters/)
+  // Load adapters (built-in + plugins from .assemble/adapters/)
   const adapters = loadAdapters(projectDir);
   console.log(`  ✓ ${Object.keys(adapters).length} adapters available`);
   console.log('');
@@ -383,7 +383,7 @@ function generate() {
     console.log('');
   }
 
-  // Générer pour chaque plateforme
+  // Generate for each platform
   let successCount = 0;
   let errorCount = 0;
 
@@ -422,7 +422,7 @@ function generate() {
     }
   }
 
-  // ─── Créer le répertoire output pour les livrables ──────────────────────
+  // ─── Create output directory for deliverables ──────────────────────────
   const outputPath = path.resolve(projectDir, config.output_dir);
   fs.mkdirSync(outputPath, { recursive: true });
   fs.writeFileSync(
@@ -525,7 +525,7 @@ Log of all agent actions for governance compliance. Required by \`governance: st
     fs.writeFileSync(agentsMdPath, agentsMdContent, 'utf-8');
   }
 
-  // Mettre à jour ou créer .assemble.yaml
+  // Update or create .assemble.yaml
   const assembleConfigPath = path.join(projectDir, '.assemble.yaml');
   const existingConfig = fs.existsSync(assembleConfigPath) ? loadConfig(assembleConfigPath) : {};
   const today = new Date().toISOString().split('T')[0];
@@ -564,6 +564,6 @@ updated_at: "${today}"
   process.exit(errorCount > 0 ? 1 : 0);
 }
 
-// ─── Point d'entrée ──────────────────────────────────────────────────────────
+// ─── Entry point ────────────────────────────────────────────────────────────
 
 generate();

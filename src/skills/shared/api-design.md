@@ -1,70 +1,70 @@
 ---
 name: api-design
-description: Conception d'API REST/GraphQL — contrats d'interface, versioning, pagination, gestion d'erreurs, documentation OpenAPI et bonnes pratiques
+description: REST/GraphQL API design — interface contracts, versioning, pagination, error handling, OpenAPI documentation and best practices
 agents: [dev-backend, dev-fullstack, architect, dev-mobile]
 trigger: /api
 ---
 
-# Skill : Conception d'API
+# Skill : API Design
 
-## Objectif
+## Objective
 
-Concevoir des APIs REST ou GraphQL robustes, cohérentes et bien documentées en suivant les standards de l'industrie. Cette skill couvre la définition des contrats, le versioning, la pagination, la gestion d'erreurs, l'authentification et la génération de la documentation OpenAPI/GraphQL SDL.
+Design robust, consistent, and well-documented REST or GraphQL APIs following industry standards. This skill covers contract definition, versioning, pagination, error handling, authentication, and OpenAPI/GraphQL SDL documentation generation.
 
-## Quand l'utiliser
+## When to use
 
-- Lors de la conception d'une nouvelle API ou d'un nouveau module d'API
-- Pour standardiser les conventions d'une API existante
-- Quand un contrat d'interface doit être défini entre le frontend et le backend
-- Lors de l'ajout de versioning ou de pagination à une API existante
-- Pour générer ou mettre à jour la documentation OpenAPI / GraphQL SDL
-- Quand une API tierce doit être encapsulée dans une abstraction propre
+- When designing a new API or a new API module
+- To standardize conventions of an existing API
+- When an interface contract must be defined between frontend and backend
+- When adding versioning or pagination to an existing API
+- To generate or update OpenAPI / GraphQL SDL documentation
+- When a third-party API needs to be encapsulated in a clean abstraction
 
-## Étapes
+## Steps
 
-1. **Identifier les ressources et les opérations** — Lister les entités métier concernées et les opérations CRUD + actions spécifiques. Pour GraphQL, identifier les queries, mutations et subscriptions. Définir les relations entre ressources (1:1, 1:N, N:N).
-2. **Définir les endpoints et le nommage** — Appliquer les conventions REST : noms de ressources au pluriel, verbes HTTP corrects (GET, POST, PUT, PATCH, DELETE), hiérarchie logique (`/users/{id}/orders`). Pour GraphQL, structurer le schema avec des types clairs et des noms de champs explicites.
-3. **Concevoir les schémas de données** — Définir les structures de requête (request body) et de réponse pour chaque endpoint. Utiliser un système de validation (Zod, JSON Schema, Pydantic). Documenter chaque champ avec son type, sa cardinalité et ses contraintes.
-4. **Implémenter la pagination et le filtrage** — Choisir la stratégie de pagination : offset-based (simple, adaptée aux listes stables), cursor-based (performante, adaptée aux flux). Définir les paramètres de filtrage, de tri et de recherche standardisés.
-5. **Définir la gestion d'erreurs** — Standardiser le format des erreurs avec un code machine, un message humain et des détails contextuels. Mapper les codes HTTP appropriés (400, 401, 403, 404, 409, 422, 429, 500). Implémenter le Problem Details (RFC 7807) si pertinent.
-6. **Configurer l'authentification et le rate limiting** — Documenter le mécanisme d'auth (JWT Bearer, API Key, OAuth2 scopes), les permissions par endpoint, les quotas et le rate limiting. Définir les headers de réponse associés (`X-RateLimit-*`).
-7. **Définir la stratégie de versioning** — Choisir entre URL versioning (`/v1/`), header versioning (`Accept: application/vnd.api.v1+json`), ou query parameter. Définir la politique de dépréciation et de support des anciennes versions.
-8. **Générer la documentation** — Produire la spécification OpenAPI 3.x (REST) ou le SDL (GraphQL) complète avec descriptions, exemples, et codes de réponse. Inclure des exemples de requêtes curl/httpie.
+1. **Identify resources and operations** — List the business entities involved and CRUD operations + specific actions. For GraphQL, identify queries, mutations, and subscriptions. Define relationships between resources (1:1, 1:N, N:N).
+2. **Define endpoints and naming** — Apply REST conventions: plural resource names, correct HTTP verbs (GET, POST, PUT, PATCH, DELETE), logical hierarchy (`/users/{id}/orders`). For GraphQL, structure the schema with clear types and explicit field names.
+3. **Design data schemas** — Define request body and response structures for each endpoint. Use a validation system (Zod, JSON Schema, Pydantic). Document each field with its type, cardinality, and constraints.
+4. **Implement pagination and filtering** — Choose the pagination strategy: offset-based (simple, suited for stable lists), cursor-based (performant, suited for streams). Define standardized filtering, sorting, and search parameters.
+5. **Define error handling** — Standardize the error format with a machine code, a human-readable message, and contextual details. Map appropriate HTTP codes (400, 401, 403, 404, 409, 422, 429, 500). Implement Problem Details (RFC 7807) if relevant.
+6. **Configure authentication and rate limiting** — Document the auth mechanism (JWT Bearer, API Key, OAuth2 scopes), per-endpoint permissions, quotas, and rate limiting. Define associated response headers (`X-RateLimit-*`).
+7. **Define the versioning strategy** — Choose between URL versioning (`/v1/`), header versioning (`Accept: application/vnd.api.v1+json`), or query parameter. Define the deprecation policy and support for legacy versions.
+8. **Generate documentation** — Produce the complete OpenAPI 3.x (REST) or SDL (GraphQL) specification with descriptions, examples, and response codes. Include curl/httpie request examples.
 
-## Checklist de sortie
+## Exit Checklist
 
-- [ ] Les ressources et opérations sont identifiées et nommées selon les conventions
-- [ ] Les schémas de requête et réponse sont définis avec validation
-- [ ] La pagination est implémentée (offset ou cursor) avec des limites configurées
-- [ ] Le format d'erreur est standardisé avec les codes HTTP appropriés
-- [ ] L'authentification et les permissions sont documentées par endpoint
-- [ ] La stratégie de versioning est définie et appliquée
-- [ ] La documentation OpenAPI/SDL est complète et à jour
-- [ ] Des exemples de requêtes fonctionnels sont fournis (curl/httpie)
+- [ ] Resources and operations are identified and named following conventions
+- [ ] Request and response schemas are defined with validation
+- [ ] Pagination is implemented (offset or cursor) with configured limits
+- [ ] Error format is standardized with appropriate HTTP codes
+- [ ] Authentication and permissions are documented per endpoint
+- [ ] Versioning strategy is defined and applied
+- [ ] OpenAPI/SDL documentation is complete and up to date
+- [ ] Working request examples are provided (curl/httpie)
 
-## Format de sortie
+## Output Format
 
 ```markdown
-## Conception d'API
+## API Design
 
-**Projet :** [nom du projet / service]
+**Project :** [project / service name]
 **Type :** [REST | GraphQL | gRPC]
 **Version :** [v1 | v2 | ...]
 **Base URL :** [https://api.example.com/v1]
 **Date :** [date]
 
-### Ressources
+### Resources
 
-| Ressource | Description | Opérations |
-|-----------|-------------|------------|
-| /users | Gestion des utilisateurs | GET, POST, GET/:id, PATCH/:id, DELETE/:id |
-| /users/:id/orders | Commandes d'un utilisateur | GET, POST |
+| Resource | Description | Operations |
+|----------|-------------|------------|
+| /users | User management | GET, POST, GET/:id, PATCH/:id, DELETE/:id |
+| /users/:id/orders | User orders | GET, POST |
 
-### Contrat détaillé
+### Detailed Contract
 
 #### `POST /resource`
 
-**Description :** Créer une nouvelle ressource
+**Description :** Create a new resource
 **Auth :** Bearer JWT — Scope `resource:write`
 **Rate limit :** 100 req/min
 
@@ -79,26 +79,26 @@ Concevoir des APIs REST ou GraphQL robustes, cohérentes et bien documentées en
 }
 ```
 
-**Réponses :**
+**Responses :**
 
 | Code | Description | Body |
 |------|-------------|------|
-| 201 | Ressource créée | `{ "id": "uuid", "field_1": "...", "created_at": "ISO8601" }` |
-| 400 | Données invalides | `{ "error": { "code": "VALIDATION_ERROR", "message": "...", "details": [...] } }` |
-| 401 | Non authentifié | `{ "error": { "code": "UNAUTHORIZED", "message": "..." } }` |
-| 409 | Conflit | `{ "error": { "code": "DUPLICATE_RESOURCE", "message": "..." } }` |
+| 201 | Resource created | `{ "id": "uuid", "field_1": "...", "created_at": "ISO8601" }` |
+| 400 | Invalid data | `{ "error": { "code": "VALIDATION_ERROR", "message": "...", "details": [...] } }` |
+| 401 | Not authenticated | `{ "error": { "code": "UNAUTHORIZED", "message": "..." } }` |
+| 409 | Conflict | `{ "error": { "code": "DUPLICATE_RESOURCE", "message": "..." } }` |
 
-**Exemple curl :**
+**curl example :**
 ```bash
 curl -X POST https://api.example.com/v1/resource \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
-  -d '{"field_1": "valeur", "field_2": 42}'
+  -d '{"field_1": "value", "field_2": 42}'
 ```
 
 ### Pagination
 
-**Stratégie :** [Offset | Cursor]
+**Strategy :** [Offset | Cursor]
 
 ```json
 {
@@ -112,15 +112,15 @@ curl -X POST https://api.example.com/v1/resource \
 }
 ```
 
-### Format d'erreur standardisé
+### Standardized error format
 
 ```json
 {
   "error": {
     "code": "ERROR_CODE",
-    "message": "Message lisible pour l'humain",
+    "message": "Human-readable message",
     "details": [
-      { "field": "email", "issue": "Format invalide" }
+      { "field": "email", "issue": "Invalid format" }
     ],
     "request_id": "req_abc123"
   }
@@ -129,7 +129,7 @@ curl -X POST https://api.example.com/v1/resource \
 
 ### Versioning
 
-**Stratégie :** URL prefix (`/v1/`, `/v2/`)
-**Politique de dépréciation :** 6 mois de support après l'annonce de dépréciation
-**Header de dépréciation :** `Deprecation: true`, `Sunset: <date>`
+**Strategy :** URL prefix (`/v1/`, `/v2/`)
+**Deprecation policy :** 6 months of support after deprecation announcement
+**Deprecation header :** `Deprecation: true`, `Sunset: <date>`
 ```

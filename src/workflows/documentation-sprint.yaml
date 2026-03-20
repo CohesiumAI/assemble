@@ -1,5 +1,5 @@
 name: documentation-sprint
-description: "Sprint de documentation — inventaire, rédaction, revue et publication"
+description: "Documentation sprint — inventory, writing, review, and publication"
 trigger: /docs
 output_dir: "{assemble_output}/docs_{timestamp}"
 steps:
@@ -10,13 +10,13 @@ steps:
   # Steps 2 and 3 can run in parallel
   - step: 2
     agent: architect
-    action: "Rédiger ou mettre à jour la documentation d'architecture (ADR, diagrammes, stack)"
+    action: "Write or update architecture documentation (ADR, diagrams, stack)"
     inputs: [01-analyst/doc-plan.md, 01-analyst/gap-analysis.md]
     outputs: [architecture-docs.md, adr-index.md]
     depends_on: [1]
   - step: 3
     agent: dev-fullstack
-    action: "Rédiger ou mettre à jour la documentation technique (API, README, guides de contribution)"
+    action: "Write or update technical documentation (API, README, contribution guides)"
     inputs: [01-analyst/doc-plan.md, 01-analyst/gap-analysis.md]
     outputs: [api-docs.md, readme-update.md, contributing-guide.md]
     depends_on: [1]

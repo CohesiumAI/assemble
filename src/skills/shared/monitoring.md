@@ -1,108 +1,108 @@
 ---
 name: monitoring
-description: Mise en place et analyse du monitoring et de l'observabilité — métriques, logs, traces, alerting et tableaux de bord opérationnels
+description: Monitoring and observability setup and analysis — metrics, logs, traces, alerting, and operational dashboards
 agents: [devops, data, dev-backend]
 trigger: /monitor
 ---
 
-# Skill : Monitoring & Observabilité
+# Skill : Monitoring & Observability
 
-## Objectif
+## Objective
 
-Mettre en place une stratégie d'observabilité complète couvrant les trois piliers (métriques, logs, traces), configurer des alertes pertinentes et créer des tableaux de bord opérationnels. Cette skill permet de détecter, diagnostiquer et résoudre rapidement les incidents en production.
+Set up a comprehensive observability strategy covering the three pillars (metrics, logs, traces), configure relevant alerts, and create operational dashboards. This skill enables rapid detection, diagnosis, and resolution of production incidents.
 
-## Quand l'utiliser
+## When to use
 
-- Lors de la mise en production d'un nouveau service ou microservice
-- Pour diagnostiquer un incident ou une dégradation de performance en production
-- Quand le système d'alerting génère trop de bruit (false positives) ou est insuffisant
-- Lors de la migration vers une nouvelle stack d'observabilité
-- Pour créer ou améliorer les dashboards opérationnels d'un service existant
-- Quand les SLO/SLI doivent être définis ou révisés
+- When deploying a new service or microservice to production
+- To diagnose an incident or performance degradation in production
+- When the alerting system generates too much noise (false positives) or is insufficient
+- When migrating to a new observability stack
+- To create or improve operational dashboards for an existing service
+- When SLOs/SLIs need to be defined or revised
 
-## Étapes
+## Steps
 
-1. **Identifier les signaux critiques** — Appliquer la méthode RED (Rate, Errors, Duration) pour les services et USE (Utilization, Saturation, Errors) pour les ressources. Définir les métriques métier clés (taux de conversion, commandes/minute, latence de traitement). Cartographier les dépendances du service.
-2. **Instrumenter l'application** — Ajouter les métriques custom (compteurs, histogrammes, jauges) avec Prometheus/OpenTelemetry. Configurer le structured logging (JSON) avec les champs standards (request_id, user_id, service, level, timestamp). Implémenter le distributed tracing avec les spans appropriés.
-3. **Configurer la collecte et le stockage** — Déployer les agents de collecte (Prometheus scraper, Fluentd/Vector, OpenTelemetry Collector). Configurer la rétention des données par niveau : métriques haute résolution (15 jours), agrégées (90 jours), logs (30 jours), traces (7 jours).
-4. **Définir les SLO et les error budgets** — Établir les Service Level Objectives en accord avec les besoins métier : disponibilité (99.9% = 43min de downtime/mois), latence (P95 < 500ms), taux d'erreur (< 0.1%). Calculer les error budgets et définir les actions quand ils sont consommés.
-5. **Configurer les alertes** — Créer des alertes basées sur les symptômes (pas les causes) avec des seuils appropriés. Implémenter des alertes multi-niveaux : warning (notification Slack), critical (page PagerDuty/OpsGenie). Éviter l'alert fatigue en regroupant et en dédupliquant.
-6. **Créer les dashboards** — Construire des tableaux de bord par audience : overview opérationnel (SRE), détail service (développeurs), métriques métier (product). Suivre le principe des 4 Golden Signals : latence, trafic, erreurs, saturation.
-7. **Documenter les runbooks** — Pour chaque alerte critique, rédiger un runbook : description de l'alerte, diagnostic étape par étape, actions correctives, critères d'escalade. Lier chaque alerte à son runbook dans le système de notification.
-8. **Valider et itérer** — Tester les alertes avec des incidents simulés (chaos engineering). Revoir mensuellement les alertes déclenchées : supprimer celles non actionnables, ajuster les seuils, ajouter les alertes manquantes identifiées lors d'incidents réels.
+1. **Identify critical signals** — Apply the RED method (Rate, Errors, Duration) for services and USE (Utilization, Saturation, Errors) for resources. Define key business metrics (conversion rate, orders/minute, processing latency). Map service dependencies.
+2. **Instrument the application** — Add custom metrics (counters, histograms, gauges) with Prometheus/OpenTelemetry. Configure structured logging (JSON) with standard fields (request_id, user_id, service, level, timestamp). Implement distributed tracing with appropriate spans.
+3. **Configure collection and storage** — Deploy collection agents (Prometheus scraper, Fluentd/Vector, OpenTelemetry Collector). Configure data retention by level: high-resolution metrics (15 days), aggregated (90 days), logs (30 days), traces (7 days).
+4. **Define SLOs and error budgets** — Establish Service Level Objectives aligned with business needs: availability (99.9% = 43min downtime/month), latency (P95 < 500ms), error rate (< 0.1%). Calculate error budgets and define actions when they are consumed.
+5. **Configure alerts** — Create symptom-based alerts (not cause-based) with appropriate thresholds. Implement multi-level alerts: warning (Slack notification), critical (PagerDuty/OpsGenie page). Avoid alert fatigue by grouping and deduplicating.
+6. **Create dashboards** — Build dashboards by audience: operational overview (SRE), service detail (developers), business metrics (product). Follow the 4 Golden Signals principle: latency, traffic, errors, saturation.
+7. **Document runbooks** — For each critical alert, write a runbook: alert description, step-by-step diagnosis, corrective actions, escalation criteria. Link each alert to its runbook in the notification system.
+8. **Validate and iterate** — Test alerts with simulated incidents (chaos engineering). Review triggered alerts monthly: remove non-actionable ones, adjust thresholds, add missing alerts identified during real incidents.
 
-## Checklist de sortie
+## Exit Checklist
 
-- [ ] Les métriques RED/USE sont collectées pour chaque service et ressource
-- [ ] Le structured logging est implémenté avec les champs standards
-- [ ] Le distributed tracing est opérationnel avec corrélation logs-traces
-- [ ] Les SLO sont définis et les error budgets calculés
-- [ ] Les alertes couvrent les symptômes critiques sans alert fatigue
-- [ ] Les dashboards sont créés par audience (ops, dev, product)
-- [ ] Un runbook existe pour chaque alerte critique
-- [ ] Le système a été testé avec un incident simulé
+- [ ] RED/USE metrics are collected for each service and resource
+- [ ] Structured logging is implemented with standard fields
+- [ ] Distributed tracing is operational with log-trace correlation
+- [ ] SLOs are defined and error budgets calculated
+- [ ] Alerts cover critical symptoms without alert fatigue
+- [ ] Dashboards are created by audience (ops, dev, product)
+- [ ] A runbook exists for each critical alert
+- [ ] The system has been tested with a simulated incident
 
-## Format de sortie
+## Output Format
 
 ```markdown
-## Plan de Monitoring & Observabilité
+## Monitoring & Observability Plan
 
-**Service :** [nom du service]
+**Service :** [service name]
 **Stack :** [Prometheus + Grafana | Datadog | New Relic | ELK | ...]
 **Environnement :** [production | staging]
 **Date :** [date]
 
-### SLO définis
+### Defined SLOs
 
-| SLI | Objectif (SLO) | Fenêtre | Error budget |
-|-----|----------------|---------|--------------|
-| Disponibilité | 99.9% | 30 jours | 43 min |
-| Latence P95 | < 500ms | 30 jours | 0.1% requêtes |
-| Taux d'erreur (5xx) | < 0.1% | 30 jours | [budget] |
+| SLI | Objective (SLO) | Window | Error budget |
+|-----|-----------------|--------|--------------|
+| Availability | 99.9% | 30 days | 43 min |
+| Latency P95 | < 500ms | 30 days | 0.1% requests |
+| Error rate (5xx) | < 0.1% | 30 days | [budget] |
 
-### Métriques instrumentées
+### Instrumented metrics
 
-#### Métriques applicatives (RED)
-| Métrique | Type | Labels | Description |
-|----------|------|--------|-------------|
-| `http_requests_total` | Counter | method, path, status | Nombre total de requêtes HTTP |
-| `http_request_duration_seconds` | Histogram | method, path | Durée des requêtes |
-| `http_errors_total` | Counter | method, path, error_code | Nombre d'erreurs |
+#### Application metrics (RED)
+| Metric | Type | Labels | Description |
+|--------|------|--------|-------------|
+| `http_requests_total` | Counter | method, path, status | Total HTTP requests |
+| `http_request_duration_seconds` | Histogram | method, path | Request duration |
+| `http_errors_total` | Counter | method, path, error_code | Error count |
 
-#### Métriques infrastructure (USE)
-| Ressource | Utilization | Saturation | Errors |
-|-----------|-------------|------------|--------|
+#### Infrastructure metrics (USE)
+| Resource | Utilization | Saturation | Errors |
+|----------|-------------|------------|--------|
 | CPU | `cpu_usage_percent` | `cpu_throttled_seconds` | — |
-| Mémoire | `memory_usage_bytes` | `memory_oom_kills` | — |
-| Disque | `disk_usage_percent` | `disk_io_queue_length` | `disk_errors` |
-| Réseau | `network_bytes_total` | `network_drops_total` | `network_errors` |
+| Memory | `memory_usage_bytes` | `memory_oom_kills` | — |
+| Disk | `disk_usage_percent` | `disk_io_queue_length` | `disk_errors` |
+| Network | `network_bytes_total` | `network_drops_total` | `network_errors` |
 
-### Alertes configurées
+### Configured alerts
 
-| Alerte | Condition | Sévérité | Canal | Runbook |
-|--------|-----------|----------|-------|---------|
-| Service indisponible | `up == 0` pendant 2min | Critical | PagerDuty | [lien] |
-| Latence élevée | `P95 > 1s` pendant 5min | Warning | Slack #ops | [lien] |
-| Taux d'erreur élevé | `5xx > 1%` pendant 5min | Critical | PagerDuty | [lien] |
-| Error budget < 20% | Budget mensuel consommé à 80% | Warning | Slack #ops | [lien] |
+| Alert | Condition | Severity | Channel | Runbook |
+|-------|-----------|----------|---------|---------|
+| Service unavailable | `up == 0` for 2min | Critical | PagerDuty | [link] |
+| High latency | `P95 > 1s` for 5min | Warning | Slack #ops | [link] |
+| High error rate | `5xx > 1%` for 5min | Critical | PagerDuty | [link] |
+| Error budget < 20% | Monthly budget consumed at 80% | Warning | Slack #ops | [link] |
 
-### Dashboard principal
+### Main dashboard
 
-**Panels recommandés :**
-1. Trafic — requêtes/seconde par endpoint (graphe temporel)
-2. Latence — P50/P95/P99 par endpoint (graphe temporel)
-3. Taux d'erreur — pourcentage 4xx/5xx (graphe temporel + seuil)
-4. Saturation — CPU, mémoire, connexions DB (jauges)
-5. SLO burn rate — consommation de l'error budget (indicateur)
-6. Dépendances — latence et disponibilité des services externes (tableau)
+**Recommended panels :**
+1. Traffic — requests/second per endpoint (time series)
+2. Latency — P50/P95/P99 per endpoint (time series)
+3. Error rate — 4xx/5xx percentage (time series + threshold)
+4. Saturation — CPU, memory, DB connections (gauges)
+5. SLO burn rate — error budget consumption (indicator)
+6. Dependencies — latency and availability of external services (table)
 
-### Template de runbook
+### Runbook template
 
-#### Alerte : [Nom de l'alerte]
-1. **Vérifier** — Confirmer l'alerte via le dashboard [lien]
-2. **Diagnostiquer** — Consulter les logs : `kubectl logs -l app=service --since=10m`
-3. **Corréler** — Vérifier les traces associées dans [outil de tracing]
-4. **Agir** — [Action corrective spécifique]
-5. **Escalader** — Si non résolu en 15min, contacter [équipe/personne]
-6. **Post-mortem** — Documenter l'incident dans [outil]
+#### Alert : [Alert name]
+1. **Verify** — Confirm the alert via the dashboard [link]
+2. **Diagnose** — Check the logs: `kubectl logs -l app=service --since=10m`
+3. **Correlate** — Check associated traces in [tracing tool]
+4. **Act** — [Specific corrective action]
+5. **Escalate** — If not resolved in 15min, contact [team/person]
+6. **Post-mortem** — Document the incident in [tool]
 ```

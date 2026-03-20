@@ -1,97 +1,97 @@
 ---
 name: qa-test-plan
-description: Création de plan de test complet avec stratégies, cas de test, matrices de couverture et critères d'acceptation
+description: Complete test plan creation with strategies, test cases, coverage matrices, and acceptance criteria
 agents: [qa, dev-backend, dev-frontend, dev-fullstack]
 trigger: /test-plan
 ---
 
 # Skill : QA Test Plan
 
-## Objectif
-Créer un plan de test complet et structuré qui couvre l'ensemble des exigences fonctionnelles et non fonctionnelles d'une fonctionnalité ou d'une release. Définir les stratégies de test, rédiger les cas de test détaillés, établir les matrices de couverture et fixer les critères d'acceptation pour garantir la qualité avant mise en production.
+## Objective
+Create a complete and structured test plan covering all functional and non-functional requirements of a feature or release. Define test strategies, write detailed test cases, establish coverage matrices, and set acceptance criteria to ensure quality before production deployment.
 
-## Quand l'utiliser
-- Avant le début des tests d'une nouvelle fonctionnalité ou d'un epic
-- Lors de la préparation d'une release majeure nécessitant un plan de test structuré
-- Quand une régression critique impose de renforcer la couverture de test
-- Pour un audit qualité ou une certification nécessitant une documentation de test formelle
-- Lors de la mise en place d'une stratégie de test pour un nouveau projet
+## When to use
+- Before starting tests on a new feature or epic
+- When preparing a major release requiring a structured test plan
+- When a critical regression requires strengthening test coverage
+- For a quality audit or certification requiring formal test documentation
+- When setting up a test strategy for a new project
 
-## Étapes
-1. **Analyser les exigences** — Étudier les spécifications fonctionnelles, les user stories, les critères d'acceptation et les maquettes. Identifier les règles métier, les cas limites et les contraintes non fonctionnelles (performance, sécurité, accessibilité).
-2. **Définir la stratégie de test** — Choisir les types de tests à réaliser (unitaire, intégration, fonctionnel, E2E, performance, sécurité, accessibilité) et les approches (boîte noire, boîte blanche, exploratoire).
-3. **Identifier les scénarios de test** — Lister les scénarios couvrant le happy path, les cas alternatifs, les cas d'erreur et les cas limites. Organiser les scénarios par module fonctionnel et par priorité.
-4. **Rédiger les cas de test** — Pour chaque scénario, écrire les cas de test détaillés avec préconditions, étapes d'exécution, données de test, résultats attendus et postconditions. Utiliser un format standardisé.
-5. **Créer la matrice de couverture** — Établir la matrice de traçabilité reliant chaque exigence aux cas de test correspondants. Identifier les zones non couvertes et ajouter les cas manquants.
-6. **Configurer l'environnement de test** — Définir les prérequis d'environnement (données de test, configuration, services externes, mocks) et préparer les jeux de données nécessaires.
-7. **Définir les critères d'acceptation** — Fixer les critères de sortie : taux de réussite minimum, couverture requise, zéro défaut bloquant/critique, performance dans les seuils définis.
-8. **Planifier l'exécution** — Estimer l'effort de test, définir le calendrier d'exécution, assigner les testeurs et planifier les cycles de régression.
+## Steps
+1. **Analyze requirements** — Study functional specifications, user stories, acceptance criteria, and mockups. Identify business rules, edge cases, and non-functional constraints (performance, security, accessibility).
+2. **Define the test strategy** — Choose the types of tests to perform (unit, integration, functional, E2E, performance, security, accessibility) and approaches (black box, white box, exploratory).
+3. **Identify test scenarios** — List scenarios covering the happy path, alternative cases, error cases, and edge cases. Organize scenarios by functional module and priority.
+4. **Write test cases** — For each scenario, write detailed test cases with preconditions, execution steps, test data, expected results, and postconditions. Use a standardized format.
+5. **Create the coverage matrix** — Establish the traceability matrix linking each requirement to corresponding test cases. Identify uncovered areas and add missing cases.
+6. **Configure the test environment** — Define environment prerequisites (test data, configuration, external services, mocks) and prepare necessary data sets.
+7. **Define acceptance criteria** — Set exit criteria: minimum pass rate, required coverage, zero blocking/critical defects, performance within defined thresholds.
+8. **Plan execution** — Estimate test effort, define execution schedule, assign testers, and plan regression cycles.
 
-## Checklist de sortie
-- [ ] Toutes les exigences fonctionnelles sont couvertes par au moins un cas de test
-- [ ] Les cas limites et les scénarios d'erreur sont documentés et testés
-- [ ] La matrice de traçabilité est complète (exigences vs. cas de test)
-- [ ] Les données de test sont préparées et reproductibles
-- [ ] Les critères d'acceptation sont définis et mesurables
-- [ ] Les tests de performance ont des seuils chiffrés (temps de réponse, charge)
-- [ ] Les tests d'accessibilité WCAG 2.1 AA sont inclus
-- [ ] Le calendrier d'exécution est réaliste et validé par l'équipe
+## Exit Checklist
+- [ ] All functional requirements are covered by at least one test case
+- [ ] Edge cases and error scenarios are documented and tested
+- [ ] Traceability matrix is complete (requirements vs. test cases)
+- [ ] Test data is prepared and reproducible
+- [ ] Acceptance criteria are defined and measurable
+- [ ] Performance tests have quantified thresholds (response time, load)
+- [ ] WCAG 2.1 AA accessibility tests are included
+- [ ] Execution schedule is realistic and validated by the team
 
-## Format de sortie
+## Output Format
 ```
-Plan de Test
+Test Plan
 
-Projet : [nom du projet / fonctionnalité]
-Version : [version du plan de test]
-Rédacteur : [agent qa]
+Project : [project / feature name]
+Version : [test plan version]
+Author : [agent qa]
 Date : [date]
-Sprint / Release : [référence]
+Sprint / Release : [reference]
 
-Périmètre de test :
-  - Fonctionnalités couvertes : [liste]
-  - Fonctionnalités hors périmètre : [liste]
-  - Environnement cible : [staging / préprod / navigateurs / devices]
+Test scope :
+  - Covered features : [list]
+  - Out-of-scope features : [list]
+  - Target environment : [staging / pre-prod / browsers / devices]
 
-Stratégie de test :
-  | Type de test       | Approche         | Outil           | Automatisé |
+Test strategy :
+  | Test type          | Approach         | Tool            | Automated |
   |--------------------|------------------|-----------------|-----------|
-  | Tests unitaires    | Boîte blanche    | Jest / Vitest   | Oui       |
-  | Tests intégration  | API / Service    | Supertest       | Oui       |
-  | Tests fonctionnels | Boîte noire      | Cypress / PWTW  | Partiel   |
-  | Tests E2E          | Parcours complet | Playwright      | Oui       |
-  | Tests performance  | Charge / Stress  | k6 / Artillery  | Oui       |
-  | Tests accessibilité| WCAG 2.1 AA      | axe / Lighthouse| Partiel   |
+  | Unit tests         | White box        | Jest / Vitest   | Yes       |
+  | Integration tests  | API / Service    | Supertest       | Yes       |
+  | Functional tests   | Black box        | Cypress / PWTW  | Partial   |
+  | E2E tests          | Full journey     | Playwright      | Yes       |
+  | Performance tests  | Load / Stress    | k6 / Artillery  | Yes       |
+  | Accessibility tests| WCAG 2.1 AA      | axe / Lighthouse| Partial   |
 
-Cas de test :
+Test cases :
 
-[TC-001] Titre du cas de test
-  - Priorité : Haute
-  - Préconditions : [état initial requis]
-  - Étapes :
-    1. [action utilisateur]
-    2. [action utilisateur]
-    3. [vérification]
-  - Données de test : [données nécessaires]
-  - Résultat attendu : [comportement attendu]
-  - Postconditions : [état final]
+[TC-001] Test case title
+  - Priority : High
+  - Preconditions : [required initial state]
+  - Steps :
+    1. [user action]
+    2. [user action]
+    3. [verification]
+  - Test data : [required data]
+  - Expected result : [expected behavior]
+  - Postconditions : [final state]
 
-Matrice de couverture :
-  | Exigence | TC-001 | TC-002 | TC-003 | TC-004 | Couverture |
-  |----------|--------|--------|--------|--------|-----------|
-  | REQ-01   |   X    |   X    |        |        | 100%      |
-  | REQ-02   |        |        |   X    |   X    | 100%      |
-  | REQ-03   |        |   X    |        |        | 50%       |
+Coverage matrix :
+  | Requirement | TC-001 | TC-002 | TC-003 | TC-004 | Coverage |
+  |-------------|--------|--------|--------|--------|----------|
+  | REQ-01      |   X    |   X    |        |        | 100%     |
+  | REQ-02      |        |        |   X    |   X    | 100%     |
+  | REQ-03      |        |   X    |        |        | 50%      |
 
-Critères d'acceptation :
-  - Taux de réussite : >= 95% des cas de test passés
-  - Zéro défaut bloquant ou critique ouvert
-  - Couverture de code : >= 80%
-  - Temps de réponse API : < 200ms (P95)
-  - Score accessibilité Lighthouse : >= 90
+Acceptance criteria :
+  - Pass rate : >= 95% of test cases passed
+  - Zero open blocking or critical defects
+  - Code coverage : >= 80%
+  - API response time : < 200ms (P95)
+  - Lighthouse accessibility score : >= 90
 
-Calendrier :
-  - Préparation : [date début] - [date fin]
-  - Exécution cycle 1 : [date début] - [date fin]
-  - Correction et retest : [date début] - [date fin]
-  - Régression finale : [date début] - [date fin]
+Schedule :
+  - Preparation : [start date] - [end date]
+  - Execution cycle 1 : [start date] - [end date]
+  - Fix and retest : [start date] - [end date]
+  - Final regression : [start date] - [end date]
 ```

@@ -1,57 +1,57 @@
 ---
 name: database-query
-description: Optimisation et conception de requêtes et schémas de base de données — modélisation, indexation, plans d'exécution, migrations et bonnes pratiques
+description: Database query and schema design and optimization — modeling, indexing, execution plans, migrations, and best practices
 agents: [db, dev-backend, dev-fullstack, data]
 trigger: /db
 ---
 
-# Skill : Requêtes & Schémas de Base de Données
+# Skill : Database Queries & Schemas
 
-## Objectif
+## Objective
 
-Concevoir des schémas de données robustes, écrire des requêtes performantes et optimiser les accès à la base de données. Cette skill couvre la modélisation relationnelle et NoSQL, l'indexation stratégique, l'analyse des plans d'exécution, les migrations et les bonnes pratiques de gestion des données.
+Design robust data schemas, write performant queries, and optimize database access. This skill covers relational and NoSQL modeling, strategic indexing, execution plan analysis, migrations, and data management best practices.
 
-## Quand l'utiliser
+## When to use
 
-- Lors de la conception d'un nouveau schéma de base de données ou d'une nouvelle table
-- Pour optimiser des requêtes lentes identifiées par le monitoring ou les logs
-- Lors de la création de migrations (ajout de colonnes, refactoring de schéma)
-- Quand un index doit être ajouté, modifié ou supprimé
-- Pour résoudre des problèmes de performances liés aux requêtes N+1, full scans ou locks
-- Lors d'un audit de la structure de la base de données existante
+- When designing a new database schema or table
+- To optimize slow queries identified by monitoring or logs
+- When creating migrations (adding columns, schema refactoring)
+- When an index needs to be added, modified, or removed
+- To resolve performance issues related to N+1 queries, full scans, or locks
+- During an audit of the existing database structure
 
-## Étapes
+## Steps
 
-1. **Analyser le besoin métier** — Identifier les entités, leurs attributs et leurs relations. Comprendre les patterns d'accès dominants (lecture intensive, écriture intensive, analytique). Définir les contraintes métier (unicité, intégrité référentielle, soft delete).
-2. **Concevoir le schéma** — Modéliser les tables, les types de colonnes, les contraintes (NOT NULL, UNIQUE, CHECK, FK), les valeurs par défaut. Appliquer la normalisation appropriée (3NF pour l'OLTP, dénormalisation ciblée pour la performance). Documenter les choix de modélisation.
-3. **Définir la stratégie d'indexation** — Créer les index en fonction des patterns de requêtes : index simples pour les filtres fréquents, index composites pour les requêtes multi-colonnes (respecter l'ordre des colonnes), index partiels pour les sous-ensembles de données, index GIN pour JSONB/full-text.
-4. **Rédiger et optimiser les requêtes** — Écrire les requêtes SQL en privilégiant la lisibilité. Utiliser `EXPLAIN ANALYZE` pour valider les plans d'exécution. Éliminer les sequential scans non désirés, les nested loops coûteux et les sorts en mémoire excessifs.
-5. **Gérer les migrations** — Rédiger des migrations idempotentes et réversibles. Séparer les migrations de schéma (rapides) des migrations de données (potentiellement longues). Prévoir les migrations zero-downtime pour les environnements de production.
-6. **Implémenter les contraintes de sécurité** — Configurer le Row-Level Security (RLS) pour l'isolation multi-tenant. Définir les rôles et permissions au niveau de la base. Chiffrer les colonnes sensibles si nécessaire.
-7. **Optimiser les performances globales** — Configurer le connection pooling (PgBouncer, Prisma pool), ajuster les paramètres du serveur (`work_mem`, `shared_buffers`, `effective_cache_size`), planifier le VACUUM et l'analyse des statistiques.
+1. **Analyze business needs** — Identify entities, their attributes, and relationships. Understand dominant access patterns (read-intensive, write-intensive, analytical). Define business constraints (uniqueness, referential integrity, soft delete).
+2. **Design the schema** — Model tables, column types, constraints (NOT NULL, UNIQUE, CHECK, FK), default values. Apply appropriate normalization (3NF for OLTP, targeted denormalization for performance). Document modeling choices.
+3. **Define the indexing strategy** — Create indexes based on query patterns: simple indexes for frequent filters, composite indexes for multi-column queries (respect column order), partial indexes for data subsets, GIN indexes for JSONB/full-text.
+4. **Write and optimize queries** — Write SQL queries prioritizing readability. Use `EXPLAIN ANALYZE` to validate execution plans. Eliminate unwanted sequential scans, costly nested loops, and excessive in-memory sorts.
+5. **Manage migrations** — Write idempotent and reversible migrations. Separate schema migrations (fast) from data migrations (potentially long). Plan zero-downtime migrations for production environments.
+6. **Implement security constraints** — Configure Row-Level Security (RLS) for multi-tenant isolation. Define roles and permissions at the database level. Encrypt sensitive columns if necessary.
+7. **Optimize overall performance** — Configure connection pooling (PgBouncer, Prisma pool), adjust server parameters (`work_mem`, `shared_buffers`, `effective_cache_size`), schedule VACUUM and statistics analysis.
 
-## Checklist de sortie
+## Exit Checklist
 
-- [ ] Le schéma est modélisé avec les types, contraintes et relations appropriés
-- [ ] La normalisation est adaptée au cas d'usage (OLTP vs analytique)
-- [ ] Les index sont définis en fonction des patterns de requêtes réels
-- [ ] Les requêtes critiques sont validées avec `EXPLAIN ANALYZE`
-- [ ] Aucun sequential scan non désiré sur les tables volumineuses
-- [ ] Les migrations sont idempotentes, réversibles et zero-downtime
-- [ ] La sécurité au niveau données (RLS, permissions) est configurée
-- [ ] La documentation du schéma est à jour (diagramme ER, dictionnaire de données)
+- [ ] Schema is modeled with appropriate types, constraints, and relationships
+- [ ] Normalization is adapted to the use case (OLTP vs analytical)
+- [ ] Indexes are defined based on actual query patterns
+- [ ] Critical queries are validated with `EXPLAIN ANALYZE`
+- [ ] No unwanted sequential scan on large tables
+- [ ] Migrations are idempotent, reversible, and zero-downtime
+- [ ] Data-level security (RLS, permissions) is configured
+- [ ] Schema documentation is up to date (ER diagram, data dictionary)
 
-## Format de sortie
+## Output Format
 
 ```markdown
-## Conception / Optimisation Base de Données
+## Database Design / Optimization
 
-**Base :** [PostgreSQL | MySQL | MongoDB | ...]
-**Schéma :** [nom du schéma]
-**Contexte :** [nouvelle table | optimisation | migration | audit]
+**Database :** [PostgreSQL | MySQL | MongoDB | ...]
+**Schema :** [schema name]
+**Context :** [new table | optimization | migration | audit]
 **Date :** [date]
 
-### Schéma proposé
+### Proposed schema
 
 ```sql
 CREATE TABLE orders (
@@ -65,15 +65,15 @@ CREATE TABLE orders (
     updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Index pour les requêtes fréquentes
+-- Indexes for frequent queries
 CREATE INDEX idx_orders_user_id ON orders(user_id);
 CREATE INDEX idx_orders_status ON orders(status) WHERE status NOT IN ('delivered', 'cancelled');
 CREATE INDEX idx_orders_created_at ON orders(created_at DESC);
 ```
 
-### Analyse des requêtes
+### Query analysis
 
-#### Requête : [description fonctionnelle]
+#### Query : [functional description]
 
 **SQL :**
 ```sql
@@ -86,15 +86,15 @@ ORDER BY o.created_at DESC
 LIMIT 50;
 ```
 
-**Plan d'exécution :**
+**Execution plan :**
 ```
 Index Scan using idx_orders_status on orders o (cost=0.42..12.56 rows=50)
   Filter: (created_at > ...)
   -> Index Scan using users_pkey on users u
 ```
 
-**Temps d'exécution :** X.XXms
-**Verdict :** ✅ Optimal | ⚠️ Acceptable | ❌ À optimiser
+**Execution time :** X.XXms
+**Verdict :** ✅ Optimal | ⚠️ Acceptable | ❌ Needs optimization
 
 ### Migration
 
@@ -111,13 +111,13 @@ DROP INDEX IF EXISTS idx_orders_discount;
 ALTER TABLE orders DROP COLUMN IF EXISTS discount_cents;
 ```
 
-**Zero-downtime :** ✅ Oui — utilisation de `CONCURRENTLY` et colonnes nullable/default
+**Zero-downtime :** ✅ Yes — using `CONCURRENTLY` and nullable/default columns
 
-### Recommandations
+### Recommendations
 
-| Priorité | Action | Impact | Complexité |
+| Priority | Action | Impact | Complexity |
 |----------|--------|--------|------------|
-| P0 | [action critique] | [gain attendu] | [effort] |
-| P1 | [optimisation recommandée] | [gain attendu] | [effort] |
-| P2 | [amélioration future] | [gain attendu] | [effort] |
+| P0 | [critical action] | [expected gain] | [effort] |
+| P1 | [recommended optimization] | [expected gain] | [effort] |
+| P2 | [future improvement] | [expected gain] | [effort] |
 ```

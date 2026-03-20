@@ -70,9 +70,9 @@ module.exports = {
 
     // ── GEMINI.md — concise overview ──────────────────────────────────────
     let gemini = '# Assemble\n\n';
-    gemini += 'Ce projet utilise le système Assemble by Cohesium AI avec des agents IA spécialisés.\n\n';
+    gemini += 'This project uses the Assemble by Cohesium AI system with specialized AI agents.\n\n';
 
-    gemini += '## Agents disponibles\n\n';
+    gemini += '## Available Agents\n\n';
     for (const agent of agents) {
       const slug = marvelSlug(agent);
       const display = marvelDisplayName(agent);
@@ -80,14 +80,14 @@ module.exports = {
       gemini += `- **${display}** — ${desc} → \`.gemini/agents/${slug}.md\`\n`;
     }
 
-    gemini += '\n## Skills disponibles\n\n';
+    gemini += '\n## Available Skills\n\n';
     for (const skill of allSkills) {
       const slug = skillSlug(skill);
       const desc = (skill.meta.description || '').split('—')[0].trim();
       gemini += `- **${slug}** — ${desc}\n`;
     }
 
-    gemini += '\n## Workflows disponibles\n\n';
+    gemini += '\n## Available Workflows\n\n';
     for (const workflow of workflows) {
       const slug = workflowSlug(workflow);
       const desc = workflowField(workflow.raw, 'description');
@@ -96,7 +96,7 @@ module.exports = {
 
     gemini += '\n' + renderCommandRegistry(agents, skills, workflows, config.governance);
 
-    gemini += `\n## Répertoire de sortie\n\nLes livrables sont produits dans : \`${config.output_dir || './assemble-output'}\`\n`;
+    gemini += `\n## Output Directory\n\nDeliverables are produced in: \`${config.output_dir || './assemble-output'}\`\n`;
 
     fs.writeFileSync(path.join(projectDir, 'GEMINI.md'), gemini, 'utf-8');
   },

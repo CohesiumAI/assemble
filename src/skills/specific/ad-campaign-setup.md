@@ -1,51 +1,51 @@
 ---
 name: ad-campaign-setup
-description: Configuration complète de campagne publicitaire multi-plateforme avec ciblage, créatives et suivi de performance
+description: Complete multi-platform ad campaign configuration with targeting, creatives, and performance tracking
 agents: [ads, marketing, growth]
 trigger: /ad-setup
 ---
 
 # Skill : Ad Campaign Setup
 
-## Objectif
-Configurer et lancer une campagne publicitaire complète sur les plateformes de diffusion (Google Ads, Meta Ads, LinkedIn Ads, TikTok Ads). Définir la stratégie de ciblage, créer les ensembles d'annonces, configurer le tracking de conversion et mettre en place les tableaux de bord de suivi de performance.
+## Objective
+Configure and launch a complete ad campaign on distribution platforms (Google Ads, Meta Ads, LinkedIn Ads, TikTok Ads). Define the targeting strategy, create ad sets, configure conversion tracking, and set up performance tracking dashboards.
 
-## Quand l'utiliser
-- Lors du lancement d'un nouveau produit ou service nécessitant de la visibilité payante
-- Pour une campagne d'acquisition d'utilisateurs ou de génération de leads
-- Quand une campagne existante doit être restructurée ou optimisée
-- Pour un lancement sur une nouvelle plateforme publicitaire
-- Lors de la mise en place d'une campagne de retargeting ou de remarketing
+## When to use
+- When launching a new product or service requiring paid visibility
+- For a user acquisition or lead generation campaign
+- When an existing campaign needs to be restructured or optimized
+- For a launch on a new advertising platform
+- When setting up a retargeting or remarketing campaign
 
-## Étapes
-1. **Définir les objectifs de la campagne** — Identifier l'objectif principal (awareness, trafic, conversions, leads, app installs), le KPI principal, le budget global et la durée de la campagne.
-2. **Configurer le ciblage** — Définir les audiences cibles : demographics (âge, genre, localisation), intérêts, comportements, audiences similaires (lookalike), listes de remarketing et exclusions.
-3. **Structurer les campagnes et ad sets** — Organiser les campagnes par objectif, les ad sets par audience ou placement, avec une nomenclature claire pour le reporting (convention de nommage standardisée).
-4. **Créer les créatives** — Préparer les variantes d'annonces : textes (titres, descriptions, CTA), visuels (images, vidéos, carrousels) en respectant les spécifications de chaque plateforme.
-5. **Configurer le tracking** — Installer les pixels de suivi (Meta Pixel, Google Tag, LinkedIn Insight Tag), définir les événements de conversion, configurer les paramètres UTM et vérifier le tracking server-side si applicable.
-6. **Définir la stratégie d'enchères** — Choisir la stratégie d'enchères adaptée à l'objectif (CPA cible, ROAS cible, maximiser les conversions), définir les plafonds de budget quotidien et les règles d'optimisation automatique.
-7. **Mettre en place les tests A/B** — Configurer les tests de créatives, d'audiences et de placements pour identifier les combinaisons les plus performantes avec une méthodologie statistiquement significative.
-8. **Créer le tableau de bord de suivi** — Mettre en place le dashboard de reporting avec les métriques clés (CPC, CPM, CTR, CPA, ROAS, taux de conversion) et les alertes de performance.
+## Steps
+1. **Define campaign objectives** — Identify the primary objective (awareness, traffic, conversions, leads, app installs), the primary KPI, the overall budget, and the campaign duration.
+2. **Configure targeting** — Define target audiences: demographics (age, gender, location), interests, behaviors, lookalike audiences, remarketing lists, and exclusions.
+3. **Structure campaigns and ad sets** — Organize campaigns by objective, ad sets by audience or placement, with clear nomenclature for reporting (standardized naming convention).
+4. **Create creatives** — Prepare ad variants: copy (headlines, descriptions, CTA), visuals (images, videos, carousels) following each platform's specifications.
+5. **Configure tracking** — Install tracking pixels (Meta Pixel, Google Tag, LinkedIn Insight Tag), define conversion events, configure UTM parameters, and verify server-side tracking if applicable.
+6. **Define bidding strategy** — Choose the bidding strategy suited to the objective (target CPA, target ROAS, maximize conversions), set daily budget caps and automatic optimization rules.
+7. **Set up A/B tests** — Configure creative, audience, and placement tests to identify the best-performing combinations with statistically significant methodology.
+8. **Create the tracking dashboard** — Set up the reporting dashboard with key metrics (CPC, CPM, CTR, CPA, ROAS, conversion rate) and performance alerts.
 
-## Checklist de sortie
-- [ ] Les objectifs et KPIs sont clairement définis et mesurables
-- [ ] Les audiences sont configurées avec les exclusions appropriées
-- [ ] La nomenclature des campagnes suit la convention de nommage établie
-- [ ] Les créatives respectent les spécifications de chaque plateforme (taille, format, poids)
-- [ ] Le tracking de conversion est installé et vérifié (événements de test fires)
-- [ ] La stratégie d'enchères est alignée avec les objectifs de la campagne
-- [ ] Les tests A/B sont configurés avec un minimum de 2 variantes par ad set
-- [ ] Le tableau de bord de suivi est opérationnel avec les alertes configurées
+## Exit Checklist
+- [ ] Objectives and KPIs are clearly defined and measurable
+- [ ] Audiences are configured with appropriate exclusions
+- [ ] Campaign nomenclature follows the established naming convention
+- [ ] Creatives meet each platform's specifications (size, format, weight)
+- [ ] Conversion tracking is installed and verified (test event fires)
+- [ ] Bidding strategy is aligned with campaign objectives
+- [ ] A/B tests are configured with a minimum of 2 variants per ad set
+- [ ] Tracking dashboard is operational with alerts configured
 
-## Format de sortie
+## Output Format
 ```
-Configuration de Campagne Publicitaire
+Ad Campaign Configuration
 
-Campagne : [nom de la campagne]
-Plateforme(s) : [Google Ads / Meta Ads / LinkedIn Ads / TikTok Ads]
-Objectif : [awareness / trafic / conversions / leads]
-Budget : [montant] / [jour / semaine / mois]
-Durée : [date de début] - [date de fin]
+Campaign : [campaign name]
+Platform(s) : [Google Ads / Meta Ads / LinkedIn Ads / TikTok Ads]
+Objective : [awareness / traffic / conversions / leads]
+Budget : [amount] / [day / week / month]
+Duration : [start date] - [end date]
 
 Structure :
   Campagne : [NOM_CAMPAGNE]_[OBJECTIF]_[DATE]
@@ -57,20 +57,20 @@ Structure :
       ├── Ad 1 : [FORMAT]_[VARIANTE_A]
       └── Ad 2 : [FORMAT]_[VARIANTE_B]
 
-Ciblage principal :
-  - Âge : [tranche]
-  - Localisation : [pays / régions / villes]
-  - Intérêts : [liste]
-  - Audience lookalike : [source, pourcentage]
+Primary targeting :
+  - Age : [range]
+  - Location : [countries / regions / cities]
+  - Interests : [list]
+  - Lookalike audience : [source, percentage]
 
-Tracking configuré :
-  - Pixel : [installé et vérifié]
-  - Événements : [PageView, AddToCart, Purchase, Lead, etc.]
+Configured tracking :
+  - Pixel : [installed and verified]
+  - Events : [PageView, AddToCart, Purchase, Lead, etc.]
   - UTM : utm_source=[source]&utm_medium=[medium]&utm_campaign=[campaign]
 
-KPIs cibles :
-  - CPA cible : [montant]
-  - ROAS cible : [ratio]
-  - CTR attendu : [pourcentage]
-  - Budget quotidien : [montant]
+Target KPIs :
+  - Target CPA : [amount]
+  - Target ROAS : [ratio]
+  - Expected CTR : [percentage]
+  - Daily budget : [amount]
 ```

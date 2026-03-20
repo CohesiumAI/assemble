@@ -1,48 +1,48 @@
 ---
 name: ci-cd
-description: Configuration et optimisation des pipelines CI/CD — build, tests, déploiement, quality gates, caching et bonnes pratiques DevOps
+description: CI/CD pipeline configuration and optimization — build, tests, deployment, quality gates, caching, and DevOps best practices
 agents: [devops, dev-backend, dev-fullstack]
 trigger: /cicd
 ---
 
-# Skill : Pipeline CI/CD
+# Skill : CI/CD Pipeline
 
-## Objectif
+## Objective
 
-Concevoir, configurer et optimiser des pipelines d'intégration continue et de déploiement continu fiables, rapides et sécurisés. Cette skill couvre la structure des pipelines, les quality gates, le caching, les stratégies de déploiement et le monitoring des builds.
+Design, configure, and optimize reliable, fast, and secure continuous integration and continuous deployment pipelines. This skill covers pipeline structure, quality gates, caching, deployment strategies, and build monitoring.
 
-## Quand l'utiliser
+## When to use
 
-- Lors de la mise en place d'un pipeline CI/CD pour un nouveau projet
-- Pour optimiser un pipeline existant (durée de build, fiabilité, coûts)
-- Quand de nouvelles étapes doivent être ajoutées (tests, sécurité, déploiement)
-- Lors d'un changement de plateforme CI/CD (GitHub Actions, GitLab CI, CircleCI, Jenkins)
-- Pour implémenter une stratégie de déploiement (blue-green, canary, rolling)
-- Quand les builds sont instables (flaky tests, timeouts, ressources insuffisantes)
+- When setting up a CI/CD pipeline for a new project
+- To optimize an existing pipeline (build duration, reliability, costs)
+- When new stages need to be added (tests, security, deployment)
+- When changing CI/CD platform (GitHub Actions, GitLab CI, CircleCI, Jenkins)
+- To implement a deployment strategy (blue-green, canary, rolling)
+- When builds are unstable (flaky tests, timeouts, insufficient resources)
 
-## Étapes
+## Steps
 
-1. **Analyser le projet et ses besoins** — Identifier le langage, le framework, les dépendances, les environnements cibles (staging, production), les contraintes de déploiement. Évaluer la maturité CI/CD actuelle et les points de douleur.
-2. **Structurer le pipeline** — Définir les stages dans l'ordre logique : checkout → install → lint → build → test (unit → integration → e2e) → security scan → deploy. Paralléliser les étapes indépendantes pour réduire le temps total.
-3. **Configurer le caching** — Mettre en cache les dépendances (`node_modules`, `.pip-cache`, images Docker layers), les artefacts de build et les résultats de tests. Utiliser des clés de cache basées sur les lockfiles (`package-lock.json`, `poetry.lock`).
-4. **Implémenter les quality gates** — Définir les conditions de passage : couverture de tests minimale, zéro vulnérabilité critique (SAST/DAST), lint sans erreur, build sans warning. Bloquer le merge si un gate échoue.
-5. **Configurer les déploiements** — Implémenter la stratégie de déploiement adaptée : blue-green (zero-downtime, rollback instantané), canary (déploiement progressif avec monitoring), rolling update (mise à jour progressive des instances). Configurer les health checks et les rollback automatiques.
-6. **Sécuriser le pipeline** — Stocker les secrets dans le gestionnaire de la plateforme CI (jamais en clair dans le YAML). Scanner les images Docker avec Trivy/Grype. Restreindre les permissions des tokens CI. Signer les artefacts de build.
-7. **Optimiser les performances** — Réduire le temps de build : parallélisation des jobs, self-hosted runners pour les builds lourds, builds incrémentaux, matrix strategy pour les tests multi-version. Cibler un pipeline complet en moins de 10 minutes.
-8. **Monitorer et maintenir** — Tracker les métriques du pipeline : durée moyenne, taux de succès, temps de recovery après échec. Alerter sur les dégradations. Documenter les runbooks pour les échecs courants.
+1. **Analyze the project and its needs** — Identify the language, framework, dependencies, target environments (staging, production), deployment constraints. Evaluate current CI/CD maturity and pain points.
+2. **Structure the pipeline** — Define stages in logical order: checkout → install → lint → build → test (unit → integration → e2e) → security scan → deploy. Parallelize independent stages to reduce total time.
+3. **Configure caching** — Cache dependencies (`node_modules`, `.pip-cache`, Docker image layers), build artifacts, and test results. Use cache keys based on lockfiles (`package-lock.json`, `poetry.lock`).
+4. **Implement quality gates** — Define pass conditions: minimum test coverage, zero critical vulnerabilities (SAST/DAST), lint with no errors, build with no warnings. Block merge if a gate fails.
+5. **Configure deployments** — Implement the appropriate deployment strategy: blue-green (zero-downtime, instant rollback), canary (progressive deployment with monitoring), rolling update (progressive instance updates). Configure health checks and automatic rollbacks.
+6. **Secure the pipeline** — Store secrets in the CI platform's secret manager (never in plaintext in YAML). Scan Docker images with Trivy/Grype. Restrict CI token permissions. Sign build artifacts.
+7. **Optimize performance** — Reduce build time: job parallelization, self-hosted runners for heavy builds, incremental builds, matrix strategy for multi-version tests. Target a complete pipeline under 10 minutes.
+8. **Monitor and maintain** — Track pipeline metrics: average duration, success rate, recovery time after failure. Alert on degradations. Document runbooks for common failures.
 
-## Checklist de sortie
+## Exit Checklist
 
-- [ ] Le pipeline couvre les étapes lint → build → test → security → deploy
-- [ ] Les étapes indépendantes sont parallélisées
-- [ ] Le caching est configuré pour les dépendances et artefacts
-- [ ] Les quality gates bloquent le merge en cas d'échec
-- [ ] Les secrets sont gérés via le gestionnaire de la plateforme CI
-- [ ] La stratégie de déploiement est définie avec rollback automatique
-- [ ] Le temps de pipeline total est inférieur à 10 minutes (cible)
-- [ ] Les métriques du pipeline sont monitorées et alertées
+- [ ] The pipeline covers lint → build → test → security → deploy stages
+- [ ] Independent stages are parallelized
+- [ ] Caching is configured for dependencies and artifacts
+- [ ] Quality gates block merge on failure
+- [ ] Secrets are managed via the CI platform's secret manager
+- [ ] Deployment strategy is defined with automatic rollback
+- [ ] Total pipeline time is under 10 minutes (target)
+- [ ] Pipeline metrics are monitored and alerted
 
-## Format de sortie
+## Output Format
 
 ```markdown
 ## Configuration CI/CD
@@ -52,7 +52,7 @@ Concevoir, configurer et optimiser des pipelines d'intégration continue et de d
 **Environnements :** [staging, production]
 **Date :** [date]
 
-### Architecture du pipeline
+### Pipeline architecture
 
 ```
 ┌─────────┐   ┌──────┐   ┌───────┐   ┌──────────┐   ┌────────┐   ┌────────┐
@@ -63,10 +63,10 @@ Concevoir, configurer et optimiser des pipelines d'intégration continue et de d
                                       └──────────┘
 ```
 
-### Fichier de configuration
+### Configuration file
 
 ```yaml
-# .github/workflows/ci.yml (exemple GitHub Actions)
+# .github/workflows/ci.yml (GitHub Actions example)
 name: CI/CD Pipeline
 
 on:
@@ -113,23 +113,23 @@ jobs:
 
 | Gate | Seuil | Bloquant |
 |------|-------|----------|
-| Couverture de tests | ≥ 80% | ✅ |
-| Lint (erreurs) | 0 | ✅ |
-| Vulnérabilités critiques | 0 | ✅ |
-| Build size (delta) | < +10% | ⚠️ Avertissement |
+| Test coverage | ≥ 80% | ✅ |
+| Lint (errors) | 0 | ✅ |
+| Critical vulnerabilities | 0 | ✅ |
+| Build size (delta) | < +10% | ⚠️ Warning |
 
-### Stratégie de déploiement
+### Deployment strategy
 
 **Type :** [Blue-Green | Canary | Rolling]
-**Rollback :** Automatique si health check échoue après X minutes
-**Health check :** `GET /health` — réponse 200 en < 5s
+**Rollback :** Automatic if health check fails after X minutes
+**Health check :** `GET /health` — 200 response in < 5s
 
-### Métriques cibles
+### Target metrics
 
-| Métrique | Valeur actuelle | Cible |
-|----------|----------------|-------|
-| Durée du pipeline | Xmin | < 10min |
-| Taux de succès | X% | > 95% |
+| Metric | Current value | Target |
+|--------|--------------|--------|
+| Pipeline duration | Xmin | < 10min |
+| Success rate | X% | > 95% |
 | MTTR (Mean Time To Recovery) | Xmin | < 15min |
-| Fréquence de déploiement | X/semaine | [cible] |
+| Deployment frequency | X/week | [target] |
 ```

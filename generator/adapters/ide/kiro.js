@@ -80,7 +80,7 @@ module.exports = {
       fs.writeFileSync(path.join(kiroSteeringDir, 'orchestrator.md'), renderOrchestrator(orchestrator, config), 'utf-8');
     }
 
-    let teams = '# Équipes Assemble\n\n';
+    let teams = '# Assemble Teams\n\n';
     for (const agent of agents) {
       const display = marvelDisplayName(agent);
       const id = agentId(agent);

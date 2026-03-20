@@ -1,42 +1,42 @@
 ---
 name: db-migration
-description: Création et gestion de migrations de base de données avec rollback et validation
+description: Database migration creation and management with rollback and validation
 agents: [db, dev-backend, dev-fullstack]
 trigger: /migrate
 ---
 
 # Skill : Database Migration
 
-## Objectif
-Créer, valider et appliquer des migrations de base de données de manière sécurisée et réversible. Gérer les changements de schéma (tables, colonnes, index, contraintes) avec des scripts de migration versionnés et des stratégies de rollback.
+## Objective
+Create, validate, and apply database migrations in a secure and reversible manner. Manage schema changes (tables, columns, indexes, constraints) with versioned migration scripts and rollback strategies.
 
-## Quand l'utiliser
-- Lors de l'ajout, modification ou suppression de tables ou colonnes
-- Quand un changement de schéma est nécessaire pour une nouvelle fonctionnalité
-- Pour ajouter ou modifier des index, contraintes ou relations
-- Lors de la migration de données existantes (data migration)
-- Pour synchroniser le schéma entre environnements (dev, staging, production)
+## When to use
+- When adding, modifying, or deleting tables or columns
+- When a schema change is needed for a new feature
+- To add or modify indexes, constraints, or relationships
+- During existing data migration (data migration)
+- To synchronize schema between environments (dev, staging, production)
 
-## Étapes
-1. **Analyser le changement requis** — Identifier les modifications de schéma nécessaires, les tables impactées, les dépendances et les données existantes à préserver.
-2. **Créer le fichier de migration** — Générer un fichier de migration horodaté avec un nom descriptif via l'outil de migration (Prisma, Knex, TypeORM, Alembic, Flyway).
-3. **Écrire la migration UP** — Implémenter les changements de schéma dans la direction forward avec les types de données appropriés, les valeurs par défaut et les contraintes.
-4. **Écrire la migration DOWN** — Implémenter le rollback complet pour permettre de revenir à l'état précédent sans perte de données.
-5. **Gérer la migration de données** — Si nécessaire, écrire les scripts de transformation des données existantes avec gestion des volumes importants (batching).
-6. **Valider en environnement de test** — Exécuter la migration et le rollback sur une copie de la base de données de production pour vérifier l'intégrité.
-7. **Documenter les changements** — Mettre à jour le schéma de référence, les diagrammes ERD et le changelog des migrations.
+## Steps
+1. **Analyze the required change** — Identify necessary schema modifications, impacted tables, dependencies, and existing data to preserve.
+2. **Create the migration file** — Generate a timestamped migration file with a descriptive name via the migration tool (Prisma, Knex, TypeORM, Alembic, Flyway).
+3. **Write the UP migration** — Implement schema changes in the forward direction with appropriate data types, default values, and constraints.
+4. **Write the DOWN migration** — Implement complete rollback to allow returning to the previous state without data loss.
+5. **Handle data migration** — If necessary, write transformation scripts for existing data with large volume handling (batching).
+6. **Validate in test environment** — Run the migration and rollback on a copy of the production database to verify integrity.
+7. **Document the changes** — Update the reference schema, ERD diagrams, and migration changelog.
 
-## Checklist de sortie
-- [ ] La migration UP s'exécute sans erreur sur une base de données propre
-- [ ] La migration DOWN restaure exactement l'état précédent
-- [ ] Les index nécessaires sont créés pour les performances
-- [ ] Les contraintes d'intégrité (FK, UNIQUE, NOT NULL, CHECK) sont en place
-- [ ] La migration de données préserve toutes les données existantes
-- [ ] Le temps d'exécution est acceptable pour la production (pas de lock prolongé)
-- [ ] La migration est idempotente ou protégée contre la double exécution
-- [ ] Le fichier de migration suit la convention de nommage du projet
+## Exit Checklist
+- [ ] UP migration executes without errors on a clean database
+- [ ] DOWN migration restores exactly the previous state
+- [ ] Required indexes are created for performance
+- [ ] Integrity constraints (FK, UNIQUE, NOT NULL, CHECK) are in place
+- [ ] Data migration preserves all existing data
+- [ ] Execution time is acceptable for production (no prolonged locks)
+- [ ] Migration is idempotent or protected against double execution
+- [ ] Migration file follows the project naming convention
 
-## Format de sortie
+## Output Format
 ```
 📄 Migration : <YYYYMMDDHHMMSS>_<description>.sql (ou .ts/.py)
 
@@ -50,11 +50,11 @@ DROP INDEX idx_<table>_<column>;
 ALTER TABLE <table>
   DROP COLUMN <column>;
 
-Résumé des changements :
-  - Tables modifiées : <liste>
-  - Colonnes ajoutées : <liste avec types>
-  - Index créés : <liste>
-  - Temps estimé d'exécution : <durée>
-  - Impact sur les données existantes : <description>
-  - Rollback validé : oui/non
+Summary of changes :
+  - Modified tables : <list>
+  - Added columns : <list with types>
+  - Created indexes : <list>
+  - Estimated execution time : <duration>
+  - Impact on existing data : <description>
+  - Rollback validated : yes/no
 ```

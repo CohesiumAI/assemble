@@ -1,129 +1,129 @@
 ---
 name: reporting
-description: Génération de rapports et tableaux de bord — collecte de données, analyse, visualisation, insights et recommandations pour le pilotage décisionnel
+description: Report and dashboard generation — data collection, analysis, visualization, insights, and recommendations for decision-making
 agents: [data, analyst, pm, scrum, marketing, customer-success, finance]
 trigger: /report
 ---
 
-# Skill : Reporting & Tableaux de Bord
+# Skill : Reporting & Dashboards
 
-## Objectif
+## Objective
 
-Concevoir et produire des rapports structurés et des tableaux de bord qui transforment les données brutes en insights actionnables pour le pilotage décisionnel. Cette skill couvre la collecte, l'analyse, la visualisation des données et la formulation de recommandations basées sur les métriques clés.
+Design and produce structured reports and dashboards that transform raw data into actionable insights for decision-making. This skill covers data collection, analysis, visualization, and formulation of recommendations based on key metrics.
 
-## Quand l'utiliser
+## When to use
 
-- Lors de la création d'un rapport périodique (hebdomadaire, mensuel, trimestriel)
-- Pour construire un tableau de bord de suivi de KPIs
-- Quand une présentation data-driven est nécessaire pour les stakeholders
-- Lors d'une rétrospective sprint ou d'un bilan de campagne marketing
-- Pour analyser les résultats d'un A/B test ou d'un lancement de fonctionnalité
-- Quand la direction demande un état des lieux sur un sujet spécifique
+- When creating a periodic report (weekly, monthly, quarterly)
+- To build a KPI tracking dashboard
+- When a data-driven presentation is needed for stakeholders
+- During a sprint retrospective or marketing campaign review
+- To analyze the results of an A/B test or feature launch
+- When management requests a status report on a specific topic
 
-## Étapes
+## Steps
 
-1. **Clarifier l'objectif et l'audience** — Identifier la question métier à laquelle le rapport doit répondre. Définir l'audience (C-level, product, marketing, technique) et adapter le niveau de détail, le vocabulaire et le format en conséquence. Un rapport technique et un rapport exécutif ne se présentent pas de la même manière.
-2. **Identifier et collecter les sources de données** — Lister les sources nécessaires : base de données, analytics (GA4, Mixpanel, Amplitude), outils métier (CRM, Stripe, ad platforms), APIs, exports CSV. Vérifier la fiabilité et la fraîcheur des données. Documenter les limitations connues.
-3. **Définir les KPIs et métriques** — Sélectionner les indicateurs pertinents (pas plus de 7-10 KPIs principaux). Pour chaque KPI : définition précise, formule de calcul, source de données, fréquence de mise à jour, seuils (vert/orange/rouge). Distinguer les vanity metrics des métriques actionnables.
-4. **Analyser les données** — Calculer les métriques, identifier les tendances (croissance, décroissance, plateau), les anomalies et les corrélations. Comparer avec les périodes précédentes (MoM, YoY), les objectifs fixés et les benchmarks du secteur. Segmenter les données pour révéler les insights cachés.
-5. **Visualiser les résultats** — Choisir les types de graphiques adaptés : line charts pour les tendances temporelles, bar charts pour les comparaisons, pie charts pour les répartitions (avec parcimonie), heatmaps pour les distributions, tables pour les détails. Respecter les principes de data visualization (Tufte).
-6. **Formuler les insights et recommandations** — Traduire chaque constat en insight actionnable : qu'est-ce que les données révèlent ? Quelles sont les causes probables ? Quelles actions sont recommandées ? Prioriser les recommandations par impact métier estimé.
-7. **Structurer le livrable** — Organiser le rapport avec un executive summary en début (conclusions et recommandations clés), suivi du détail par section thématique. Chaque section suit le pattern : constat → analyse → recommandation.
-8. **Définir le suivi** — Proposer la fréquence de mise à jour du rapport, les alertes automatiques à configurer sur les KPIs critiques, et les prochaines questions à investiguer.
+1. **Clarify objective and audience** — Identify the business question the report must answer. Define the audience (C-level, product, marketing, technical) and adapt the level of detail, vocabulary, and format accordingly. A technical report and an executive report are not presented the same way.
+2. **Identify and collect data sources** — List necessary sources: database, analytics (GA4, Mixpanel, Amplitude), business tools (CRM, Stripe, ad platforms), APIs, CSV exports. Verify data reliability and freshness. Document known limitations.
+3. **Define KPIs and metrics** — Select relevant indicators (no more than 7-10 main KPIs). For each KPI: precise definition, calculation formula, data source, update frequency, thresholds (green/orange/red). Distinguish vanity metrics from actionable metrics.
+4. **Analyze the data** — Calculate metrics, identify trends (growth, decline, plateau), anomalies, and correlations. Compare with previous periods (MoM, YoY), set objectives, and industry benchmarks. Segment data to reveal hidden insights.
+5. **Visualize results** — Choose appropriate chart types: line charts for time trends, bar charts for comparisons, pie charts for distributions (sparingly), heatmaps for distributions, tables for details. Follow data visualization principles (Tufte).
+6. **Formulate insights and recommendations** — Translate each finding into an actionable insight: what do the data reveal? What are the probable causes? What actions are recommended? Prioritize recommendations by estimated business impact.
+7. **Structure the deliverable** — Organize the report with an executive summary at the top (key conclusions and recommendations), followed by detailed thematic sections. Each section follows the pattern: finding → analysis → recommendation.
+8. **Define follow-up** — Propose the report update frequency, automatic alerts to configure on critical KPIs, and next questions to investigate.
 
-## Checklist de sortie
+## Exit Checklist
 
-- [ ] L'objectif du rapport et l'audience sont définis
-- [ ] Les sources de données sont identifiées, fiables et documentées
-- [ ] Les KPIs sont pertinents, bien définis et limités en nombre (≤ 10)
-- [ ] L'analyse inclut les comparaisons temporelles et les segmentations clés
-- [ ] Les visualisations sont claires, adaptées au type de données et non trompeuses
-- [ ] Chaque constat est accompagné d'un insight et d'une recommandation
-- [ ] L'executive summary permet de comprendre l'essentiel en 2 minutes
-- [ ] La fréquence de mise à jour et les prochaines étapes sont définies
+- [ ] Report objective and audience are defined
+- [ ] Data sources are identified, reliable, and documented
+- [ ] KPIs are relevant, well-defined, and limited in number (≤ 10)
+- [ ] Analysis includes time comparisons and key segmentations
+- [ ] Visualizations are clear, appropriate for the data type, and not misleading
+- [ ] Each finding is accompanied by an insight and a recommendation
+- [ ] The executive summary conveys the essentials in 2 minutes
+- [ ] Update frequency and next steps are defined
 
-## Format de sortie
+## Output Format
 
 ```markdown
 ## Rapport [Type]
 
-**Titre :** [Titre descriptif du rapport]
-**Période :** [date début — date fin]
-**Audience :** [C-level | Product | Marketing | Technique]
-**Auteur :** [agent]
-**Date de production :** [date]
-**Prochaine mise à jour :** [date]
+**Title :** [Descriptive report title]
+**Period :** [start date — end date]
+**Audience :** [C-level | Product | Marketing | Technical]
+**Author :** [agent]
+**Production date :** [date]
+**Next update :** [date]
 
 ---
 
 ### Executive Summary
 
-**En bref :** [2-3 phrases résumant les conclusions principales]
+**In brief :** [2-3 sentences summarizing the main conclusions]
 
-**KPIs clés :**
+**Key KPIs :**
 
-| KPI | Valeur | Variation | Objectif | Statut |
+| KPI | Value | Variation | Objective | Status |
 |-----|--------|-----------|----------|--------|
 | [KPI 1] | [valeur] | [+X% / -X% vs N-1] | [objectif] | ✅/⚠️/❌ |
 | [KPI 2] | [valeur] | [+X% / -X% vs N-1] | [objectif] | ✅/⚠️/❌ |
 | [KPI 3] | [valeur] | [+X% / -X% vs N-1] | [objectif] | ✅/⚠️/❌ |
 
-**Actions recommandées :**
-1. 🔴 [Action prioritaire — impact élevé]
-2. 🟠 [Action importante — à planifier]
-3. 🟡 [Action d'optimisation — nice to have]
+**Recommended actions :**
+1. 🔴 [Priority action — high impact]
+2. 🟠 [Important action — to schedule]
+3. 🟡 [Optimization action — nice to have]
 
 ---
 
-### Section 1 : [Thématique — ex: Acquisition]
+### Section 1 : [Theme — e.g.: Acquisition]
 
-#### Métriques
+#### Metrics
 
-| Métrique | Ce mois | Mois précédent | Variation | YoY |
-|----------|---------|---------------|-----------|-----|
-| [métrique 1] | [valeur] | [valeur] | [%] | [%] |
-| [métrique 2] | [valeur] | [valeur] | [%] | [%] |
+| Metric | This month | Previous month | Variation | YoY |
+|--------|-----------|---------------|-----------|-----|
+| [metric 1] | [value] | [value] | [%] | [%] |
+| [metric 2] | [value] | [value] | [%] | [%] |
 
-#### Analyse
+#### Analysis
 
-**Constat :** [description factuelle de ce que montrent les données]
+**Finding :** [factual description of what the data shows]
 
-**Cause probable :** [hypothèse basée sur les données et le contexte]
+**Probable cause :** [hypothesis based on data and context]
 
-**Recommandation :** [action concrète avec résultat attendu]
+**Recommendation :** [concrete action with expected result]
 
 #### Segmentation
 
-| Segment | Valeur | Part | Tendance |
-|---------|--------|------|----------|
+| Segment | Value | Share | Trend |
+|---------|-------|-------|-------|
 | [segment A] | [valeur] | [%] | ↗️/➡️/↘️ |
 | [segment B] | [valeur] | [%] | ↗️/➡️/↘️ |
 | [segment C] | [valeur] | [%] | ↗️/➡️/↘️ |
 
 ---
 
-### Section 2 : [Thématique — ex: Engagement]
+### Section 2 : [Theme — e.g.: Engagement]
 
-[Même structure : Métriques → Analyse → Segmentation]
-
----
-
-### Section 3 : [Thématique — ex: Conversion / Revenus]
-
-[Même structure : Métriques → Analyse → Segmentation]
+[Same structure: Metrics → Analysis → Segmentation]
 
 ---
 
-### Annexes
+### Section 3 : [Theme — e.g.: Conversion / Revenue]
 
-**Sources de données :** [liste des sources avec date de dernière extraction]
-**Limitations connues :** [biais, données manquantes, approximations]
-**Glossaire :** [définition des termes et métriques utilisés]
+[Same structure: Metrics → Analysis → Segmentation]
 
-### Prochaines étapes
+---
 
-- [ ] [Analyse complémentaire à mener]
-- [ ] [Alerte à configurer sur KPI critique]
-- [ ] [Question à investiguer dans le prochain rapport]
-- [ ] [Décision à prendre par [responsable] avant [date]]
+### Appendix
+
+**Data sources :** [list of sources with last extraction date]
+**Known limitations :** [biases, missing data, approximations]
+**Glossary :** [definition of terms and metrics used]
+
+### Next steps
+
+- [ ] [Additional analysis to conduct]
+- [ ] [Alert to configure on critical KPI]
+- [ ] [Question to investigate in the next report]
+- [ ] [Decision to be made by [owner] before [date]]
 ```

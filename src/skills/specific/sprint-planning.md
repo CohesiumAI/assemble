@@ -1,76 +1,76 @@
 ---
 name: sprint-planning
-description: Planification et facilitation de sprint agile avec estimation, priorisation et définition des objectifs
+description: Agile sprint planning and facilitation with estimation, prioritization, and goal definition
 agents: [scrum, pm]
 trigger: /sprint-plan
 ---
 
 # Skill : Sprint Planning
 
-## Objectif
-Planifier et faciliter une session de sprint planning structurée qui aboutit à un sprint backlog clair, des objectifs de sprint définis et un engagement réaliste de l'équipe. Assurer que les user stories sont correctement estimées, priorisées et comprises par tous les membres de l'équipe.
+## Objective
+Plan and facilitate a structured sprint planning session that results in a clear sprint backlog, defined sprint goals, and a realistic team commitment. Ensure user stories are correctly estimated, prioritized, and understood by all team members.
 
-## Quand l'utiliser
-- Au début de chaque nouveau sprint (cérémonie de sprint planning)
-- Lors de la replanification d'un sprint suite à un changement de priorités majeur
-- Pour préparer un PI Planning (SAFe) ou une planification à plus grande échelle
-- Quand l'équipe démarre un nouveau projet et doit structurer son premier sprint
-- Lors d'un refinement avancé nécessitant une décomposition détaillée des stories
+## When to use
+- At the start of each new sprint (sprint planning ceremony)
+- When replanning a sprint following a major priority change
+- To prepare a PI Planning (SAFe) or larger-scale planning
+- When the team starts a new project and needs to structure its first sprint
+- During advanced refinement requiring detailed story decomposition
 
-## Étapes
-1. **Préparer le backlog produit** — Vérifier que le backlog est raffiné : les stories du haut du backlog ont des critères d'acceptation clairs, des maquettes associées et les dépendances identifiées. Retirer les stories obsolètes.
-2. **Définir l'objectif du sprint** — En collaboration avec le Product Owner, formuler un objectif de sprint clair et mesurable qui donne une direction et un sens au travail de l'équipe.
-3. **Évaluer la capacité de l'équipe** — Calculer la vélocité disponible en tenant compte des congés, des jours fériés, des cérémonies, du support et de la dette technique planifiée. Ajuster selon l'historique des sprints précédents.
-4. **Estimer les stories** — Faciliter la session d'estimation (Planning Poker, T-shirt sizing, dot voting) pour attribuer des story points à chaque user story. Décomposer les stories trop volumineuses (> 8 points).
-5. **Prioriser et sélectionner** — Avec le Product Owner, sélectionner les stories qui entrent dans le sprint en respectant la capacité. S'assurer que les dépendances sont résolues et que l'objectif de sprint est atteignable.
-6. **Décomposer en tâches techniques** — Pour chaque story sélectionnée, identifier les tâches techniques nécessaires (front, back, tests, infra), estimer les heures et assigner les responsables.
-7. **Identifier les risques et dépendances** — Lister les risques potentiels du sprint (dépendance externe, dette technique, complexité inconnue) et définir les actions de mitigation pour chaque risque.
-8. **Formaliser le sprint backlog** — Documenter le sprint backlog final avec l'objectif, les stories, les estimations, les assignations et les critères de Definition of Done. Obtenir l'engagement de l'équipe.
+## Steps
+1. **Prepare the product backlog** — Verify the backlog is refined: top stories have clear acceptance criteria, associated mockups, and identified dependencies. Remove obsolete stories.
+2. **Define the sprint goal** — In collaboration with the Product Owner, formulate a clear and measurable sprint goal that gives direction and meaning to the team's work.
+3. **Evaluate team capacity** — Calculate available velocity accounting for vacations, holidays, ceremonies, support, and planned technical debt. Adjust based on previous sprint history.
+4. **Estimate stories** — Facilitate the estimation session (Planning Poker, T-shirt sizing, dot voting) to assign story points to each user story. Decompose stories that are too large (> 8 points).
+5. **Prioritize and select** — With the Product Owner, select stories that fit in the sprint while respecting capacity. Ensure dependencies are resolved and the sprint goal is achievable.
+6. **Decompose into technical tasks** — For each selected story, identify necessary technical tasks (front, back, tests, infra), estimate hours, and assign owners.
+7. **Identify risks and dependencies** — List potential sprint risks (external dependency, technical debt, unknown complexity) and define mitigation actions for each risk.
+8. **Formalize the sprint backlog** — Document the final sprint backlog with the goal, stories, estimates, assignments, and Definition of Done criteria. Obtain team commitment.
 
-## Checklist de sortie
-- [ ] L'objectif du sprint est formulé, clair et accepté par l'équipe
-- [ ] La capacité de l'équipe est calculée et documentée (en story points ou heures)
-- [ ] Toutes les stories sélectionnées ont des critères d'acceptation définis
-- [ ] Les estimations sont complètes pour chaque story (story points attribués)
-- [ ] Les stories volumineuses sont décomposées (aucune story > 8 points)
-- [ ] Les dépendances externes sont identifiées et les actions de déblocage planifiées
-- [ ] Les tâches techniques sont créées pour chaque story avec les responsables
-- [ ] L'équipe a confirmé son engagement sur le sprint backlog
+## Exit Checklist
+- [ ] Sprint goal is formulated, clear, and accepted by the team
+- [ ] Team capacity is calculated and documented (in story points or hours)
+- [ ] All selected stories have defined acceptance criteria
+- [ ] Estimates are complete for each story (story points assigned)
+- [ ] Large stories are decomposed (no story > 8 points)
+- [ ] External dependencies are identified and unblocking actions are planned
+- [ ] Technical tasks are created for each story with owners
+- [ ] The team has confirmed its commitment to the sprint backlog
 
-## Format de sortie
+## Output Format
 ```
-Sprint Planning - Sprint [numéro]
+Sprint Planning - Sprint [number]
 
-Objectif du sprint : [description claire et mesurable de l'objectif]
-Période : [date de début] - [date de fin] ([X] jours ouvrables)
-Équipe : [X] développeurs, capacité [Y] story points
+Sprint goal : [clear and measurable goal description]
+Period : [start date] - [end date] ([X] business days)
+Team : [X] developers, capacity [Y] story points
 
-Capacité de l'équipe :
-  - Vélocité moyenne (3 derniers sprints) : [X] SP
-  - Capacité ajustée (congés, support) : [Y] SP
-  - Engagement du sprint : [Z] SP
+Team capacity :
+  - Average velocity (last 3 sprints) : [X] SP
+  - Adjusted capacity (vacations, support) : [Y] SP
+  - Sprint commitment : [Z] SP
 
 Sprint Backlog :
 
-| ID       | Story                              | Points | Priorité | Assigné     |
+| ID       | Story                              | Points | Priority | Assigned    |
 |----------|------------------------------------|--------|----------|-------------|
-| US-101   | [titre de la story]                | 5      | Haute    | [nom]       |
-| US-102   | [titre de la story]                | 3      | Haute    | [nom]       |
-| US-103   | [titre de la story]                | 8      | Moyenne  | [nom]       |
-| TECH-042 | [dette technique]                  | 3      | Moyenne  | [nom]       |
-| BUG-015  | [correction de bug]                | 2      | Haute    | [nom]       |
+| US-101   | [story title]                      | 5      | High     | [name]      |
+| US-102   | [story title]                      | 3      | High     | [name]      |
+| US-103   | [story title]                      | 8      | Medium   | [name]      |
+| TECH-042 | [technical debt]                   | 3      | Medium   | [name]      |
+| BUG-015  | [bug fix]                          | 2      | High     | [name]      |
 | Total    |                                    | 21 SP  |          |             |
 
-Risques identifiés :
-  - [R1] [description du risque] — Mitigation : [action]
-  - [R2] [description du risque] — Mitigation : [action]
+Identified risks :
+  - [R1] [risk description] — Mitigation : [action]
+  - [R2] [risk description] — Mitigation : [action]
 
-Dépendances externes :
-  - [D1] [équipe / service] — [description] — Statut : [résolu / en attente]
+External dependencies :
+  - [D1] [team / service] — [description] — Status : [resolved / pending]
 
 Definition of Done :
-  - Code revu par un pair
-  - Tests unitaires et d'intégration passés
-  - Documentation mise à jour
-  - Déployé en staging et validé par le PO
+  - Code reviewed by a peer
+  - Unit and integration tests passed
+  - Documentation updated
+  - Deployed to staging and validated by the PO
 ```

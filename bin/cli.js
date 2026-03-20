@@ -384,8 +384,8 @@ async function main() {
   // so that resolveProfile() in the generator applies the profile defaults.
   // When custom, write explicit values so the user has full control.
   const lines = [
-    '# Assemble — Configuration du projet',
-    '# Mettre à jour : npx create-assemble --update',
+    '# Assemble — Project configuration',
+    '# Update: npx create-assemble --update',
     '',
     'version: "1.0.0"',
     `profile: "${profile}"`,

@@ -1,27 +1,27 @@
 name: onboarding-project
-description: "Onboarding d'un nouveau projet — cadrage, analyse et mise en place de l'équipe"
+description: "New project onboarding — scoping, analysis, and team setup"
 trigger: /onboarding
 output_dir: "{assemble_output}/onboarding_{timestamp}"
 steps:
   - step: 1
     agent: pm
-    action: "Rédiger la charte du projet et définir la vision produit"
+    action: "Write the project charter and define the product vision"
     outputs: [project-charter.md, product-vision.md]
   - step: 2
     agent: analyst
-    action: "Documenter les exigences et cartographier les parties prenantes"
+    action: "Document les exigences et cartographier les parties prenantes"
     inputs: [01-pm/project-charter.md, 01-pm/product-vision.md]
     outputs: [requirements-doc.md, stakeholder-map.md]
     depends_on: [1]
   - step: 3
     agent: architect
-    action: "Définir l'architecture globale et recommander la stack technique"
+    action: "Define l'architecture globale et recommander la stack technique"
     inputs: [02-analyst/requirements-doc.md, 01-pm/product-vision.md, 01-pm/project-charter.md]
     outputs: [architecture-overview.md, tech-stack-recommendation.md]
     depends_on: [2]
   - step: 4
     agent: scrum
-    action: "Mettre en place l'équipe et définir les processus de travail"
+    action: "Set up the team and define work processes"
     inputs: [01-pm/project-charter.md, 02-analyst/stakeholder-map.md, 03-architect/architecture-overview.md]
     outputs: [team-setup.md, process-guide.md]
     depends_on: [3]

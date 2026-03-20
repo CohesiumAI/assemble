@@ -1,131 +1,131 @@
 ---
 name: seo-audit
-description: Audit SEO technique et on-page — crawlabilité, Core Web Vitals, balises, données structurées, maillage interne et opportunités d'optimisation
+description: Technical and on-page SEO audit — crawlability, Core Web Vitals, tags, structured data, internal linking, and optimization opportunities
 agents: [seo, content-seo, geo-aio, dev-frontend]
 trigger: /seo
 ---
 
-# Skill : Audit SEO
+# Skill : SEO Audit
 
-## Objectif
+## Objective
 
-Réaliser un audit SEO complet couvrant les aspects techniques (crawlabilité, indexabilité, performance), on-page (balises, contenu, données structurées) et structurels (maillage interne, architecture de l'information). Cette skill produit un rapport actionnable avec des recommandations priorisées par impact sur le référencement.
+Perform a comprehensive SEO audit covering technical aspects (crawlability, indexability, performance), on-page (tags, content, structured data), and structural aspects (internal linking, information architecture). This skill produces an actionable report with recommendations prioritized by SEO impact.
 
-## Quand l'utiliser
+## When to use
 
-- Lors du lancement d'un nouveau site ou d'une refonte
-- Quand le trafic organique chute ou stagne sans explication évidente
-- Lors d'un audit périodique de la santé SEO (trimestriel recommandé)
-- Après une migration de domaine, de CMS ou de structure d'URL
-- Pour identifier les opportunités d'optimisation rapides (quick wins)
-- Avant une campagne de contenu pour s'assurer que la base technique est solide
+- When launching a new site or redesign
+- When organic traffic drops or stagnates without obvious explanation
+- During a periodic SEO health audit (quarterly recommended)
+- After a domain, CMS, or URL structure migration
+- To identify quick optimization opportunities (quick wins)
+- Before a content campaign to ensure the technical foundation is solid
 
-## Étapes
+## Steps
 
-1. **Analyser la crawlabilité et l'indexabilité** — Vérifier le `robots.txt`, le `sitemap.xml`, les directives meta robots et les en-têtes X-Robots-Tag. Identifier les pages bloquées involontairement, les boucles de redirection, les erreurs 4xx/5xx. Analyser le budget de crawl (logs serveur).
-2. **Auditer la performance technique** — Mesurer les Core Web Vitals (LCP, INP, CLS) sur les pages stratégiques. Vérifier le temps de chargement, le TTFB, la compression (gzip/brotli), la minification des ressources, le lazy loading des images, le cache navigateur.
-3. **Analyser les balises SEO on-page** — Vérifier la présence et l'unicité des balises `<title>`, `<meta description>`, `<h1>`, la hiérarchie des headings (H1→H6), les attributs `alt` des images, les URLs canoniques, les balises hreflang pour le multilingue.
-4. **Vérifier les données structurées** — Auditer le balisage Schema.org (JSON-LD) : validité (Google Rich Results Test), pertinence par rapport au type de page (Article, Product, FAQPage, LocalBusiness, BreadcrumbList), complétude des champs recommandés.
-5. **Auditer le maillage interne** — Analyser la profondeur de crawl (pages à plus de 3 clics de la homepage), la distribution du PageRank interne, les pages orphelines, les ancres de liens optimisées, les liens cassés internes.
-6. **Analyser le contenu** — Vérifier le contenu dupliqué (interne et externe), le thin content (pages < 300 mots sans valeur ajoutée), la cannibalisation de mots-clés (plusieurs pages ciblant le même terme), l'optimisation des contenus existants vs le search intent.
-7. **Évaluer l'expérience mobile** — Tester la compatibilité mobile (responsive design), la taille des zones tactiles, la lisibilité du texte sans zoom, l'absence d'interstitiels intrusifs. Vérifier le rendu sur les principaux appareils.
-8. **Produire le rapport et le plan d'action** — Classifier les recommandations par impact SEO (élevé, moyen, faible) et effort technique. Identifier les quick wins (fort impact, faible effort). Proposer un calendrier de mise en œuvre réaliste.
+1. **Analyze crawlability and indexability** — Check `robots.txt`, `sitemap.xml`, meta robots directives, and X-Robots-Tag headers. Identify unintentionally blocked pages, redirect loops, 4xx/5xx errors. Analyze crawl budget (server logs).
+2. **Audit technical performance** — Measure Core Web Vitals (LCP, INP, CLS) on strategic pages. Check load time, TTFB, compression (gzip/brotli), resource minification, image lazy loading, browser cache.
+3. **Analyze on-page SEO tags** — Check the presence and uniqueness of `<title>`, `<meta description>`, `<h1>` tags, heading hierarchy (H1→H6), image `alt` attributes, canonical URLs, hreflang tags for multilingual.
+4. **Verify structured data** — Audit Schema.org markup (JSON-LD): validity (Google Rich Results Test), relevance to page type (Article, Product, FAQPage, LocalBusiness, BreadcrumbList), completeness of recommended fields.
+5. **Audit internal linking** — Analyze crawl depth (pages more than 3 clicks from homepage), internal PageRank distribution, orphan pages, optimized link anchors, broken internal links.
+6. **Analyze content** — Check for duplicate content (internal and external), thin content (pages < 300 words with no added value), keyword cannibalization (multiple pages targeting the same term), optimization of existing content vs search intent.
+7. **Evaluate mobile experience** — Test mobile compatibility (responsive design), touch target size, text readability without zoom, absence of intrusive interstitials. Check rendering on major devices.
+8. **Produce the report and action plan** — Classify recommendations by SEO impact (high, medium, low) and technical effort. Identify quick wins (high impact, low effort). Propose a realistic implementation timeline.
 
-## Checklist de sortie
+## Exit Checklist
 
-- [ ] Le robots.txt et le sitemap.xml sont conformes et à jour
-- [ ] Aucune page stratégique n'est bloquée à l'indexation
-- [ ] Les Core Web Vitals respectent les seuils Google (vert)
-- [ ] Chaque page a un title, une meta description et un H1 uniques
-- [ ] Les données structurées sont valides et pertinentes
-- [ ] Le maillage interne assure une profondeur de crawl ≤ 3 clics
-- [ ] Aucun contenu dupliqué ou cannibalisation critique identifié
-- [ ] Le rapport contient un plan d'action priorisé avec quick wins
+- [ ] robots.txt and sitemap.xml are compliant and up to date
+- [ ] No strategic page is blocked from indexation
+- [ ] Core Web Vitals meet Google thresholds (green)
+- [ ] Each page has a unique title, meta description, and H1
+- [ ] Structured data is valid and relevant
+- [ ] Internal linking ensures crawl depth ≤ 3 clicks
+- [ ] No critical duplicate content or cannibalization identified
+- [ ] Report contains a prioritized action plan with quick wins
 
-## Format de sortie
+## Output Format
 
 ```markdown
-## Rapport d'Audit SEO
+## SEO Audit Report
 
-**Site :** [URL du site]
-**Pages analysées :** [nombre]
+**Site :** [site URL]
+**Pages analyzed :** [number]
 **Date :** [date]
-**Auditeur :** [agent]
+**Auditor :** [agent]
 
-### Score global
+### Overall score
 
-| Catégorie | Score | Statut |
-|-----------|-------|--------|
-| Technique | XX/100 | ✅/⚠️/❌ |
+| Category | Score | Status |
+|----------|-------|--------|
+| Technical | XX/100 | ✅/⚠️/❌ |
 | On-page | XX/100 | ✅/⚠️/❌ |
-| Contenu | XX/100 | ✅/⚠️/❌ |
-| Maillage interne | XX/100 | ✅/⚠️/❌ |
+| Content | XX/100 | ✅/⚠️/❌ |
+| Internal linking | XX/100 | ✅/⚠️/❌ |
 | Mobile | XX/100 | ✅/⚠️/❌ |
 
-**Score SEO global :** XX/100
+**Overall SEO score :** XX/100
 
-### Constats techniques
+### Technical findings
 
-#### 🔴 Problèmes critiques
+#### 🔴 Critical issues
 
-**[SEO-01] Titre du problème**
-- **Pages affectées :** [nombre] pages — [exemples d'URLs]
-- **Impact SEO :** [description de l'impact sur le référencement]
-- **Recommandation :** [solution technique détaillée]
-- **Priorité :** Immédiate
+**[SEO-01] Issue title**
+- **Affected pages :** [number] pages — [URL examples]
+- **SEO impact :** [description of the ranking impact]
+- **Recommendation :** [detailed technical solution]
+- **Priority :** Immediate
 
-#### 🟠 Problèmes importants
+#### 🟠 Important issues
 
-**[SEO-02] Titre du problème**
-- **Pages affectées :** [nombre] pages
-- **Impact SEO :** [description]
-- **Recommandation :** [solution]
+**[SEO-02] Issue title**
+- **Affected pages :** [number] pages
+- **SEO impact :** [description]
+- **Recommendation :** [solution]
 
-#### 🟡 Améliorations recommandées
+#### 🟡 Recommended improvements
 
-**[SEO-03] Titre de l'amélioration**
-- **Opportunité :** [gain potentiel]
-- **Recommandation :** [solution]
+**[SEO-03] Improvement title**
+- **Opportunity :** [potential gain]
+- **Recommendation :** [solution]
 
-### Analyse des Core Web Vitals
+### Core Web Vitals analysis
 
-| Page | LCP | INP | CLS | Score mobile | Score desktop |
+| Page | LCP | INP | CLS | Mobile score | Desktop score |
 |------|-----|-----|-----|-------------|---------------|
 | Homepage | X.Xs | Xms | X.XX | XX | XX |
-| Page catégorie | X.Xs | Xms | X.XX | XX | XX |
-| Page produit | X.Xs | Xms | X.XX | XX | XX |
+| Category page | X.Xs | Xms | X.XX | XX | XX |
+| Product page | X.Xs | Xms | X.XX | XX | XX |
 
-### Analyse des balises
+### Tag analysis
 
-| Problème | Pages affectées | Exemples |
-|----------|----------------|----------|
-| Title manquant | X | [URLs] |
-| Title dupliqué | X | [URLs] |
-| Meta description manquante | X | [URLs] |
-| H1 manquant ou multiple | X | [URLs] |
-| Images sans alt | X | [URLs] |
+| Issue | Affected pages | Examples |
+|-------|---------------|----------|
+| Missing title | X | [URLs] |
+| Duplicate title | X | [URLs] |
+| Missing meta description | X | [URLs] |
+| Missing or multiple H1 | X | [URLs] |
+| Images without alt | X | [URLs] |
 
-### Données structurées
+### Structured data
 
-| Type | Pages | Statut validation | Erreurs |
-|------|-------|-------------------|---------|
-| [BreadcrumbList] | X | ✅/❌ | [détails] |
-| [Product] | X | ✅/❌ | [détails] |
-| [FAQPage] | X | ✅/❌ | [détails] |
+| Type | Pages | Validation status | Errors |
+|------|-------|-------------------|--------|
+| [BreadcrumbList] | X | ✅/❌ | [details] |
+| [Product] | X | ✅/❌ | [details] |
+| [FAQPage] | X | ✅/❌ | [details] |
 
-### Quick wins — Actions à fort impact / faible effort
+### Quick wins — High impact / low effort actions
 
-| # | Action | Impact estimé | Effort | Délai |
-|---|--------|---------------|--------|-------|
-| 1 | [action] | [impact trafic] | [jours-homme] | [délai] |
-| 2 | [action] | [impact trafic] | [jours-homme] | [délai] |
-| 3 | [action] | [impact trafic] | [jours-homme] | [délai] |
+| # | Action | Estimated impact | Effort | Timeline |
+|---|--------|-----------------|--------|----------|
+| 1 | [action] | [traffic impact] | [person-days] | [timeline] |
+| 2 | [action] | [traffic impact] | [person-days] | [timeline] |
+| 3 | [action] | [traffic impact] | [person-days] | [timeline] |
 
-### Plan d'action complet
+### Complete action plan
 
-| Phase | Actions | Délai | Responsable |
-|-------|---------|-------|-------------|
-| Immédiat (S1-S2) | [actions critiques] | 2 semaines | [équipe] |
-| Court terme (M1) | [actions importantes] | 1 mois | [équipe] |
-| Moyen terme (M2-M3) | [améliorations] | 2-3 mois | [équipe] |
+| Phase | Actions | Timeline | Owner |
+|-------|---------|----------|-------|
+| Immediate (W1-W2) | [critical actions] | 2 weeks | [team] |
+| Short term (M1) | [important actions] | 1 month | [team] |
+| Medium term (M2-M3) | [improvements] | 2-3 months | [team] |
 ```

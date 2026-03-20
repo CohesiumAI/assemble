@@ -1,90 +1,90 @@
 ---
 name: documentation
-description: Génération de documentation technique et fonctionnelle — README, guides d'architecture, ADR, documentation d'API et guides utilisateur
+description: Technical and functional documentation generation — README, architecture guides, ADR, API documentation, and user guides
 agents: [dev-backend, dev-frontend, dev-fullstack, dev-mobile, devops, architect, qa, security, db, data, pm, scrum, ai-engineer, automation, seo, geo-aio, content-seo, marketing, copywriter, ads, growth, social, storytelling, ux, brand, contrarian, analyst, legal, pr-comms]
 trigger: /doc
 ---
 
 # Skill : Documentation
 
-## Objectif
+## Objective
 
-Produire une documentation claire, structurée et maintenable qui répond au besoin identifié : documentation technique (README, ADR, guides), documentation d'API, documentation fonctionnelle ou guide utilisateur. Chaque document doit être autonome, à jour et actionnable.
+Produce clear, structured, and maintainable documentation that addresses the identified need: technical documentation (README, ADR, guides), API documentation, functional documentation, or user guide. Each document must be self-contained, up to date, and actionable.
 
-## Quand l'utiliser
+## When to use
 
-- À la création d'un nouveau projet, module ou service
-- Après un choix architectural significatif (ADR)
-- Lors de la publication ou modification d'une API
-- Quand un processus métier doit être documenté pour l'équipe
-- Lors de l'onboarding de nouveaux membres dans le projet
-- Quand la documentation existante est obsolète ou manquante
+- When creating a new project, module, or service
+- After a significant architectural decision (ADR)
+- When publishing or modifying an API
+- When a business process needs to be documented for the team
+- When onboarding new members to the project
+- When existing documentation is outdated or missing
 
-## Étapes
+## Steps
 
-1. **Identifier le type de document** — Classifier le besoin : README projet, guide d'architecture, ADR (Architecture Decision Record), documentation d'API, guide utilisateur, runbook opérationnel, changelog.
-2. **Définir l'audience** — Qui va lire ce document ? Développeur, ops, product owner, utilisateur final ? Adapter le niveau de détail et le vocabulaire en conséquence.
-3. **Collecter les informations sources** — Analyser le code, les fichiers de configuration, les commentaires existants, les tickets, les conversations pertinentes. Ne pas inventer — documenter ce qui existe.
-4. **Structurer le document** — Appliquer le template approprié au type de document. Utiliser des titres hiérarchiques, des listes, des tableaux et des blocs de code pour maximiser la lisibilité.
-5. **Rédiger le contenu** — Écrire de manière concise et directe. Chaque section doit répondre à une question précise. Inclure des exemples concrets (commandes, requêtes, snippets) quand pertinent.
-6. **Ajouter les éléments visuels** — Diagrammes d'architecture (Mermaid), schémas de flux, tableaux de référence. Un bon schéma remplace souvent trois paragraphes.
-7. **Valider la cohérence** — Vérifier que les chemins de fichiers, les commandes et les exemples de code sont corrects et fonctionnels. Supprimer les sections vides ou placeholder.
-8. **Définir la maintenance** — Indiquer la date de dernière mise à jour, le responsable du document et les conditions de révision (ex: à chaque release, à chaque changement d'architecture).
+1. **Identify the document type** — Classify the need: project README, architecture guide, ADR (Architecture Decision Record), API documentation, user guide, operational runbook, changelog.
+2. **Define the audience** — Who will read this document? Developer, ops, product owner, end user? Adapt the level of detail and vocabulary accordingly.
+3. **Collect source information** — Analyze code, configuration files, existing comments, tickets, relevant conversations. Do not invent — document what exists.
+4. **Structure the document** — Apply the appropriate template for the document type. Use hierarchical headings, lists, tables, and code blocks to maximize readability.
+5. **Write the content** — Write concisely and directly. Each section should answer a specific question. Include concrete examples (commands, queries, snippets) when relevant.
+6. **Add visual elements** — Architecture diagrams (Mermaid), flow charts, reference tables. A good diagram often replaces three paragraphs.
+7. **Validate consistency** — Verify that file paths, commands, and code examples are correct and functional. Remove empty or placeholder sections.
+8. **Define maintenance** — Indicate the last update date, document owner, and revision conditions (e.g., at each release, at each architecture change).
 
-## Checklist de sortie
+## Exit Checklist
 
-- [ ] Le type de document et l'audience sont clairement identifiés
-- [ ] La structure suit le template approprié
-- [ ] Le contenu est factuel, concis et actionnable
-- [ ] Les exemples de code et commandes sont vérifiés et fonctionnels
-- [ ] Les diagrammes et schémas sont inclus quand nécessaire
-- [ ] Aucune section vide ou placeholder n'est présente
-- [ ] La date de mise à jour et le responsable sont indiqués
-- [ ] Le document est autonome (compréhensible sans contexte oral)
+- [ ] Document type and audience are clearly identified
+- [ ] Structure follows the appropriate template
+- [ ] Content is factual, concise, and actionable
+- [ ] Code examples and commands are verified and functional
+- [ ] Diagrams and charts are included when necessary
+- [ ] No empty or placeholder sections are present
+- [ ] Update date and owner are indicated
+- [ ] The document is self-contained (understandable without verbal context)
 
-## Format de sortie
+## Output Format
 
 ```markdown
-## Documentation générée
+## Generated Documentation
 
-**Type :** [README | ADR | Guide d'architecture | Doc API | Guide utilisateur | Runbook]
-**Audience :** [Développeurs | Ops | Product | Utilisateurs finaux]
-**Dernière mise à jour :** [date]
-**Responsable :** [nom/rôle]
+**Type :** [README | ADR | Architecture guide | API doc | User guide | Runbook]
+**Audience :** [Developers | Ops | Product | End users]
+**Last updated :** [date]
+**Owner :** [name/role]
 
 ---
 
-### [Titre du document]
+### [Document title]
 
-#### Contexte
-[Pourquoi ce document existe, quel problème il résout]
+#### Context
+[Why this document exists, what problem it solves]
 
-#### Contenu principal
-[Corps du document structuré selon le template du type choisi]
+#### Main content
+[Document body structured according to the chosen type template]
 
-##### Pour un README :
-- Description du projet
-- Prérequis et installation
+##### For a README :
+- Project description
+- Prerequisites and installation
 - Configuration
-- Utilisation / Commandes disponibles
-- Architecture (schéma)
-- Contribution
-- Licence
+- Usage / Available commands
+- Architecture (diagram)
+- Contributing
+- License
 
-##### Pour un ADR :
-- Statut : [Proposé | Accepté | Déprécié | Remplacé par ADR-XXX]
-- Contexte
-- Décision
-- Alternatives considérées
-- Conséquences
+##### For an ADR :
+- Status : [Proposed | Accepted | Deprecated | Superseded by ADR-XXX]
+- Context
+- Decision
+- Alternatives considered
+- Consequences
 
-##### Pour un Runbook :
-- Scénario / Alerte déclencheuse
-- Diagnostic étape par étape
-- Actions correctives
-- Escalade
+##### For a Runbook :
+- Scenario / Triggering alert
+- Step-by-step diagnosis
+- Corrective actions
+- Escalation
 
 ---
 
-**Prochaine révision prévue :** [date ou condition]
+**Next scheduled review :** [date or condition]
 ```

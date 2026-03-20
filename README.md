@@ -380,7 +380,7 @@ User types /go <request>
 After installation, a `.assemble.yaml` file is created at the root of your project:
 
 ```yaml
-# Assemble — Configuration du projet
+# Assemble — Project configuration
 version: "1.0.0"
 profile: "custom"                 # startup | enterprise | agency | custom
 langue_equipe: "english"          # Language for agent-to-agent communication

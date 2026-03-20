@@ -1,60 +1,60 @@
 ---
 name: performance-audit
-description: Audit de performance — Core Web Vitals, optimisation des requêtes, analyse de charge, profiling et recommandations d'amélioration
+description: Performance audit — Core Web Vitals, query optimization, load analysis, profiling, and improvement recommendations
 agents: [dev-frontend, dev-backend, devops, data]
 trigger: /perf
 ---
 
-# Skill : Audit de Performance
+# Skill : Performance Audit
 
-## Objectif
+## Objective
 
-Réaliser un audit de performance complet couvrant les métriques clés (Core Web Vitals, temps de réponse API, throughput, utilisation des ressources), identifier les goulots d'étranglement et produire un plan d'optimisation priorisé avec des gains estimés.
+Perform a comprehensive performance audit covering key metrics (Core Web Vitals, API response times, throughput, resource utilization), identify bottlenecks, and produce a prioritized optimization plan with estimated gains.
 
-## Quand l'utiliser
+## When to use
 
-- Quand les performances de l'application se dégradent (plaintes utilisateurs, monitoring)
-- Avant un lancement ou une montée en charge anticipée (campagne marketing, saisonnalité)
-- Lors d'un audit périodique de la santé technique du produit
-- Après un déploiement ayant impacté les temps de réponse
-- Pour établir des baselines de performance sur un nouveau projet
-- Quand les scores Lighthouse ou Web Vitals sont en dessous des seuils acceptables
+- When application performance degrades (user complaints, monitoring)
+- Before a launch or anticipated load increase (marketing campaign, seasonality)
+- During a periodic audit of the product's technical health
+- After a deployment that impacted response times
+- To establish performance baselines on a new project
+- When Lighthouse or Web Vitals scores are below acceptable thresholds
 
-## Étapes
+## Steps
 
-1. **Établir les baselines** — Mesurer les métriques actuelles : Core Web Vitals (LCP, FID/INP, CLS) pour le frontend, temps de réponse P50/P95/P99 pour les APIs, utilisation CPU/mémoire/disque pour l'infrastructure. Documenter les conditions de mesure.
-2. **Profiler le frontend** — Analyser le chargement initial (bundle size, code splitting, lazy loading), le rendu (re-renders inutiles, layout thrashing, images non optimisées), les requêtes réseau (waterfall, requêtes bloquantes, cache strategy). Utiliser Lighthouse, Chrome DevTools Performance, WebPageTest.
-3. **Profiler le backend** — Identifier les endpoints lents (APM, slow query logs), analyser les requêtes N+1, les appels sérialisés qui pourraient être parallélisés, les calculs bloquants sur le thread principal, les fuites mémoire. Profiler avec les outils adaptés (pprof, py-spy, clinic.js).
-4. **Analyser les requêtes de base de données** — Examiner les plans d'exécution (`EXPLAIN ANALYZE`), identifier les index manquants, les full table scans, les jointures coûteuses, les requêtes non paginées. Vérifier la configuration du connection pooling.
-5. **Évaluer la stratégie de cache** — Auditer les couches de cache (CDN, reverse proxy, application, base de données). Vérifier les hit ratios, les TTL appropriés, l'invalidation correcte. Identifier les données chaudes non cachées.
-6. **Tester la charge** — Simuler des scénarios de charge réalistes (k6, Artillery, Locust) : charge normale, pic de trafic, montée progressive. Identifier le point de rupture et les ressources limitantes.
-7. **Prioriser les optimisations** — Classer les problèmes par impact (gain estimé) et effort (complexité de correction). Appliquer la règle 80/20 : les optimisations les plus simples qui apportent le plus de gain.
-8. **Rédiger le rapport** — Produire un rapport avec les métriques avant/après (quand des corrections ont été appliquées), les goulots identifiés et le plan d'action priorisé.
+1. **Establish baselines** — Measure current metrics: Core Web Vitals (LCP, FID/INP, CLS) for frontend, P50/P95/P99 response times for APIs, CPU/memory/disk utilization for infrastructure. Document measurement conditions.
+2. **Profile the frontend** — Analyze initial loading (bundle size, code splitting, lazy loading), rendering (unnecessary re-renders, layout thrashing, unoptimized images), network requests (waterfall, blocking requests, cache strategy). Use Lighthouse, Chrome DevTools Performance, WebPageTest.
+3. **Profile the backend** — Identify slow endpoints (APM, slow query logs), analyze N+1 queries, serialized calls that could be parallelized, blocking computations on the main thread, memory leaks. Profile with appropriate tools (pprof, py-spy, clinic.js).
+4. **Analyze database queries** — Examine execution plans (`EXPLAIN ANALYZE`), identify missing indexes, full table scans, expensive joins, non-paginated queries. Check connection pooling configuration.
+5. **Evaluate cache strategy** — Audit cache layers (CDN, reverse proxy, application, database). Check hit ratios, appropriate TTLs, correct invalidation. Identify hot data that is not cached.
+6. **Load test** — Simulate realistic load scenarios (k6, Artillery, Locust): normal load, traffic spike, progressive ramp-up. Identify the breaking point and limiting resources.
+7. **Prioritize optimizations** — Rank issues by impact (estimated gain) and effort (fix complexity). Apply the 80/20 rule: the simplest optimizations that bring the most gain.
+8. **Write the report** — Produce a report with before/after metrics (when corrections have been applied), identified bottlenecks, and a prioritized action plan.
 
-## Checklist de sortie
+## Exit Checklist
 
-- [ ] Les baselines de performance sont mesurées et documentées
-- [ ] Les Core Web Vitals sont analysés (LCP < 2.5s, INP < 200ms, CLS < 0.1)
-- [ ] Les endpoints API lents sont identifiés avec leurs causes
-- [ ] Les requêtes de base de données problématiques sont listées avec plans d'exécution
-- [ ] La stratégie de cache est auditée et les lacunes identifiées
-- [ ] Un test de charge a été réalisé avec identification du point de rupture
-- [ ] Les optimisations sont priorisées par rapport impact/effort
-- [ ] Le rapport contient des métriques concrètes et un plan d'action
+- [ ] Performance baselines are measured and documented
+- [ ] Core Web Vitals are analyzed (LCP < 2.5s, INP < 200ms, CLS < 0.1)
+- [ ] Slow API endpoints are identified with their causes
+- [ ] Problematic database queries are listed with execution plans
+- [ ] Cache strategy is audited and gaps identified
+- [ ] A load test has been performed with breaking point identification
+- [ ] Optimizations are prioritized by impact/effort ratio
+- [ ] The report contains concrete metrics and an action plan
 
-## Format de sortie
+## Output Format
 
 ```markdown
-## Rapport d'Audit de Performance
+## Performance Audit Report
 
-**Application :** [nom de l'application / service]
-**Environnement :** [production | staging | développement]
+**Application :** [application / service name]
+**Environment :** [production | staging | development]
 **Date :** [date]
-**Auditeur :** [agent]
+**Auditor :** [agent]
 
-### Résumé exécutif
+### Executive summary
 
-| Métrique | Valeur actuelle | Seuil cible | Statut |
+| Metric | Current value | Target threshold | Status |
 |----------|----------------|-------------|--------|
 | LCP (Largest Contentful Paint) | X.Xs | < 2.5s | ✅/⚠️/❌ |
 | INP (Interaction to Next Paint) | Xms | < 200ms | ✅/⚠️/❌ |
@@ -63,45 +63,45 @@ Réaliser un audit de performance complet couvrant les métriques clés (Core We
 | API P95 | Xms | < 1000ms | ✅/⚠️/❌ |
 | API P99 | Xms | < 3000ms | ✅/⚠️/❌ |
 
-**Score global :** [Excellent | Bon | À améliorer | Critique]
+**Overall score :** [Excellent | Good | Needs improvement | Critical]
 
-### Goulots d'étranglement identifiés
+### Identified bottlenecks
 
-#### [PERF-01] Titre du problème — Sévérité : [Critique | Haute | Moyenne]
+#### [PERF-01] Issue title — Severity : [Critical | High | Medium]
 
-- **Composant :** [frontend | backend | database | infrastructure]
-- **Description :** Explication technique du problème
-- **Impact mesuré :** Métrique affectée et dégradation observée
-- **Cause racine :** Analyse détaillée
-- **Recommandation :** Solution technique avec estimation du gain
-- **Effort :** [Faible | Moyen | Élevé]
+- **Component :** [frontend | backend | database | infrastructure]
+- **Description :** Technical explanation of the problem
+- **Measured impact :** Affected metric and observed degradation
+- **Root cause :** Detailed analysis
+- **Recommendation :** Technical solution with estimated gain
+- **Effort :** [Low | Medium | High]
 
-### Analyse des requêtes DB
+### DB query analysis
 
-| Requête | Temps moyen | Appels/min | Index manquant | Recommandation |
-|---------|------------|------------|----------------|----------------|
-| [description] | Xms | X | Oui/Non | [action] |
+| Query | Average time | Calls/min | Missing index | Recommendation |
+|-------|-------------|-----------|---------------|----------------|
+| [description] | Xms | X | Yes/No | [action] |
 
-### Test de charge
+### Load test
 
-| Scénario | Utilisateurs simultanés | RPS | P95 latence | Taux d'erreur |
-|----------|------------------------|-----|-------------|---------------|
-| Charge normale | X | X | Xms | X% |
-| Pic de trafic | X | X | Xms | X% |
-| Point de rupture | X | X | Xms | X% |
+| Scenario | Concurrent users | RPS | P95 latency | Error rate |
+|----------|-----------------|-----|-------------|------------|
+| Normal load | X | X | Xms | X% |
+| Traffic spike | X | X | Xms | X% |
+| Breaking point | X | X | Xms | X% |
 
-### Plan d'optimisation priorisé
+### Prioritized optimization plan
 
-| Priorité | Action | Gain estimé | Effort | Responsable |
-|----------|--------|-------------|--------|-------------|
-| P0 | [action immédiate] | [gain] | [effort] | [équipe] |
-| P1 | [action court terme] | [gain] | [effort] | [équipe] |
-| P2 | [action moyen terme] | [gain] | [effort] | [équipe] |
+| Priority | Action | Estimated gain | Effort | Owner |
+|----------|--------|---------------|--------|-------|
+| P0 | [immediate action] | [gain] | [effort] | [team] |
+| P1 | [short-term action] | [gain] | [effort] | [team] |
+| P2 | [medium-term action] | [gain] | [effort] | [team] |
 
-### Prochaines étapes
+### Next steps
 
-- [ ] Implémenter les optimisations P0
-- [ ] Re-mesurer les baselines après corrections
-- [ ] Planifier les optimisations P1 dans le prochain sprint
-- [ ] Configurer des alertes de performance automatiques
+- [ ] Implement P0 optimizations
+- [ ] Re-measure baselines after corrections
+- [ ] Schedule P1 optimizations in the next sprint
+- [ ] Configure automatic performance alerts
 ```

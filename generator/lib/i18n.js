@@ -1,49 +1,55 @@
 /**
- * Assemble — Module i18n
- * Gère l'injection des instructions de langue dans les agents générés
- * Approche "langue libre" : pas de fichiers de traduction, le LLM gère
+ * Assemble — i18n Module
+ * Manages language instruction injection in generated agents
+ * "Free language" approach: no translation files, the LLM handles it
  */
 
 /**
- * Génère le bloc d'instructions de langue à injecter dans chaque agent
- * @param {string} langueEquipe - Langue des interactions (ex: "français", "english", "deutsch")
- * @param {string} langueOutput - Langue des livrables produits
- * @returns {string} - Bloc markdown à injecter
+ * Generates the language instruction block to inject in each agent
+ * @param {string} langueEquipe - Interaction language (e.g., "english", "deutsch", "français")
+ * @param {string} langueOutput - Deliverable output language
+ * @returns {string} - Markdown block to inject
  */
 function generateLanguageBlock(langueEquipe, langueOutput) {
-  return `## Langue de travail
+  return `## Working Language
 
-Tu communiques et rédiges tous tes échanges en **${langueEquipe}**.
-Les fichiers et livrables que tu produis sont rédigés en **${langueOutput}**.
-Les termes techniques, le code source, les noms de variables et les commandes restent en **anglais**.
+You communicate and write all your exchanges in **${langueEquipe}**.
+The files and deliverables you produce are written in **${langueOutput}**.
+Technical terms, source code, variable names, and commands remain in **English**.
 `;
 }
 
 /**
- * Remplace les instructions de langue existantes dans le contenu d'un agent
- * Cherche le pattern "Tu travailles toujours en français" et le remplace
- * @param {string} content - Contenu de l'agent
- * @param {string} langueEquipe - Langue des interactions
- * @param {string} langueOutput - Langue des livrables
- * @returns {string} - Contenu modifié
+ * Replaces existing language instructions in an agent's content
+ * Looks for language instruction patterns and replaces them
+ * @param {string} content - Agent content
+ * @param {string} langueEquipe - Interaction language
+ * @param {string} langueOutput - Deliverable language
+ * @returns {string} - Modified content
  */
 function injectLanguage(content, langueEquipe, langueOutput) {
   const languageBlock = generateLanguageBlock(langueEquipe, langueOutput);
 
-  // Remplacer les mentions de langue existantes dans la posture
+  // Replace existing language mentions in the approach section
   let modified = content.replace(
     /- Tu travailles toujours en français.*\n/g,
-    `- Tu travailles en ${langueEquipe} pour les échanges et en ${langueOutput} pour les livrables.\n`
+    `- You communicate in ${langueEquipe} for interactions and in ${langueOutput} for deliverables.\n`
   );
 
-  // Remplacer aussi "sauf instruction contraire"
+  // Also replace "unless instructed otherwise" variant
   modified = modified.replace(
     /- Tu travailles toujours en français sauf instruction contraire\.\n/g,
-    `- Tu travailles en ${langueEquipe} pour les échanges et en ${langueOutput} pour les livrables.\n`
+    `- You communicate in ${langueEquipe} for interactions and in ${langueOutput} for deliverables.\n`
   );
 
-  // Ajouter le bloc de langue à la fin si pas déjà présent
-  if (!modified.includes('## Langue de travail')) {
+  // Replace English variants too
+  modified = modified.replace(
+    /- You communicate in the team language.*\n/g,
+    `- You communicate in ${langueEquipe} for interactions and in ${langueOutput} for deliverables.\n`
+  );
+
+  // Add language block at the end if not already present
+  if (!modified.includes('## Working Language') && !modified.includes('## Langue de travail')) {
     modified = modified.trim() + '\n\n' + languageBlock;
   }
 
@@ -51,51 +57,61 @@ function injectLanguage(content, langueEquipe, langueOutput) {
 }
 
 /**
- * Traduit les labels de section si nécessaire
- * Utilisé pour adapter les headers des agents à la langue cible
- * @param {string} sectionName - Nom de section en français
- * @param {string} langue - Langue cible
- * @returns {string} - Nom traduit
+ * Translates section labels if necessary
+ * Used to adapt agent headers to the target language
+ * @param {string} sectionName - Section name in English
+ * @param {string} langue - Target language
+ * @returns {string} - Translated name
  */
 function translateSectionLabel(sectionName, langue) {
-  // Si la langue est le français, pas de traduction
-  if (langue.toLowerCase().startsWith('fran')) return sectionName;
+  // If the language is English, no translation needed
+  if (langue.toLowerCase().startsWith('en')) return sectionName;
 
-  // Mapping basique pour les langues principales
+  // Basic mapping for main languages
   const translations = {
     english: {
-      'Identité': 'Identity',
-      'Posture': 'Approach',
-      'Séquence d\'intervention': 'Intervention Sequence',
-      'Anti-patterns — ce que tu ne fais jamais': 'Anti-patterns — what you never do',
-      'Format de sortie par défaut': 'Default Output Format',
-      'Ce que tu produis typiquement': 'Typical Deliverables',
-      'Règles de qualité': 'Quality Rules',
-      'Langue de travail': 'Working Language'
+      'Identity': 'Identity',
+      'Approach': 'Approach',
+      'Intervention Sequence': 'Intervention Sequence',
+      'Anti-patterns — what you never do': 'Anti-patterns — what you never do',
+      'Default Output Format': 'Default Output Format',
+      'Typical Deliverables': 'Typical Deliverables',
+      'Quality Rules': 'Quality Rules',
+      'Working Language': 'Working Language'
     },
     deutsch: {
-      'Identité': 'Identität',
-      'Posture': 'Haltung',
-      'Séquence d\'intervention': 'Interventionssequenz',
-      'Anti-patterns — ce que tu ne fais jamais': 'Anti-Patterns — was du nie tust',
-      'Format de sortie par défaut': 'Standard-Ausgabeformat',
-      'Ce que tu produis typiquement': 'Typische Ergebnisse',
-      'Règles de qualité': 'Qualitätsregeln',
-      'Langue de travail': 'Arbeitssprache'
+      'Identity': 'Identität',
+      'Approach': 'Haltung',
+      'Intervention Sequence': 'Interventionssequenz',
+      'Anti-patterns — what you never do': 'Anti-Patterns — was du nie tust',
+      'Default Output Format': 'Standard-Ausgabeformat',
+      'Typical Deliverables': 'Typische Ergebnisse',
+      'Quality Rules': 'Qualitätsregeln',
+      'Working Language': 'Arbeitssprache'
     },
     español: {
-      'Identité': 'Identidad',
-      'Posture': 'Postura',
-      'Séquence d\'intervention': 'Secuencia de intervención',
-      'Anti-patterns — ce que tu ne fais jamais': 'Anti-patrones — lo que nunca haces',
-      'Format de sortie par défaut': 'Formato de salida por defecto',
-      'Ce que tu produis typiquement': 'Lo que produces típicamente',
-      'Règles de qualité': 'Reglas de calidad',
-      'Langue de travail': 'Idioma de trabajo'
+      'Identity': 'Identidad',
+      'Approach': 'Postura',
+      'Intervention Sequence': 'Secuencia de intervención',
+      'Anti-patterns — what you never do': 'Anti-patrones — lo que nunca haces',
+      'Default Output Format': 'Formato de salida por defecto',
+      'Typical Deliverables': 'Lo que produces típicamente',
+      'Quality Rules': 'Reglas de calidad',
+      'Working Language': 'Idioma de trabajo'
+    },
+    français: {
+      'Identity': 'Identité',
+      'Approach': 'Posture',
+      'Intervention Sequence': 'Séquence d\'intervention',
+      'Anti-patterns — what you never do': 'Anti-patterns — ce que tu ne fais jamais',
+      'Default Output Format': 'Format de sortie par défaut',
+      'Typical Deliverables': 'Ce que tu produis typiquement',
+      'Quality Rules': 'Règles de qualité',
+      'Working Language': 'Langue de travail'
     }
   };
 
-  // Trouver la langue la plus proche
+  // Find the closest language match
   const langKey = Object.keys(translations).find(k =>
     langue.toLowerCase().includes(k) || k.includes(langue.toLowerCase())
   );
@@ -104,8 +120,8 @@ function translateSectionLabel(sectionName, langue) {
     return translations[langKey][sectionName];
   }
 
-  // Pour les langues non listées, on garde le français
-  // Le LLM adaptera naturellement
+  // For unlisted languages, keep English
+  // The LLM will naturally adapt
   return sectionName;
 }
 

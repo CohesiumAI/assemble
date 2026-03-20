@@ -1,81 +1,81 @@
 ---
 name: testing
-description: Stratégie et exécution de tests — tests unitaires, d'intégration, end-to-end, avec génération de cas de test et analyse de couverture
+description: Test strategy and execution — unit, integration, end-to-end tests, with test case generation and coverage analysis
 agents: [dev-backend, dev-frontend, dev-fullstack, dev-mobile, qa]
 trigger: /test
 ---
 
 # Skill : Testing
 
-## Objectif
+## Objective
 
-Définir et exécuter une stratégie de test adaptée au contexte : identifier les cas de test pertinents, rédiger des tests unitaires, d'intégration et/ou end-to-end, analyser la couverture et produire un rapport de résultats exploitable.
+Define and execute a test strategy adapted to the context: identify relevant test cases, write unit, integration, and/or end-to-end tests, analyze coverage, and produce a usable results report.
 
-## Quand l'utiliser
+## When to use
 
-- Lors de l'implémentation d'une nouvelle fonctionnalité nécessitant des tests
-- Pour augmenter la couverture de tests d'un module existant
-- Avant un refactoring pour sécuriser le comportement actuel
-- Lors d'un bug report pour créer un test de régression
-- Pour auditer la qualité et la pertinence de la suite de tests existante
+- When implementing a new feature requiring tests
+- To increase test coverage of an existing module
+- Before a refactoring to secure current behavior
+- When a bug report requires creating a regression test
+- To audit the quality and relevance of the existing test suite
 
-## Étapes
+## Steps
 
-1. **Analyser le périmètre à tester** — Identifier le module, la fonction ou le flux concerné. Comprendre le comportement attendu, les entrées/sorties, les dépendances et les effets de bord.
-2. **Choisir le niveau de test** — Déterminer le type de test approprié selon la pyramide de tests : unitaire (logique isolée), intégration (interactions entre composants), end-to-end (flux utilisateur complet). Justifier le choix.
-3. **Identifier les cas de test** — Lister les scénarios : cas nominal (happy path), cas limites (edge cases), cas d'erreur (entrées invalides, timeouts, permissions refusées), cas de concurrence si applicable.
-4. **Préparer l'environnement de test** — Identifier les mocks, stubs et fixtures nécessaires. Configurer les données de test. S'assurer que les tests sont isolés et reproductibles (pas de dépendance à l'ordre d'exécution).
-5. **Rédiger les tests** — Suivre le pattern AAA (Arrange, Act, Assert). Un test = un comportement vérifié. Nommer les tests de manière descriptive (`should_return_404_when_user_not_found`). Utiliser les matchers adaptés.
-6. **Exécuter et analyser** — Lancer la suite de tests, vérifier que tous passent. Analyser le rapport de couverture (lignes, branches, fonctions). Identifier les zones non couvertes critiques.
-7. **Documenter les résultats** — Produire un rapport synthétique avec le taux de couverture, les cas testés, les éventuels tests ignorés (avec justification) et les recommandations.
+1. **Analyze the scope to test** — Identify the module, function, or flow involved. Understand the expected behavior, inputs/outputs, dependencies, and side effects.
+2. **Choose the test level** — Determine the appropriate test type according to the test pyramid: unit (isolated logic), integration (interactions between components), end-to-end (complete user flow). Justify the choice.
+3. **Identify test cases** — List scenarios: nominal case (happy path), edge cases, error cases (invalid inputs, timeouts, denied permissions), concurrency cases if applicable.
+4. **Prepare the test environment** — Identify required mocks, stubs, and fixtures. Configure test data. Ensure tests are isolated and reproducible (no dependency on execution order).
+5. **Write the tests** — Follow the AAA pattern (Arrange, Act, Assert). One test = one verified behavior. Name tests descriptively (`should_return_404_when_user_not_found`). Use appropriate matchers.
+6. **Execute and analyze** — Run the test suite, verify all pass. Analyze the coverage report (lines, branches, functions). Identify critical uncovered areas.
+7. **Document the results** — Produce a summary report with coverage rate, tested cases, any skipped tests (with justification), and recommendations.
 
-## Checklist de sortie
+## Exit Checklist
 
-- [ ] Le périmètre de test est clairement défini
-- [ ] Le niveau de test (unitaire / intégration / e2e) est justifié
-- [ ] Les cas nominaux, limites et d'erreur sont couverts
-- [ ] Les tests sont isolés, reproductibles et indépendants
-- [ ] Le pattern AAA est respecté (Arrange, Act, Assert)
-- [ ] Les noms de tests décrivent le comportement vérifié
-- [ ] La couverture de code atteint le seuil cible du projet
-- [ ] Le rapport de résultats est produit et exploitable
+- [ ] The test scope is clearly defined
+- [ ] The test level (unit / integration / e2e) is justified
+- [ ] Nominal, edge, and error cases are covered
+- [ ] Tests are isolated, reproducible, and independent
+- [ ] The AAA pattern is followed (Arrange, Act, Assert)
+- [ ] Test names describe the verified behavior
+- [ ] Code coverage meets the project's target threshold
+- [ ] The results report is produced and actionable
 
-## Format de sortie
+## Output Format
 
 ```markdown
-## Rapport de Tests
+## Test Report
 
-**Module :** [nom du module / composant]
-**Type :** [Unitaire | Intégration | E2E | Mixte]
-**Framework :** [Jest | Vitest | Pytest | Cypress | Playwright | autre]
+**Module :** [module / component name]
+**Type :** [Unit | Integration | E2E | Mixed]
+**Framework :** [Jest | Vitest | Pytest | Cypress | Playwright | other]
 **Date :** [date]
 
-### Cas de test identifiés
+### Identified test cases
 
-| # | Scénario | Type | Priorité |
+| # | Scenario | Type | Priority |
 |---|----------|------|----------|
-| T-01 | [Description du cas nominal] | Nominal | Haute |
-| T-02 | [Description du cas limite] | Edge case | Haute |
-| T-03 | [Description du cas d'erreur] | Erreur | Moyenne |
-| T-04 | [Description] | [Type] | [Priorité] |
+| T-01 | [Nominal case description] | Nominal | High |
+| T-02 | [Edge case description] | Edge case | High |
+| T-03 | [Error case description] | Error | Medium |
+| T-04 | [Description] | [Type] | [Priority] |
 
-### Résultats d'exécution
+### Execution results
 
-| Métrique | Valeur |
-|----------|--------|
-| Tests total | XX |
-| Passés ✅ | XX |
-| Échoués ❌ | XX |
-| Ignorés ⏭️ | XX |
-| Couverture lignes | XX% |
-| Couverture branches | XX% |
+| Metric | Value |
+|--------|-------|
+| Total tests | XX |
+| Passed ✅ | XX |
+| Failed ❌ | XX |
+| Skipped ⏭️ | XX |
+| Line coverage | XX% |
+| Branch coverage | XX% |
 
-### Tests rédigés
+### Written tests
 
 ```typescript
-// Exemple de test généré
-describe('NomDuModule', () => {
-  it('should [comportement attendu] when [condition]', () => {
+// Example of generated test
+describe('ModuleName', () => {
+  it('should [expected behavior] when [condition]', () => {
     // Arrange
     // Act
     // Assert
@@ -83,9 +83,9 @@ describe('NomDuModule', () => {
 });
 ```
 
-### Recommandations
+### Recommendations
 
-- [Zone non couverte critique à adresser]
-- [Test flaky à stabiliser]
-- [Refactoring suggéré pour améliorer la testabilité]
+- [Critical uncovered area to address]
+- [Flaky test to stabilize]
+- [Suggested refactoring to improve testability]
 ```

@@ -43,7 +43,7 @@ module.exports = {
       main += renderOrchestrator(orchestrator, config) + '\n\n';
     }
 
-    main += '## Agents disponibles\n\n';
+    main += '## Available Agents\n\n';
     for (const agent of agents) {
       const display = marvelDisplayName(agent);
       const id = agentId(agent);
@@ -52,14 +52,14 @@ module.exports = {
     }
 
     const allSkills = [...(skills.shared || []), ...(skills.specific || [])];
-    main += '\n## Skills disponibles\n\n';
+    main += '\n## Available Skills\n\n';
     for (const skill of allSkills) {
       const slug = skillSlug(skill);
       const desc = (skill.meta.description || '').split('—')[0].trim();
       main += `- **${slug}** — ${desc}\n`;
     }
 
-    main += '\n## Workflows disponibles\n\n';
+    main += '\n## Available Workflows\n\n';
     for (const workflow of workflows) {
       const slug = workflowSlug(workflow);
       const desc = workflowField(workflow.raw, 'description');
@@ -68,7 +68,7 @@ module.exports = {
 
     main += '\n' + renderCommandRegistry(agents, skills, workflows, config.governance);
 
-    main += `\n## Répertoire de sortie\n\nLivrables → \`${config.output_dir || './assemble-output'}\`\n`;
+    main += `\n## Output Directory\n\nDeliverables → \`${config.output_dir || './assemble-output'}\`\n`;
     fs.writeFileSync(path.join(githubDir, 'copilot-instructions.md'), main, 'utf-8');
 
     // ── Agent instruction files ───────────────────────────────────────────

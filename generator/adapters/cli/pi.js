@@ -25,11 +25,11 @@ module.exports = {
 
     // ── SYSTEM.md — orchestrator as system prompt ─────────────────────────
     let system = '# Assemble — System Prompt\n\n';
-    system += 'Tu es un orchestrateur IA qui coordonne une équipe d\'agents spécialisés.\n\n';
+    system += 'You are an AI orchestrator coordinating a team of specialized agents.\n\n';
     if (orchestrator) {
       system += renderOrchestrator(orchestrator, config) + '\n\n';
     }
-    system += '## Équipe\n\n';
+    system += '## Team\n\n';
     for (const agent of agents) {
       const display = marvelDisplayName(agent);
       const id = agentId(agent);

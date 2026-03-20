@@ -1,82 +1,82 @@
 ---
 name: ux-wireframe
-description: Création de wireframes et prototypes interactifs avec architecture d'information, flux utilisateur et spécifications de design
+description: Wireframe and interactive prototype creation with information architecture, user flows, and design specifications
 agents: [ux, pm, dev-frontend]
 trigger: /wireframe
 ---
 
 # Skill : UX Wireframe
 
-## Objectif
-Créer des wireframes et prototypes interactifs qui définissent la structure, la hiérarchie d'information et les interactions d'une interface utilisateur. Produire des livrables de design exploitables par les développeurs, incluant les flux utilisateur, les spécifications d'interaction et les annotations d'accessibilité.
+## Objective
+Create wireframes and interactive prototypes that define the structure, information hierarchy, and interactions of a user interface. Produce design deliverables usable by developers, including user flows, interaction specifications, and accessibility annotations.
 
-## Quand l'utiliser
-- Lors de la conception d'une nouvelle fonctionnalité ou d'un nouvel écran
-- Pour valider un flux utilisateur avant le développement (test de concept)
-- Quand une refonte UX est nécessaire sur un parcours existant
-- Pour aligner les parties prenantes sur la structure d'une interface avant le design visuel
-- Lors de tests utilisateurs nécessitant un prototype cliquable rapide
+## When to use
+- When designing a new feature or screen
+- To validate a user flow before development (concept testing)
+- When a UX redesign is needed on an existing journey
+- To align stakeholders on an interface's structure before visual design
+- During user testing requiring a quick clickable prototype
 
-## Étapes
-1. **Recueillir les besoins** — Identifier les objectifs utilisateur, les contraintes techniques, les personas concernés et les user stories associées. Analyser les parcours existants et les pain points identifiés.
-2. **Définir l'architecture d'information** — Structurer le contenu et la hiérarchie de l'interface : arborescence des pages, organisation des blocs de contenu, système de navigation et taxonomie.
-3. **Concevoir les flux utilisateur** — Cartographier les parcours utilisateur de bout en bout : points d'entrée, étapes, décisions, chemins alternatifs, états d'erreur et sorties. Identifier les happy path et les edge cases.
-4. **Créer les wireframes basse fidélité** — Dessiner les wireframes lo-fi pour chaque écran du flux : disposition des éléments, hiérarchie visuelle, zones d'interaction, contenu placeholder et annotations.
-5. **Itérer vers la moyenne fidélité** — Affiner les wireframes avec les composants du design system, les vrais contenus (ou contenus représentatifs), les états interactifs (hover, focus, active, disabled) et les breakpoints responsive.
-6. **Prototyper les interactions** — Créer un prototype interactif en liant les écrans avec les transitions, les micro-interactions, les états de chargement et les animations clés pour tester le flux complet.
-7. **Annoter les spécifications** — Ajouter les annotations détaillées pour les développeurs : espacements, comportements au scroll, règles de responsive, gestion du contenu dynamique, cas limites et accessibilité.
-8. **Valider avec les parties prenantes** — Présenter les wireframes aux parties prenantes (PO, développeurs, design) pour collecte de feedback, itérer selon les retours et archiver la version validée.
+## Steps
+1. **Gather requirements** — Identify user goals, technical constraints, relevant personas, and associated user stories. Analyze existing journeys and identified pain points.
+2. **Define information architecture** — Structure the content and interface hierarchy: page tree, content block organization, navigation system, and taxonomy.
+3. **Design user flows** — Map end-to-end user journeys: entry points, steps, decisions, alternative paths, error states, and exits. Identify happy paths and edge cases.
+4. **Create low-fidelity wireframes** — Draw lo-fi wireframes for each flow screen: element layout, visual hierarchy, interaction zones, placeholder content, and annotations.
+5. **Iterate toward medium fidelity** — Refine wireframes with design system components, real content (or representative content), interactive states (hover, focus, active, disabled), and responsive breakpoints.
+6. **Prototype interactions** — Create an interactive prototype by linking screens with transitions, micro-interactions, loading states, and key animations to test the complete flow.
+7. **Annotate specifications** — Add detailed annotations for developers: spacing, scroll behaviors, responsive rules, dynamic content management, edge cases, and accessibility.
+8. **Validate with stakeholders** — Present wireframes to stakeholders (PO, developers, design) for feedback collection, iterate based on feedback, and archive the validated version.
 
-## Checklist de sortie
-- [ ] Les objectifs utilisateur et les contraintes sont documentés
-- [ ] L'architecture d'information est définie et validée
-- [ ] Les flux utilisateur couvrent le happy path et les cas d'erreur
-- [ ] Les wireframes sont disponibles pour tous les écrans du flux
-- [ ] Les breakpoints responsive sont définis (mobile, tablette, desktop)
-- [ ] Le prototype interactif est fonctionnel et testable
-- [ ] Les annotations de spécifications sont complètes pour le handoff développeur
-- [ ] Les critères d'accessibilité sont intégrés (ordre de tabulation, zones tactiles, contrastes)
+## Exit Checklist
+- [ ] User goals and constraints are documented
+- [ ] Information architecture is defined and validated
+- [ ] User flows cover the happy path and error cases
+- [ ] Wireframes are available for all flow screens
+- [ ] Responsive breakpoints are defined (mobile, tablet, desktop)
+- [ ] Interactive prototype is functional and testable
+- [ ] Specification annotations are complete for developer handoff
+- [ ] Accessibility criteria are integrated (tab order, touch targets, contrasts)
 
-## Format de sortie
+## Output Format
 ```
-Livrable UX Wireframe
+UX Wireframe Deliverable
 
-Projet : [nom du projet / fonctionnalité]
+Project : [project / feature name]
 Designer : [agent ux]
 Date : [date]
 Version : [v1.0 / v1.1 / v2.0]
-Outil : [Figma / Whimsical / Balsamiq / Excalidraw]
+Tool : [Figma / Whimsical / Balsamiq / Excalidraw]
 
-Architecture d'information :
-  Page principale
-  ├── Section hero / en-tête
-  ├── Section contenu principal
-  │   ├── Bloc filtres / recherche
-  │   ├── Bloc liste / grille de résultats
-  │   └── Bloc pagination
-  ├── Section contenu secondaire
-  │   └── Bloc sidebar / widgets
-  └── Section pied de page
+Information architecture :
+  Main page
+  ├── Hero / header section
+  ├── Main content section
+  │   ├── Filters / search block
+  │   ├── List / results grid block
+  │   └── Pagination block
+  ├── Secondary content section
+  │   └── Sidebar / widgets block
+  └── Footer section
 
-Flux utilisateur :
-  [Entrée] → Écran A → Décision → Écran B1 (succès) → [Sortie]
-                                 → Écran B2 (erreur) → Retry → Écran A
+User flow :
+  [Entry] → Screen A → Decision → Screen B1 (success) → [Exit]
+                                 → Screen B2 (error) → Retry → Screen A
 
 Wireframes :
-  - Écran 1 : [nom] — [lien Figma / image]
-  - Écran 2 : [nom] — [lien Figma / image]
-  - Écran 3 : [nom] — [lien Figma / image]
+  - Screen 1 : [name] — [Figma link / image]
+  - Screen 2 : [name] — [Figma link / image]
+  - Screen 3 : [name] — [Figma link / image]
 
-Spécifications responsive :
-  - Mobile (< 768px) : Layout single column, navigation burger
-  - Tablette (768-1024px) : Layout 2 colonnes, sidebar collapsable
-  - Desktop (> 1024px) : Layout complet avec sidebar visible
+Responsive specifications :
+  - Mobile (< 768px) : Single column layout, burger navigation
+  - Tablet (768-1024px) : 2 column layout, collapsible sidebar
+  - Desktop (> 1024px) : Full layout with visible sidebar
 
-Annotations d'accessibilité :
-  - Ordre de tabulation : [séquence définie]
-  - Zones tactiles minimales : 44x44px
-  - Landmarks ARIA : header, nav, main, footer
-  - Textes alternatifs : [décrits pour chaque image]
+Accessibility annotations :
+  - Tab order : [defined sequence]
+  - Minimum touch targets : 44x44px
+  - ARIA landmarks : header, nav, main, footer
+  - Alt text : [described for each image]
 
-Prototype interactif : [lien vers le prototype]
+Interactive prototype : [link to prototype]
 ```

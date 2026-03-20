@@ -1,33 +1,33 @@
 name: experimentation
-description: "Cycle d'expérimentation A/B — hypothèse, implémentation, mesure et décision"
+description: "A/B experimentation cycle — hypothesis, implementation, measurement, and decision"
 trigger: /experiment
 output_dir: "{assemble_output}/experiment_{timestamp}"
 steps:
   - step: 1
     agent: pm
-    action: "Définir l'hypothèse, les métriques de succès et les critères de décision"
+    action: "Define the hypothesis, success metrics, and decision criteria"
     outputs: [hypothesis.md, success-metrics.md, decision-criteria.md]
   - step: 2
     agent: data
-    action: "Calculer la taille d'échantillon requise et configurer le tracking analytique"
+    action: "Calculate required sample size and configure analytics tracking"
     inputs: [01-pm/hypothesis.md, 01-pm/success-metrics.md]
     outputs: [sample-size.md, tracking-plan.md]
     depends_on: [1]
   - step: 3
     agent: dev-fullstack
-    action: "Implémenter les variantes via feature flags et instrumenter le code"
+    action: "Implement les variantes via feature flags et instrumenter le code"
     inputs: [01-pm/hypothesis.md, 02-data/tracking-plan.md]
     outputs: [implementation-spec.md, feature-flags.md]
     depends_on: [1, 2]
   - step: 4
     agent: qa
-    action: "Valider que les variantes fonctionnent correctement et que le tracking est précis"
+    action: "Validate that variants work correctly and tracking is accurate"
     inputs: [03-dev-fullstack/implementation-spec.md, 03-dev-fullstack/feature-flags.md, 02-data/tracking-plan.md]
     outputs: [variant-test-report.md, tracking-validation.md]
     depends_on: [3]
   - step: 5
     agent: growth
-    action: "Analyser les résultats, évaluer la significativité statistique et recommander la décision"
+    action: "Analyze results, evaluate statistical significance, and recommend the decision"
     inputs: [01-pm/hypothesis.md, 01-pm/decision-criteria.md, 02-data/sample-size.md, 04-qa/tracking-validation.md]
     outputs: [experiment-results.md, decision-recommendation.md]
     depends_on: [4]

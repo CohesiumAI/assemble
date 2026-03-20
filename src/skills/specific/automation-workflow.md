@@ -1,83 +1,83 @@
 ---
 name: automation-workflow
-description: Conception de workflow d'automatisation multi-outils avec déclencheurs, actions, gestion d'erreurs et monitoring
+description: Multi-tool automation workflow design with triggers, actions, error handling, and monitoring
 agents: [automation, devops, dev-backend]
 trigger: /automate
 ---
 
 # Skill : Automation Workflow
 
-## Objectif
-Concevoir et implémenter un workflow d'automatisation complet en utilisant les outils no-code/low-code (n8n, Make, Zapier) ou des scripts personnalisés. Définir les déclencheurs, les étapes de transformation, les intégrations tierces, la gestion des erreurs et le monitoring pour automatiser des processus métier répétitifs de manière fiable.
+## Objective
+Design and implement a complete automation workflow using no-code/low-code tools (n8n, Make, Zapier) or custom scripts. Define triggers, transformation steps, third-party integrations, error handling, and monitoring to reliably automate repetitive business processes.
 
-## Quand l'utiliser
-- Pour automatiser un processus métier répétitif impliquant plusieurs outils ou services
-- Lors de la création d'une intégration entre deux systèmes qui ne communiquent pas nativement
-- Quand un flux de données doit être automatisé entre des applications (CRM, ERP, outil de ticketing, etc.)
-- Pour mettre en place des notifications automatiques basées sur des événements
-- Lors de l'automatisation de tâches de reporting, de synchronisation de données ou de provisioning
+## When to use
+- To automate a repetitive business process involving multiple tools or services
+- When creating an integration between two systems that don't communicate natively
+- When a data flow needs to be automated between applications (CRM, ERP, ticketing tool, etc.)
+- To set up automatic notifications based on events
+- When automating reporting tasks, data synchronization, or provisioning
 
-## Étapes
-1. **Cartographier le processus actuel** — Documenter le processus manuel existant : étapes, acteurs, outils utilisés, fréquence d'exécution, volume de données et temps passé. Identifier les points de douleur et les erreurs fréquentes.
-2. **Définir le workflow cible** — Concevoir le workflow automatisé : déclencheur (webhook, schedule, événement), étapes de traitement, conditions de branchement, boucles et points de sortie. Produire un diagramme de flux.
-3. **Sélectionner les outils et connecteurs** — Choisir la plateforme d'automatisation adaptée (n8n pour le self-hosted, Make pour la flexibilité, Zapier pour la simplicité) et vérifier la disponibilité des connecteurs pour chaque service impliqué.
-4. **Configurer le déclencheur** — Implémenter le déclencheur du workflow : webhook entrant, polling schedule (cron), événement applicatif, file d'attente de messages ou déclenchement manuel avec paramètres.
-5. **Implémenter les étapes de traitement** — Configurer chaque noeud du workflow : appels API, transformations de données (mapping, filtrage, agrégation), conditions logiques (if/else, switch) et boucles (for each).
-6. **Gérer les erreurs et les retries** — Implémenter la gestion des erreurs à chaque étape critique : retries avec backoff exponentiel, chemins d'erreur alternatifs, notifications d'échec et file de messages morts (dead letter queue).
-7. **Tester le workflow de bout en bout** — Exécuter le workflow avec des données de test représentatives, vérifier chaque étape, valider les transformations de données et simuler les cas d'erreur pour vérifier la résilience.
-8. **Déployer et monitorer** — Activer le workflow en production, configurer les alertes de monitoring (échecs, latence, volume anormal), mettre en place les logs et définir les procédures de maintenance.
+## Steps
+1. **Map the current process** — Document the existing manual process: steps, actors, tools used, execution frequency, data volume, and time spent. Identify pain points and frequent errors.
+2. **Define the target workflow** — Design the automated workflow: trigger (webhook, schedule, event), processing steps, branching conditions, loops, and exit points. Produce a flow diagram.
+3. **Select tools and connectors** — Choose the appropriate automation platform (n8n for self-hosted, Make for flexibility, Zapier for simplicity) and verify connector availability for each involved service.
+4. **Configure the trigger** — Implement the workflow trigger: incoming webhook, polling schedule (cron), application event, message queue, or manual trigger with parameters.
+5. **Implement processing steps** — Configure each workflow node: API calls, data transformations (mapping, filtering, aggregation), logical conditions (if/else, switch), and loops (for each).
+6. **Handle errors and retries** — Implement error handling at each critical step: retries with exponential backoff, alternative error paths, failure notifications, and dead letter queue.
+7. **Test the workflow end-to-end** — Execute the workflow with representative test data, verify each step, validate data transformations, and simulate error cases to verify resilience.
+8. **Deploy and monitor** — Activate the workflow in production, configure monitoring alerts (failures, latency, abnormal volume), set up logs, and define maintenance procedures.
 
-## Checklist de sortie
-- [ ] Le processus actuel est documenté et les gains de l'automatisation sont chiffrés
-- [ ] Le diagramme de flux du workflow est clair et validé par les parties prenantes
-- [ ] Tous les connecteurs et API sont configurés avec les authentifications appropriées
-- [ ] Le déclencheur fonctionne de manière fiable (webhook vérifié, schedule correct)
-- [ ] Les transformations de données sont correctes et les mappings sont validés
-- [ ] La gestion des erreurs est implémentée avec retries et notifications d'échec
-- [ ] Le workflow est testé avec des données représentatives (cas nominal et cas d'erreur)
-- [ ] Le monitoring et les alertes sont en place pour la supervision en production
+## Exit Checklist
+- [ ] The current process is documented and automation gains are quantified
+- [ ] The workflow flow diagram is clear and validated by stakeholders
+- [ ] All connectors and APIs are configured with appropriate authentication
+- [ ] The trigger works reliably (webhook verified, schedule correct)
+- [ ] Data transformations are correct and mappings are validated
+- [ ] Error handling is implemented with retries and failure notifications
+- [ ] The workflow is tested with representative data (nominal and error cases)
+- [ ] Monitoring and alerts are in place for production supervision
 
-## Format de sortie
+## Output Format
 ```
-Spécification de Workflow d'Automatisation
+Automation Workflow Specification
 
-Nom : [nom descriptif du workflow]
-Plateforme : [n8n / Make / Zapier / script custom]
-Concepteur : [agent automation]
+Name : [descriptive workflow name]
+Platform : [n8n / Make / Zapier / custom script]
+Designer : [agent automation]
 Date : [date]
-Fréquence : [temps réel / toutes les X minutes / quotidien / hebdomadaire]
+Frequency : [real-time / every X minutes / daily / weekly]
 
-Processus automatisé :
-  - Description : [ce que fait le workflow en une phrase]
-  - Déclencheur : [webhook / schedule / événement]
-  - Volume estimé : [X exécutions par jour/semaine]
-  - Temps économisé : [X heures par semaine]
+Automated process :
+  - Description : [what the workflow does in one sentence]
+  - Trigger : [webhook / schedule / event]
+  - Estimated volume : [X executions per day/week]
+  - Time saved : [X hours per week]
 
-Diagramme de flux :
-  [Déclencheur] → [Étape 1 : Récupération données]
-                 → [Étape 2 : Transformation / Filtrage]
-                 → [Condition : validation]
-                    → OUI → [Étape 3A : Action principale]
-                           → [Étape 4 : Notification succès]
-                    → NON → [Étape 3B : Gestion rejet]
-                           → [Étape 4B : Alerte équipe]
+Flow diagram :
+  [Trigger] → [Step 1 : Data retrieval]
+             → [Step 2 : Transformation / Filtering]
+             → [Condition : validation]
+                → YES → [Step 3A : Main action]
+                       → [Step 4 : Success notification]
+                → NO  → [Step 3B : Rejection handling]
+                       → [Step 4B : Team alert]
 
-Services intégrés :
-  | Service        | Connecteur | Action                   | Authentification |
+Integrated services :
+  | Service        | Connector | Action                   | Authentication  |
   |----------------|-----------|--------------------------|-----------------|
-  | [Service 1]    | API REST  | Récupérer données        | API Key         |
-  | [Service 2]    | Webhook   | Envoyer notification     | OAuth 2.0       |
-  | [Service 3]    | SDK natif | Créer enregistrement     | Token           |
+  | [Service 1]    | REST API  | Retrieve data            | API Key         |
+  | [Service 2]    | Webhook   | Send notification        | OAuth 2.0       |
+  | [Service 3]    | Native SDK| Create record            | Token           |
 
-Gestion des erreurs :
-  - Retry : 3 tentatives avec backoff exponentiel (1s, 5s, 30s)
-  - Notification d'échec : [Slack / email / PagerDuty]
-  - Dead letter queue : [activée / désactivée]
-  - Fallback : [action alternative en cas d'échec définitif]
+Error handling :
+  - Retry : 3 attempts with exponential backoff (1s, 5s, 30s)
+  - Failure notification : [Slack / email / PagerDuty]
+  - Dead letter queue : [enabled / disabled]
+  - Fallback : [alternative action on definitive failure]
 
 Monitoring :
-  - Dashboard : [lien vers le tableau de bord]
-  - Alertes : [conditions de déclenchement des alertes]
-  - Logs : [rétention et niveau de détail]
-  - SLA : [temps de réponse attendu, taux de succès cible]
+  - Dashboard : [link to dashboard]
+  - Alerts : [alert trigger conditions]
+  - Logs : [retention and detail level]
+  - SLA : [expected response time, target success rate]
 ```

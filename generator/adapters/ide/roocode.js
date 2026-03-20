@@ -67,12 +67,12 @@ module.exports = {
     if (orchestrator) {
       const orchRole = (orchestrator.sections || {})['Identité']
         || (orchestrator.sections || {})['Identity']
-        || (orchestrator.meta || {}).description || 'Orchestrateur de projet';
+        || (orchestrator.meta || {}).description || 'Project Orchestrator';
 
       customModes.push({
         slug: 'orchestrator',
         name: 'Jarvis (Orchestrator)',
-        roleDefinition: typeof orchRole === 'string' ? orchRole.trim() : 'Orchestrateur de projet',
+        roleDefinition: typeof orchRole === 'string' ? orchRole.trim() : 'Project Orchestrator',
         customInstructions: renderOrchestrator(orchestrator, config),
         groups: ['read', 'edit', 'browser', 'command', 'mcp'],
         source: 'project'

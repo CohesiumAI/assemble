@@ -263,8 +263,8 @@ module.exports = {
 
     // ── 5. .claude/rules/teams.md ─────────────────────────────────────────────
 
-    let teamsContent = '# Équipes Assemble\n\n';
-    teamsContent += 'Répertoire des agents disponibles. Chaque agent est invocable via `@nom-agent`.\n\n';
+    let teamsContent = '# Assemble Teams\n\n';
+    teamsContent += 'Directory of available agents. Each agent can be invoked via `@agent-name`.\n\n';
 
     for (const agent of agents) {
       const slug  = this._marvelSlug(agent);
@@ -298,10 +298,10 @@ module.exports = {
     const steps = this._parseWorkflowSteps(workflow.raw);
     const outputDir = config.output_dir || './assemble-output';
 
-    let out = '## Instructions d\'exécution\n\n';
-    out += `Répertoire de sortie : \`${outputDir}\`\n\n`;
-    out += 'Exécute les étapes suivantes dans l\'ordre. ';
-    out += 'Pour chaque étape, adopte le rôle de l\'agent indiqué en lisant sa définition dans `.claude/agents/`.\n\n';
+    let out = '## Execution Instructions\n\n';
+    out += `Output directory: \`${outputDir}\`\n\n`;
+    out += 'Execute the following steps in order. ';
+    out += 'For each step, adopt the role of the designated agent by reading its definition in `.claude/agents/`.\n\n';
 
     if (steps.length === 0) {
       out += '```yaml\n' + workflow.raw + '\n```\n';
@@ -313,19 +313,19 @@ module.exports = {
       const agentRef = info.marvelSlug || step.agent;
       const agentDisplay = info.displayName || step.agent;
 
-      out += `### Étape ${step.num} — ${agentDisplay} (\`@${agentRef}\`)\n\n`;
-      out += `**Action :** ${step.action}\n\n`;
+      out += `### Step ${step.num} — ${agentDisplay} (\`@${agentRef}\`)\n\n`;
+      out += `**Action:** ${step.action}\n\n`;
 
       if (step.inputs.length > 0) {
-        out += '**Inputs :** ';
+        out += '**Inputs:** ';
         out += step.inputs.map(i => `\`${i}\``).join(', ') + '\n\n';
       }
 
       if (step.depends_on.length > 0) {
-        out += `**Dépend de :** étape(s) ${step.depends_on.join(', ')}\n\n`;
+        out += `**Depends on:** step(s) ${step.depends_on.join(', ')}\n\n`;
       }
 
-      out += '**Livrables attendus :**\n';
+      out += '**Expected deliverables:**\n';
       for (const o of step.outputs) {
         out += `- \`${o}\`\n`;
       }
@@ -381,26 +381,26 @@ module.exports = {
     // Check CLAUDE.md
     const claudeMdPath = path.join(projectDir, 'CLAUDE.md');
     if (!fs.existsSync(claudeMdPath)) {
-      errors.push('CLAUDE.md manquant');
+      errors.push('CLAUDE.md missing');
     } else {
       const content = fs.readFileSync(claudeMdPath, 'utf-8');
       if (content.trim().length === 0) {
-        errors.push('CLAUDE.md est vide');
+        errors.push('CLAUDE.md is empty');
       }
       const lineCount = content.split('\n').length;
       if (lineCount > 30) {
-        errors.push(`CLAUDE.md trop long (${lineCount} lignes, recommandé < 30)`);
+        errors.push(`CLAUDE.md too long (${lineCount} lines, recommended < 30)`);
       }
     }
 
     // Check routing.md exists
     const routingPath = path.join(projectDir, '.claude', 'rules', 'routing.md');
     if (!fs.existsSync(routingPath)) {
-      errors.push('.claude/rules/routing.md manquant');
+      errors.push('.claude/rules/routing.md missing');
     } else {
       const content = fs.readFileSync(routingPath, 'utf-8');
       if (content.trim().length === 0) {
-        errors.push('.claude/rules/routing.md est vide');
+        errors.push('.claude/rules/routing.md is empty');
       }
     }
 
@@ -411,15 +411,15 @@ module.exports = {
         const agentMd = path.join(agentsDir, entry, 'AGENT.md');
         const stat = fs.statSync(path.join(agentsDir, entry));
         if (!stat.isDirectory()) {
-          errors.push(`Fichier inattendu dans .claude/agents/ : ${entry} (doit être un dossier)`);
+          errors.push(`Unexpected file in .claude/agents/: ${entry} (must be a directory)`);
           continue;
         }
         if (!fs.existsSync(agentMd)) {
-          errors.push(`AGENT.md manquant dans .claude/agents/${entry}/`);
+          errors.push(`AGENT.md missing in .claude/agents/${entry}/`);
         } else {
           const content = fs.readFileSync(agentMd, 'utf-8');
           if (content.trim().length === 0) {
-            errors.push(`AGENT.md vide dans .claude/agents/${entry}/`);
+            errors.push(`AGENT.md empty in .claude/agents/${entry}/`);
           }
         }
       }
@@ -434,11 +434,11 @@ module.exports = {
         if (!stat.isDirectory()) continue;
         const skillMd = path.join(entryPath, 'SKILL.md');
         if (!fs.existsSync(skillMd)) {
-          errors.push(`SKILL.md manquant dans .claude/skills/${entry}/`);
+          errors.push(`SKILL.md missing in .claude/skills/${entry}/`);
         } else {
           const content = fs.readFileSync(skillMd, 'utf-8');
           if (content.trim().length === 0) {
-            errors.push(`SKILL.md vide dans .claude/skills/${entry}/`);
+            errors.push(`SKILL.md empty in .claude/skills/${entry}/`);
           }
         }
       }
@@ -456,14 +456,14 @@ module.exports = {
             if (fs.statSync(subPath).isFile()) {
               const content = fs.readFileSync(subPath, 'utf-8');
               if (content.trim().length === 0) {
-                errors.push(`Fichier de règle vide : .claude/rules/${entry}/${subFile}`);
+                errors.push(`Empty rule file: .claude/rules/${entry}/${subFile}`);
               }
             }
           }
         } else {
           const content = fs.readFileSync(entryPath, 'utf-8');
           if (content.trim().length === 0) {
-            errors.push(`Fichier de règle vide : .claude/rules/${entry}`);
+            errors.push(`Empty rule file: .claude/rules/${entry}`);
           }
         }
       }

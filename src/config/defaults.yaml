@@ -1,35 +1,35 @@
-# Assemble — Configuration par défaut
-# Ce fichier définit les valeurs par défaut du système
-# L'installateur génère un .assemble.yaml par projet qui surcharge ces valeurs
+# Assemble — Default configuration
+# This file defines the system default values
+# The installer generates a per-project .assemble.yaml that overrides these values
 
 version: "1.0.0"
 
-# Langues par défaut
+# Default languages
 i18n:
   langue_equipe: "english"
   langue_output: "english"
   instruction_template: |
-    ## Langue de travail
-    Tu communiques et rédiges tous tes livrables en {langue_equipe}.
-    Les fichiers que tu produis sont rédigés en {langue_output}.
-    Les termes techniques et le code restent en anglais.
+    ## Working Language
+    You communicate and write all your deliverables in {langue_equipe}.
+    The files you produce are written in {langue_output}.
+    Technical terms and code remain in English.
 
-# Profil d'équipe (custom = configuration manuelle, startup/enterprise/agency = presets)
+# Team profile (custom = manual configuration, startup/enterprise/agency = presets)
 profile: "custom"
 
-# Gouvernance (none = pas de surcharge, standard = decision gates + risk assessment, strict = audit + RBAC + NIST)
+# Governance (none = no overhead, standard = decision gates + risk assessment, strict = audit + RBAC + NIST)
 governance: "none"
 
-# MCP Server (false = désactivé, true = génère mcp-server.js dans .assemble/)
+# MCP Server (false = disabled, true = generates mcp-server.js in .assemble/)
 mcp: false
 
-# Mémoire cross-session (false = désactivé, true = génère _memory.md)
+# Cross-session memory (false = disabled, true = generates _memory.md)
 memory: false
 
-# Métriques workflow (false = désactivé, true = génère _metrics.md)
+# Workflow metrics (false = disabled, true = generates _metrics.md)
 metrics: false
 
-# Répertoire de sortie des livrables
+# Deliverable output directory
 output:
   dir: "./assemble-output"
   structure: "{workflow_name}_{timestamp}"
@@ -37,7 +37,7 @@ output:
   summary_file: "_summary.md"
   timestamp_format: "%Y%m%d_%H%M%S"
 
-# Agents activés par défaut
+# Agents enabled by default
 agents:
   default: all
   available:
@@ -74,7 +74,7 @@ agents:
     - pr-comms
     - redteam
 
-# Workflows activés par défaut
+# Workflows enabled by default
 workflows:
   default: all
   available:
@@ -94,7 +94,7 @@ workflows:
     - documentation-sprint
     - experimentation
 
-# Plateformes supportées
+# Supported platforms
 platforms:
   ide:
     - name: cursor

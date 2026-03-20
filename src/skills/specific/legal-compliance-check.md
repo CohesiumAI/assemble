@@ -1,76 +1,76 @@
 ---
 name: legal-compliance-check
-description: Vérification de conformité réglementaire RGPD, AI Act et nLPD avec analyse des écarts et plan de mise en conformité
+description: GDPR, AI Act, and nLPD regulatory compliance check with gap analysis and compliance plan
 agents: [legal, pm, architect, security]
 trigger: /compliance
 ---
 
 # Skill : Legal Compliance Check
 
-## Objectif
-Réaliser une vérification exhaustive de la conformité d'un produit, service ou traitement de données vis-à-vis des réglementations applicables (RGPD, AI Act, nLPD). Identifier les écarts de conformité, évaluer les risques juridiques et produire un plan de mise en conformité priorisé avec les actions correctives nécessaires.
+## Objective
+Perform an exhaustive compliance check of a product, service, or data processing against applicable regulations (GDPR, AI Act, nLPD). Identify compliance gaps, assess legal risks, and produce a prioritized compliance plan with necessary corrective actions.
 
-## Quand l'utiliser
-- Avant le lancement d'un nouveau produit ou service traitant des données personnelles
-- Lors de l'intégration d'un système d'intelligence artificielle dans un produit existant
-- Pour un audit périodique de conformité (annuel ou semestriel)
-- Quand une nouvelle réglementation entre en vigueur ou est modifiée
-- Lors d'un changement significatif dans le traitement des données (nouveau sous-traitant, transfert hors UE, nouvelle finalité)
+## When to use
+- Before launching a new product or service processing personal data
+- When integrating an artificial intelligence system into an existing product
+- For a periodic compliance audit (annual or semi-annual)
+- When new regulation comes into force or is modified
+- During a significant change in data processing (new sub-processor, transfer outside EU, new purpose)
 
-## Étapes
-1. **Cartographier les traitements** — Identifier tous les traitements de données personnelles concernés : finalités, bases légales, catégories de données, durées de conservation, sous-traitants et transferts internationaux.
-2. **Identifier les réglementations applicables** — Déterminer quelles réglementations s'appliquent selon la localisation des utilisateurs, la nature des données et le type de système (RGPD pour l'UE, nLPD pour la Suisse, AI Act pour les systèmes IA).
-3. **Analyser la conformité RGPD** — Vérifier les principes fondamentaux : licéité du traitement, minimisation des données, droits des personnes concernées, registre des traitements, AIPD si nécessaire, DPO désigné.
-4. **Évaluer la conformité AI Act** — Si applicable, classifier le système IA selon le niveau de risque (inacceptable, haut, limité, minimal), vérifier les obligations de transparence, documentation technique et supervision humaine.
-5. **Vérifier la conformité nLPD** — Pour les traitements concernant la Suisse, vérifier le devoir d'informer, les analyses d'impact, les transferts transfrontaliers et les mesures techniques et organisationnelles.
-6. **Analyser les écarts** — Documenter chaque écart de conformité identifié avec le niveau de risque juridique (amende, sanction, litige), la probabilité et l'impact potentiel.
-7. **Élaborer le plan de remédiation** — Définir les actions correctives priorisées avec responsables, délais et ressources nécessaires pour chaque écart identifié.
-8. **Rédiger le rapport de conformité** — Produire le rapport final avec la synthèse de l'analyse, les constats détaillés, le plan d'action et les recommandations pour maintenir la conformité dans le temps.
+## Steps
+1. **Map data processing activities** — Identify all personal data processing involved: purposes, legal bases, data categories, retention periods, sub-processors, and international transfers.
+2. **Identify applicable regulations** — Determine which regulations apply based on user location, data nature, and system type (GDPR for EU, nLPD for Switzerland, AI Act for AI systems).
+3. **Analyze GDPR compliance** — Check fundamental principles: lawfulness of processing, data minimization, data subject rights, processing records, DPIA if necessary, designated DPO.
+4. **Evaluate AI Act compliance** — If applicable, classify the AI system by risk level (unacceptable, high, limited, minimal), check transparency obligations, technical documentation, and human oversight.
+5. **Verify nLPD compliance** — For processing concerning Switzerland, check the duty to inform, impact assessments, cross-border transfers, and technical and organizational measures.
+6. **Analyze gaps** — Document each identified compliance gap with legal risk level (fine, sanction, litigation), probability, and potential impact.
+7. **Develop the remediation plan** — Define prioritized corrective actions with owners, deadlines, and resources needed for each identified gap.
+8. **Write the compliance report** — Produce the final report with analysis summary, detailed findings, action plan, and recommendations to maintain compliance over time.
 
-## Checklist de sortie
-- [ ] Le registre des traitements est complet et à jour
-- [ ] Les bases légales sont identifiées et documentées pour chaque traitement
-- [ ] Les droits des personnes concernées sont implémentés (accès, rectification, suppression, portabilité)
-- [ ] Les mentions légales et politiques de confidentialité sont conformes et à jour
-- [ ] Les AIPD sont réalisées pour les traitements à haut risque
-- [ ] Les transferts internationaux sont encadrés (clauses contractuelles types, décisions d'adéquation)
-- [ ] Les systèmes IA sont classifiés et les obligations correspondantes sont respectées
-- [ ] Le plan de remédiation est priorisé avec des délais réalistes
+## Exit Checklist
+- [ ] Processing records are complete and up to date
+- [ ] Legal bases are identified and documented for each processing activity
+- [ ] Data subject rights are implemented (access, rectification, deletion, portability)
+- [ ] Legal notices and privacy policies are compliant and up to date
+- [ ] DPIAs are performed for high-risk processing activities
+- [ ] International transfers are governed (standard contractual clauses, adequacy decisions)
+- [ ] AI systems are classified and corresponding obligations are met
+- [ ] Remediation plan is prioritized with realistic deadlines
 
-## Format de sortie
+## Output Format
 ```
-Rapport de Conformité Réglementaire
+Regulatory Compliance Report
 
-Objet : [nom du produit / service / traitement]
-Réglementations analysées : RGPD, AI Act, nLPD
-Date de l'analyse : [date]
-Analyste : [agent legal]
+Subject : [product / service / processing name]
+Regulations analyzed : GDPR, AI Act, nLPD
+Analysis date : [date]
+Analyst : [agent legal]
 
-Synthèse de conformité :
-  - RGPD : [Conforme / Partiellement conforme / Non conforme]
-  - AI Act : [Conforme / Partiellement conforme / Non conforme / Non applicable]
-  - nLPD : [Conforme / Partiellement conforme / Non conforme / Non applicable]
-  - Niveau de risque global : [critique / élevé / modéré / faible]
+Compliance summary :
+  - GDPR : [Compliant / Partially compliant / Non-compliant]
+  - AI Act : [Compliant / Partially compliant / Non-compliant / Not applicable]
+  - nLPD : [Compliant / Partially compliant / Non-compliant / Not applicable]
+  - Overall risk level : [critical / high / moderate / low]
 
-Écarts identifiés :
+Identified gaps :
 
-[EC-001] Titre de l'écart
-  - Réglementation : RGPD - Article 13
-  - Constat : Description de la non-conformité
-  - Risque : Amende jusqu'à 4% du CA mondial / CHF 250'000
-  - Priorité : Critique
-  - Action corrective : Description de la correction à apporter
-  - Responsable : [rôle / équipe]
-  - Délai : [date cible]
+[GAP-001] Gap title
+  - Regulation : GDPR - Article 13
+  - Finding : Description of the non-compliance
+  - Risk : Fine up to 4% of global revenue / CHF 250,000
+  - Priority : Critical
+  - Corrective action : Description of the correction to apply
+  - Owner : [role / team]
+  - Deadline : [target date]
 
-Plan de mise en conformité :
-  Phase 1 (0-30 jours) — Actions critiques
-    - [EC-001] Mise à jour de la politique de confidentialité
-    - [EC-003] Implémentation du mécanisme de consentement
-  Phase 2 (30-90 jours) — Actions importantes
-    - [EC-005] Réalisation de l'AIPD
-    - [EC-007] Mise en place du registre des traitements
-  Phase 3 (90-180 jours) — Améliorations continues
-    - [EC-009] Formation des équipes
-    - [EC-010] Audit des sous-traitants
+Compliance plan :
+  Phase 1 (0-30 days) — Critical actions
+    - [GAP-001] Privacy policy update
+    - [GAP-003] Consent mechanism implementation
+  Phase 2 (30-90 days) — Important actions
+    - [GAP-005] DPIA completion
+    - [GAP-007] Processing records setup
+  Phase 3 (90-180 days) — Continuous improvements
+    - [GAP-009] Team training
+    - [GAP-010] Sub-processor audit
 ```

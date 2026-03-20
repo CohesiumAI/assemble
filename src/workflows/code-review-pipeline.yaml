@@ -1,33 +1,33 @@
 name: code-review-pipeline
-description: "Pipeline de revue de code complète — analyse qualité, sécurité et regard critique"
+description: "Complete code review pipeline — quality, security, and critical analysis"
 trigger: /review
 output_dir: "{assemble_output}/review_{timestamp}"
 steps:
   - step: 1
     agent: dev-fullstack
-    action: "Résumer les changements de code et documenter les décisions techniques"
+    action: "Summarize code changes and document technical decisions"
     outputs: [code-summary.md, change-rationale.md]
   - step: 2
     agent: qa
-    action: "Évaluer la qualité du code, la couverture de tests et les bonnes pratiques"
+    action: "Evaluate code quality, test coverage, and best practices"
     inputs: [01-dev-fullstack/code-summary.md, 01-dev-fullstack/change-rationale.md]
     outputs: [quality-report.md, recommendations.md]
     depends_on: [1]
   - step: 3
     agent: security
-    action: "Auditer le code pour détecter les vulnérabilités et failles de sécurité"
+    action: "Audit code to detect vulnerabilities and security flaws"
     inputs: [01-dev-fullstack/code-summary.md, 02-qa/quality-report.md]
     outputs: [security-findings.md, risk-assessment.md]
     depends_on: [2]
   - step: 4
     agent: redteam
-    action: "Tenter d'exploiter les vulnérabilités trouvées et chercher des failles manquées par l'audit"
+    action: "Attempt to exploit found vulnerabilities and search for flaws missed by the audit"
     inputs: [01-dev-fullstack/code-summary.md, 03-security/security-findings.md]
     outputs: [exploit-report.md, attack-vectors.md]
     depends_on: [3]
   - step: 5
     agent: contrarian
-    action: "Challenger les choix techniques et proposer des alternatives"
+    action: "Challenge les choix techniques et proposer des alternatives"
     inputs: [01-dev-fullstack/code-summary.md, 02-qa/quality-report.md, 03-security/security-findings.md, 04-redteam/exploit-report.md]
     outputs: [devil-advocate-report.md, alternative-approaches.md]
     depends_on: [4]

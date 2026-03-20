@@ -1,35 +1,35 @@
-# Assemble — Définition des équipes
-# Les équipes regroupent les agents par domaine fonctionnel
-# Utilisable via /team-<group> pour afficher un sous-groupe
+# Assemble — Team definitions
+# Teams group agents by functional domain
+# Accessible via /team-<group> to display a subgroup
 
 teams:
   dev:
-    name: "Équipe Développement"
-    description: "Développeurs, architecte et DBA"
+    name: "Development Team"
+    description: "Developers, architect and DBA"
     lead: architect
     members:
       - agent: architect
-        role: "Architecte Système"
+        role: "System Architect"
         marvel: "Tony Stark"
       - agent: dev-backend
-        role: "Développeur Backend"
+        role: "Backend Developer"
         marvel: "Bruce Banner"
       - agent: dev-frontend
-        role: "Développeur Frontend"
+        role: "Frontend Developer"
         marvel: "Spider-Man"
       - agent: dev-fullstack
-        role: "Développeur Fullstack"
+        role: "Fullstack Developer"
         marvel: "Mr. Fantastic"
       - agent: dev-mobile
-        role: "Développeur Mobile"
+        role: "Mobile Developer"
         marvel: "Ant-Man"
       - agent: db
-        role: "Architecte Base de Données"
+        role: "Database Architect"
         marvel: "Doctor Strange"
 
   ops:
-    name: "Équipe Ops & Qualité"
-    description: "DevOps, QA, Sécurité, Automation"
+    name: "Ops & Quality Team"
+    description: "DevOps, QA, Security, Automation"
     lead: devops
     members:
       - agent: devops
@@ -39,14 +39,14 @@ teams:
         role: "QA / Testing"
         marvel: "Hawkeye"
       - agent: security
-        role: "Sécurité / InfoSec"
+        role: "Security / InfoSec"
         marvel: "Punisher"
       - agent: automation
         role: "Automation"
         marvel: "Quicksilver"
 
   product:
-    name: "Équipe Produit & Stratégie"
+    name: "Product & Strategy Team"
     description: "Product Management, Business Analysis, Scrum"
     lead: pm
     members:
@@ -64,7 +64,7 @@ teams:
         marvel: "She-Hulk"
 
   marketing:
-    name: "Équipe Marketing & Growth"
+    name: "Marketing & Growth Team"
     description: "Marketing, Ads, Growth, SEO"
     lead: marketing
     members:
@@ -78,7 +78,7 @@ teams:
         role: "Paid Media"
         marvel: "Gamora"
       - agent: seo
-        role: "SEO Technique"
+        role: "Technical SEO"
         marvel: "Black Widow"
       - agent: content-seo
         role: "Content SEO"
@@ -88,7 +88,7 @@ teams:
         marvel: "Jean Grey"
 
   content:
-    name: "Équipe Contenu & Communication"
+    name: "Content & Communication Team"
     description: "Copywriting, Brand, Storytelling, Social Media"
     lead: brand
     members:
@@ -106,7 +106,7 @@ teams:
         marvel: "Ms. Marvel"
 
   data:
-    name: "Équipe Data & IA"
+    name: "Data & AI Team"
     description: "Data Analysis, AI Engineering"
     lead: ai-engineer
     members:
@@ -118,7 +118,7 @@ teams:
         marvel: "Vision"
 
   design:
-    name: "Équipe Design"
+    name: "Design Team"
     description: "UX/UI Design"
     lead: ux
     members:
@@ -127,27 +127,27 @@ teams:
         marvel: "Invisible Woman"
 
   business:
-    name: "Équipe Business & Operations"
+    name: "Business & Operations Team"
     description: "Finance, Customer Success, PR/Communication"
     lead: finance
     members:
       - agent: finance
-        role: "Directeur Financier / CFO"
+        role: "Chief Financial Officer / CFO"
         marvel: "Iron Fist"
       - agent: customer-success
         role: "Customer Success Manager"
         marvel: "Pepper Potts"
       - agent: pr-comms
-        role: "Directeur Communication / PR"
+        role: "Communications Director / PR"
         marvel: "Phil Coulson"
 
   meta:
-    name: "Agents Transversaux"
-    description: "Agents de support et de challenge"
+    name: "Cross-functional Agents"
+    description: "Support and challenge agents"
     members:
       - agent: contrarian
         role: "Devil's Advocate"
         marvel: "Deadpool"
       - agent: jarvis
-        role: "Orchestrateur"
+        role: "Orchestrator"
         marvel: "Jarvis"

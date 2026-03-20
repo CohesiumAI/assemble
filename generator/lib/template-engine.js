@@ -1,32 +1,32 @@
 /**
- * Assemble — Moteur de template
- * Transforme les agents/skills/workflows source en format cible
+ * Assemble — Template Engine
+ * Transforms source agents/skills/workflows into target format
  */
 
 const { injectLanguage } = require('./i18n');
 
 /**
- * Prépare un agent pour la génération en injectant langue et output config
- * @param {object} agent - Agent parsé { meta, content, sections }
+ * Prepares an agent for generation by injecting language and output config
+ * @param {object} agent - Parsed agent { meta, content, sections }
  * @param {object} config - Configuration { langue_equipe, langue_output, output_dir }
- * @returns {object} - Agent enrichi
+ * @returns {object} - Enriched agent
  */
 function prepareAgent(agent, config) {
   let content = agent.content;
 
-  // Injecter les instructions de langue
+  // Inject language instructions
   if (config.langue_equipe) {
     content = injectLanguage(content, config.langue_equipe, config.langue_output || config.langue_equipe);
   }
 
-  // Injecter la config output
-  const outputBlock = `## Répertoire de sortie
+  // Inject output config
+  const outputBlock = `## Output Directory
 
-Tes livrables doivent être produits dans le répertoire : \`${config.output_dir || './assemble-output'}\`
-Respecte la structure de dossiers définie par le workflow en cours.
+Your deliverables must be produced in the directory: \`${config.output_dir || './assemble-output'}\`
+Follow the folder structure defined by the current workflow.
 `;
 
-  if (!content.includes('## Répertoire de sortie')) {
+  if (!content.includes('## Output Directory')) {
     content = content.trim() + '\n\n' + outputBlock;
   }
 
@@ -34,10 +34,10 @@ Respecte la structure de dossiers définie par le workflow en cours.
 }
 
 /**
- * Génère le contenu d'un fichier agent pour une plateforme donnée
- * @param {object} agent - Agent parsé et préparé
- * @param {string} format - Format cible ('markdown', 'rules', 'yaml')
- * @returns {string} - Contenu formaté
+ * Generates agent file content for a given platform
+ * @param {object} agent - Parsed and prepared agent
+ * @param {string} format - Target format ('markdown', 'rules', 'yaml')
+ * @returns {string} - Formatted content
  */
 function renderAgent(agent, format = 'markdown') {
   switch (format) {
@@ -53,7 +53,7 @@ function renderAgent(agent, format = 'markdown') {
 }
 
 /**
- * Rend un agent au format Markdown (utilisé par la plupart des plateformes)
+ * Renders an agent in Markdown format (used by most platforms)
  */
 function renderAsMarkdown(agent) {
   const { meta, content } = agent;
@@ -76,7 +76,7 @@ function renderAsMarkdown(agent) {
 }
 
 /**
- * Rend un agent au format Rules (pour .cursorrules, .windsurfrules, etc.)
+ * Renders an agent in Rules format (for .cursorrules, .windsurfrules, etc.)
  * Format plus compact, sans frontmatter
  */
 function renderAsRules(agent) {
@@ -93,7 +93,7 @@ function renderAsRules(agent) {
 }
 
 /**
- * Rend un agent au format YAML (pour Kiro, OpenCode, etc.)
+ * Renders an agent in YAML format (for Kiro, OpenCode, etc.)
  */
 function renderAsYaml(agent) {
   const { meta, sections } = agent;
@@ -113,21 +113,21 @@ function renderAsYaml(agent) {
 }
 
 /**
- * Génère un fichier de commandes pour une plateforme
- * @param {string} commandsYaml - Contenu du commands.yaml
- * @param {string} format - Format cible
+ * Generates a command file for a platform
+ * @param {string} commandsYaml - Contents of commands.yaml
+ * @param {string} format - Target format
  * @returns {string}
  */
 function renderCommands(commandsYaml, format = 'markdown') {
   if (format === 'markdown') {
-    return `# Commandes Assemble\n\n${commandsYaml}`;
+    return `# Assemble Commands\n\n${commandsYaml}`;
   }
   return commandsYaml;
 }
 
 /**
- * Génère le contenu de l'orchestrateur pour une plateforme
- * @param {object} orchestrator - Orchestrateur parsé
+ * Generates the orchestrator content for a platform
+ * @param {object} orchestrator - Parsed orchestrator
  * @param {object} config - Configuration
  * @returns {string}
  */
@@ -136,9 +136,9 @@ function renderOrchestrator(orchestrator, config) {
 }
 
 /**
- * Génère un fichier de workflow pour une plateforme
- * @param {object} workflow - Workflow parsé
- * @param {string} format - Format cible
+ * Generates a workflow file for a platform
+ * @param {object} workflow - Parsed workflow
+ * @param {string} format - Target format
  * @returns {string}
  */
 function renderWorkflow(workflow, format = 'yaml') {
@@ -219,7 +219,7 @@ function parseWorkflowSteps(raw) {
 function renderWorkflowInstructions(workflow, agentLookup, config) {
   const steps = parseWorkflowSteps(workflow.raw);
   const outputDir = (config || {}).output_dir || './assemble-output';
-  let out = `## Instructions d'exécution\n\nRépertoire de sortie : \`${outputDir}\`\n\n`;
+  let out = `## Execution Instructions\n\nOutput directory: \`${outputDir}\`\n\n`;
   if (steps.length === 0) {
     out += '```yaml\n' + workflow.raw + '\n```\n';
     return out;
@@ -228,11 +228,11 @@ function renderWorkflowInstructions(workflow, agentLookup, config) {
     const info = agentLookup[step.agent] || {};
     const display = info.displayName || step.agent;
     const ref = info.marvelSlug || step.agent;
-    out += `### Étape ${step.num} — ${display} (${ref})\n\n`;
+    out += `### Step ${step.num} — ${display} (${ref})\n\n`;
     out += `**Action :** ${step.action}\n\n`;
     if (step.inputs.length) out += '**Inputs :** ' + step.inputs.map(i => `\`${i}\``).join(', ') + '\n\n';
-    if (step.depends_on.length) out += `**Dépend de :** étape(s) ${step.depends_on.join(', ')}\n\n`;
-    out += '**Livrables :**\n';
+    if (step.depends_on.length) out += `**Depends on:** step(s) ${step.depends_on.join(', ')}\n\n`;
+    out += '**Deliverables:**\n';
     for (const o of step.outputs) out += `- \`${o}\`\n`;
     out += '\n';
   }

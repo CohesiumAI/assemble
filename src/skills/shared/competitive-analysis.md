@@ -1,134 +1,134 @@
 ---
 name: competitive-analysis
-description: Analyse concurrentielle et benchmark — positionnement, forces et faiblesses, stratégies, opportunités de marché et recommandations stratégiques
+description: Competitive analysis and benchmark — positioning, strengths and weaknesses, strategies, market opportunities, and strategic recommendations
 agents: [analyst, marketing, growth, pm, customer-success, finance]
 trigger: /benchmark
 ---
 
-# Skill : Analyse Concurrentielle
+# Skill : Competitive Analysis
 
-## Objectif
+## Objective
 
-Réaliser une analyse concurrentielle structurée et approfondie pour identifier le positionnement des concurrents, leurs forces et faiblesses, les tendances du marché et les opportunités stratégiques. Cette skill produit un benchmark actionnable qui guide les décisions produit, marketing et commerciales.
+Perform a structured and in-depth competitive analysis to identify competitor positioning, their strengths and weaknesses, market trends, and strategic opportunities. This skill produces an actionable benchmark that guides product, marketing, and sales decisions.
 
-## Quand l'utiliser
+## When to use
 
-- Lors du lancement d'un nouveau produit ou d'une nouvelle fonctionnalité
-- Pour une révision stratégique périodique (trimestrielle ou semestrielle)
-- Quand un nouveau concurrent émerge ou qu'un concurrent existant pivote
-- Lors de la définition du pricing ou du repositionnement d'une offre
-- Pour alimenter un pitch investisseur ou un business plan
-- Quand l'équipe produit doit prioriser les fonctionnalités du roadmap
+- When launching a new product or feature
+- For periodic strategic review (quarterly or semi-annual)
+- When a new competitor emerges or an existing competitor pivots
+- When defining pricing or repositioning an offering
+- To support an investor pitch or business plan
+- When the product team needs to prioritize roadmap features
 
-## Étapes
+## Steps
 
-1. **Définir le périmètre et les objectifs** — Identifier les questions stratégiques à adresser : positionnement, pricing, fonctionnalités, go-to-market, satisfaction client. Définir les critères de sélection des concurrents (directs, indirects, substituts). Limiter l'analyse à 5-8 concurrents pour rester actionnable.
-2. **Cartographier les concurrents** — Pour chaque concurrent, collecter les informations clés : proposition de valeur, cible client, modèle économique, taille (équipe, levée de fonds, CA estimé), historique et trajectoire de croissance. Classifier en concurrents directs, indirects et potentiels.
-3. **Analyser les produits et fonctionnalités** — Comparer feature par feature sur les axes critiques pour le marché. Identifier les fonctionnalités différenciantes de chaque concurrent, les lacunes communes, les innovations récentes. Évaluer l'expérience utilisateur et la qualité perçue.
-4. **Analyser le pricing et le business model** — Comparer les grilles tarifaires (freemium, abonnement, usage-based, licence), les niveaux d'offre, les conditions commerciales. Identifier les stratégies de pricing (pénétration, écrémage, value-based). Estimer le revenu moyen par utilisateur (ARPU) quand possible.
-5. **Analyser les stratégies marketing et acquisition** — Étudier les canaux d'acquisition (SEO, paid, social, content, partenariats), le positionnement de marque, la communication, la présence sur les réseaux sociaux, les avis clients (G2, Trustpilot, Capterra). Identifier les messages clés et les arguments de vente.
-6. **Identifier les forces, faiblesses et opportunités** — Pour chaque concurrent, synthétiser les forces et faiblesses. Croiser avec les attentes du marché pour identifier les opportunités non adressées (blue ocean), les menaces concurrentielles et les axes de différenciation exploitables.
-7. **Formuler les recommandations stratégiques** — Traduire l'analyse en actions concrètes : fonctionnalités à développer en priorité, ajustements de pricing, messages marketing à adopter, segments de marché à cibler, partenariats à explorer. Prioriser par impact et faisabilité.
+1. **Define scope and objectives** — Identify strategic questions to address: positioning, pricing, features, go-to-market, customer satisfaction. Define competitor selection criteria (direct, indirect, substitutes). Limit the analysis to 5-8 competitors to remain actionable.
+2. **Map competitors** — For each competitor, collect key information: value proposition, target customer, business model, size (team, funding, estimated revenue), history and growth trajectory. Classify as direct, indirect, and potential competitors.
+3. **Analyze products and features** — Compare feature by feature on axes critical to the market. Identify differentiating features of each competitor, common gaps, recent innovations. Evaluate user experience and perceived quality.
+4. **Analyze pricing and business model** — Compare pricing grids (freemium, subscription, usage-based, license), offer tiers, commercial terms. Identify pricing strategies (penetration, skimming, value-based). Estimate average revenue per user (ARPU) when possible.
+5. **Analyze marketing and acquisition strategies** — Study acquisition channels (SEO, paid, social, content, partnerships), brand positioning, communications, social media presence, customer reviews (G2, Trustpilot, Capterra). Identify key messages and selling points.
+6. **Identify strengths, weaknesses, and opportunities** — For each competitor, synthesize strengths and weaknesses. Cross-reference with market expectations to identify unaddressed opportunities (blue ocean), competitive threats, and exploitable differentiation axes.
+7. **Formulate strategic recommendations** — Translate the analysis into concrete actions: priority features to develop, pricing adjustments, marketing messages to adopt, market segments to target, partnerships to explore. Prioritize by impact and feasibility.
 
-## Checklist de sortie
+## Exit Checklist
 
-- [ ] Le périmètre d'analyse et les concurrents sont définis et justifiés
-- [ ] Chaque concurrent est profilé (proposition de valeur, cible, modèle)
-- [ ] La comparaison produit est réalisée feature par feature
-- [ ] Le pricing et le business model sont analysés et comparés
-- [ ] Les stratégies marketing et d'acquisition sont identifiées
-- [ ] Les forces, faiblesses et opportunités sont synthétisées
-- [ ] Les recommandations sont concrètes, priorisées et actionnables
-- [ ] Le rapport est structuré pour être partageable avec les stakeholders
+- [ ] Analysis scope and competitors are defined and justified
+- [ ] Each competitor is profiled (value proposition, target, model)
+- [ ] Product comparison is done feature by feature
+- [ ] Pricing and business model are analyzed and compared
+- [ ] Marketing and acquisition strategies are identified
+- [ ] Strengths, weaknesses, and opportunities are synthesized
+- [ ] Recommendations are concrete, prioritized, and actionable
+- [ ] The report is structured for sharing with stakeholders
 
-## Format de sortie
+## Output Format
 
 ```markdown
-## Analyse Concurrentielle
+## Competitive Analysis
 
-**Marché :** [secteur / segment analysé]
-**Nombre de concurrents analysés :** [X]
-**Période d'analyse :** [dates]
-**Analyste :** [agent]
+**Market :** [sector / segment analyzed]
+**Number of competitors analyzed :** [X]
+**Analysis period :** [dates]
+**Analyst :** [agent]
 **Date :** [date]
 
-### Vue d'ensemble du marché
+### Market overview
 
-**Taille du marché :** [estimation TAM/SAM/SOM]
-**Croissance annuelle :** [X%]
-**Tendances clés :**
-1. [Tendance 1 et son impact]
-2. [Tendance 2 et son impact]
-3. [Tendance 3 et son impact]
+**Market size :** [TAM/SAM/SOM estimate]
+**Annual growth :** [X%]
+**Key trends :**
+1. [Trend 1 and its impact]
+2. [Trend 2 and its impact]
+3. [Trend 3 and its impact]
 
-### Cartographie des concurrents
+### Competitor mapping
 
-| Concurrent | Type | Proposition de valeur | Cible | Taille | Levée / CA |
-|------------|------|----------------------|-------|--------|------------|
-| [Concurrent A] | Direct | [proposition] | [cible] | [équipe] | [montant] |
-| [Concurrent B] | Direct | [proposition] | [cible] | [équipe] | [montant] |
-| [Concurrent C] | Indirect | [proposition] | [cible] | [équipe] | [montant] |
-| **Notre produit** | — | [proposition] | [cible] | [équipe] | [montant] |
+| Competitor | Type | Value proposition | Target | Size | Funding / Revenue |
+|------------|------|-------------------|--------|------|-------------------|
+| [Competitor A] | Direct | [proposition] | [target] | [team] | [amount] |
+| [Competitor B] | Direct | [proposition] | [target] | [team] | [amount] |
+| [Competitor C] | Indirect | [proposition] | [target] | [team] | [amount] |
+| **Our product** | — | [proposition] | [target] | [team] | [amount] |
 
-### Comparaison fonctionnelle
+### Feature comparison
 
-| Fonctionnalité | Notre produit | Concurrent A | Concurrent B | Concurrent C |
-|----------------|---------------|-------------|-------------|-------------|
-| [Feature 1] | ✅ Complet | ✅ Complet | ⚠️ Partiel | ❌ Absent |
-| [Feature 2] | ⚠️ Partiel | ✅ Complet | ✅ Complet | ✅ Complet |
-| [Feature 3] | ❌ Absent | ❌ Absent | ✅ Complet | ❌ Absent |
-| [Feature 4] | ✅ Complet | ⚠️ Partiel | ❌ Absent | ✅ Complet |
+| Feature | Our product | Competitor A | Competitor B | Competitor C |
+|---------|-------------|-------------|-------------|-------------|
+| [Feature 1] | ✅ Complete | ✅ Complete | ⚠️ Partial | ❌ Missing |
+| [Feature 2] | ⚠️ Partial | ✅ Complete | ✅ Complete | ✅ Complete |
+| [Feature 3] | ❌ Missing | ❌ Missing | ✅ Complete | ❌ Missing |
+| [Feature 4] | ✅ Complete | ⚠️ Partial | ❌ Missing | ✅ Complete |
 
-**Avantage concurrentiel clé de chaque acteur :**
-- **Concurrent A :** [avantage distinctif]
-- **Concurrent B :** [avantage distinctif]
-- **Concurrent C :** [avantage distinctif]
-- **Notre produit :** [avantage distinctif]
+**Key competitive advantage of each player :**
+- **Competitor A :** [distinctive advantage]
+- **Competitor B :** [distinctive advantage]
+- **Competitor C :** [distinctive advantage]
+- **Our product :** [distinctive advantage]
 
-### Analyse du pricing
+### Pricing analysis
 
-| Offre | Notre produit | Concurrent A | Concurrent B | Concurrent C |
-|-------|---------------|-------------|-------------|-------------|
-| Gratuit / Freemium | [détails] | [détails] | [détails] | [détails] |
-| Entrée de gamme | [prix/mois] | [prix/mois] | [prix/mois] | [prix/mois] |
-| Pro / Business | [prix/mois] | [prix/mois] | [prix/mois] | [prix/mois] |
-| Enterprise | [prix/mois] | [prix/mois] | [prix/mois] | [prix/mois] |
+| Offer | Our product | Competitor A | Competitor B | Competitor C |
+|-------|-------------|-------------|-------------|-------------|
+| Free / Freemium | [details] | [details] | [details] | [details] |
+| Entry level | [price/month] | [price/month] | [price/month] | [price/month] |
+| Pro / Business | [price/month] | [price/month] | [price/month] | [price/month] |
+| Enterprise | [price/month] | [price/month] | [price/month] | [price/month] |
 
-**Positionnement prix :** [Premium | Aligné | Agressif | Value-based]
+**Price positioning :** [Premium | Aligned | Aggressive | Value-based]
 
-### Matrice SWOT par concurrent
+### SWOT matrix per competitor
 
-#### Concurrent A
-| Forces | Faiblesses |
-|--------|------------|
-| [force 1] | [faiblesse 1] |
-| [force 2] | [faiblesse 2] |
+#### Competitor A
+| Strengths | Weaknesses |
+|-----------|------------|
+| [strength 1] | [weakness 1] |
+| [strength 2] | [weakness 2] |
 
-| Opportunités | Menaces |
-|-------------|---------|
-| [opportunité 1] | [menace 1] |
-| [opportunité 2] | [menace 2] |
+| Opportunities | Threats |
+|---------------|---------|
+| [opportunity 1] | [threat 1] |
+| [opportunity 2] | [threat 2] |
 
-### Opportunités identifiées
+### Identified opportunities
 
-| # | Opportunité | Source | Impact potentiel | Faisabilité |
+| # | Opportunity | Source | Potential impact | Feasibility |
 |---|-------------|--------|-----------------|-------------|
-| 1 | [opportunité non adressée par le marché] | [analyse] | Élevé | [effort] |
-| 2 | [segment sous-servi] | [analyse] | Moyen | [effort] |
-| 3 | [fonctionnalité différenciante] | [analyse] | Élevé | [effort] |
+| 1 | [unaddressed market opportunity] | [analysis] | High | [effort] |
+| 2 | [underserved segment] | [analysis] | Medium | [effort] |
+| 3 | [differentiating feature] | [analysis] | High | [effort] |
 
-### Recommandations stratégiques
+### Strategic recommendations
 
-| Priorité | Recommandation | Justification | Horizon |
+| Priority | Recommendation | Justification | Horizon |
 |----------|---------------|---------------|---------|
-| P0 | [action stratégique immédiate] | [basée sur l'analyse] | Court terme |
-| P1 | [action à planifier] | [basée sur l'analyse] | Moyen terme |
-| P2 | [action à explorer] | [basée sur l'analyse] | Long terme |
+| P0 | [immediate strategic action] | [based on analysis] | Short term |
+| P1 | [action to plan] | [based on analysis] | Medium term |
+| P2 | [action to explore] | [based on analysis] | Long term |
 
 ### Conclusion
 
-**Position concurrentielle actuelle :** [Leader | Challenger | Suiveur | Niche]
-**Principaux axes de différenciation :** [liste]
-**Risques majeurs à surveiller :** [liste]
-**Prochaine mise à jour recommandée :** [date]
+**Current competitive position :** [Leader | Challenger | Follower | Niche]
+**Main differentiation axes :** [list]
+**Major risks to monitor :** [list]
+**Next recommended update :** [date]
 ```

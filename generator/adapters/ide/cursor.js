@@ -46,7 +46,7 @@ module.exports = {
       rules += renderOrchestrator(orchestrator, config) + '\n\n';
     }
 
-    rules += '## Agents disponibles\n\n';
+    rules += '## Available Agents\n\n';
     for (const agent of agents) {
       const slug = marvelSlug(agent);
       const display = marvelDisplayName(agent);
@@ -55,14 +55,14 @@ module.exports = {
     }
 
     const allSkills = [...(skills.shared || []), ...(skills.specific || [])];
-    rules += '\n## Skills disponibles\n\n';
+    rules += '\n## Available Skills\n\n';
     for (const skill of allSkills) {
       const slug = skillSlug(skill);
       const desc = (skill.meta.description || '').split('—')[0].trim();
       rules += `- **${slug}** — ${desc}\n`;
     }
 
-    rules += '\n## Workflows disponibles\n\n';
+    rules += '\n## Available Workflows\n\n';
     for (const workflow of workflows) {
       const slug = workflowSlug(workflow);
       const desc = workflowField(workflow.raw, 'description');
@@ -71,7 +71,7 @@ module.exports = {
 
     rules += '\n' + renderCommandRegistry(agents, skills, workflows, config.governance);
 
-    rules += `\n## Répertoire de sortie\n\nLes livrables → \`${config.output_dir || './assemble-output'}\`\n`;
+    rules += `\n## Output Directory\n\nDeliverables → \`${config.output_dir || './assemble-output'}\`\n`;
     fs.writeFileSync(path.join(projectDir, '.cursorrules'), rules, 'utf-8');
 
     // ── Individual agent files ────────────────────────────────────────────
