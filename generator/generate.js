@@ -38,14 +38,17 @@ const ADAPTERS_DIR = path.join(__dirname, 'adapters');
 function loadAdapters(projectDir) {
   const adapters = {};
 
-  // Built-in adapters
+  // Built-in adapters (from generator/adapters/{ide,cli}/)
   for (const subdir of ['ide', 'cli']) {
-    const dir = path.join(ADAPTERS_DIR, subdir);
+    const dir = path.resolve(ADAPTERS_DIR, subdir);
     if (!fs.existsSync(dir)) continue;
 
     for (const file of fs.readdirSync(dir).filter(f => f.endsWith('.js'))) {
+      const resolvedPath = path.resolve(dir, file);
+      // Ensure the file is inside the expected directory
+      if (!resolvedPath.startsWith(dir + path.sep) && resolvedPath !== dir) continue;
       try {
-        const adapter = require(path.join(dir, file));
+        const adapter = require(resolvedPath);
         adapters[adapter.name] = adapter;
       } catch (err) {
         console.warn(`⚠️  Could not load adapter ${file}: ${err.message}`);
@@ -54,12 +57,24 @@ function loadAdapters(projectDir) {
   }
 
   // Plugin adapters from .assemble/adapters/ (user-provided, override built-in if same name)
+  // Security: only .js files directly inside the plugin dir are loaded (no traversal).
   if (projectDir) {
-    const pluginDir = path.join(projectDir, '.assemble', 'adapters');
+    const pluginDir = path.resolve(projectDir, '.assemble', 'adapters');
     if (fs.existsSync(pluginDir)) {
       for (const file of fs.readdirSync(pluginDir).filter(f => f.endsWith('.js'))) {
+        // Path traversal guard: reject filenames containing path separators or ..
+        if (file.includes('/') || file.includes('\\') || file.includes('..')) {
+          console.warn(`⚠️  Plugin adapter ${file}: rejected (path traversal attempt)`);
+          continue;
+        }
+        const resolvedPath = path.resolve(pluginDir, file);
+        // Ensure the resolved path is actually inside the plugin directory
+        if (!resolvedPath.startsWith(pluginDir + path.sep) && resolvedPath !== pluginDir) {
+          console.warn(`⚠️  Plugin adapter ${file}: rejected (resolves outside plugin dir)`);
+          continue;
+        }
         try {
-          const adapter = require(path.resolve(pluginDir, file));
+          const adapter = require(resolvedPath);
           if (adapter.name && typeof adapter.generate === 'function') {
             adapters[adapter.name] = adapter;
           } else {
@@ -587,7 +602,7 @@ Log of all agent actions for governance compliance. Required by \`governance: st
     }
     const manifest = {
       generated_at: new Date().toISOString(),
-      generator_version: '1.0.0',
+      generator_version: '1.0.0-beta.1',
       platforms: config.platforms,
       files: manifestFiles,
       directories: [...manifestDirs].sort(),
@@ -607,7 +622,7 @@ Log of all agent actions for governance compliance. Required by \`governance: st
 # Update:     npx create-assemble --update
 # Regenerate: node generate.js --config .assemble.yaml
 
-version: "1.0.0"
+version: "1.0.0-beta.1"
 profile: "${config.profile || 'custom'}"
 langue_equipe: "${config.langue_equipe}"
 langue_output: "${config.langue_output}"

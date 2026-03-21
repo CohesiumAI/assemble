@@ -1,6 +1,6 @@
 {
   "name": "create-assemble",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.1",
   "description": "Assemble — AI Agent Orchestrator. Deploy 34 specialized AI agents, 15 workflows, and 28 skills across 21 platforms.",
   "author": "CohesiumAI <renald@cohesium.ai>",
   "license": "MIT",
@@ -37,6 +37,7 @@
     "validate": "node generator/generate.js --validate",
     "test": "node tests/unit.test.js && node tests/snapshot.test.js && node tests/integration-full.js",
     "doctor": "node bin/doctor.js",
+    "pack-agents": "cd src/agents && zip -r ../../agents-cohesium-ai.zip AGENT-*.md",
     "diff": "node bin/diff.js",
     "ls": "node bin/ls.js"
   },

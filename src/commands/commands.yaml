@@ -2,7 +2,7 @@
 # Architecture: 10 primary commands + hidden shortcuts + internal skills + agents via @mention
 
 # ═══════════════════════════════════════════
-# PRIMARY COMMANDS (10 — visible in autocomplete)
+# PRIMARY COMMANDS (11 — visible in autocomplete)
 # ═══════════════════════════════════════════
 
 primary_commands:
@@ -28,6 +28,12 @@ primary_commands:
   - name: /help
     type: system
     description: "Show catalog (agents, workflows, examples)"
+    category: system
+
+  - name: /doctor
+    type: system
+    description: "Health check and auto-repair — diagnose and fix Assemble installation issues"
+    usage: "/doctor [fix|--fix] [--verbose]"
     category: system
 
   - name: /review

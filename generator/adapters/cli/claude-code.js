@@ -72,8 +72,8 @@ module.exports = {
       paths.push(path.join(projectDir, '.claude', 'agents', slug, 'AGENT.md'));
     }
 
-    // 12 skills (10 system + 2 YOLO escalation)
-    const skillSlugs = ['go', 'party', 'dismiss', 'help', 'review', 'bugfix', 'feature', 'sprint', 'release', 'mvp', 'yolo-hardcore', 'yolo-full'];
+    // 13 skills (11 system + 2 YOLO escalation)
+    const skillSlugs = ['go', 'party', 'dismiss', 'help', 'doctor', 'review', 'bugfix', 'feature', 'sprint', 'release', 'mvp', 'yolo-hardcore', 'yolo-full'];
     for (const slug of skillSlugs) {
       paths.push(path.join(projectDir, '.claude', 'skills', slug, 'SKILL.md'));
     }
@@ -130,7 +130,7 @@ module.exports = {
       fs.writeFileSync(path.join(agentDir, 'AGENT.md'), content, 'utf-8');
     }
 
-    // ── 2. Generate 12 SKILL.md files (10 system + 2 YOLO escalation) ─────────────────────────────────
+    // ── 2. Generate 13 SKILL.md files (11 system + 2 YOLO escalation) ─────────────────────────────────
 
     // 2a. /go — routing entry point
     {
@@ -199,7 +199,49 @@ module.exports = {
       fs.writeFileSync(path.join(dir, 'SKILL.md'), content, 'utf-8');
     }
 
-    // 2e-2j. Workflow shortcut skills
+    // 2e. /doctor — health check & auto-repair
+    {
+      const doctorSkill = (skills.specific || []).find(s => s.meta.name === 'doctor' || (s.meta.trigger || '').includes('doctor'));
+      const dir = path.join(skillsDir, 'doctor');
+      fs.mkdirSync(dir, { recursive: true });
+      let content = '---\n';
+      content += 'name: doctor\n';
+      content += 'description: "Health check and auto-repair — diagnose and fix Assemble installation issues"\n';
+      content += 'user-invocable: true\n';
+      content += '---\n\n';
+      if (doctorSkill) {
+        const prepared = prepareAgent(doctorSkill, config);
+        content += prepared.content;
+      } else {
+        content += '# /doctor — Assemble Health Check & Auto-Repair\n\n';
+        content += '## Objective\n\n';
+        content += 'Diagnose the health of the current Assemble installation and optionally repair issues.\n\n';
+        content += '## Execution\n\n';
+        content += 'Run the following checks:\n';
+        content += '1. **Configuration** — `.assemble.yaml` exists and is valid\n';
+        content += '2. **Structure** — output dir, agent/skill/rule files exist\n';
+        content += '3. **Integrity** — governance, memory, metrics files match config\n';
+        content += '4. **Cross-platform** — generated files exist for each configured platform\n\n';
+        content += '## Auto-Repair\n\n';
+        content += 'If `fix` or `--fix` is in the arguments:\n';
+        content += '- Create missing directories (output, .assemble/agents, .assemble/skills)\n';
+        content += '- Create missing governance/memory/metrics files\n';
+        content += '- Suggest `npx create-assemble --update` for missing platform files\n\n';
+        content += '## Report Format\n\n';
+        content += '```\n';
+        content += '🩺 Assemble Doctor\n\n';
+        content += '  ✅ Check passed\n';
+        content += '  ⚠️  Warning (non-blocking)\n';
+        content += '  ❌ Failure (blocking)\n';
+        content += '  🔧 Fixed (when --fix active)\n\n';
+        content += '  Summary: X passed, Y warnings, Z failures, W fixed\n';
+        content += '```\n\n';
+      }
+      content += '\nApply to: $ARGUMENTS\n';
+      fs.writeFileSync(path.join(dir, 'SKILL.md'), content, 'utf-8');
+    }
+
+    // 2f-2k. Workflow shortcut skills
     const workflowShortcuts = {
       'review': 'code-review-pipeline',
       'bugfix': 'bug-fix',

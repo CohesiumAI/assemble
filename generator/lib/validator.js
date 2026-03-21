@@ -14,12 +14,15 @@ function loadAdapters() {
   const adaptersDir = path.resolve(__dirname, '..', 'adapters');
 
   for (const subdir of ['ide', 'cli']) {
-    const dir = path.join(adaptersDir, subdir);
+    const dir = path.resolve(adaptersDir, subdir);
     if (!fs.existsSync(dir)) continue;
 
     for (const file of fs.readdirSync(dir).filter(f => f.endsWith('.js'))) {
+      const resolvedPath = path.resolve(dir, file);
+      // Ensure the file is inside the expected directory (no path traversal)
+      if (!resolvedPath.startsWith(dir + path.sep) && resolvedPath !== dir) continue;
       try {
-        const adapter = require(path.join(dir, file));
+        const adapter = require(resolvedPath);
         adapters[adapter.name] = adapter;
       } catch (err) {
         // Skip adapters that fail to load

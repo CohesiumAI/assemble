@@ -14,3 +14,6 @@ assemble-output/
 .assemble/package.json
 .assemble/node_modules/
 node_modules/
+
+# Binary archives (regenerate from src/agents/ if needed)
+*.zip

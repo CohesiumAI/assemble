@@ -443,7 +443,7 @@ async function main() {
     '# Assemble — Project configuration',
     '# Update: npx create-assemble --update',
     '',
-    'version: "1.0.0"',
+    'version: "1.0.0-beta.1"',
     `profile: "${profile}"`,
     `langue_equipe: "${langTeam}"`,
     `langue_output: "${langOutput}"`,

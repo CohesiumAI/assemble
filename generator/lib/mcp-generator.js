@@ -117,7 +117,7 @@ const PROJECT_ROOT = resolve(dirname(__filename), '..');
 
 const server = new McpServer({
   name: "assemble",
-  version: "${config.version || '1.0.0'}",
+  version: "${config.version || '1.0.0-beta.1'}",
   description: "Assemble — ${agents.length}-agent AI team orchestrator by Cohesium AI",
 });
 
@@ -276,7 +276,7 @@ await server.connect(transport);
   // 3. Generate mcp-package.json (for dependency installation)
   const mcpPackage = {
     name: 'assemble-mcp-server',
-    version: config.version || '1.0.0',
+    version: config.version || '1.0.0-beta.1',
     type: 'module',
     description: 'MCP server for Assemble AI agent team',
     main: 'mcp-server.js',

@@ -12,12 +12,15 @@
 
 <p align="center">
   <a href="#quick-start"><img src="https://img.shields.io/badge/npx-create--assemble-6366f1?style=flat-square" alt="npx create-assemble" /></a>
+  <img src="https://img.shields.io/badge/version-1.0.0--beta.1-orange?style=flat-square" alt="v1.0.0-beta.1" />
   <img src="https://img.shields.io/badge/agents-34-8b5cf6?style=flat-square" alt="34 agents" />
   <img src="https://img.shields.io/badge/platforms-21-3b82f6?style=flat-square" alt="21 platforms" />
   <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License" />
 </p>
 
 ---
+
+> **v1.0.0-beta.1** — This is a beta release. Core functionality is stable, but APIs and generated file formats may change before v1.0.0 stable. Feedback welcome via [GitHub Issues](https://github.com/CohesiumAI/assemble/issues).
 
 > **34 agent definitions. 15 workflows. 21 platforms. Zero runtime.** Assemble generates native configuration files that turn your IDE or CLI into a structured AI team. No daemon, no vendor lock-in, no dependencies. Just `npx create-assemble` and your LLM knows its job.
 
@@ -73,7 +76,17 @@ npx create-assemble
 
 ### Using Bash (macOS/Linux)
 
+> **Security note:** Piping `curl` into `bash` executes remote code without verification.
+> We recommend using `npx create-assemble` instead. If you prefer the bash installer,
+> download and inspect it first:
+
 ```bash
+# Option 1 — Download, inspect, then run
+curl -fsSL https://raw.githubusercontent.com/CohesiumAI/assemble/main/install.sh -o install.sh
+cat install.sh   # review the script
+bash install.sh
+
+# Option 2 — Direct execution (not recommended for untrusted networks)
 curl -fsSL https://raw.githubusercontent.com/CohesiumAI/assemble/main/install.sh | bash
 ```
 
@@ -124,7 +137,7 @@ $ npx create-assemble
   Your choice: 0    # → all 21 platforms
 
 ✅ Installation complete!
-  149+ tests passing | 21 platforms | 34 agents
+  164+ tests passing | 21 platforms | 34 agents
 ```
 
 ---
@@ -348,7 +361,7 @@ assemble/
       defaults.yaml     # Default configuration (profiles, MCP, memory, metrics)
       teams.yaml        # Team definitions (9 teams)
     commands/
-      commands.yaml     # Registry of 10 primary commands + hidden shortcuts + internal skills
+      commands.yaml     # Registry of 11 primary commands + hidden shortcuts + internal skills
   generator/
     generate.js         # Main generator (profiles, custom agents/skills, MCP, memory, metrics)
     lib/
@@ -356,7 +369,7 @@ assemble/
       mcp-generator.js  # MCP server + config generator
       agents-md-generator.js  # Universal AGENTS.md generator
       template-engine.js      # Template rendering (memory, metrics, governance strict)
-    adapters/           # 20 platform adapters (IDE + CLI)
+    adapters/           # 21 platform adapters (16 IDE + 5 CLI)
   bin/
     cli.js              # Interactive installer (12-step wizard)
     doctor.js           # Health check (npx create-assemble doctor)
@@ -366,7 +379,7 @@ assemble/
   tests/
     unit.test.js        # Unit tests for core functions
     snapshot.test.js    # Snapshot + qualitative tests
-    integration-full.js # Full 20-platform integration tests
+    integration-full.js # Full 21-platform integration tests
   .assemble/            # User extensibility (auto-detected)
     agents/             # Custom agents (AGENT-*.md)
     skills/             # Imported skills
@@ -412,7 +425,7 @@ After installation, a `.assemble.yaml` file is created at the root of your proje
 
 ```yaml
 # Assemble — Project configuration
-version: "1.0.0"
+version: "1.0.0-beta.1"
 profile: "custom"                 # startup | enterprise | agency | custom
 langue_equipe: "english"          # Language for agent-to-agent communication
 langue_output: "english"          # Language for produced deliverables
@@ -582,9 +595,21 @@ Then regenerate: `npx create-assemble --update`
 
 ### How it works across platforms
 
-- **19 platforms** (Cursor, Copilot, Cline, Windsurf, Kiro, Roo Code, Codex, Gemini CLI, Pi, Auggie, and all IDE adapters): Governance rules are injected into the command registry.
+- **20 platforms** (Cursor, Copilot, Cline, Windsurf, Kiro, Roo Code, Trae, Antigravity, CodeBuddy, Crush, iFlow, KiloCoder, OpenCode, QwenCoder, Rovo Dev, Claude Code Desktop, Codex, Gemini CLI, Pi, Auggie): Governance rules are injected into the command registry.
 - **Claude Code:** Uses a dedicated `.claude/rules/governance/governance.md` file loaded on-demand by Jarvis.
 - **Platforms with orchestrator**: Governance behavior is also embedded in the orchestrator instructions.
+
+### Enforcement model
+
+> **Important:** Governance in Assemble is **soft enforcement via LLM instructions**, not hard technical enforcement.
+
+Assemble generates prompt instructions that tell the LLM to follow decision gates, risk assessment, and approval workflows. The LLM complies because the instructions are part of its system context. However:
+
+- There is **no runtime engine** that blocks execution if a gate is skipped — the LLM itself is the enforcement mechanism.
+- `strict` mode adds audit trail instructions (`_audit.md`) and RBAC rules, but these are **behavioral directives** the LLM follows, not access-control systems.
+- The effectiveness depends on the LLM's instruction-following capability. Modern models (Claude, GPT-4, Gemini) follow these reliably, but it is not cryptographically guaranteed.
+
+This is by design: Assemble is a **generation-time** tool, not a runtime. For hard enforcement (e.g., blocking production deploys), integrate with your CI/CD pipeline's native approval gates.
 
 ---
 
@@ -596,7 +621,7 @@ Then regenerate: `npx create-assemble --update`
 | [Skills Reference](docs/SKILLS.md) | 28 skills (14 shared + 14 specific) with detailed processes |
 | [Workflow Guide](docs/WORKFLOWS.md) | 15 workflows with agent chains, inputs/outputs, and dependency graphs |
 | [Platform Support](docs/PLATFORMS.md) | Platform-specific setup guides and file structure details |
-| [Command Reference](docs/COMMANDS.md) | Full reference for 10 commands + hidden shortcuts |
+| [Command Reference](docs/COMMANDS.md) | Full reference for 11 commands + hidden shortcuts |
 
 ---
 
@@ -607,9 +632,20 @@ Then regenerate: `npx create-assemble --update`
 3. Follow the existing file naming conventions (`AGENT-*.md`, `*.yaml`)
 4. Test your changes by running the generator: `npm run generate`
 5. Validate the output: `npm run validate`
-6. Submit a pull request
+6. Run `npm test` to execute the full test suite
+7. Submit a pull request
 
 Agent definitions live in `src/agents/`, skills in `src/skills/`, and workflows in `src/workflows/`. The generator in `generator/` transforms these source files into platform-specific configurations.
+
+### Binary archive
+
+`agents-cohesium-ai.zip` is a convenience archive of the agent definitions from `src/agents/`. It is **not committed to the repository** (listed in `.gitignore`). To regenerate it locally:
+
+```bash
+npm run pack-agents
+```
+
+The authoritative source is always `src/agents/AGENT-*.md`.
 
 ---
 

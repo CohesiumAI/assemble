@@ -2,9 +2,25 @@
 # ═══════════════════════════════════════════════════════════════════════
 # Assemble — Interactive Installer (Bash)
 # Configures and deploys the agent system in your project
+#
+# Recommended: npx create-assemble (safer, no piping remote code)
+# Alternative: Download, inspect, then run:
+#   curl -fsSL <URL> -o install.sh && cat install.sh && bash install.sh
 # ═══════════════════════════════════════════════════════════════════════
 
 set -euo pipefail
+
+# ─── Integrity check ────────────────────────────────────────────────
+# Detect if piped from curl — warn the user
+if [ ! -t 0 ] && [ -z "${ASSEMBLE_SKIP_PIPE_WARNING:-}" ]; then
+    echo ""
+    echo -e "\033[1;33m⚠  You are running this script via pipe (curl | bash).\033[0m"
+    echo -e "\033[1;33m   For better security, download and inspect first:\033[0m"
+    echo -e "\033[0;36m   curl -fsSL <URL> -o install.sh && cat install.sh && bash install.sh\033[0m"
+    echo ""
+    echo "Continuing in 3 seconds... (Ctrl+C to cancel)"
+    sleep 3
+fi
 
 # ─── Colors ──────────────────────────────────────────────────────────
 RED='\033[0;31m'

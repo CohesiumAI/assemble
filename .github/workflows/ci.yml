@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20, 22]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Run unit tests
+        run: node tests/unit.test.js
+
+      - name: Run snapshot tests
+        run: node tests/snapshot.test.js
+
+      - name: Run integration tests
+        run: node tests/integration-full.js
+
+      - name: Run doctor
+        run: node bin/doctor.js --project .
+
+      - name: Validate generation (dry run)
+        run: node generator/generate.js --validate --project . 2>/dev/null || true
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check for syntax errors
+        run: |
+          find . -name '*.js' -not -path './node_modules/*' -not -path './tmp-*' | while read f; do
+            node --check "$f" || exit 1
+          done
+
+      - name: Verify package.json fields
+        run: |
+          node -e "
+            const pkg = require('./package.json');
+            const required = ['name', 'version', 'license', 'author', 'engines'];
+            const missing = required.filter(k => !pkg[k]);
+            if (missing.length) {
+              console.error('Missing package.json fields:', missing.join(', '));
+              process.exit(1);
+            }
+            console.log('package.json OK');
+          "
+
+      - name: Verify LICENSE file exists
+        run: test -f LICENSE || (echo "LICENSE file missing" && exit 1)

@@ -1,6 +1,6 @@
-# Command Reference — 10 Commands
+# Command Reference — 11 Commands
 
-> **10 primary commands** that expose the full power of 34 agents, 15 workflows, and 28 skills. Jarvis smart routing handles complexity assessment and agent selection.
+> **11 primary commands** that expose the full power of 34 agents, 15 workflows, and 28 skills. Jarvis smart routing handles complexity assessment and agent selection.
 
 ---
 
@@ -8,15 +8,15 @@
 
 | Category | Count | Description |
 |----------|-------|-------------|
-| System Commands | 4 | `/go`, `/party`, `/dismiss`, `/help` |
+| System Commands | 5 | `/go`, `/party`, `/dismiss`, `/help`, `/doctor` |
 | Workflow Shortcuts | 6 | `/review`, `/bugfix`, `/feature`, `/sprint`, `/release`, `/mvp` |
 | Hidden Shortcuts | 9 | Work if typed, not in autocomplete |
 | Agent Access | 33 | Via `@marvel-name` mentions |
-| **Total visible** | **10** | |
+| **Total visible** | **11** | |
 
 ---
 
-## Primary Commands (10)
+## Primary Commands (11)
 
 ### System Commands
 
@@ -26,17 +26,18 @@
 | 2 | `/party <request>` | Persistent multi-agent collaborative session |
 | 3 | `/dismiss` | End the current agent or party session |
 | 4 | `/help` | Show catalog (agents, workflows, examples) |
+| 5 | `/doctor [fix]` | Health check and auto-repair — diagnose and fix installation issues |
 
 ### Workflow Shortcuts
 
 | # | Command | Workflow | Agent Chain |
 |---|---------|----------|-------------|
-| 5 | `/review` | Code Review Pipeline | Fullstack → QA → Security → Red Team → Contrarian |
-| 6 | `/bugfix` | Bug Fix | QA → Fullstack → QA |
-| 7 | `/feature` | Feature Development | PM → Analyst → Architect → Dev → QA |
-| 8 | `/sprint` | Sprint Cycle | Scrum → PM → Fullstack → QA → DevOps |
-| 9 | `/release` | Release Cycle | Scrum → QA → Security → Legal → DevOps → Marketing → PR → CS |
-| 10 | `/mvp` | MVP Launch | PM → Architect → UX → Brand → DB → Backend → Frontend → QA → DevOps |
+| 6 | `/review` | Code Review Pipeline | Fullstack → QA → Security → Red Team → Contrarian |
+| 7 | `/bugfix` | Bug Fix | QA → Fullstack → QA |
+| 8 | `/feature` | Feature Development | PM → Analyst → Architect → Dev → QA |
+| 9 | `/sprint` | Sprint Cycle | Scrum → PM → Fullstack → QA → DevOps |
+| 10 | `/release` | Release Cycle | Scrum → QA → Security → Legal → DevOps → Marketing → PR → CS |
+| 11 | `/mvp` | MVP Launch | PM → Architect → UX → Brand → DB → Backend → Frontend → QA → DevOps |
 
 ---
 
@@ -132,7 +133,8 @@ In addition to the in-session commands above, Assemble provides CLI utilities:
 
 | Command | Description |
 |---------|-------------|
-| `npx create-assemble doctor` | Health check: verifies config, generated files, Node.js version |
+| `npx create-assemble doctor` | Health check: verifies config, generated files, Node.js version (15 checks) |
+| `npx create-assemble doctor --fix` | Health check + auto-repair of fixable issues |
 | `npx create-assemble diff` | Dry run: shows what files would be created/modified without generating |
 | `npx create-assemble ls` | List active agents, workflows, skills, and configuration |
 | `npx create-assemble import <path>` | Import a skill file into `.assemble/skills/` for next generation |
@@ -140,12 +142,32 @@ In addition to the in-session commands above, Assemble provides CLI utilities:
 ### Doctor
 
 ```bash
-npx create-assemble doctor
-# or
-node bin/doctor.js --project /path/to/project
+npx create-assemble doctor              # diagnostic only
+npx create-assemble doctor --fix        # diagnostic + auto-repair
+node bin/doctor.js --project /path      # target a specific project
 ```
 
-Checks: Node.js version, `.assemble.yaml` validity, output directory, generated platform files, custom agents/skills.
+Runs 15 health checks across the entire installation:
+
+| # | Check | Fixable |
+|---|-------|---------|
+| 1 | Node.js >= 18 | No |
+| 2 | `.assemble.yaml` exists | No |
+| 3 | `.assemble.yaml` parseable (version + platforms) | No |
+| 4 | Output directory exists | Yes |
+| 5 | Generated platform files for each configured platform | Yes (triggers regeneration) |
+| 6 | Source agent files (AGENT-*.md) | No |
+| 7 | Source skill files | No |
+| 8 | Rules files (routing.md, orchestrator.md, teams.md) | No |
+| 9 | Governance files (if governance != "none") | Yes |
+| 10 | `_memory.md` (if memory: true) | Yes |
+| 11 | `_metrics.md` (if metrics: true) | Yes |
+| 12 | `.assemble/agents/` directory | Yes |
+| 13 | `.assemble/skills/` directory | Yes |
+| 14 | No orphaned platform files | No |
+| 15 | Config version matches package.json | No |
+
+**Also available as an in-session skill**: `/doctor` or `/doctor fix` inside any supported IDE/CLI.
 
 ### Diff
 
@@ -175,4 +197,4 @@ Copies a skill file into `.assemble/skills/`. The skill must have YAML frontmatt
 
 ## Source File
 
-Commands are defined in `src/commands/commands.yaml` with structure: `primary_commands` (10), `hidden_shortcuts` (9), `internal_skills` (28), and `agents` (31 via @mention).
+Commands are defined in `src/commands/commands.yaml` with structure: `primary_commands` (11), `hidden_shortcuts` (9), `internal_skills` (28), and `agents` (31 via @mention).
