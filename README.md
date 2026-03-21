@@ -5,7 +5,8 @@
 <h1 align="center">Assemble</h1>
 
 <p align="center">
-  <strong>Your 34-agent AI team</strong><br>
+  <strong>Terraform for AI agents</strong><br>
+  <em>34 experts. 21 platforms. One config source.</em><br>
   <em>An open-source project by <a href="https://cohesium.ai">Cohesium AI</a></em>
 </p>
 
@@ -18,19 +19,23 @@
 
 ---
 
-> Transform any IDE or CLI into a full interdisciplinary team of **34 specialized AI agents**, organized in **9 teams**, with **15 automated workflows**, **28 skills**, and **10 commands** — deployable across **21 platforms** (16 IDE + 5 CLI). Powered by Jarvis smart routing, spec-driven methodology, MCP server, cross-session memory, and enterprise governance.
+> **34 agent definitions. 15 workflows. 21 platforms. Zero runtime.** Assemble generates native configuration files that turn your IDE or CLI into a structured AI team. No daemon, no vendor lock-in, no dependencies. Just `npx create-assemble` and your LLM knows its job.
 
-## What is Assemble by Cohesium AI?
+## What is Assemble?
 
-Assemble by Cohesium AI is a multi-agent orchestration system that turns your development environment into a complete, cross-functional team. Each agent is a senior-level expert in its domain, with persona and `@mention` name drawn from the Marvel universe.
+Assemble is a **prompt orchestration and platform generation system** — not a proprietary agentic runtime.
 
-The system uses an **adapter pattern**: agent definitions, skills, and workflows are maintained as platform-agnostic source files, then a generator produces the correct configuration files for each target platform — Cursor rules, Claude Code commands, GitHub Copilot agents, and 17 others.
+It defines 34 specialized AI agent personas, 15 automated workflows, routing intelligence, governance rules, and delivery conventions. Then it **generates native configuration files** for your target platform — Cursor rules, Claude Code agents, GitHub Copilot instructions, and 18 others.
 
-An orchestrator named **Jarvis** serves as the single entry point. **Just type `/go` and describe what you need** — Jarvis does the rest. He assesses complexity (trivial/moderate/complex), selects the right agents, chains them in the correct order, and for complex tasks applies a spec-driven methodology with gated phases (SPECIFY → PLAN → TASKS → IMPLEMENT).
+The LLM in your IDE or CLI does the actual execution. Assemble provides the playbook.
 
-With **YOLO mode** (`yolo: true`), Jarvis runs the entire workflow autonomously end-to-end — no human validation between steps. He only stops for destructive production actions or when he needs information only you can provide.
+### How it works
 
-All 34 agents remain accessible via `@marvel-name` mentions.
+```
+You define what you need → Assemble generates platform-native configs → Your LLM reads them and behaves accordingly
+```
+
+Think of it like **Terraform for AI agents**: you declare the team structure once, and it compiles to whatever format your platform expects. Switch IDE? Regenerate. Add a platform? Same source, new adapter.
 
 ### `/go` — The only command you need
 
@@ -42,13 +47,19 @@ All 34 agents remain accessible via `@marvel-name` mentions.
 /go create a complete SaaS MVP with auth, billing, and dashboard
 ```
 
-Jarvis analyzes your request, picks the right agents and workflow, and executes. In YOLO mode, he chains everything autonomously — you come back to a finished result with a full audit trail.
+Type `/go` and describe what you need. The generated routing instructions tell Jarvis (the orchestrator) to assess complexity, select the right agents, and chain them in order. For complex tasks, a spec-driven methodology kicks in: SPECIFY → PLAN → TASKS → IMPLEMENT → CLOSE.
 
-### Why Marvel?
+With **YOLO mode** (`yolo: true`), the generated instructions tell the LLM to execute all workflow steps without pausing for validation. It only stops for destructive production actions or when it needs information only you can provide. Full traceability is preserved.
 
-The Marvel naming is not cosmetic — it's **prompt engineering embedded in the naming convention**. LLMs already have deep knowledge of these characters. When routing says `@tony-stark` for architecture, the AI doesn't just receive an arbitrary slug — it activates a semantic network: inventive, systematic, pragmatic, technological. Same for `@hawkeye` in QA (precision, never misses), `@punisher` in security (zero tolerance), `@loki` in copywriting (language manipulation, persuasion).
+### Why Marvel names?
 
-Each persona acts as a behavioral shortcut. Instead of spending 200 tokens describing how an agent should think, the Marvel identity primes the LLM into the right mindset with a single `@mention`. And for humans, `@professor-x` is easier to remember than `@product-manager-agent`.
+It's a **prompt engineering trick**, not branding.
+
+LLMs have deep knowledge of Marvel characters. When the config says `@tony-stark` for architecture, the LLM activates a semantic network: inventive, systematic, pragmatic. `@hawkeye` in QA means precision, never misses. `@loki` in copywriting means language manipulation, persuasion.
+
+Each persona compresses hundreds of tokens of behavioral instructions into a single `@mention`. And the characters are teammates who know how to work together and always find a way to succeed — the LLM's weights know this too.
+
+For humans: `@professor-x` is easier to remember than `@product-manager-agent`.
 
 ---
 
@@ -327,7 +338,7 @@ Specialized capabilities tied to a primary agent.
 ```
 assemble/
   src/
-    agents/             # 33 agent definition files (AGENT-*.md)
+    agents/             # 34 agent definition files (AGENT-*.md)
     skills/
       shared/           # 14 shared skills (multi-agent)
       specific/         # 14 agent-specific skills
@@ -364,32 +375,34 @@ assemble/
 ### Execution Flow
 
 ```
-User types /go <request>
+You type /go <request>
       |
       v
-  Jarvis (Orchestrator)
+  Your LLM reads the generated Jarvis instructions
       |
-      +-- Assess complexity (TRIVIAL / MODERATE / COMPLEX)
-      +-- Match a workflow or select agents
+      +-- Assesses complexity (TRIVIAL / MODERATE / COMPLEX)
+      +-- Selects agents from generated configs
       |
-      +── TRIVIAL → single agent, direct answer
-      +── MODERATE → 2-3 agents, sequential execution
-      +── COMPLEX → Spec-Driven Methodology:
-      |     1. SPECIFY (@professor-x) → spec.md → user validates
-      |     2. PLAN (@tony-stark) → plan.md → user validates
-      |     3. TASKS (@captain-america) → tasks.md → user validates
+      +── TRIVIAL → routes to single agent definition
+      +── MODERATE → chains 2-3 agent definitions sequentially
+      +── COMPLEX → follows Spec-Driven Methodology:
+      |     1. SPECIFY (@professor-x) → spec.md
+      |     2. PLAN (@tony-stark) → plan.md
+      |     3. TASKS (@captain-america) → tasks.md
       |     4. IMPLEMENT (Dev agents) → code + tests
-      |     5. CLOSE (Jarvis) → _quality.md (auto)
+      |     5. CLOSE (Jarvis) → _quality.md
       |
       v
-  Sequential Execution
+  LLM executes using generated agent personas
       |
-      +-- Agent 1 --> deliverables --> _manifest.yaml updated
-      +-- Agent N --> deliverables --> _manifest.yaml updated
+      +-- Reads agent definition → produces deliverables
+      +-- Reads next agent definition → continues
       |
       v
-  Consolidation → _summary.md + _quality.md → Report to user
+  Consolidation → _summary.md + _quality.md
 ```
+
+> **Note:** Assemble generates the configuration. Your IDE/CLI and its LLM handle the runtime execution. Assemble has no daemon, no server, no process running.
 
 ---
 
@@ -450,11 +463,11 @@ The startup profile generates **60% fewer config files** while keeping the core 
 
 ### MCP Server (opt-in)
 
-Set `mcp: true` to generate an MCP (Model Context Protocol) server:
+Set `mcp: true` to generate an MCP bridge that exposes agent definitions and routing as MCP tools:
 
 ```bash
 # Generated in .assemble/
-mcp-server.js        # Standalone Node.js server (31+ tools)
+mcp-server.js        # Bridge server — exposes agents as MCP tools (stdio transport)
 mcp.json             # Config for Claude Desktop / VS Code
 package.json         # Install deps: cd .assemble && npm install
 ```
@@ -469,7 +482,7 @@ Set `metrics: true` to track workflow execution metrics. Generates `_metrics.md`
 
 ### YOLO Mode — Autonomous Execution (opt-in)
 
-Set `yolo: true` to enable fully autonomous workflow execution. Jarvis orchestrates the entire workflow end-to-end without pausing for human validation between steps.
+Set `yolo: true` to generate instructions that tell the LLM to execute all workflow steps without pausing for validation. This is a behavioral instruction, not a separate runtime — the LLM chains agents end-to-end within its own context.
 
 ```yaml
 yolo: true   # Jarvis runs autonomously

@@ -27,7 +27,7 @@ steps:
     depends_on: [3]
   - step: 5
     agent: contrarian
-    action: "Challenge les choix techniques et proposer des alternatives"
+    action: "Challenge technical choices and propose alternatives"
     inputs: [01-dev-fullstack/code-summary.md, 02-qa/quality-report.md, 03-security/security-findings.md, 04-redteam/exploit-report.md]
     outputs: [devil-advocate-report.md, alternative-approaches.md]
     depends_on: [4]

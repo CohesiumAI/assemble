@@ -386,7 +386,7 @@ function renderRoutingRules(agents, workflows, config) {
   // Complexity assessment
   out += '## Complexity Assessment\n\n';
   out += 'For every `/go` request, assess complexity first:\n\n';
-  out += '**TRIVIAL** — Simple question, single agent, direct answer. Act as the most relevant agent.\n';
+  out += '**TRIVIAL** — Simple question, single agent, direct answer. Route to the most relevant agent.\n';
   out += '**MODERATE** — Clear task, 2-3 agents. Select agents, execute sequentially, produce deliverables.\n';
   out += '**COMPLEX** — Multi-domain, high stakes, ambitious. Apply Spec-Driven Methodology:\n\n';
   out += '1. **SPECIFY** (@professor-x) → spec.md → user validates\n';

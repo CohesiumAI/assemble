@@ -6,6 +6,7 @@ tmp-gov-*/
 
 # Generated output (deliverables, memory, metrics, audit)
 assemble-output/
+.assemble-manifest.json
 
 # MCP generated files
 .assemble/mcp-server.js

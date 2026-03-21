@@ -147,9 +147,10 @@ Options:
   --validate               Validate generated files without regenerating
   --help, -h               Show this help
 
-Supported platforms:
+Supported platforms (21):
   IDE: cursor, windsurf, cline, roocode, copilot, kiro, trae, antigravity,
-       codebuddy, crush, iflow, kilocoder, opencode, qwencoder, rovodev
+       codebuddy, crush, iflow, kilocoder, opencode, qwencoder, rovodev,
+       claude-code-desktop
   CLI: claude-code, codex, gemini-cli, auggie, pi
 
 Examples:
@@ -354,33 +355,72 @@ function generate() {
   console.log('');
 
   // ─── Clean up old generated files before regeneration ────────────────────
+  // Uses manifest-based cleanup: only removes files Assemble previously generated.
+  // This prevents destroying user files like .github/workflows/, CODEOWNERS, etc.
   if (args.update) {
     console.log('🧹 Cleaning old generated files...');
-    // Directories that adapters generate — clean them but NEVER touch output or .assemble.yaml
-    const platformDirs = [
-      '.cursor', '.windsurf', '.cline', '.roo', '.github',
-      '.kiro', '.trae', '.antigravity', '.codebuddy', '.crush',
-      '.iflow', '.kilocoder', '.opencode', '.qwencoder', '.rovo',
-      '.claude', '.gemini', '.augment', '.pi',
-    ];
-    const platformFiles = [
-      '.cursorrules', '.windsurfrules', '.clinerules', '.roomodes',
-      'CLAUDE.md', 'GEMINI.md', 'AGENTS.md', 'SYSTEM.md',
-    ];
-
-    for (const dir of platformDirs) {
-      const fullPath = path.join(projectDir, dir);
-      if (fs.existsSync(fullPath)) {
-        fs.rmSync(fullPath, { recursive: true, force: true });
+    const manifestPath = path.join(projectDir, '.assemble-manifest.json');
+    if (fs.existsSync(manifestPath)) {
+      try {
+        const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+        const removedDirs = new Set();
+        // Remove individual files first
+        for (const file of (manifest.files || [])) {
+          const fullPath = path.join(projectDir, file);
+          if (fs.existsSync(fullPath)) {
+            fs.unlinkSync(fullPath);
+          }
+        }
+        // Remove directories that are now empty
+        for (const dir of (manifest.directories || [])) {
+          const fullPath = path.join(projectDir, dir);
+          if (fs.existsSync(fullPath)) {
+            try {
+              const entries = fs.readdirSync(fullPath);
+              if (entries.length === 0) {
+                fs.rmdirSync(fullPath);
+                removedDirs.add(dir);
+              }
+            } catch (e) { /* skip */ }
+          }
+        }
+        console.log(`  ✓ ${(manifest.files || []).length} old files cleaned (manifest-based)`);
+      } catch (e) {
+        console.warn(`  ⚠️  Could not read manifest, falling back to targeted cleanup`);
+        // Fallback: only clean Assemble-specific dirs, NEVER .github or user dirs
+        const safeDirs = [
+          '.cursor/agents', '.cursor/skills', '.cursor/workflows',
+          '.windsurf/rules', '.windsurf/workflows',
+          '.cline/agents', '.cline/skills', '.cline/workflows',
+          '.roo',
+          '.kiro/agents', '.kiro/steering',
+          '.trae/rules', '.trae/agents', '.trae/skills', '.trae/workflows',
+          '.antigravity', '.codebuddy', '.crush', '.iflow',
+          '.kilocoder', '.opencode', '.qwencoder', '.rovo',
+          '.claude/agents', '.claude/skills', '.claude/rules',
+          '.gemini/agents', '.gemini/skills', '.gemini/workflows',
+          '.augment/commands',
+        ];
+        const safeFiles = [
+          '.cursorrules', '.windsurfrules', '.clinerules', '.roomodes',
+          'CLAUDE.md', 'GEMINI.md', 'SYSTEM.md',
+        ];
+        // Note: AGENTS.md is NOT in safe list because Codex/Pi share it with user content
+        for (const dir of safeDirs) {
+          const fullPath = path.join(projectDir, dir);
+          if (fs.existsSync(fullPath)) {
+            fs.rmSync(fullPath, { recursive: true, force: true });
+          }
+        }
+        for (const file of safeFiles) {
+          const fullPath = path.join(projectDir, file);
+          if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
+        }
+        console.log('  ✓ Old files removed (targeted fallback)');
       }
+    } else {
+      console.log('  ℹ No manifest found (first-time update), skipping cleanup');
     }
-    for (const file of platformFiles) {
-      const fullPath = path.join(projectDir, file);
-      if (fs.existsSync(fullPath)) {
-        fs.unlinkSync(fullPath);
-      }
-    }
-    console.log('  ✓ Old files removed');
     console.log('');
   }
 
@@ -524,6 +564,39 @@ Log of all agent actions for governance compliance. Required by \`governance: st
     const agentsMdPath = path.join(projectDir, config.output_dir || './assemble-output', 'AGENTS.md');
     fs.mkdirSync(path.dirname(agentsMdPath), { recursive: true });
     fs.writeFileSync(agentsMdPath, agentsMdContent, 'utf-8');
+  }
+
+  // ─── Write manifest of generated files (for safe cleanup on next update) ──
+  {
+    const manifestFiles = [];
+    const manifestDirs = new Set();
+    for (const platformName of config.platforms) {
+      const adapter = adapters[platformName];
+      if (!adapter || !adapter.getOutputPaths) continue;
+      const paths = adapter.getOutputPaths(projectDir, { agents: preparedAgents, skills, workflows, config });
+      for (const p of paths) {
+        const rel = path.relative(projectDir, p);
+        manifestFiles.push(rel);
+        // Track parent directories
+        let dir = path.dirname(rel);
+        while (dir && dir !== '.') {
+          manifestDirs.add(dir);
+          dir = path.dirname(dir);
+        }
+      }
+    }
+    const manifest = {
+      generated_at: new Date().toISOString(),
+      generator_version: '1.0.0',
+      platforms: config.platforms,
+      files: manifestFiles,
+      directories: [...manifestDirs].sort(),
+    };
+    fs.writeFileSync(
+      path.join(projectDir, '.assemble-manifest.json'),
+      JSON.stringify(manifest, null, 2),
+      'utf-8'
+    );
   }
 
   // Update or create .assemble.yaml

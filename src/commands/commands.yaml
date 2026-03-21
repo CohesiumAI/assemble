@@ -303,7 +303,7 @@ internal_skills:
     visible: false
 
 # ═══════════════════════════════════════════
-# AGENTS (31 — accessed via @mention, not slash commands)
+# AGENTS (34 — accessed via @mention, not slash commands)
 # ═══════════════════════════════════════════
 
 agents:
@@ -386,7 +386,13 @@ agents:
   - id: security
     marvel: punisher
     name: Punisher
-    description: "Senior Security Expert"
+    description: "Senior Security Expert (Blue Team)"
+    category: ops
+
+  - id: redteam
+    marvel: microchip
+    name: Microchip
+    description: "Red Team / Offensive Security"
     category: ops
 
   - id: automation
@@ -496,9 +502,21 @@ agents:
     description: "Senior Communications Director / PR"
     category: business
 
-  # Cross-functional Agent
+  # Meta Team
   - id: contrarian
     marvel: deadpool
     name: Deadpool
-    description: "Devil's Advocate"
+    description: "Devil's Advocate (permanent contrarian)"
+    category: meta
+
+  - id: doom
+    marvel: doctor-doom
+    name: Doctor Doom
+    description: "Strategic Stress-Tester (on-demand)"
+    category: meta
+
+  - id: jarvis
+    marvel: jarvis
+    name: Jarvis
+    description: "Chief Orchestrator"
     category: meta

@@ -77,6 +77,10 @@ function resolveProfile(config) {
     resolved.governance = profile.governance || 'none';
   }
 
+  if (!explicit.has('yolo') && profile.yolo !== undefined) {
+    resolved.yolo = profile.yolo;
+  }
+
   return resolved;
 }
 
