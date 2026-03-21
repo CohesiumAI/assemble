@@ -421,7 +421,7 @@ platforms: [claude-code, cursor]  # Target platforms
 agents: all                       # Activated agents (all or list)
 workflows: all                    # Activated workflows (all or list)
 governance: "none"                # none | standard | strict
-yolo: false                       # Autonomous execution (no validation gates)
+yolo: false                       # Non-interactive chaining (no validation gates)
 mcp: false                        # MCP server generation
 memory: false                     # Cross-session _memory.md
 metrics: false                    # Workflow _metrics.md
@@ -482,7 +482,7 @@ Set `metrics: true` to track workflow execution metrics. Generates `_metrics.md`
 
 ### YOLO Mode — 3 Escalation Levels
 
-Assemble has three levels of autonomous execution. Each removes more guardrails. All are behavioral instructions — the LLM chains agents within its own context.
+Assemble has three levels of non-interactive chaining. Each removes more guardrails. All are behavioral instructions — the LLM chains agents within its own context.
 
 #### Level 1: YOLO (`yolo: true` in config)
 

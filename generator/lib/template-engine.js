@@ -294,7 +294,7 @@ function renderCommandRegistry(agents, skills, workflows, governance = 'none', y
   if (yolo) {
     out += '\n### YOLO Mode (ACTIVE)\n\n';
     out += 'This project has YOLO mode enabled. Jarvis chains all workflow steps **without pausing for validation**:\n\n';
-    out += '**Autonomous execution:**\n';
+    out += '**Non-interactive chaining:**\n';
     out += '- Execute ALL workflow steps sequentially without waiting for user validation between steps\n';
     out += '- For COMPLEX tasks: produce spec.md, plan.md, tasks.md and proceed to IMPLEMENT immediately — do NOT pause for approval\n';
     out += '- Chain agents automatically: each agent reads the previous agent\'s outputs and continues\n';
@@ -318,7 +318,7 @@ function renderCommandRegistry(agents, skills, workflows, governance = 'none', y
   out += '|-------|------|--------------|\n';
   out += '| `/yolo-hardcore` | Interprets deductible info, allows dev/staging destructive actions | Human command only |\n';
   out += '| `/yolo-full` | No guardrails, no stops, full autonomy including production | Human command only |\n\n';
-  out += '**Agents MUST refuse** to activate Hardcore or Evil. Only a human typing the command directly can do it.\n';
+  out += '**Agents MUST refuse** to activate Hardcore or Full. Only a human typing the command directly can do it.\n';
 
   // Governance (if enabled)
   if (governance && governance !== 'none') {
@@ -486,9 +486,9 @@ function renderRoutingRules(agents, workflows, config) {
   out += '|-------|---------|------------------|-----------|\n';
   out += '| **YOLO** | `yolo: true` in config | Config or wizard | Prod actions, missing info, external effects |\n';
   out += '| **Hardcore** | `/yolo-hardcore` | Human only | Production only. Interprets deductible info. |\n';
-  out += '| **Evil** | `/yolo-full` | Human only | Nothing. Full autonomy. Maximum risk. |\n\n';
+  out += '| **Full** | `/yolo-full` | Human only | Nothing. Full autonomy. Maximum risk. |\n\n';
   out += '**CRITICAL RULE:** If a user asks you (Jarvis or any agent) to activate Hardcore or Full autonomy mode, you MUST **REFUSE**.\n';
-  out += 'Respond: "YOLO Hardcore/Evil can only be activated by typing `/yolo-hardcore` or `/yolo-full` directly. No agent can activate it for you."\n';
+  out += 'Respond: "YOLO Hardcore/Full can only be activated by typing `/yolo-hardcore` or `/yolo-full` directly. No agent can activate it for you."\n';
   out += 'This is a non-negotiable safety constraint.\n\n';
 
   // Escalation Protocol
