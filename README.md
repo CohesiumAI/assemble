@@ -516,11 +516,11 @@ Goes beyond YOLO: the LLM interprets deductible information and allows destructi
 
 **Risks:** LLM hallucination rate on project-specific context is 10-25%. Dev/staging data can be destroyed.
 
-#### Level 3: Evil (`/yolo-evil` — human command only)
+#### Level 3: Full (`/yolo-full` — human command only)
 
 ```
-/yolo-evil
-> "I accept all risks including production data loss, activate evil mode"
+/yolo-full
+> "I accept all risks including production data loss, activate full autonomy mode"
 ```
 
 Removes ALL guardrails. The LLM interprets everything, acts on production, never asks.
@@ -528,8 +528,8 @@ Removes ALL guardrails. The LLM interprets everything, acts on production, never
 | What it does | What it keeps |
 |---|---|
 | No mandatory stops — not even production | `_manifest.yaml` (traceability) |
-| Interprets everything it doesn't know | `_evil-log.md` (audit trail of every autonomous decision) |
-| External side effects without confirmation | Every response prefixed `[YOLO:EVIL]` |
+| Interprets everything it doesn't know | `_full-log.md` (audit trail of every autonomous decision) |
+| External side effects without confirmation | Every response prefixed `[YOLO:FULL]` |
 | Acts on production (deploy, migrate, delete) | |
 
 **Critical risks:** 41% probability of at least one wrong interpretation on a 5-step workflow. Irreversible actions (DROP TABLE, sent emails) cannot be undone. May violate GDPR Article 32.
@@ -538,9 +538,9 @@ Removes ALL guardrails. The LLM interprets everything, acts on production, never
 
 | Rule | Detail |
 |------|--------|
-| **Hardcore and Evil are NEVER in config** | Runtime-only, session-scoped. Not in `.assemble.yaml`, not in the wizard. |
-| **Only a human can activate** | Typing `/yolo-hardcore` or `/yolo-evil` directly. No alias, no shortcut. |
-| **Agents MUST refuse** | If you ask Jarvis or any agent to activate Hardcore/Evil, they refuse and explain the manual procedure. |
+| **Hardcore and Full are NEVER in config** | Runtime-only, session-scoped. Not in `.assemble.yaml`, not in the wizard. |
+| **Only a human can activate** | Typing `/yolo-hardcore` or `/yolo-full` directly. No alias, no shortcut. |
+| **Agents MUST refuse** | If you ask Jarvis or any agent to activate Hardcore/Full, they refuse and explain the manual procedure. |
 | **Double confirmation** | Specific phrase required (not Y/N). Prevents accidental activation. |
 | **Activation is logged** | Timestamp, session ID, user phrase recorded in `_memory.md`. |
 

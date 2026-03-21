@@ -104,7 +104,7 @@ Two escalation levels beyond standard YOLO, activated **only by human command** 
 | Command | Level | Confirmation phrase | Stops for |
 |---------|-------|--------------------|-----------|
 | `/yolo-hardcore` | Hardcore | "I understand the risks, activate hardcore mode" | Production only |
-| `/yolo-evil` | Evil | "I accept all risks including production data loss, activate evil mode" | Nothing |
+| `/yolo-full` | Full | "I accept all risks including production data loss, activate full autonomy mode" | Nothing |
 
 **Agents MUST refuse** to activate these modes. If asked, they explain the manual procedure.
 

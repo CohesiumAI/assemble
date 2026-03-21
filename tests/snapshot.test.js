@@ -325,7 +325,7 @@ console.log('\nTest 7: Claude Code 10-command architecture');
   });
 
   test('Expected skill directories exist', () => {
-    const expectedSkills = ['go', 'party', 'dismiss', 'help', 'review', 'bugfix', 'feature', 'sprint', 'release', 'mvp', 'yolo-hardcore', 'yolo-evil'];
+    const expectedSkills = ['go', 'party', 'dismiss', 'help', 'review', 'bugfix', 'feature', 'sprint', 'release', 'mvp', 'yolo-hardcore', 'yolo-full'];
     const skillsDir = path.join(dir, '.claude', 'skills');
     for (const slug of expectedSkills) {
       const skillMd = path.join(skillsDir, slug, 'SKILL.md');
@@ -1000,7 +1000,7 @@ console.log('\nTest 27: YOLO mode');
   test('yolo: true — YOLO section in routing.md', () => {
     const routing = fs.readFileSync(path.join(dirOn, '.claude', 'rules', 'routing.md'), 'utf-8');
     assert(routing.includes('YOLO Mode'), 'routing.md should contain YOLO Mode');
-    assert(routing.includes('autonomous execution'), 'should mention autonomous execution');
+    assert(routing.includes('non-interactive chaining'), 'should mention non-interactive chaining mode');
     assert(routing.includes('MANDATORY STOPS'), 'should contain mandatory stop conditions');
   });
 

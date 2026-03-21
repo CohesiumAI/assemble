@@ -425,9 +425,9 @@ Three YOLO levels, injected into the command registry on all 21 platforms:
 |-------|-----------|-----------|-----------|
 | **YOLO** | `yolo: true` in `.assemble.yaml` | Prod, missing info, side effects | Yes |
 | **Hardcore** | `/yolo-hardcore` (human only) | Production only | No — runtime only |
-| **Evil** | `/yolo-evil` (human only) | Nothing | No — runtime only |
+| **Full** | `/yolo-full` (human only) | Nothing | No — runtime only |
 
-Hardcore and Evil require specific confirmation phrases and cannot be activated by agents.
+Hardcore and Full require specific confirmation phrases and cannot be activated by agents.
 
 ---
 
