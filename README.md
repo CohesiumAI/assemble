@@ -480,26 +480,69 @@ Set `memory: true` to enable persistent context across sessions. Generates `_mem
 
 Set `metrics: true` to track workflow execution metrics. Generates `_metrics.md` with tables for workflow performance and agent statistics.
 
-### YOLO Mode — Autonomous Execution (opt-in)
+### YOLO Mode — 3 Escalation Levels
 
-Set `yolo: true` to generate instructions that tell the LLM to execute all workflow steps without pausing for validation. This is a behavioral instruction, not a separate runtime — the LLM chains agents end-to-end within its own context.
+Assemble has three levels of autonomous execution. Each removes more guardrails. All are behavioral instructions — the LLM chains agents within its own context.
+
+#### Level 1: YOLO (`yolo: true` in config)
 
 ```yaml
-yolo: true   # Jarvis runs autonomously
+yolo: true   # Configured at install time or via .assemble.yaml
 ```
 
-**What changes:**
-- All workflow steps execute sequentially without "do you want to continue?" prompts
-- COMPLEX tasks: spec → plan → tasks → implement in one continuous flow
-- Agents chain automatically, each reading the previous agent's outputs
-- If a step produces incomplete output, Jarvis iterates and self-corrects
+The standard autonomous mode. The LLM executes all workflow steps without pausing for validation between steps.
 
-**Mandatory stops (Jarvis ALWAYS pauses for these):**
-- Destructive production actions (deploy to prod, migrate live DB, irreversible deletes)
-- Missing information only a human can provide (credentials, business decisions)
-- External side effects with real-world impact (sending emails, creating cloud resources)
+| What it does | What it keeps |
+|---|---|
+| Chains all steps without "do you want to continue?" | Stops for production destructive actions |
+| COMPLEX: spec → plan → tasks → implement in one flow | Stops for missing info (credentials, business decisions) |
+| Self-corrects on incomplete output | Stops for external side effects (emails, cloud resources) |
+| | Full traceability (`_manifest.yaml`, `_summary.md`, `_quality.md`) |
 
-**What stays active:** `_manifest.yaml`, `_summary.md`, `_quality.md`, pre-execution validation, agent context injection, cross-session memory. Full traceability — you review the result, not every step.
+#### Level 2: Hardcore (`/yolo-hardcore` — human command only)
+
+```
+/yolo-hardcore
+> "I understand the risks, activate hardcore mode"
+```
+
+Goes beyond YOLO: the LLM interprets deductible information and allows destructive actions on dev/staging.
+
+| What it adds | What it keeps |
+|---|---|
+| Interprets info it can reasonably deduce (conventions, code patterns) | **Stops for production** (deploy, migrate live DB) |
+| Dev/staging destructive actions allowed | Hard-coded fuses (`DROP DATABASE`, `rm -rf /`) |
+| Skips methodology for deductible tasks | Enriched audit log |
+
+**Risks:** LLM hallucination rate on project-specific context is 10-25%. Dev/staging data can be destroyed.
+
+#### Level 3: Evil (`/yolo-evil` — human command only)
+
+```
+/yolo-evil
+> "I accept all risks including production data loss, activate evil mode"
+```
+
+Removes ALL guardrails. The LLM interprets everything, acts on production, never asks.
+
+| What it does | What it keeps |
+|---|---|
+| No mandatory stops — not even production | `_manifest.yaml` (traceability) |
+| Interprets everything it doesn't know | `_evil-log.md` (audit trail of every autonomous decision) |
+| External side effects without confirmation | Every response prefixed `[YOLO:EVIL]` |
+| Acts on production (deploy, migrate, delete) | |
+
+**Critical risks:** 41% probability of at least one wrong interpretation on a 5-step workflow. Irreversible actions (DROP TABLE, sent emails) cannot be undone. May violate GDPR Article 32.
+
+#### Safety design
+
+| Rule | Detail |
+|------|--------|
+| **Hardcore and Evil are NEVER in config** | Runtime-only, session-scoped. Not in `.assemble.yaml`, not in the wizard. |
+| **Only a human can activate** | Typing `/yolo-hardcore` or `/yolo-evil` directly. No alias, no shortcut. |
+| **Agents MUST refuse** | If you ask Jarvis or any agent to activate Hardcore/Evil, they refuse and explain the manual procedure. |
+| **Double confirmation** | Specific phrase required (not Y/N). Prevents accidental activation. |
+| **Activation is logged** | Timestamp, session ID, user phrase recorded in `_memory.md`. |
 
 ---
 

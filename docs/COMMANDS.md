@@ -97,6 +97,21 @@ When you type `/go <request>`, Jarvis:
 
 ---
 
+## YOLO Escalation (runtime-only)
+
+Two escalation levels beyond standard YOLO, activated **only by human command** — never by agents, never by config.
+
+| Command | Level | Confirmation phrase | Stops for |
+|---------|-------|--------------------|-----------|
+| `/yolo-hardcore` | Hardcore | "I understand the risks, activate hardcore mode" | Production only |
+| `/yolo-evil` | Evil | "I accept all risks including production data loss, activate evil mode" | Nothing |
+
+**Agents MUST refuse** to activate these modes. If asked, they explain the manual procedure.
+
+See the [README YOLO section](../README.md#yolo-mode--3-escalation-levels) for full details and risk matrix.
+
+---
+
 ## Party Mode
 
 `/party <request>` opens a persistent multi-agent session:

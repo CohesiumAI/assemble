@@ -419,7 +419,15 @@ When `metrics: true`, generates `_metrics.md` in the output directory with table
 
 ### YOLO Mode — Autonomous Execution (opt-in)
 
-When `yolo: true`, Jarvis executes workflows autonomously without pausing for human validation. Injected into the command registry on all 21 platforms. Mandatory stops preserved: destructive production actions, missing human info, external side effects.
+Three YOLO levels, injected into the command registry on all 21 platforms:
+
+| Level | Activation | Stops for | In config |
+|-------|-----------|-----------|-----------|
+| **YOLO** | `yolo: true` in `.assemble.yaml` | Prod, missing info, side effects | Yes |
+| **Hardcore** | `/yolo-hardcore` (human only) | Production only | No — runtime only |
+| **Evil** | `/yolo-evil` (human only) | Nothing | No — runtime only |
+
+Hardcore and Evil require specific confirmation phrases and cannot be activated by agents.
 
 ---
 
