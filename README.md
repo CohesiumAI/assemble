@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.svg" width="160" height="160" alt="Assemble logo" />
+  <img src="https://raw.githubusercontent.com/CohesiumAI/assemble/main/assets/logo.svg" width="160" height="160" alt="Assemble logo" />
 </p>
 
 <h1 align="center">Assemble</h1>
