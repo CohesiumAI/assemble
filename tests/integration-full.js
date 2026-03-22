@@ -12,7 +12,7 @@ const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'assemble-full-'));
 const ROOT = path.resolve(__dirname, '..');
 const GENERATOR = path.join(ROOT, 'generator', 'generate.js');
 
-const config = `version: "1.0.0-beta.1"
+const config = `version: "1.0.0-beta.2"
 profile: "custom"
 langue_equipe: "english"
 langue_output: "english"

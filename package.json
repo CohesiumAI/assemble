@@ -1,6 +1,6 @@
 {
   "name": "cohesiumai-assemble",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "Assemble — AI Agent Orchestrator. Deploy 34 specialized AI agents, 15 workflows, and 28 skills across 21 platforms.",
   "author": "CohesiumAI <renald@cohesium.ai>",
   "license": "MIT",
