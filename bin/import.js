@@ -4,7 +4,7 @@
  * Assemble — Import Skills
  * Copies a skill file into .assemble/skills/ for use during generation.
  *
- * Usage: npx create-assemble import <path-to-skill.md>
+ * Usage: npx cohesiumai-assemble import <path-to-skill.md>
  *        node bin/import.js <path-to-skill.md>
  */
 
@@ -55,14 +55,14 @@ function importSkill(filePath) {
   fs.writeFileSync(destPath, content, 'utf-8');
 
   console.log(`✅ Skill "${skillName}" imported to .assemble/skills/${skillName}.md`);
-  console.log('   Run `npx create-assemble --update` to include it in generation.');
+  console.log('   Run `npx cohesiumai-assemble --update` to include it in generation.');
 }
 
 // CLI entry point (only runs when executed directly, not when required)
 if (require.main === module) {
   const args = process.argv.slice(2);
   if (args.length === 0) {
-    console.log('Usage: npx create-assemble import <path-to-skill.md>');
+    console.log('Usage: npx cohesiumai-assemble import <path-to-skill.md>');
     console.log('');
     console.log('Imports a skill file into .assemble/skills/ for inclusion during generation.');
     console.log('The skill file must have YAML frontmatter with at least a "name" field.');

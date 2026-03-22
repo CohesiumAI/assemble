@@ -5,7 +5,7 @@
  * Health check (and optional auto-repair) for an Assemble installation.
  *
  * Usage:
- *   npx create-assemble doctor [--project <path>] [--fix]
+ *   npx cohesiumai-assemble doctor [--project <path>] [--fix]
  *   node bin/doctor.js [--project <path>] [--fix]
  *
  * --fix   Automatically repair fixable issues (create missing dirs, files, etc.)
@@ -156,7 +156,7 @@ function doctor(projectDir, fixMode) {
   // ─── 2. .assemble.yaml exists ─────────────────────────────────────────
 
   check('.assemble.yaml exists', () => {
-    return configExists ? true : 'Missing — run npx create-assemble';
+    return configExists ? true : 'Missing — run npx cohesiumai-assemble';
   });
 
   // ─── 3. .assemble.yaml is parseable (has version + platforms) ─────────

@@ -202,7 +202,7 @@ function generate() {
 
     if (!fs.existsSync(configPath)) {
       console.error('❌ No installation found (.assemble.yaml missing).');
-      console.error('   Run an installation first: npx create-assemble');
+      console.error('   Run an installation first: npx cohesiumai-assemble');
       process.exit(1);
     }
     console.log('🔄 Assemble — Update');
@@ -619,7 +619,7 @@ Log of all agent actions for governance compliance. Required by \`governance: st
   const existingConfig = fs.existsSync(assembleConfigPath) ? loadConfig(assembleConfigPath) : {};
   const today = new Date().toISOString().split('T')[0];
   const assembleConfig = `# Assemble — Project configuration
-# Update:     npx create-assemble --update
+# Update:     npx cohesiumai-assemble --update
 # Regenerate: node generate.js --config .assemble.yaml
 
 version: "1.0.0-beta.1"

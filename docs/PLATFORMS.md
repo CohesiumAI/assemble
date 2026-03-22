@@ -445,7 +445,7 @@ node generator/generate.js --config .assemble.yaml
 python3 generator/generate.py --config .assemble.yaml
 
 # Via CLI
-npx create-assemble --update    # Regenerate from .assemble.yaml
+npx cohesiumai-assemble --update    # Regenerate from .assemble.yaml
 ```
 
 ### Multi-Platform Support

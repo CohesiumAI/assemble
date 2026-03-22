@@ -4,7 +4,7 @@
  * Assemble — List
  * Lists active agents, workflows, and skills from current configuration.
  *
- * Usage: npx create-assemble ls [--project <path>]
+ * Usage: npx cohesiumai-assemble ls [--project <path>]
  *        node bin/ls.js [--project <path>]
  */
 
@@ -14,7 +14,7 @@ const path = require('path');
 function ls(projectDir) {
   const configPath = path.join(projectDir, '.assemble.yaml');
   if (!fs.existsSync(configPath)) {
-    console.error('❌ No .assemble.yaml found. Run npx create-assemble first.');
+    console.error('❌ No .assemble.yaml found. Run npx cohesiumai-assemble first.');
     process.exit(1);
   }
 

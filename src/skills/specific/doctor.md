@@ -56,7 +56,7 @@ When `/doctor fix` or `/doctor --fix` is invoked:
 1. Create missing directories (output, .assemble/agents, .assemble/skills)
 2. Create missing governance structure
 3. Create missing _memory.md / _metrics.md templates
-4. For missing platform files -> suggest regeneration via `npx create-assemble --update`
+4. For missing platform files -> suggest regeneration via `npx cohesiumai-assemble --update`
 5. Report what was fixed
 
 ## Anti-patterns

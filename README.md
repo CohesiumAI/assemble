@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="#quick-start"><img src="https://img.shields.io/badge/npx-create--assemble-6366f1?style=flat-square" alt="npx create-assemble" /></a>
+  <a href="#quick-start"><img src="https://img.shields.io/badge/npx-cohesiumai--assemble-6366f1?style=flat-square" alt="npx cohesiumai-assemble" /></a>
   <img src="https://img.shields.io/badge/version-1.0.0--beta.1-orange?style=flat-square" alt="v1.0.0-beta.1" />
   <img src="https://img.shields.io/badge/agents-34-8b5cf6?style=flat-square" alt="34 agents" />
   <img src="https://img.shields.io/badge/platforms-21-3b82f6?style=flat-square" alt="21 platforms" />
@@ -22,7 +22,7 @@
 
 > **v1.0.0-beta.1** — This is a beta release. Core functionality is stable, but APIs and generated file formats may change before v1.0.0 stable. Feedback welcome via [GitHub Issues](https://github.com/CohesiumAI/assemble/issues).
 
-> **34 agent definitions. 15 workflows. 21 platforms. Zero runtime.** Assemble generates native configuration files that turn your IDE or CLI into a structured AI team. No daemon, no vendor lock-in, no dependencies. Just `npx create-assemble` and your LLM knows its job.
+> **34 agent definitions. 15 workflows. 21 platforms. Zero runtime.** Assemble generates native configuration files that turn your IDE or CLI into a structured AI team. No daemon, no vendor lock-in, no dependencies. Just `npx cohesiumai-assemble` and your LLM knows its job.
 
 ## What is Assemble?
 
@@ -71,13 +71,13 @@ For humans: `@professor-x` is easier to remember than `@product-manager-agent`.
 ### Using NPX (recommended)
 
 ```bash
-npx create-assemble
+npx cohesiumai-assemble
 ```
 
 ### Using Bash (macOS/Linux)
 
 > **Security note:** Piping `curl` into `bash` executes remote code without verification.
-> We recommend using `npx create-assemble` instead. If you prefer the bash installer,
+> We recommend using `npx cohesiumai-assemble` instead. If you prefer the bash installer,
 > download and inspect it first:
 
 ```bash
@@ -122,7 +122,7 @@ The interactive installer guides you through:
 ## Quick Demo
 
 ```bash
-$ npx create-assemble
+$ npx cohesiumai-assemble
 
 🦸 Assemble — AI Agent Orchestrator
 
@@ -147,7 +147,7 @@ $ npx create-assemble
 If you already have Assemble by Cohesium AI installed, you can update to the latest version while preserving your preferences:
 
 ```bash
-npx create-assemble --update
+npx cohesiumai-assemble --update
 ```
 
 The `--update` flag re-generates all platform configuration files from your existing `.assemble.yaml` without re-running the interactive setup. Your agent selection, language settings, and output directory are preserved.
@@ -372,10 +372,10 @@ assemble/
     adapters/           # 21 platform adapters (16 IDE + 5 CLI)
   bin/
     cli.js              # Interactive installer (12-step wizard)
-    doctor.js           # Health check (npx create-assemble doctor)
-    diff.js             # Dry run diff (npx create-assemble diff)
-    ls.js               # List active config (npx create-assemble ls)
-    import.js           # Import skills (npx create-assemble import)
+    doctor.js           # Health check (npx cohesiumai-assemble doctor)
+    diff.js             # Dry run diff (npx cohesiumai-assemble diff)
+    ls.js               # List active config (npx cohesiumai-assemble ls)
+    import.js           # Import skills (npx cohesiumai-assemble import)
   tests/
     unit.test.js        # Unit tests for core functions
     snapshot.test.js    # Snapshot + qualitative tests
@@ -472,7 +472,7 @@ The startup profile generates **60% fewer config files** while keeping the core 
 
 **Custom agents:** Drop `AGENT-*.md` files in `.assemble/agents/` — they're auto-discovered and merged during generation. Same slug overrides built-in.
 
-**Custom skills:** Use `npx create-assemble import <path>` to copy skill files into `.assemble/skills/`. They're included in the next generation.
+**Custom skills:** Use `npx cohesiumai-assemble import <path>` to copy skill files into `.assemble/skills/`. They're included in the next generation.
 
 ### MCP Server (opt-in)
 
@@ -575,7 +575,7 @@ governance: "standard"   # Decision gates + risk assessment
 governance: "strict"     # Full audit trail + RBAC + NIST AI RMF mapping
 ```
 
-Then regenerate: `npx create-assemble --update`
+Then regenerate: `npx cohesiumai-assemble --update`
 
 ### What it adds
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Assemble — CLI Installer (npx create-assemble)
+ * Assemble — CLI Installer (npx cohesiumai-assemble)
  * Interactive installer for the Agent Workflow System
  */
 
@@ -267,7 +267,7 @@ async function main() {
     if (subcommand === 'import') {
       const importPath = process.argv[3];
       if (!importPath) {
-        print('Usage: npx create-assemble import <path-to-skill.md>');
+        print('Usage: npx cohesiumai-assemble import <path-to-skill.md>');
         rl.close();
         process.exit(0);
       }
@@ -441,7 +441,7 @@ async function main() {
   // When custom, write explicit values so the user has full control.
   const lines = [
     '# Assemble — Project configuration',
-    '# Update: npx create-assemble --update',
+    '# Update: npx cohesiumai-assemble --update',
     '',
     'version: "1.0.0-beta.1"',
     `profile: "${profile}"`,
@@ -486,7 +486,7 @@ async function main() {
   print('\x1b[32m\x1b[1m   ✅ Installation complete!\x1b[0m');
   print('\x1b[36m═══════════════════════════════════════════════════════\x1b[0m');
   print('');
-  print('To update: npx create-assemble --update');
+  print('To update: npx cohesiumai-assemble --update');
   print('');
 
   rl.close();

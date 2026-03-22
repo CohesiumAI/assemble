@@ -26,7 +26,7 @@ jobs:
         id: version
         run: |
           LOCAL_VERSION=$(node -p "require('./package.json').version")
-          NPM_VERSION=$(npm view create-assemble version 2>/dev/null || echo "0.0.0")
+          NPM_VERSION=$(npm view cohesiumai-assemble version 2>/dev/null || echo "0.0.0")
           echo "local=$LOCAL_VERSION" >> $GITHUB_OUTPUT
           echo "npm=$NPM_VERSION" >> $GITHUB_OUTPUT
           if [ "$LOCAL_VERSION" != "$NPM_VERSION" ]; then

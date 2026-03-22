@@ -133,17 +133,17 @@ In addition to the in-session commands above, Assemble provides CLI utilities:
 
 | Command | Description |
 |---------|-------------|
-| `npx create-assemble doctor` | Health check: verifies config, generated files, Node.js version (15 checks) |
-| `npx create-assemble doctor --fix` | Health check + auto-repair of fixable issues |
-| `npx create-assemble diff` | Dry run: shows what files would be created/modified without generating |
-| `npx create-assemble ls` | List active agents, workflows, skills, and configuration |
-| `npx create-assemble import <path>` | Import a skill file into `.assemble/skills/` for next generation |
+| `npx cohesiumai-assemble doctor` | Health check: verifies config, generated files, Node.js version (15 checks) |
+| `npx cohesiumai-assemble doctor --fix` | Health check + auto-repair of fixable issues |
+| `npx cohesiumai-assemble diff` | Dry run: shows what files would be created/modified without generating |
+| `npx cohesiumai-assemble ls` | List active agents, workflows, skills, and configuration |
+| `npx cohesiumai-assemble import <path>` | Import a skill file into `.assemble/skills/` for next generation |
 
 ### Doctor
 
 ```bash
-npx create-assemble doctor              # diagnostic only
-npx create-assemble doctor --fix        # diagnostic + auto-repair
+npx cohesiumai-assemble doctor              # diagnostic only
+npx cohesiumai-assemble doctor --fix        # diagnostic + auto-repair
 node bin/doctor.js --project /path      # target a specific project
 ```
 
@@ -172,7 +172,7 @@ Runs 15 health checks across the entire installation:
 ### Diff
 
 ```bash
-npx create-assemble diff
+npx cohesiumai-assemble diff
 ```
 
 Shows what files would be created (new) or modified (existing) without actually regenerating. Useful for previewing changes before `--update`.
@@ -180,7 +180,7 @@ Shows what files would be created (new) or modified (existing) without actually 
 ### Ls
 
 ```bash
-npx create-assemble ls
+npx cohesiumai-assemble ls
 ```
 
 Lists the current active configuration: profile, platforms, agents, workflows, governance, and any custom agents/skills.
@@ -188,7 +188,7 @@ Lists the current active configuration: profile, platforms, agents, workflows, g
 ### Import
 
 ```bash
-npx create-assemble import ./my-custom-skill.md
+npx cohesiumai-assemble import ./my-custom-skill.md
 ```
 
 Copies a skill file into `.assemble/skills/`. The skill must have YAML frontmatter with at least a `name` field. Run `--update` after importing.

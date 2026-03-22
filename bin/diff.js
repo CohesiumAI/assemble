@@ -5,7 +5,7 @@
  * Shows what files would be created/modified without actually generating.
  * Loads the full config and source data to accurately predict output paths.
  *
- * Usage: npx create-assemble diff [--project <path>]
+ * Usage: npx cohesiumai-assemble diff [--project <path>]
  *        node bin/diff.js [--project <path>]
  */
 
@@ -16,7 +16,7 @@ function diff(projectDir) {
   // Load config using the generator's own loadConfig
   const configPath = path.join(projectDir, '.assemble.yaml');
   if (!fs.existsSync(configPath)) {
-    console.error('❌ No .assemble.yaml found. Run npx create-assemble first.');
+    console.error('❌ No .assemble.yaml found. Run npx cohesiumai-assemble first.');
     process.exit(1);
   }
 
