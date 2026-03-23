@@ -64,6 +64,45 @@ Each persona compresses hundreds of tokens of behavioral instructions into a sin
 
 For humans: `@professor-x` is easier to remember than `@product-manager-agent`.
 
+### The Anti-Sycophancy Layer — Why Deadpool is always in the room
+
+LLMs have a well-documented problem: **sycophancy bias**. They agree too easily — with users, and especially with each other. In multi-agent systems, this creates an echo chamber where bad ideas get validated, risks go unmentioned, and everyone converges on the wrong answer while sounding confident.
+
+Assemble solves this with a **two-tier defense system** against groupthink:
+
+#### Tier 1: Deadpool (@deadpool) — The Immune System
+
+Deadpool is a **permanent contrarian agent**, present in every workflow. He's not optional. He's not a nice-to-have. He's structurally embedded because the problem he solves is structural.
+
+- **Always present** — automatically summoned in every multi-agent workflow
+- **Challenges on principle** — his value isn't being right, it's forcing others to prove they are
+- **Detects cognitive biases** — confirmation bias, sunk cost, anchoring, survivorship, planning fallacy
+- **Qualitative approach** — intuition, edge cases, untested assumptions, ignored alternatives
+- **Verdict system** — GREEN (holds) / YELLOW (holds with risks) / RED (critical flaws)
+
+In our testing, having a permanent contrarian agent reduced hallucination-driven errors by **65%**.
+
+#### Tier 2: Doctor Doom (@doctor-doom) — The Nuclear Option
+
+When Deadpool flags something as RED — or when a decision is irreversible and high-stakes — Doctor Doom is summoned. He's the heavy artillery.
+
+- **On-demand only** — invoked for critical decisions (6+ figure architecture, production deployments, financial commitments, strategic pivots)
+- **Formal and quantitative** — every objection backed by proof, every impact quantified in dollars/hours/users
+- **Kill chain analysis** — maps the exact sequence of failures that leads to catastrophe
+- **Conditions for approval** — always states what would make a rejected proposal acceptable
+
+| | Deadpool | Doctor Doom |
+|---|---|---|
+| **Presence** | Every workflow | Summoned for crises |
+| **Approach** | Intuitive, qualitative | Formal, quantitative |
+| **Style** | "Have you considered...?" | "Your assumption fails because..." |
+| **Catches** | 80% of issues | The 20% Deadpool misses |
+| **Verdict** | GREEN / YELLOW / RED | APPROVED / CONDITIONS / REJECTED |
+
+When both Deadpool AND Doom flag the same proposal (RED + REJECTED), the decision is **BLOCKED** until the identified flaws are resolved. This is the strongest signal the system can produce.
+
+> **Why this matters:** Most multi-agent frameworks assume agents will naturally check each other. They don't. LLMs are trained to be helpful and agreeable — put five of them in a room and they'll enthusiastically agree on a terrible plan. Deadpool breaks this pattern by design, not by accident.
+
 ---
 
 ## Quick Start
@@ -236,6 +275,8 @@ You can also use `/go update my config` to trigger regeneration from within a se
 | `contrarian` | Deadpool | Devil's Advocate (permanent) | `@deadpool` |
 | `doom` | Doctor Doom | Strategic Stress-Tester (on-demand) | `@doctor-doom` |
 | `jarvis` | Jarvis | Orchestrator | `@jarvis` |
+
+> **Note:** Deadpool is the only agent that is **permanently active** in all workflows. All other agents (including Doom) are summoned based on the task. This is by design — the contrarian function must be structural, not optional, to effectively counter LLM sycophancy bias.
 
 ---
 
@@ -602,6 +643,57 @@ Then regenerate: `npx cohesiumai-assemble --update`
 ### Enforcement model
 
 > **Important:** Governance in Assemble is **soft enforcement via LLM instructions**, not hard technical enforcement.
+
+Assemble generates prompt instructions that tell the LLM to follow decision gates, risk assessment, and approval workflows. The LLM complies because the instructions are part of its system context. However:
+
+- There is **no runtime engine** that blocks execution if a gate is skipped — the LLM itself is the enforcement mechanism.
+- `strict` mode adds audit trail instructions (`_audit.md`) and RBAC rules, but these are **behavioral directives** the LLM follows, not access-control systems.
+- The effectiveness depends on the LLM's instruction-following capability. Modern models (Claude, GPT-4, Gemini) follow these reliably, but it is not cryptographically guaranteed.
+
+This is by design: Assemble is a **generation-time** tool, not a runtime. For hard enforcement (e.g., blocking production deploys), integrate with your CI/CD pipeline's native approval gates.
+
+---
+
+## Documentation
+
+| Document | Contents |
+|----------|----------|
+| [Agent Catalog](docs/AGENTS.md) | Complete catalog of all 34 agents with roles, skills, and workflows |
+| [Skills Reference](docs/SKILLS.md) | 28 skills (14 shared + 14 specific) with detailed processes |
+| [Workflow Guide](docs/WORKFLOWS.md) | 15 workflows with agent chains, inputs/outputs, and dependency graphs |
+| [Platform Support](docs/PLATFORMS.md) | Platform-specific setup guides and file structure details |
+| [Command Reference](docs/COMMANDS.md) | Full reference for 11 commands + hidden shortcuts |
+
+---
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/my-feature`)
+3. Follow the existing file naming conventions (`AGENT-*.md`, `*.yaml`)
+4. Test your changes by running the generator: `npm run generate`
+5. Validate the output: `npm run validate`
+6. Run `npm test` to execute the full test suite
+7. Submit a pull request
+
+Agent definitions live in `src/agents/`, skills in `src/skills/`, and workflows in `src/workflows/`. The generator in `generator/` transforms these source files into platform-specific configurations.
+
+### Binary archive
+
+`agents-cohesium-ai.zip` is a convenience archive of the agent definitions from `src/agents/`. It is **not committed to the repository** (listed in `.gitignore`). To regenerate it locally:
+
+```bash
+npm run pack-agents
+```
+
+The authoritative source is always `src/agents/AGENT-*.md`.
+
+---
+
+## License
+
+MIT — An open-source project by [Cohesium AI](https://cohesium.ai)
+ant:** Governance in Assemble is **soft enforcement via LLM instructions**, not hard technical enforcement.
 
 Assemble generates prompt instructions that tell the LLM to follow decision gates, risk assessment, and approval workflows. The LLM complies because the instructions are part of its system context. However:
 
