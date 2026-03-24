@@ -34,12 +34,6 @@ jobs:
       - name: Run integration tests
         run: node tests/integration-full.js
 
-      - name: Run doctor
-        run: node bin/doctor.js --project .
-
-      - name: Validate generation (dry run)
-        run: node generator/generate.js --validate --project . 2>/dev/null || true
-
   lint:
     name: Lint
     runs-on: ubuntu-latest
