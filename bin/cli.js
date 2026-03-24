@@ -240,8 +240,11 @@ async function runUpdate(projectDir) {
   print('\x1b[32m\x1b[1m   ✅ Update complete!\x1b[0m');
   print('\x1b[36m═══════════════════════════════════════════════════════\x1b[0m');
   print('');
-  print('Your preferences have been preserved.');
-  print('Configuration files have been regenerated with the latest version.');
+  print('  Your preferences have been preserved.');
+  print('  Configuration files have been regenerated.');
+  print('');
+  print('\x1b[1m  Ready — just type /go\x1b[0m');
+  print('\x1b[2m  Jarvis and your 34 agents are waiting.\x1b[0m');
   print('');
   rl.close();
 }
@@ -486,7 +489,18 @@ async function main() {
   print('\x1b[32m\x1b[1m   ✅ Installation complete!\x1b[0m');
   print('\x1b[36m═══════════════════════════════════════════════════════\x1b[0m');
   print('');
-  print('To update: npx cohesiumai-assemble --update');
+  print('\x1b[1m  Get started — just type /go\x1b[0m');
+  print('');
+  print('\x1b[2m  /go build a REST API for user management\x1b[0m');
+  print('\x1b[2m  /go fix the auth bug in the login flow\x1b[0m');
+  print('\x1b[2m  /go develop all stories from the current sprint\x1b[0m');
+  print('\x1b[2m  /go create a complete SaaS MVP\x1b[0m');
+  print('');
+  print('\x1b[2m  Jarvis analyzes your request, selects the right agents,\x1b[0m');
+  print('\x1b[2m  and orchestrates the full workflow. You describe it — they build it.\x1b[0m');
+  print('');
+  print('\x1b[2m  34 agents · 15 workflows · docs → https://github.com/CohesiumAI/assemble\x1b[0m');
+  print('\x1b[2m  Update: npx cohesiumai-assemble --update\x1b[0m');
   print('');
 
   rl.close();
