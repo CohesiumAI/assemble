@@ -117,7 +117,7 @@ const PROJECT_ROOT = resolve(dirname(__filename), '..');
 
 const server = new McpServer({
   name: "assemble",
-  version: "${config.version || '1.0.0-beta.4'}",
+  version: "${config.version || '1.0.0-beta.5'}",
   description: "Assemble — ${agents.length}-agent AI team orchestrator by Cohesium AI",
 });
 
@@ -239,7 +239,7 @@ ${workflowTriggers}
     agent_count: Object.keys(AGENT_REGISTRY).length,
     methodology: complexity === "TRIVIAL" ? "Single agent, direct answer"
       : complexity === "MODERATE" ? "2-3 agents, sequential execution"
-      : "Spec-driven: SPECIFY → PLAN → TASKS → IMPLEMENT → CLOSE",
+      : "Spec-driven: BRAINSTORM → SPECIFY → PLAN → TASKS → IMPLEMENT → CLOSE",
   };
   return {
     content: [{
@@ -276,7 +276,7 @@ await server.connect(transport);
   // 3. Generate mcp-package.json (for dependency installation)
   const mcpPackage = {
     name: 'assemble-mcp-server',
-    version: config.version || '1.0.0-beta.4',
+    version: config.version || '1.0.0-beta.5',
     type: 'module',
     description: 'MCP server for Assemble AI agent team',
     main: 'mcp-server.js',

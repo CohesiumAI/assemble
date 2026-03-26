@@ -76,7 +76,8 @@ When you type `/go <request>`, Jarvis:
    - **MODERATE** — Clear task → 2-3 agents, sequential execution
    - **COMPLEX** — Multi-domain → Spec-Driven Methodology
 
-2. **For COMPLEX tasks, applies 5 gated phases:**
+2. **For COMPLEX tasks, applies 6 phases:**
+   - **BRAINSTORM** (Jarvis + relevant agents) → produces `brainstorm.md` (multi-agent analysis)
    - **SPECIFY** (Professor X) → produces `spec.md` → user validates
    - **PLAN** (Tony Stark) → produces `plan.md` → user validates
    - **TASKS** (Captain America) → produces `tasks.md` → user validates

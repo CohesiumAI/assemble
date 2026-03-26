@@ -625,7 +625,7 @@ Log of all agent actions for governance compliance. Required by \`governance: st
     }
     const manifest = {
       generated_at: new Date().toISOString(),
-      generator_version: '1.0.0-beta.4',
+      generator_version: '1.0.0-beta.5',
       platforms: config.platforms,
       files: manifestFiles,
       directories: [...manifestDirs].sort(),
@@ -645,7 +645,7 @@ Log of all agent actions for governance compliance. Required by \`governance: st
 # Update:     npx cohesiumai-assemble --update
 # Regenerate: node generate.js --config .assemble.yaml
 
-version: "1.0.0-beta.4"
+version: "1.0.0-beta.5"
 profile: "${config.profile || 'custom'}"
 langue_equipe: "${config.langue_equipe}"
 langue_output: "${config.langue_output}"

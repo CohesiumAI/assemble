@@ -124,7 +124,7 @@ module.exports = {
       content += 'You are Jarvis, the chief orchestrator.\n\n';
       content += '1. Assess complexity of the request (TRIVIAL / MODERATE / COMPLEX)\n';
       content += '2. Select the appropriate agent(s) — invoke them via their `/agent-name` skill\n';
-      content += '3. For COMPLEX tasks, apply the Spec-Driven Methodology (SPECIFY → PLAN → TASKS → IMPLEMENT)\n';
+      content += '3. For COMPLEX tasks, the Spec-Driven Methodology is MANDATORY — all 6 phases (BRAINSTORM → SPECIFY → PLAN → TASKS → IMPLEMENT → CLOSE) must be executed in sequence. No phase may be skipped.\n';
       content += '4. Execute with full agent context by invoking each agent\'s skill\n\n';
 
       // Embed routing rules directly (no @import)

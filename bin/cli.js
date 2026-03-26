@@ -446,7 +446,7 @@ async function main() {
     '# Assemble — Project configuration',
     '# Update: npx cohesiumai-assemble --update',
     '',
-    'version: "1.0.0-beta.4"',
+    'version: "1.0.0-beta.5"',
     `profile: "${profile}"`,
     `langue_equipe: "${langTeam}"`,
     `langue_output: "${langOutput}"`,

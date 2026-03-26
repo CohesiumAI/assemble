@@ -1031,7 +1031,7 @@ console.log('\nTest 28: Startup profile + COMPLEX methodology coherence');
 {
   const dir = createTmpDir();
   fs.mkdirSync(dir, { recursive: true });
-  const config = `version: "1.0.0-beta.4"\nprofile: "startup"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\ngovernance: "none"\nyolo: true\ninstalled_at: "2026-03-20"\n`;
+  const config = `version: "1.0.0-beta.5"\nprofile: "startup"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\ngovernance: "none"\nyolo: true\ninstalled_at: "2026-03-20"\n`;
   fs.writeFileSync(path.join(dir, '.assemble.yaml'), config);
   run(['--project', dir, '--update']);
 
@@ -1066,7 +1066,7 @@ console.log('\nTest 29: /go skill phase coherence');
 {
   const dir = createTmpDir();
   fs.mkdirSync(dir, { recursive: true });
-  const config = `version: "1.0.0-beta.4"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nyolo: true\ninstalled_at: "2026-03-20"\n`;
+  const config = `version: "1.0.0-beta.5"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nyolo: true\ninstalled_at: "2026-03-20"\n`;
   fs.writeFileSync(path.join(dir, '.assemble.yaml'), config);
   run(['--project', dir, '--update']);
 
