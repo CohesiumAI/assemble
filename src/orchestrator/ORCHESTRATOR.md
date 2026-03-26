@@ -62,14 +62,55 @@ A detailed brief is an input to BRAINSTORM and SPECIFY — it is not a substitut
 
 ### Phase 0 — BRAINSTORM (Jarvis facilitates, relevant agents analyze)
 
-Before any specification work, Jarvis MUST launch a multi-agent brainstorm session:
+Before any specification work, Jarvis MUST launch a multi-agent brainstorm session.
+This session follows the same collaborative format as `/party` — agents speak in character, Jarvis facilitates.
 
+**Step 1 — Setup:**
 1. **Select 3-8 agents** most relevant to the request domains (use the Domain → Agent Mapping)
 2. **Deadpool is ALWAYS included** — his contrarian role is essential from the very first analysis
-3. **Launch the session**: each agent analyzes the provided brief, documents, and context from their expertise
-4. **Each agent contributes**: identifies key insights, risks, blind spots, technical considerations, and questions from their domain
-5. **Disagreement is encouraged** — agents challenge each other's assumptions
-6. **Jarvis produces** `brainstorm.md`: synthesis of insights, identified risks, scope clarifications, open questions, and recommendations
+3. Announce who is convoked and what they will analyze
+
+**Step 2 — Agent contributions (each agent speaks in character):**
+- Each agent analyzes the brief, documents, and context from their domain of expertise
+- Each contribution MUST be clearly attributed: `### 💬 [Marvel Name] ([Role])`
+- Agents identify: key insights, risks, blind spots, technical considerations, questions, and recommendations
+- Agents CAN and SHOULD disagree with each other — challenge assumptions, flag contradictions
+- Deadpool speaks last and challenges any consensus that formed too easily
+
+**Step 3 — Jarvis produces the synthesis and conclusion:**
+
+Jarvis writes `brainstorm.md` with this MANDATORY structure:
+
+```
+## 📋 Brainstorm Synthesis (Jarvis)
+
+### Agents consulted
+- [List of agents who contributed, with their role]
+
+### Key insights by domain
+- [Agent]: [Their main insight or recommendation]
+- [Agent]: [Their main insight or recommendation]
+- ...
+
+### Consensus
+- [Points where agents agreed]
+
+### Divergences
+- [Position A (Agent) vs Position B (Agent) — and why it matters]
+
+### Risks and blind spots (including Deadpool's challenges)
+- [Risk or blind spot raised, by whom]
+
+### Open questions
+- [Questions that need user input or further analysis]
+
+### Conclusion and recommendations for SPECIFY
+- [What the PM should focus on in the spec]
+- [What constraints emerged from the analysis]
+- [What should be explicitly in-scope or out-of-scope]
+```
+
+This synthesis is NOT optional — even in YOLO mode, Jarvis MUST produce the full structured `brainstorm.md` before proceeding to SPECIFY. A superficial summary is not acceptable.
 
 `brainstorm.md` becomes the primary input to Phase 1 — SPECIFY.
 → **User validation required before continuing** (skipped when `yolo: true`).

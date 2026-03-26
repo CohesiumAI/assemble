@@ -297,7 +297,7 @@ function renderCommandRegistry(agents, skills, workflows, governance = 'none', y
     out += 'YOLO mode removes validation pauses between phases — it does NOT remove the phases themselves.\n\n';
     out += '**What YOLO changes:** no user approval required between workflow steps. Agents chain automatically.\n\n';
     out += '**What YOLO does NOT change — COMPLEX tasks MUST follow all 6 phases:**\n';
-    out += '- BRAINSTORM → produce brainstorm.md (Jarvis selects relevant agents for multi-agent analysis)\n';
+    out += '- BRAINSTORM → produce brainstorm.md (Jarvis selects relevant agents, each speaks in character, Jarvis writes full structured synthesis with consensus/divergences/risks/conclusion)\n';
     out += '- SPECIFY → produce spec.md (delegate to PM agent, or closest available)\n';
     out += '- PLAN → produce plan.md (delegate to architect agent, or PM if unavailable)\n';
     out += '- TASKS → produce tasks.md (delegate to scrum agent, or PM if unavailable)\n';
@@ -482,7 +482,7 @@ function renderRoutingRules(agents, workflows, config) {
     out += '- You MUST execute all 6 phases in sequence: BRAINSTORM → SPECIFY → PLAN → TASKS → IMPLEMENT → CLOSE\n';
     out += '- You MUST produce each deliverable: brainstorm.md, spec.md, plan.md, tasks.md before any implementation\n';
     out += '- You MUST delegate each phase to the most relevant available agent:\n';
-    out += '  0. BRAINSTORM → Jarvis selects 3-8 relevant agents (+ Deadpool), launches multi-agent analysis (produce brainstorm.md)\n';
+    out += '  0. BRAINSTORM → Jarvis selects 3-8 relevant agents (+ Deadpool), each agent speaks in character, Jarvis writes structured brainstorm.md (consensus, divergences, risks, conclusion)\n';
     out += `  1. SPECIFY → delegate to PM agent${specAgent} (produce spec.md)\n`;
     out += `  2. PLAN → delegate to architect agent${planAgent}${!availableIds.has('architect') ? ', or PM if unavailable' : ''} (produce plan.md)\n`;
     out += `  3. TASKS → delegate to scrum agent${tasksAgent}${!availableIds.has('scrum') ? ', or PM if unavailable' : ''} (produce tasks.md)\n`;
@@ -530,7 +530,7 @@ function renderRoutingRules(agents, workflows, config) {
   out += '## Sub-Agent Delegation\n\n';
   out += 'Jarvis orchestrates — he does NOT do the work. For every workflow step, Jarvis MUST delegate to the appropriate agent.\n\n';
   out += '**For COMPLEX tasks, delegation is MANDATORY:**\n';
-  out += '- BRAINSTORM: Jarvis selects 3-8 relevant agents (+ Deadpool), launches multi-agent analysis (produce brainstorm.md)\n';
+  out += '- BRAINSTORM: Jarvis selects 3-8 relevant agents (+ Deadpool), agents speak in character, Jarvis writes structured brainstorm.md with full synthesis and conclusion\n';
   out += '- SPECIFY: delegate to PM agent (produce spec.md)\n';
   out += '- PLAN: delegate to architect agent, or PM if architect is not available (produce plan.md)\n';
   out += '- TASKS: delegate to scrum agent, or PM if scrum is not available (produce tasks.md)\n';
