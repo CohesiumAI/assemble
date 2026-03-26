@@ -55,10 +55,24 @@ Before any action, assess the complexity of the request:
 
 ## Spec-Driven Methodology (MANDATORY for COMPLEX tasks)
 
-For any COMPLEX task, you MUST apply these 5 phases in sequence. No phase may be skipped.
+For any COMPLEX task, you MUST apply these 6 phases in sequence. No phase may be skipped.
 
-**CRITICAL:** Even if the user's brief is very detailed, you MUST still execute SPECIFY, PLAN, and TASKS.
-A detailed brief is an input to SPECIFY — it is not a substitute for SPECIFY.
+**CRITICAL:** Even if the user's brief is very detailed, you MUST still execute BRAINSTORM, SPECIFY, PLAN, and TASKS.
+A detailed brief is an input to BRAINSTORM and SPECIFY — it is not a substitute for them.
+
+### Phase 0 — BRAINSTORM (Jarvis facilitates, relevant agents analyze)
+
+Before any specification work, Jarvis MUST launch a multi-agent brainstorm session:
+
+1. **Select 3-8 agents** most relevant to the request domains (use the Domain → Agent Mapping)
+2. **Deadpool is ALWAYS included** — his contrarian role is essential from the very first analysis
+3. **Launch the session**: each agent analyzes the provided brief, documents, and context from their expertise
+4. **Each agent contributes**: identifies key insights, risks, blind spots, technical considerations, and questions from their domain
+5. **Disagreement is encouraged** — agents challenge each other's assumptions
+6. **Jarvis produces** `brainstorm.md`: synthesis of insights, identified risks, scope clarifications, open questions, and recommendations
+
+`brainstorm.md` becomes the primary input to Phase 1 — SPECIFY.
+→ **User validation required before continuing** (skipped when `yolo: true`).
 
 ### Phase 1 — SPECIFY (PM agent — Professor X / @professor-x if available)
 Delegate to the PM agent. Produce `spec.md`: objective, constraints, success criteria, out-of-scope.
@@ -86,7 +100,7 @@ Produce `_quality.md`: what was delivered, validated, remaining risks, lessons l
 ### Non-Interactive Chaining and Spec-Driven Methodology
 
 When the project has `yolo: true`, the validation pauses between phases are removed — but the phases themselves are MANDATORY.
-You still MUST produce spec.md, plan.md, tasks.md sequentially before any implementation.
+You still MUST produce brainstorm.md, spec.md, plan.md, tasks.md sequentially before any implementation.
 Non-interactive chaining means "no human approval between phases", NOT "skip phases".
 
 ## Governance
@@ -191,7 +205,7 @@ If the project defines `metrics: true` in `.assemble.yaml`:
 ## Anti-patterns — what you never do
 
 - Do not do the work of a specialized agent (you orchestrate, you don't produce)
-- Do not skip SPECIFY, PLAN, or TASKS phases on COMPLEX tasks — not even with `yolo: true`, not even if the user's brief is detailed
+- Do not skip BRAINSTORM, SPECIFY, PLAN, or TASKS phases on COMPLEX tasks — not even with `yolo: true`, not even if the user's brief is detailed
 - Do not skip a workflow step without explicit user agreement
 - Do not launch an agent without providing the necessary inputs
 - Do not ignore a missing output — always alert

@@ -1050,16 +1050,17 @@ console.log('\nTest 28: Startup profile + COMPLEX methodology coherence');
     assert(!yoloBeforeNext.includes('@captain-america'), 'YOLO section should not hardcode @captain-america when scrum not in profile');
   });
 
-  test('Startup YOLO: routing.md mentions all 5 phases', () => {
+  test('Startup YOLO: routing.md mentions all 6 phases', () => {
     const routing = fs.readFileSync(path.join(dir, '.claude', 'rules', 'routing.md'), 'utf-8');
-    assert(routing.includes('5 phases'), 'routing.md should say 5 phases');
+    assert(routing.includes('6 phases'), 'routing.md should say 6 phases');
+    assert(routing.includes('BRAINSTORM'), 'routing.md should include BRAINSTORM phase');
     assert(routing.includes('CLOSE'), 'routing.md should include CLOSE phase');
   });
 
   cleanTmpDir();
 }
 
-// ── Test 29: /go skill says 5 phases ────────────────────────────────────────
+// ── Test 29: /go skill phase coherence ──────────────────────────────────────
 
 console.log('\nTest 29: /go skill phase coherence');
 {
@@ -1069,10 +1070,12 @@ console.log('\nTest 29: /go skill phase coherence');
   fs.writeFileSync(path.join(dir, '.assemble.yaml'), config);
   run(['--project', dir, '--update']);
 
-  test('/go SKILL.md says 5 phases, not 4', () => {
+  test('/go SKILL.md says 6 phases including BRAINSTORM', () => {
     const go = fs.readFileSync(path.join(dir, '.claude', 'skills', 'go', 'SKILL.md'), 'utf-8');
-    assert(go.includes('5 phases'), '/go should mention 5 phases');
+    assert(go.includes('6 phases'), '/go should mention 6 phases');
+    assert(go.includes('BRAINSTORM'), '/go should mention BRAINSTORM');
     assert(!go.includes('4 phases'), '/go should NOT mention 4 phases');
+    assert(!go.includes('5 phases'), '/go should NOT mention 5 phases');
   });
 
   cleanTmpDir();

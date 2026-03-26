@@ -282,7 +282,8 @@ function renderCommandRegistry(agents, skills, workflows, governance = 'none', y
   out += 'For every `/go` request, assess complexity:\n';
   out += '- **TRIVIAL**: single agent, direct answer\n';
   out += '- **MODERATE**: 2-3 agents, sequential execution\n';
-  out += '- **COMPLEX**: Spec-Driven Methodology with 5 phases:\n';
+  out += '- **COMPLEX**: Spec-Driven Methodology with 6 phases:\n';
+  out += '  0. BRAINSTORM → brainstorm.md (multi-agent analysis of the brief)\n';
   out += '  1. SPECIFY → spec.md → user validates\n';
   out += '  2. PLAN → plan.md → user validates\n';
   out += '  3. TASKS → tasks.md → user validates\n';
@@ -295,7 +296,8 @@ function renderCommandRegistry(agents, skills, workflows, governance = 'none', y
     out += '\n### YOLO Mode (ACTIVE)\n\n';
     out += 'YOLO mode removes validation pauses between phases — it does NOT remove the phases themselves.\n\n';
     out += '**What YOLO changes:** no user approval required between workflow steps. Agents chain automatically.\n\n';
-    out += '**What YOLO does NOT change — COMPLEX tasks MUST follow all 5 phases:**\n';
+    out += '**What YOLO does NOT change — COMPLEX tasks MUST follow all 6 phases:**\n';
+    out += '- BRAINSTORM → produce brainstorm.md (Jarvis selects relevant agents for multi-agent analysis)\n';
     out += '- SPECIFY → produce spec.md (delegate to PM agent, or closest available)\n';
     out += '- PLAN → produce plan.md (delegate to architect agent, or PM if unavailable)\n';
     out += '- TASKS → produce tasks.md (delegate to scrum agent, or PM if unavailable)\n';
@@ -401,10 +403,12 @@ function renderRoutingRules(agents, workflows, config) {
   out += '**TRIVIAL** — Simple question, single agent, direct answer. Route to the most relevant agent.\n';
   out += '**MODERATE** — Clear task, 2-3 agents. Select agents, execute sequentially, produce deliverables.\n';
   out += '**COMPLEX** — Multi-domain, high stakes, ambitious. Apply Spec-Driven Methodology:\n\n';
+  out += '0. **BRAINSTORM** (Jarvis + relevant agents) → brainstorm.md → multi-agent analysis\n';
   out += '1. **SPECIFY** (@professor-x) → spec.md → user validates\n';
   out += '2. **PLAN** (@tony-stark) → plan.md → user validates\n';
   out += '3. **TASKS** (@captain-america) → tasks.md → user validates\n';
-  out += '4. **IMPLEMENT** (Dev agents) → code + tests\n\n';
+  out += '4. **IMPLEMENT** (Dev agents) → code + tests\n';
+  out += '5. **CLOSE** (Jarvis) → _quality.md\n\n';
 
   // Domain mapping
   out += '## Domain → Agent Mapping\n\n';
@@ -475,9 +479,10 @@ function renderRoutingRules(agents, workflows, config) {
     out += '- If a step produces incomplete or incorrect output, iterate and fix before moving on\n';
     out += '- Use all available tools to verify your own work\n\n';
     out += '**What YOLO does NOT change — the Spec-Driven Methodology remains MANDATORY for COMPLEX tasks:**\n';
-    out += '- You MUST execute all 5 phases in sequence: SPECIFY → PLAN → TASKS → IMPLEMENT → CLOSE\n';
-    out += '- You MUST produce each deliverable: spec.md, plan.md, tasks.md before any implementation\n';
+    out += '- You MUST execute all 6 phases in sequence: BRAINSTORM → SPECIFY → PLAN → TASKS → IMPLEMENT → CLOSE\n';
+    out += '- You MUST produce each deliverable: brainstorm.md, spec.md, plan.md, tasks.md before any implementation\n';
     out += '- You MUST delegate each phase to the most relevant available agent:\n';
+    out += '  0. BRAINSTORM → Jarvis selects 3-8 relevant agents (+ Deadpool), launches multi-agent analysis (produce brainstorm.md)\n';
     out += `  1. SPECIFY → delegate to PM agent${specAgent} (produce spec.md)\n`;
     out += `  2. PLAN → delegate to architect agent${planAgent}${!availableIds.has('architect') ? ', or PM if unavailable' : ''} (produce plan.md)\n`;
     out += `  3. TASKS → delegate to scrum agent${tasksAgent}${!availableIds.has('scrum') ? ', or PM if unavailable' : ''} (produce tasks.md)\n`;
@@ -525,6 +530,7 @@ function renderRoutingRules(agents, workflows, config) {
   out += '## Sub-Agent Delegation\n\n';
   out += 'Jarvis orchestrates — he does NOT do the work. For every workflow step, Jarvis MUST delegate to the appropriate agent.\n\n';
   out += '**For COMPLEX tasks, delegation is MANDATORY:**\n';
+  out += '- BRAINSTORM: Jarvis selects 3-8 relevant agents (+ Deadpool), launches multi-agent analysis (produce brainstorm.md)\n';
   out += '- SPECIFY: delegate to PM agent (produce spec.md)\n';
   out += '- PLAN: delegate to architect agent, or PM if architect is not available (produce plan.md)\n';
   out += '- TASKS: delegate to scrum agent, or PM if scrum is not available (produce tasks.md)\n';
