@@ -8,6 +8,7 @@ on:
       - 'bin/**'
       - 'generator/**'
       - 'src/**'
+  workflow_dispatch:
 
 jobs:
   publish:
