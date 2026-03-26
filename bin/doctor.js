@@ -39,7 +39,7 @@ try {
   // Fallback: inline minimal parser if config-loader is unavailable
   loadConfig = function fallbackLoadConfig(configPath) {
     if (!configPath || !fs.existsSync(configPath)) return {};
-    const raw = fs.readFileSync(configPath, 'utf-8');
+    const raw = fs.readFileSync(configPath, 'utf-8').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
     const config = {};
     for (const line of raw.split('\n')) {
       const match = line.match(/^(\w[\w_]*):\s*(.+)$/);

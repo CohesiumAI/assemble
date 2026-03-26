@@ -58,19 +58,11 @@ function resolveProfile(config) {
 
   // Profile provides defaults only — explicit config keys always win
   if (!explicit.has('agents')) {
-    if (Array.isArray(profile.agents)) {
-      resolved.agents = profile.agents.join(', ');
-    } else {
-      resolved.agents = profile.agents;
-    }
+    resolved.agents = profile.agents;
   }
 
   if (!explicit.has('workflows')) {
-    if (Array.isArray(profile.workflows)) {
-      resolved.workflows = profile.workflows.join(', ');
-    } else {
-      resolved.workflows = profile.workflows;
-    }
+    resolved.workflows = profile.workflows;
   }
 
   if (!explicit.has('governance')) {

@@ -11,13 +11,14 @@
 
 const fs = require('fs');
 const path = require('path');
-const { loadAgents, loadSkills, loadWorkflows, loadCommands, loadOrchestrator } = require('./lib/parser');
+const { loadAgents, loadSkills, loadWorkflows, loadCommands, loadOrchestrator, parseFlatYaml, normalizeLineEndings } = require('./lib/parser');
 const { prepareAgent } = require('./lib/template-engine');
 const { validateOutput } = require('./lib/validator');
 const { resolveProfile } = require('./lib/profiles');
 const { generateMCPServer } = require('./lib/mcp-generator');
 const { generateUniversalAgentsMd } = require('./lib/agents-md-generator');
 const { loadConfig: _loadConfig, DEFAULTS: _DEFAULTS } = require('./lib/config-loader');
+const { validateAll } = require('./lib/schema-validator');
 
 // ─── Default configuration ──────────────────────────────────────────────────
 
@@ -264,8 +265,10 @@ function generate() {
 
   let agents = loadAgents(AGENTS_DIR);
   // Filter agents if config specifies a subset (not "all")
-  if (config.agents && config.agents !== 'all' && typeof config.agents === 'string') {
-    const selectedIds = config.agents.split(/[\s,]+/).filter(Boolean);
+  if (config.agents && config.agents !== 'all') {
+    const selectedIds = Array.isArray(config.agents)
+      ? config.agents
+      : String(config.agents).split(/[\s,]+/).filter(Boolean);
     if (selectedIds.length > 0) {
       agents = agents.filter(a => {
         const id = (a.fileName || '').replace(/^AGENT-/, '').replace(/\.md$/, '');
@@ -304,16 +307,15 @@ function generate() {
   if (fs.existsSync(customSkillsDir)) {
     const customSkillFiles = fs.readdirSync(customSkillsDir).filter(f => f.endsWith('.md'));
     for (const file of customSkillFiles) {
-      const content = fs.readFileSync(path.join(customSkillsDir, file), 'utf-8');
-      const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
-      const meta = {};
+      const rawContent = normalizeLineEndings(
+        fs.readFileSync(path.join(customSkillsDir, file), 'utf-8').replace(/^\uFEFF/, '')
+      );
+      const fmMatch = rawContent.match(/^---\n([\s\S]*?)\n---/);
+      let meta = {};
       if (fmMatch) {
-        for (const line of fmMatch[1].split('\n')) {
-          const m = line.match(/^(\w+):\s*"?([^"\n]+)"?/);
-          if (m) meta[m[1]] = m[2].trim();
-        }
+        meta = parseFlatYaml(fmMatch[1]);
       }
-      skills.specific.push({ fileName: file, meta, content, raw: content, sections: {} });
+      skills.specific.push({ fileName: file, meta, content: rawContent, raw: rawContent, sections: {} });
     }
     if (customSkillFiles.length > 0) {
       console.log(`  ✓ ${customSkillFiles.length} custom skills loaded from .assemble/skills/`);
@@ -322,8 +324,10 @@ function generate() {
 
   let workflows = loadWorkflows(WORKFLOWS_DIR);
   // Filter workflows if config specifies a subset (not "all")
-  if (config.workflows && config.workflows !== 'all' && typeof config.workflows === 'string') {
-    const selectedWfs = config.workflows.split(/[\s,]+/).filter(Boolean);
+  if (config.workflows && config.workflows !== 'all') {
+    const selectedWfs = Array.isArray(config.workflows)
+      ? config.workflows
+      : String(config.workflows).split(/[\s,]+/).filter(Boolean);
     if (selectedWfs.length > 0) {
       workflows = workflows.filter(w => {
         const id = (w.fileName || '').replace(/\.(yaml|yml)$/, '');
@@ -360,6 +364,24 @@ function generate() {
 
   const orchestrator = loadOrchestrator(ORCHESTRATOR_DIR);
   console.log(`  ✓ Orchestrator loaded`);
+
+  // ─── Schema validation ──────────────────────────────────────────────────
+  console.log('🔍 Validating sources...');
+  const validation = validateAll({ agents, skills, workflows, config });
+  if (validation.warnings.length > 0) {
+    for (const w of validation.warnings) {
+      console.log(`  ⚠️  ${w}`);
+    }
+  }
+  if (!validation.valid) {
+    console.error('❌ Schema validation failed:');
+    for (const e of validation.errors) {
+      console.error(`  - ${e}`);
+    }
+    process.exit(1);
+  }
+  console.log(`  ✓ All sources valid (${agents.length} agents, ${workflows.length} workflows, ${(skills.shared || []).length + (skills.specific || []).length} skills)`);
+  console.log('');
 
   // Prepare agents (language + output injection)
   const preparedAgents = agents.map(a => prepareAgent(a, config));
@@ -590,7 +612,8 @@ Log of all agent actions for governance compliance. Required by \`governance: st
       if (!adapter || !adapter.getOutputPaths) continue;
       const paths = adapter.getOutputPaths(projectDir, { agents: preparedAgents, skills, workflows, config });
       for (const p of paths) {
-        const rel = path.relative(projectDir, p);
+        // Normalize to forward slashes for cross-platform manifest consistency
+        const rel = path.relative(projectDir, p).replace(/\\/g, '/');
         manifestFiles.push(rel);
         // Track parent directories
         let dir = path.dirname(rel);
@@ -602,7 +625,7 @@ Log of all agent actions for governance compliance. Required by \`governance: st
     }
     const manifest = {
       generated_at: new Date().toISOString(),
-      generator_version: '1.0.0-beta.3',
+      generator_version: '1.0.0-beta.4',
       platforms: config.platforms,
       files: manifestFiles,
       directories: [...manifestDirs].sort(),
@@ -622,14 +645,14 @@ Log of all agent actions for governance compliance. Required by \`governance: st
 # Update:     npx cohesiumai-assemble --update
 # Regenerate: node generate.js --config .assemble.yaml
 
-version: "1.0.0-beta.3"
+version: "1.0.0-beta.4"
 profile: "${config.profile || 'custom'}"
 langue_equipe: "${config.langue_equipe}"
 langue_output: "${config.langue_output}"
 output_dir: "${config.output_dir}"
 platforms: [${config.platforms.join(', ')}]
-agents: ${config.agents || 'all'}
-workflows: ${config.workflows || 'all'}
+agents: ${Array.isArray(config.agents) ? config.agents.join(', ') : (config.agents || 'all')}
+workflows: ${Array.isArray(config.workflows) ? config.workflows.join(', ') : (config.workflows || 'all')}
 governance: "${config.governance || 'none'}"
 yolo: ${config.yolo ? 'true' : 'false'}
 mcp: ${config.mcp ? 'true' : 'false'}

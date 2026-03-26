@@ -1,9 +1,11 @@
 /**
  * Assemble — Configuration Loader
  * Parses .assemble.yaml files with boolean support and explicit key tracking.
+ * Zero external dependencies.
  */
 
 const fs = require('fs');
+const { parseFlatYaml, normalizeLineEndings } = require('./parser');
 
 const DEFAULTS = {
   langue_equipe: 'english',
@@ -25,26 +27,16 @@ function loadConfig(configPath) {
     return { ...DEFAULTS };
   }
 
-  const raw = fs.readFileSync(configPath, 'utf-8');
+  const raw = normalizeLineEndings(fs.readFileSync(configPath, 'utf-8'));
   const config = { ...DEFAULTS };
   const explicitKeys = new Set();
 
-  for (const line of raw.split('\n')) {
-    const match = line.match(/^(\w[\w_]*):\s*(.+)$/);
-    if (!match) continue;
+  const parsed = parseFlatYaml(raw);
 
-    const [, key, value] = match;
+  for (const [key, value] of Object.entries(parsed)) {
+    if (key.startsWith('_')) continue;
     explicitKeys.add(key);
-    if (value.startsWith('[')) {
-      config[key] = value.slice(1, -1).split(',').map(v => v.trim().replace(/["']/g, ''));
-    } else if (value === 'all') {
-      config[key] = 'all';
-    } else {
-      const cleaned = value.replace(/["']/g, '').trim();
-      if (cleaned === 'true') config[key] = true;
-      else if (cleaned === 'false') config[key] = false;
-      else config[key] = cleaned;
-    }
+    config[key] = value;
   }
 
   config._explicitKeys = explicitKeys;

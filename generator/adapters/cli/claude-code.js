@@ -142,11 +142,11 @@ module.exports = {
       content += 'user-invocable: true\n';
       content += '---\n\n';
       content += '# /go — Jarvis Smart Routing\n\n';
-      content += 'Read and apply the routing rules from `.claude/rules/routing.md`.\n\n';
+      content += 'Read and apply the routing rules from `.claude/rules/routing.md` and `.claude/rules/orchestrator.md`.\n\n';
       content += '1. Assess complexity of the request (TRIVIAL / MODERATE / COMPLEX)\n';
       content += '2. Select the appropriate agent(s) or workflow\n';
-      content += '3. For COMPLEX tasks, apply the Spec-Driven Methodology (SPECIFY → PLAN → TASKS → IMPLEMENT)\n';
-      content += '4. Use the Agent tool to launch @agent-name as a sub-agent for each workflow step\n';
+      content += '3. For COMPLEX tasks, the Spec-Driven Methodology is MANDATORY — all 4 phases must be executed in sequence, each delegated to its designated agent. No phase may be skipped, even if the brief seems complete. See routing.md for details.\n';
+      content += '4. Delegate each step to the designated agent via the Agent tool — Jarvis orchestrates, agents produce\n';
       content += '5. Execute with full agent context from `.claude/agents/`\n\n';
       content += 'User request: $ARGUMENTS\n';
       fs.writeFileSync(path.join(dir, 'SKILL.md'), content, 'utf-8');

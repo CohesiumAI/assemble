@@ -18,25 +18,33 @@ function ls(projectDir) {
     process.exit(1);
   }
 
-  const content = fs.readFileSync(configPath, 'utf-8');
-
-  // Parse config fields (uses string search to avoid regex injection)
-  const parse = (key) => {
+  // Use shared config loader with inline fallback
+  let config;
+  try {
+    const { loadConfig } = require(path.join(__dirname, '..', 'generator', 'lib', 'config-loader'));
+    config = loadConfig(configPath);
+  } catch {
+    // Fallback: minimal line-based parser
+    const content = fs.readFileSync(configPath, 'utf-8').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    config = {};
     for (const line of content.split('\n')) {
-      if (line.startsWith(key + ':')) {
-        const val = line.slice(key.length + 1).trim().replace(/["']/g, '');
-        if (val.startsWith('[')) return val.slice(1, -1).split(',').map(v => v.trim());
-        return val;
+      if (line.startsWith('#') || !line.includes(':')) continue;
+      const idx = line.indexOf(':');
+      const key = line.slice(0, idx).trim();
+      const val = line.slice(idx + 1).trim().replace(/["']/g, '');
+      if (val.startsWith('[')) {
+        config[key] = val.slice(1, -1).split(',').map(v => v.trim());
+      } else {
+        config[key] = val;
       }
     }
-    return null;
-  };
+  }
 
-  const platforms = parse('platforms') || [];
-  const agents = parse('agents') || 'all';
-  const workflows = parse('workflows') || 'all';
-  const governance = parse('governance') || 'none';
-  const profile = parse('profile') || 'custom';
+  const platforms = config.platforms || [];
+  const agents = config.agents || 'all';
+  const workflows = config.workflows || 'all';
+  const governance = config.governance || 'none';
+  const profile = config.profile || 'custom';
 
   console.log('');
   console.log('📦 Assemble — Active Configuration\n');

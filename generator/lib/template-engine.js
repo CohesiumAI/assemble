@@ -293,12 +293,16 @@ function renderCommandRegistry(agents, skills, workflows, governance = 'none', y
   // YOLO mode (if enabled)
   if (yolo) {
     out += '\n### YOLO Mode (ACTIVE)\n\n';
-    out += 'This project has YOLO mode enabled. Jarvis chains all workflow steps **without pausing for validation**:\n\n';
-    out += '**Non-interactive chaining:**\n';
-    out += '- Execute ALL workflow steps sequentially without waiting for user validation between steps\n';
-    out += '- For COMPLEX tasks: produce spec.md, plan.md, tasks.md and proceed to IMPLEMENT immediately — do NOT pause for approval\n';
-    out += '- Chain agents automatically: each agent reads the previous agent\'s outputs and continues\n';
-    out += '- If a step produces incomplete output, iterate and fix before moving to the next step\n\n';
+    out += 'YOLO mode removes validation pauses between phases — it does NOT remove the phases themselves.\n\n';
+    out += '**What YOLO changes:** no user approval required between workflow steps. Agents chain automatically.\n\n';
+    out += '**What YOLO does NOT change — COMPLEX tasks MUST follow all 5 phases:**\n';
+    out += '- SPECIFY (PM agent) → produce spec.md\n';
+    out += '- PLAN (architect agent) → produce plan.md\n';
+    out += '- TASKS (scrum/project agent) → produce tasks.md\n';
+    out += '- IMPLEMENT (specialist dev agents) → code + tests\n';
+    out += '- CLOSE (Jarvis) → produce _quality.md\n';
+    out += '- Do NOT skip any phase. Do NOT jump to IMPLEMENT even if the brief seems complete.\n';
+    out += '- Delegate each phase to the most relevant available agent.\n\n';
     out += '**Mandatory stop conditions — ALWAYS pause and ask the user:**\n';
     out += '- 🔴 **Destructive production actions**: deployments to production, database migrations on live data, irreversible deletions\n';
     out += '- 🔴 **Missing information**: when the agent cannot proceed without human input (credentials, business decisions, ambiguous requirements)\n';
@@ -457,14 +461,30 @@ function renderRoutingRules(agents, workflows, config) {
 
   // YOLO mode
   if (config && config.yolo) {
+    // Build agent availability set for conditional @mentions
+    const availableIds = new Set((agents || []).map(a => agentId(a)));
+    const specAgent = availableIds.has('pm') ? ' (@professor-x)' : '';
+    const planAgent = availableIds.has('architect') ? ' (@tony-stark)' : '';
+    const tasksAgent = availableIds.has('scrum') ? ' (@captain-america)' : '';
+
     out += '## YOLO Mode (ACTIVE)\n\n';
-    out += 'This project runs in **non-interactive chaining mode**. Jarvis orchestrates the full workflow without pausing for human validation.\n\n';
-    out += '**Behavior:**\n';
-    out += '- Execute all workflow steps end-to-end without stopping between steps\n';
-    out += '- For COMPLEX tasks: produce spec.md → plan.md → tasks.md → implement — all in one continuous flow\n';
+    out += 'This project runs in **non-interactive chaining mode**. Jarvis orchestrates the full workflow without pausing for human validation **between phases**.\n\n';
+    out += '**What YOLO changes:**\n';
+    out += '- YOLO removes the validation pauses between phases — you do NOT wait for user approval between steps\n';
     out += '- Each agent reads the previous agent\'s outputs and proceeds immediately\n';
     out += '- If a step produces incomplete or incorrect output, iterate and fix before moving on\n';
-    out += '- Use all available tools (Agent tool, MCP servers, file system) to verify your own work\n\n';
+    out += '- Use all available tools to verify your own work\n\n';
+    out += '**What YOLO does NOT change — the Spec-Driven Methodology remains MANDATORY for COMPLEX tasks:**\n';
+    out += '- You MUST execute all 5 phases in sequence: SPECIFY → PLAN → TASKS → IMPLEMENT → CLOSE\n';
+    out += '- You MUST produce each deliverable: spec.md, plan.md, tasks.md before any implementation\n';
+    out += '- You MUST delegate each phase to the most relevant available agent:\n';
+    out += `  1. SPECIFY → delegate to the PM agent${specAgent} (produce spec.md)\n`;
+    out += `  2. PLAN → delegate to the architect agent${planAgent} (produce plan.md)\n`;
+    out += `  3. TASKS → delegate to the scrum/project agent${tasksAgent} (produce tasks.md)\n`;
+    out += '  4. IMPLEMENT → delegate to the appropriate specialist agents\n';
+    out += '  5. CLOSE → Jarvis produces _quality.md\n';
+    out += '- Do NOT skip any phase, even if the user\'s brief seems detailed enough to jump to implementation\n';
+    out += '- Do NOT do the work yourself — delegate to specialist agents\n\n';
     out += '**MANDATORY STOPS — always pause and ask the human:**\n';
     out += '- 🔴 Destructive production actions (deploy to prod, migrate live DB, irreversible deletes)\n';
     out += '- 🔴 Missing information only a human can provide (credentials, business decisions, ambiguous requirements)\n';
@@ -503,11 +523,20 @@ function renderRoutingRules(agents, workflows, config) {
 
   // Sub-Agent Delegation
   out += '## Sub-Agent Delegation\n\n';
-  out += 'When a task requires a specific agent\'s expertise during workflow execution:\n';
-  out += '- Use the Agent tool (if available) to launch `@agent-name` as a sub-agent\n';
+  out += 'Jarvis orchestrates — he does NOT do the work. For every workflow step, Jarvis MUST delegate to the appropriate agent.\n\n';
+  out += '**For COMPLEX tasks, delegation is MANDATORY:**\n';
+  out += '- SPECIFY: delegate to the PM agent (produce spec.md)\n';
+  out += '- PLAN: delegate to the architect agent (produce plan.md)\n';
+  out += '- TASKS: delegate to the scrum/project agent (produce tasks.md)\n';
+  out += '- IMPLEMENT: delegate to the appropriate specialist agents (not a single generalist)\n';
+  out += '- CLOSE: Jarvis produces _quality.md\n';
+  out += '- Each agent works autonomously on its designated phase and returns results\n\n';
+  out += '**Delegation rules:**\n';
+  out += '- When the Agent tool is available, use it to launch `@agent-name` as a sub-agent\n';
+  out += '- When the Agent tool is not available, adopt the agent\'s role by reading its definition\n';
   out += '- Provide full context: current workflow step, inputs available, expected outputs\n';
   out += '- The sub-agent works autonomously and returns results to the parent workflow\n';
-  out += '- For CLI platforms with Agent tool support, prefer sub-agent delegation over role-switching\n\n';
+  out += '- Do NOT do the work yourself — Jarvis orchestrates, agents produce\n\n';
 
   // Persistence
   out += '## Persistence Behavior\n\n';

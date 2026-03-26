@@ -23,21 +23,11 @@ function diff(projectDir) {
   // Reuse the generator's loader and parser for accurate results
   const generatorDir = path.join(__dirname, '..', 'generator');
   const { loadAgents, loadSkills, loadWorkflows } = require(path.join(generatorDir, 'lib', 'parser'));
+  const { loadConfig } = require(path.join(generatorDir, 'lib', 'config-loader'));
   const srcDir = path.join(__dirname, '..', 'src');
 
-  // Parse config
-  const raw = fs.readFileSync(configPath, 'utf-8');
-  const config = {};
-  for (const line of raw.split('\n')) {
-    const match = line.match(/^(\w[\w_]*):\s*(.+)$/);
-    if (!match) continue;
-    const [, key, value] = match;
-    if (value.startsWith('[')) {
-      config[key] = value.slice(1, -1).split(',').map(v => v.trim().replace(/["']/g, ''));
-    } else {
-      config[key] = value.replace(/["']/g, '').trim();
-    }
-  }
+  // Parse config using the shared loader
+  const config = loadConfig(configPath);
 
   const platforms = config.platforms || [];
   if (platforms.length === 0) {
@@ -75,7 +65,8 @@ function diff(projectDir) {
     // Pass real data so adapters can enumerate all output paths
     const paths = adapter.getOutputPaths(projectDir, { agents, skills, workflows, config });
     for (const p of paths) {
-      const rel = path.relative(projectDir, p);
+      // Normalize to forward slashes for consistent cross-platform display
+      const rel = path.relative(projectDir, p).replace(/\\/g, '/');
       if (fs.existsSync(p)) {
         modified.push(`[${platform}] ${rel}`);
       } else {
@@ -88,18 +79,19 @@ function diff(projectDir) {
   const crossPlatform = [
     [config.output_dir || './assemble-output', 'AGENTS.md'],
   ];
-  if (config.mcp === 'true') {
+  if (config.mcp === true) {
     crossPlatform.push(['.assemble', 'mcp-server.js'], ['.assemble', 'mcp.json'], ['.assemble', 'mcp-package.json']);
   }
-  if (config.memory === 'true') {
+  if (config.memory === true) {
     crossPlatform.push([config.output_dir || './assemble-output', '_memory.md']);
   }
-  if (config.metrics === 'true') {
+  if (config.metrics === true) {
     crossPlatform.push([config.output_dir || './assemble-output', '_metrics.md']);
   }
   for (const parts of crossPlatform) {
     const p = path.join(projectDir, ...parts);
-    const rel = path.relative(projectDir, p);
+    // Normalize to forward slashes for consistent cross-platform display
+    const rel = path.relative(projectDir, p).replace(/\\/g, '/');
     if (fs.existsSync(p)) {
       modified.push(`[cross-platform] ${rel}`);
     } else {

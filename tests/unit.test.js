@@ -264,6 +264,197 @@ test('returns empty array for empty input', () => {
   assert(parseWorkflowSteps(null).length === 0, 'null should be empty');
 });
 
+// ─── schema-validator ───────────────────────────────────────────────────
+
+const { validateAgent, validateWorkflow, validateSkill, validateConfig, validateAll } = require('../generator/lib/schema-validator');
+
+console.log('\nvalidateAgent()');
+
+test('valid agent passes validation', () => {
+  const agent = {
+    meta: { name: 'tony-stark', description: 'Architect', marvel: 'Tony Stark' },
+    content: 'A'.repeat(60),
+    sections: { 'Identity': 'I am Tony Stark' },
+    fileName: 'AGENT-architect.md',
+  };
+  const result = validateAgent(agent);
+  assert(result.valid, `expected valid, got errors: ${result.errors.join(', ')}`);
+});
+
+test('agent missing required fields fails', () => {
+  const agent = { meta: { name: 'test' }, content: 'short', sections: {}, fileName: 'AGENT-test.md' };
+  const result = validateAgent(agent);
+  assert(!result.valid, 'should fail');
+  assert(result.errors.some(e => e.includes('description')), 'should mention description');
+  assert(result.errors.some(e => e.includes('marvel')), 'should mention marvel');
+});
+
+console.log('\nvalidateWorkflow()');
+
+test('valid workflow passes validation', () => {
+  const wf = {
+    raw: 'name: test-wf\ndescription: "Test workflow"\ntrigger: /test\nsteps:\n  - step: 1\n    agent: pm\n    action: "Do something"\n    outputs: [spec.md]\n',
+    fileName: 'test-wf.yaml',
+  };
+  const result = validateWorkflow(wf, ['pm', 'architect']);
+  assert(result.valid, `expected valid, got errors: ${result.errors.join(', ')}`);
+});
+
+test('workflow with unknown agent produces warning', () => {
+  const wf = {
+    raw: 'name: test-wf\ndescription: "Test"\ntrigger: /test\nsteps:\n  - step: 1\n    agent: nonexistent\n    action: "Do"\n    outputs: [out.md]\n',
+    fileName: 'test-wf.yaml',
+  };
+  const result = validateWorkflow(wf, ['pm', 'architect']);
+  assert(result.valid, 'should be valid (unknown agent is a warning, not error)');
+  assert(result.warnings.some(w => w.includes('nonexistent')), 'should warn about unknown agent');
+});
+
+test('workflow with invalid YAML fails', () => {
+  const wf = { raw: '{{invalid yaml', fileName: 'bad.yaml' };
+  const result = validateWorkflow(wf);
+  assert(!result.valid, 'should fail');
+});
+
+console.log('\nvalidateConfig()');
+
+test('valid config passes', () => {
+  const config = { governance: 'standard', profile: 'startup', platforms: ['cursor', 'claude-code'] };
+  const result = validateConfig(config);
+  assert(result.valid, `expected valid, got errors: ${result.errors.join(', ')}`);
+});
+
+test('invalid governance enum fails', () => {
+  const config = { governance: 'ultra', profile: 'custom' };
+  const result = validateConfig(config);
+  assert(!result.valid, 'should fail');
+  assert(result.errors.some(e => e.includes('governance')), 'should mention governance');
+});
+
+test('unknown platform produces warning', () => {
+  const config = { platforms: ['cursor', 'unknown-ide'] };
+  const result = validateConfig(config);
+  assert(result.warnings.some(w => w.includes('unknown-ide')), 'should warn about unknown platform');
+});
+
+console.log('\nvalidateAll()');
+
+test('validates full source set', () => {
+  const agents = [{
+    meta: { name: 'pm', description: 'Product Manager', marvel: 'Professor X' },
+    content: 'A'.repeat(60),
+    sections: { 'Identity': 'I am PM' },
+    fileName: 'AGENT-pm.md',
+  }];
+  const skills = { shared: [], specific: [] };
+  const workflows = [{
+    raw: 'name: test\ndescription: "Test"\ntrigger: /test\nsteps:\n  - step: 1\n    agent: pm\n    action: "Plan"\n    outputs: [plan.md]\n',
+    fileName: 'test.yaml',
+  }];
+  const config = { governance: 'none', profile: 'custom', platforms: ['cursor'] };
+  const result = validateAll({ agents, skills, workflows, config });
+  assert(result.valid, `expected valid, got errors: ${result.errors.join(', ')}`);
+});
+
+// ─── loadConfig — robust YAML parsing ───────────────────────────────────
+
+console.log('\nloadConfig() — robust YAML parsing');
+
+test('loadConfig handles YAML with colons in values', () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'assemble-unit-'));
+  const configPath = path.join(tmpDir, 'test.yaml');
+  fs.writeFileSync(configPath, 'output_dir: "./my-output"\ndescription: "A tool: for agents"\n');
+
+  const config = loadConfig(configPath);
+
+  assert(config.output_dir === './my-output', `output_dir should be ./my-output, got: ${config.output_dir}`);
+  assert(config.description === 'A tool: for agents', `description should handle colons, got: ${config.description}`);
+  fs.rmSync(tmpDir, { recursive: true, force: true });
+});
+
+test('loadConfig handles Windows-style line endings', () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'assemble-unit-'));
+  const configPath = path.join(tmpDir, 'test.yaml');
+  fs.writeFileSync(configPath, 'mcp: true\r\nmemory: false\r\nplatforms: [cursor, cline]\r\n');
+
+  const config = loadConfig(configPath);
+
+  assert(config.mcp === true, `mcp should be true, got: ${config.mcp}`);
+  assert(config.memory === false, `memory should be false, got: ${config.memory}`);
+  assert(Array.isArray(config.platforms), 'platforms should be array');
+  assert(config.platforms.length === 2, `expected 2 platforms, got ${config.platforms.length}`);
+  fs.rmSync(tmpDir, { recursive: true, force: true });
+});
+
+// ─── loadConfig: YAML list format for agents/workflows ──────────────────
+
+console.log('\nloadConfig() — YAML list format');
+
+test('loadConfig returns arrays for YAML sequence agents', () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'assemble-unit-'));
+  const configPath = path.join(tmpDir, 'test.yaml');
+  fs.writeFileSync(configPath, 'agents:\n  - pm\n  - architect\n  - qa\n');
+
+  const config = loadConfig(configPath);
+
+  assert(Array.isArray(config.agents), `agents should be array, got: ${typeof config.agents}`);
+  assert(config.agents.length === 3, `expected 3 agents, got ${config.agents.length}`);
+  assert(config.agents[0] === 'pm', `first agent should be pm, got ${config.agents[0]}`);
+  fs.rmSync(tmpDir, { recursive: true, force: true });
+});
+
+test('loadConfig returns arrays for YAML sequence workflows', () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'assemble-unit-'));
+  const configPath = path.join(tmpDir, 'test.yaml');
+  fs.writeFileSync(configPath, 'workflows:\n  - bug-fix\n  - feature-development\n');
+
+  const config = loadConfig(configPath);
+
+  assert(Array.isArray(config.workflows), `workflows should be array, got: ${typeof config.workflows}`);
+  assert(config.workflows.length === 2, `expected 2 workflows, got ${config.workflows.length}`);
+  assert(config.workflows.includes('bug-fix'), 'should include bug-fix');
+  fs.rmSync(tmpDir, { recursive: true, force: true });
+});
+
+// ─── resolveProfile: arrays preserved ───────────────────────────────────
+
+console.log('\nresolveProfile() — array preservation');
+
+test('startup profile returns agents as array', () => {
+  const config = { profile: 'startup', _explicitKeys: new Set(['profile']) };
+  const result = resolveProfile(config);
+  assert(Array.isArray(result.agents), `agents should be array, got: ${typeof result.agents}`);
+  assert(result.agents.includes('pm'), 'startup agents should include pm');
+});
+
+// ─── parseFlatYaml ──────────────────────────────────────────────────────
+
+const { parseFlatYaml, normalizeLineEndings } = require('../generator/lib/parser');
+
+console.log('\nparseFlatYaml()');
+
+test('handles frontmatter with unquoted colons', () => {
+  const input = 'name: my-skill\ndescription: A tool: for agents: everywhere';
+  const result = parseFlatYaml(input);
+  assert(result.name === 'my-skill', `name should be my-skill, got: ${result.name}`);
+  assert(result.description.includes('A tool'), `description should start with A tool, got: ${result.description}`);
+});
+
+test('handles CRLF line endings', () => {
+  const input = 'name: test\r\ndescription: hello world\r\n';
+  const result = parseFlatYaml(normalizeLineEndings(input));
+  assert(result.name === 'test', `name should be test, got: ${result.name}`);
+  assert(result.description === 'hello world', `description should be hello world, got: ${result.description}`);
+});
+
+test('handles YAML sequence format', () => {
+  const input = 'agents:\n  - pm\n  - architect\n  - qa\n';
+  const result = parseFlatYaml(input);
+  assert(Array.isArray(result.agents), `agents should be array, got: ${typeof result.agents}`);
+  assert(result.agents.length === 3, `expected 3 agents, got ${result.agents.length}`);
+  assert(result.agents[0] === 'pm', `first should be pm, got ${result.agents[0]}`);
+});
+
 // ─── Summary ─────────────────────────────────────────────────────────────
 
 console.log('');
