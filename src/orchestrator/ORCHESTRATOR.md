@@ -64,12 +64,14 @@ A detailed brief is an input to SPECIFY — it is not a substitute for SPECIFY.
 Delegate to the PM agent. Produce `spec.md`: objective, constraints, success criteria, out-of-scope.
 → **User validation required before continuing** (skipped when `yolo: true`).
 
-### Phase 2 — PLAN (Architect agent — Tony Stark / @tony-stark if available)
-Delegate to the architect agent. Produce `plan.md`: architecture, technical choices, agents involved, sequence.
+### Phase 2 — PLAN (Architect agent — Tony Stark / @tony-stark if available, otherwise PM)
+Delegate to the architect agent. If no architect is available, the PM agent handles this phase.
+Produce `plan.md`: architecture, technical choices, agents involved, sequence.
 → **User validation required before continuing** (skipped when `yolo: true`).
 
-### Phase 3 — TASKS (Scrum/project agent — Captain America / @captain-america if available)
-Delegate to the scrum or project management agent. Produce `tasks.md`: task breakdown, estimation, dependencies, priorities.
+### Phase 3 — TASKS (Scrum agent — Captain America / @captain-america if available, otherwise PM)
+Delegate to the scrum agent. If no scrum agent is available, the PM agent handles this phase.
+Produce `tasks.md`: task breakdown, estimation, dependencies, priorities.
 → **User validation required before continuing** (skipped when `yolo: true`).
 
 ### Phase 4 — IMPLEMENT (Development agents)

@@ -1025,6 +1025,59 @@ console.log('\nTest 27: YOLO mode');
   cleanTmpDir();
 }
 
+// ── Test 28: Startup profile + COMPLEX methodology coherence ────────────────
+
+console.log('\nTest 28: Startup profile + COMPLEX methodology coherence');
+{
+  const dir = createTmpDir();
+  fs.mkdirSync(dir, { recursive: true });
+  const config = `version: "1.0.0-beta.4"\nprofile: "startup"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\ngovernance: "none"\nyolo: true\ninstalled_at: "2026-03-20"\n`;
+  fs.writeFileSync(path.join(dir, '.assemble.yaml'), config);
+  run(['--project', dir, '--update']);
+
+  test('Startup YOLO: routing.md has PM fallback for missing agents', () => {
+    const routing = fs.readFileSync(path.join(dir, '.claude', 'rules', 'routing.md'), 'utf-8');
+    // Startup lacks scrum (captain-america), so fallback must be mentioned
+    assert(routing.includes('PM if unavailable'), 'routing.md should mention PM fallback for missing agents');
+  });
+
+  test('Startup YOLO: YOLO delegation section does not hardcode unavailable agents without fallback', () => {
+    const routing = fs.readFileSync(path.join(dir, '.claude', 'rules', 'routing.md'), 'utf-8');
+    // Extract only the YOLO Mode section
+    const yoloSection = routing.split('## YOLO Mode')[1] || '';
+    const yoloBeforeNext = yoloSection.split(/\n## /)[0] || '';
+    // In the YOLO delegation, @captain-america should NOT appear since scrum is not in startup
+    assert(!yoloBeforeNext.includes('@captain-america'), 'YOLO section should not hardcode @captain-america when scrum not in profile');
+  });
+
+  test('Startup YOLO: routing.md mentions all 5 phases', () => {
+    const routing = fs.readFileSync(path.join(dir, '.claude', 'rules', 'routing.md'), 'utf-8');
+    assert(routing.includes('5 phases'), 'routing.md should say 5 phases');
+    assert(routing.includes('CLOSE'), 'routing.md should include CLOSE phase');
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 29: /go skill says 5 phases ────────────────────────────────────────
+
+console.log('\nTest 29: /go skill phase coherence');
+{
+  const dir = createTmpDir();
+  fs.mkdirSync(dir, { recursive: true });
+  const config = `version: "1.0.0-beta.4"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nyolo: true\ninstalled_at: "2026-03-20"\n`;
+  fs.writeFileSync(path.join(dir, '.assemble.yaml'), config);
+  run(['--project', dir, '--update']);
+
+  test('/go SKILL.md says 5 phases, not 4', () => {
+    const go = fs.readFileSync(path.join(dir, '.claude', 'skills', 'go', 'SKILL.md'), 'utf-8');
+    assert(go.includes('5 phases'), '/go should mention 5 phases');
+    assert(!go.includes('4 phases'), '/go should NOT mention 4 phases');
+  });
+
+  cleanTmpDir();
+}
+
 // ── Summary ──────────────────────────────────────────────────────────────────
 
 console.log('');
