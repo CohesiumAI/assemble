@@ -139,7 +139,7 @@ hidden_shortcuts:
     visible: false
 
 # ═══════════════════════════════════════════
-# INTERNAL SKILLS (28 — accessible via /go, not as standalone commands)
+# INTERNAL SKILLS (29 — accessible via /go, not as standalone commands)
 # ═══════════════════════════════════════════
 
 internal_skills:

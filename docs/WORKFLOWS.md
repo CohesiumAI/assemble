@@ -35,6 +35,12 @@ Each workflow is an **ordered sequence of agents** where every step:
 3. **Produces outputs** — deliverables consumed by subsequent agents
 4. **Declares dependencies** — `depends_on` defines which steps must complete first
 
+### Spec-Driven implementation note
+
+For **COMPLEX** workflows, Phase 4 (**IMPLEMENT**) uses **Board Execution** instead of a purely linear handoff. Captain America generates a Kanban board in `_board.yaml`, then Jarvis executes dependency-ready tickets through **implement → review → test → done**. WIP limits and dependency resolution are enforced automatically so multiple tickets can progress in parallel without losing control.
+
+For simple workflows, execution remains linear — especially when there are fewer than 3 tickets and no meaningful dependencies.
+
 The Jarvis orchestrator manages this chaining automatically:
 - It injects context (inputs) before each agent starts
 - It verifies that expected outputs are produced

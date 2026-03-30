@@ -391,7 +391,7 @@ console.log('\nTest 8: Governance');
   // 8b: governance: standard — governance file generated
   const dirStd = createTmpDir();
   // Create a config with governance: standard, then run update
-  const configContent = `version: "1.0.0-beta.1"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "standard"\ninstalled_at: "2026-03-19"\n`;
+  const configContent = `version: "1.1.0-beta.3"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "standard"\ninstalled_at: "2026-03-19"\n`;
   fs.mkdirSync(dirStd, { recursive: true });
   fs.writeFileSync(path.join(dirStd, '.assemble.yaml'), configContent);
   run(['--project', dirStd, '--update']);
@@ -458,7 +458,7 @@ console.log('\nTest 10: Governance propagation (standard) across platforms');
 {
   const dir = createTmpDir();
   fs.mkdirSync(dir, { recursive: true });
-  const configContent = `version: "1.0.0-beta.1"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [cursor, auggie, codex, copilot]\nagents: all\nworkflows: all\ngovernance: "standard"\ninstalled_at: "2026-03-19"\n`;
+  const configContent = `version: "1.1.0-beta.3"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [cursor, auggie, codex, copilot]\nagents: all\nworkflows: all\ngovernance: "standard"\ninstalled_at: "2026-03-19"\n`;
   fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
   run(['--project', dir, '--update']);
 
@@ -493,7 +493,7 @@ console.log('\nTest 11: Team profiles');
 {
   const dir = createTmpDir();
   fs.mkdirSync(dir, { recursive: true });
-  const configContent = `version: "1.0.0-beta.1"\nprofile: "startup"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\ninstalled_at: "2026-03-19"\n`;
+  const configContent = `version: "1.1.0-beta.3"\nprofile: "startup"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\ninstalled_at: "2026-03-19"\n`;
   fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
   run(['--project', dir, '--update']);
 
@@ -519,7 +519,7 @@ console.log('\nTest 11b: Profile startup actually filters agents');
   const dir = createTmpDir();
   fs.mkdirSync(dir, { recursive: true });
   // Config with profile: startup but NO explicit agents/workflows keys
-  const configContent = `version: "1.0.0-beta.1"\nprofile: "startup"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\ninstalled_at: "2026-03-19"\n`;
+  const configContent = `version: "1.1.0-beta.3"\nprofile: "startup"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\ninstalled_at: "2026-03-19"\n`;
   fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
   run(['--project', dir, '--update']);
 
@@ -573,7 +573,7 @@ console.log('\nTest 13: MCP server generation');
 {
   const dir = createTmpDir();
   fs.mkdirSync(dir, { recursive: true });
-  const configContent = `version: "1.0.0-beta.1"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nmcp: true\ninstalled_at: "2026-03-19"\n`;
+  const configContent = `version: "1.1.0-beta.3"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nmcp: true\ninstalled_at: "2026-03-19"\n`;
   fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
   run(['--project', dir, '--update']);
 
@@ -604,7 +604,7 @@ console.log('\nTest 14: Cross-session memory');
 {
   const dir = createTmpDir();
   fs.mkdirSync(dir, { recursive: true });
-  const configContent = `version: "1.0.0-beta.1"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nmemory: true\ninstalled_at: "2026-03-19"\n`;
+  const configContent = `version: "1.1.0-beta.3"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nmemory: true\ninstalled_at: "2026-03-19"\n`;
   fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
   run(['--project', dir, '--update']);
 
@@ -626,7 +626,7 @@ console.log('\nTest 15: Metrics');
 {
   const dir = createTmpDir();
   fs.mkdirSync(dir, { recursive: true });
-  const configContent = `version: "1.0.0-beta.1"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nmetrics: true\ninstalled_at: "2026-03-19"\n`;
+  const configContent = `version: "1.1.0-beta.3"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nmetrics: true\ninstalled_at: "2026-03-19"\n`;
   fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
   run(['--project', dir, '--update']);
 
@@ -744,7 +744,7 @@ console.log('\nTest 19: Governance strict');
 {
   const dir = createTmpDir();
   fs.mkdirSync(dir, { recursive: true });
-  const configContent = `version: "1.0.0-beta.1"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "strict"\ninstalled_at: "2026-03-19"\n`;
+  const configContent = `version: "1.1.0-beta.3"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "strict"\ninstalled_at: "2026-03-19"\n`;
   fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
   run(['--project', dir, '--update']);
 
@@ -788,7 +788,7 @@ console.log('\nTest 21: Boolean config parsing');
 {
   const dir = createTmpDir();
   fs.mkdirSync(dir, { recursive: true });
-  const configContent = `version: "1.0.0-beta.1"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nmcp: false\nmemory: false\nmetrics: false\ninstalled_at: "2026-03-19"\n`;
+  const configContent = `version: "1.1.0-beta.3"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nmcp: false\nmemory: false\nmetrics: false\ninstalled_at: "2026-03-19"\n`;
   fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
   run(['--project', dir, '--update']);
 
@@ -889,7 +889,7 @@ module.exports = {
   fs.writeFileSync(path.join(pluginDir, 'test-plugin.js'), pluginCode);
 
   // Create config that uses the plugin adapter
-  const configContent = `version: "1.0.0-beta.1"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [test-plugin]\nagents: all\nworkflows: all\ngovernance: "none"\ninstalled_at: "2026-03-19"\n`;
+  const configContent = `version: "1.1.0-beta.3"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [test-plugin]\nagents: all\nworkflows: all\ngovernance: "none"\ninstalled_at: "2026-03-19"\n`;
   fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
 
   run(['--project', dir, '--update']);
@@ -910,7 +910,7 @@ console.log('\nTest 25: Audit trail for governance strict');
 {
   const dir = createTmpDir();
   fs.mkdirSync(dir, { recursive: true });
-  const configContent = `version: "1.0.0-beta.1"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "strict"\ninstalled_at: "2026-03-19"\n`;
+  const configContent = `version: "1.1.0-beta.3"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "strict"\ninstalled_at: "2026-03-19"\n`;
   fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
   run(['--project', dir, '--update']);
 
@@ -932,7 +932,7 @@ console.log('\nTest 26: MCP routing workflow coverage');
 {
   const dir = createTmpDir();
   fs.mkdirSync(dir, { recursive: true });
-  const configContent = `version: "1.0.0-beta.1"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nmcp: true\ninstalled_at: "2026-03-19"\n`;
+  const configContent = `version: "1.1.0-beta.3"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nmcp: true\ninstalled_at: "2026-03-19"\n`;
   fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
   run(['--project', dir, '--update']);
 
@@ -974,7 +974,7 @@ console.log('\nTest 27: YOLO mode');
   // 27a: yolo: false — no YOLO section
   const dirOff = createTmpDir();
   fs.mkdirSync(dirOff, { recursive: true });
-  const configOff = `version: "1.0.0-beta.1"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code, cursor]\nagents: all\nworkflows: all\ngovernance: "none"\nyolo: false\ninstalled_at: "2026-03-20"\n`;
+  const configOff = `version: "1.1.0-beta.3"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code, cursor]\nagents: all\nworkflows: all\ngovernance: "none"\nyolo: false\ninstalled_at: "2026-03-20"\n`;
   fs.writeFileSync(path.join(dirOff, '.assemble.yaml'), configOff);
   run(['--project', dirOff, '--update']);
 
@@ -993,7 +993,7 @@ console.log('\nTest 27: YOLO mode');
   // 27b: yolo: true — YOLO section present
   const dirOn = createTmpDir();
   fs.mkdirSync(dirOn, { recursive: true });
-  const configOn = `version: "1.0.0-beta.1"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code, cursor]\nagents: all\nworkflows: all\ngovernance: "none"\nyolo: true\ninstalled_at: "2026-03-20"\n`;
+  const configOn = `version: "1.1.0-beta.3"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code, cursor]\nagents: all\nworkflows: all\ngovernance: "none"\nyolo: true\ninstalled_at: "2026-03-20"\n`;
   fs.writeFileSync(path.join(dirOn, '.assemble.yaml'), configOn);
   run(['--project', dirOn, '--update']);
 
@@ -1031,7 +1031,7 @@ console.log('\nTest 28: Startup profile + COMPLEX methodology coherence');
 {
   const dir = createTmpDir();
   fs.mkdirSync(dir, { recursive: true });
-  const config = `version: "1.0.0-beta.5"\nprofile: "startup"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\ngovernance: "none"\nyolo: true\ninstalled_at: "2026-03-20"\n`;
+  const config = `version: "1.1.0-beta.3"\nprofile: "startup"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\ngovernance: "none"\nyolo: true\ninstalled_at: "2026-03-20"\n`;
   fs.writeFileSync(path.join(dir, '.assemble.yaml'), config);
   run(['--project', dir, '--update']);
 
@@ -1066,7 +1066,7 @@ console.log('\nTest 29: /go skill phase coherence');
 {
   const dir = createTmpDir();
   fs.mkdirSync(dir, { recursive: true });
-  const config = `version: "1.0.0-beta.5"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nyolo: true\ninstalled_at: "2026-03-20"\n`;
+  const config = `version: "1.1.0-beta.3"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nyolo: true\ninstalled_at: "2026-03-20"\n`;
   fs.writeFileSync(path.join(dir, '.assemble.yaml'), config);
   run(['--project', dir, '--update']);
 

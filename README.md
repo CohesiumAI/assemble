@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="#quick-start"><img src="https://img.shields.io/badge/npx-cohesiumai--assemble-6366f1?style=flat-square" alt="npx cohesiumai-assemble" /></a>
-  <img src="https://img.shields.io/badge/version-1.0.0--beta.3-orange?style=flat-square" alt="v1.0.0-beta.5" />
+  <img src="https://img.shields.io/badge/version-1.1.0--beta.3-orange?style=flat-square" alt="v1.1.0-beta.3" />
   <img src="https://img.shields.io/badge/agents-34-8b5cf6?style=flat-square" alt="34 agents" />
   <img src="https://img.shields.io/badge/platforms-21-3b82f6?style=flat-square" alt="21 platforms" />
   <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License" />
@@ -20,7 +20,7 @@
 
 ---
 
-> **v1.0.0-beta.5** — This is a beta release. Core functionality is stable, but APIs and generated file formats may change before v1.0.0 stable. Feedback welcome via [GitHub Issues](https://github.com/CohesiumAI/assemble/issues).
+> **v1.1.0-beta.3** — This is a beta release. Core functionality is stable, but APIs and generated file formats may change before v1.0.0 stable. Feedback welcome via [GitHub Issues](https://github.com/CohesiumAI/assemble/issues).
 
 > **34 agent definitions. 15 workflows. 21 platforms. Zero runtime.** Assemble generates native configuration files that turn your IDE or CLI into a structured AI team. No daemon, no vendor lock-in, no dependencies. Just `npx cohesiumai-assemble` and your LLM knows its job.
 
@@ -53,6 +53,14 @@ Think of it like **Terraform for AI agents**: you declare the team structure onc
 Type `/go` and describe what you need. The generated routing instructions tell Jarvis (the orchestrator) to assess complexity, select the right agents, and chain them in order. For complex tasks, a spec-driven methodology kicks in: BRAINSTORM → SPECIFY → PLAN → TASKS → IMPLEMENT → CLOSE.
 
 With **YOLO mode** (`yolo: true`), the generated instructions tell the LLM to execute all workflow steps without pausing for validation. It only stops for destructive production actions or when it needs information only you can provide. Full traceability is preserved.
+
+### Board Execution — Kanban for complex tasks
+
+For **COMPLEX** workflows, Phase 4 (**IMPLEMENT**) switches from a linear execution model to an automated Kanban board. Professor X (PM) writes structured tickets with explicit acceptance criteria in Given/When/Then format, then Captain America (Scrum Master) converts `tasks.md` into `_board.yaml`.
+
+The `board-execution` engine runs dependency-ready tickets in parallel through a fixed pipeline: **implement → review → test → done**. It enforces WIP limits, resolves ticket dependencies automatically, and injects only ticket-specific context into each agent so execution stays focused and auditable.
+
+Use `/board` to inspect the board, resume execution, or re-prioritize tickets already in `_board.yaml`. Simple workflows — typically fewer than 3 tickets with no dependencies — stay in the standard linear mode.
 
 ### Why Marvel names?
 
@@ -395,7 +403,8 @@ assemble/
     agents/             # 34 agent definition files (AGENT-*.md)
     skills/
       shared/           # 14 shared skills (multi-agent)
-      specific/         # 14 agent-specific skills
+      specific/         # 15 agent-specific skills
+        # includes board-execution.md for Kanban ticket orchestration
     workflows/          # 15 workflow definitions (YAML)
     orchestrator/       # ORCHESTRATOR.md (Jarvis)
     config/
@@ -443,7 +452,7 @@ You type /go <request>
       |     1. SPECIFY (@professor-x) → spec.md
       |     2. PLAN (@tony-stark) → plan.md
       |     3. TASKS (@captain-america) → tasks.md
-      |     4. IMPLEMENT (Dev agents) → code + tests
+      |     4. IMPLEMENT (Board Execution for COMPLEX workflows) → `_board.yaml` + parallel ticket pipeline
       |     5. CLOSE (Jarvis) → _quality.md
       |
       v
@@ -466,7 +475,7 @@ After installation, a `.assemble.yaml` file is created at the root of your proje
 
 ```yaml
 # Assemble — Project configuration
-version: "1.0.0-beta.5"
+version: "1.1.0-beta.3"
 profile: "custom"                 # startup | enterprise | agency | custom
 langue_equipe: "english"          # Language for agent-to-agent communication
 langue_output: "english"          # Language for produced deliverables
@@ -659,8 +668,9 @@ This is by design: Assemble is a **generation-time** tool, not a runtime. For ha
 | Document | Contents |
 |----------|----------|
 | [Agent Catalog](docs/AGENTS.md) | Complete catalog of all 34 agents with roles, skills, and workflows |
-| [Skills Reference](docs/SKILLS.md) | 28 skills (14 shared + 14 specific) with detailed processes |
+| [Skills Reference](docs/SKILLS.md) | 29 skills (14 shared + 15 specific) with detailed processes |
 | [Workflow Guide](docs/WORKFLOWS.md) | 15 workflows with agent chains, inputs/outputs, and dependency graphs |
+| [Board Execution Guide](docs/BOARD.md) | `_board.yaml` format, ticket lifecycle, WIP limits, and dependency rules |
 | [Platform Support](docs/PLATFORMS.md) | Platform-specific setup guides and file structure details |
 | [Command Reference](docs/COMMANDS.md) | Full reference for 11 commands + hidden shortcuts |
 
@@ -710,8 +720,9 @@ This is by design: Assemble is a **generation-time** tool, not a runtime. For ha
 | Document | Contents |
 |----------|----------|
 | [Agent Catalog](docs/AGENTS.md) | Complete catalog of all 34 agents with roles, skills, and workflows |
-| [Skills Reference](docs/SKILLS.md) | 28 skills (14 shared + 14 specific) with detailed processes |
+| [Skills Reference](docs/SKILLS.md) | 29 skills (14 shared + 15 specific) with detailed processes |
 | [Workflow Guide](docs/WORKFLOWS.md) | 15 workflows with agent chains, inputs/outputs, and dependency graphs |
+| [Board Execution Guide](docs/BOARD.md) | `_board.yaml` format, ticket lifecycle, WIP limits, and dependency rules |
 | [Platform Support](docs/PLATFORMS.md) | Platform-specific setup guides and file structure details |
 | [Command Reference](docs/COMMANDS.md) | Full reference for 11 commands + hidden shortcuts |
 

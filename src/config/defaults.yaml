@@ -3,7 +3,7 @@
 # The installer generates a per-project .assemble.yaml that overrides these values
 
 # NOTE: the generator reads the version from package.json at build time — this value is for reference only
-version: "1.1.0-beta.2"
+version: "1.1.0-beta.3"
 
 # Default languages
 i18n:

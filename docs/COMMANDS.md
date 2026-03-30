@@ -1,6 +1,6 @@
 # Command Reference — 11 Commands
 
-> **11 primary commands** that expose the full power of 34 agents, 15 workflows, and 28 skills. Jarvis smart routing handles complexity assessment and agent selection.
+> **11 primary commands** that expose the full power of 34 agents, 15 workflows, and 29 skills. Jarvis smart routing handles complexity assessment and agent selection.
 
 ---
 
@@ -10,7 +10,7 @@
 |----------|-------|-------------|
 | System Commands | 5 | `/go`, `/party`, `/dismiss`, `/help`, `/doctor` |
 | Workflow Shortcuts | 6 | `/review`, `/bugfix`, `/feature`, `/sprint`, `/release`, `/mvp` |
-| Hidden Shortcuts | 9 | Work if typed, not in autocomplete |
+| Hidden Shortcuts | 10 | Work if typed, not in autocomplete |
 | Agent Access | 33 | Via `@marvel-name` mentions |
 | **Total visible** | **11** | |
 
@@ -41,7 +41,7 @@
 
 ---
 
-## Hidden Shortcuts (9)
+## Hidden Shortcuts (10)
 
 These commands work if typed directly but don't appear in autocomplete. They are also accessible via `/go`.
 
@@ -56,6 +56,7 @@ These commands work if typed directly but don't appear in autocomplete. They are
 | `/onboard` | Project Onboarding | PM → Analyst → Architect → Scrum |
 | `/docs` | Documentation Sprint | Analyst → Architect → Fullstack → Copywriter → DevOps |
 | `/security` | Security Audit | Security → Red Team → Backend → DevOps → Legal |
+| `/board` | Board Execution | Kanban board lifecycle — inspect status, resume execution, or re-prioritize tickets in `_board.yaml` |
 
 ---
 
@@ -81,7 +82,7 @@ When you type `/go <request>`, Jarvis:
    - **SPECIFY** (Professor X) → produces `spec.md` → user validates
    - **PLAN** (Tony Stark) → produces `plan.md` → user validates
    - **TASKS** (Captain America) → produces `tasks.md` → user validates
-   - **IMPLEMENT** (Dev agents) → code + tests
+   - **IMPLEMENT** (Board Execution for COMPLEX workflows) → `_board.yaml` tickets run through implement → review → test → done
    - **CLOSE** (Jarvis) → produces `_quality.md` (automatic)
 
 3. **Selects and chains agents** from the 34-agent roster based on domain matching.
@@ -198,4 +199,4 @@ Copies a skill file into `.assemble/skills/`. The skill must have YAML frontmatt
 
 ## Source File
 
-Commands are defined in `src/commands/commands.yaml` with structure: `primary_commands` (11), `hidden_shortcuts` (9), `internal_skills` (28), and `agents` (31 via @mention).
+Commands are defined in `src/commands/commands.yaml` with structure: `primary_commands` (11), `hidden_shortcuts` (10), `internal_skills` (29), and `agents` (31 via @mention).
