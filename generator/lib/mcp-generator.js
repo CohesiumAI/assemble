@@ -10,6 +10,8 @@ const fs = require('fs');
 const path = require('path');
 const { agentId, marvelSlug, marvelDisplayName } = require('./template-engine');
 
+const PKG_VERSION = require('../../package.json').version;
+
 /**
  * Build a platform-agnostic agent path resolver snippet for the MCP server.
  * At runtime, the server checks which platform directories exist and reads from the first match.
@@ -117,7 +119,7 @@ const PROJECT_ROOT = resolve(dirname(__filename), '..');
 
 const server = new McpServer({
   name: "assemble",
-  version: "${config.version || '1.1.0-beta.1'}",
+  version: "${config.version || PKG_VERSION}",
   description: "Assemble — ${agents.length}-agent AI team orchestrator by Cohesium AI",
 });
 
@@ -276,7 +278,7 @@ await server.connect(transport);
   // 3. Generate mcp-package.json (for dependency installation)
   const mcpPackage = {
     name: 'assemble-mcp-server',
-    version: config.version || '1.1.0-beta.1',
+    version: config.version || PKG_VERSION,
     type: 'module',
     description: 'MCP server for Assemble AI agent team',
     main: 'mcp-server.js',

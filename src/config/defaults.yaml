@@ -2,7 +2,8 @@
 # This file defines the system default values
 # The installer generates a per-project .assemble.yaml that overrides these values
 
-version: "1.0.0-beta.5"
+# NOTE: at runtime, the version is read from package.json — this value is for reference only
+version: "1.1.0-beta.2"
 
 # Default languages
 i18n:

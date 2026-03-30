@@ -9,6 +9,8 @@ const readline = require('readline');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
+const PKG_VERSION = require('../package.json').version;
+
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
@@ -446,7 +448,7 @@ async function main() {
     '# Assemble — Project configuration',
     '# Update: npx cohesiumai-assemble --update',
     '',
-    'version: "1.0.0-beta.5"',
+    `version: "${PKG_VERSION}"`,
     `profile: "${profile}"`,
     `langue_equipe: "${langTeam}"`,
     `langue_output: "${langOutput}"`,

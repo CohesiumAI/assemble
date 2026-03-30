@@ -13,6 +13,8 @@ const fs = require('fs');
 const path = require('path');
 const { loadAgents, loadSkills, loadWorkflows, loadCommands, loadOrchestrator, parseFlatYaml, normalizeLineEndings } = require('./lib/parser');
 const { prepareAgent } = require('./lib/template-engine');
+
+const PKG_VERSION = require('../package.json').version;
 const { validateOutput } = require('./lib/validator');
 const { resolveProfile } = require('./lib/profiles');
 const { generateMCPServer } = require('./lib/mcp-generator');
@@ -625,7 +627,7 @@ Log of all agent actions for governance compliance. Required by \`governance: st
     }
     const manifest = {
       generated_at: new Date().toISOString(),
-      generator_version: '1.1.0-beta.1',
+      generator_version: PKG_VERSION,
       platforms: config.platforms,
       files: manifestFiles,
       directories: [...manifestDirs].sort(),
@@ -645,7 +647,7 @@ Log of all agent actions for governance compliance. Required by \`governance: st
 # Update:     npx cohesiumai-assemble --update
 # Regenerate: node generate.js --config .assemble.yaml
 
-version: "1.1.0-beta.1"
+version: "${PKG_VERSION}"
 profile: "${config.profile || 'custom'}"
 langue_equipe: "${config.langue_equipe}"
 langue_output: "${config.langue_output}"
