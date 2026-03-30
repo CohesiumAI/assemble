@@ -4,7 +4,7 @@
  * Generates the correct file structure for Claude Code:
  *   CLAUDE.md                              — concise project instructions (< 30 lines) with @imports
  *   .claude/agents/{marvel-slug}/AGENT.md  — one directory per agent with AGENT.md inside
- *   .claude/skills/{skill-slug}/SKILL.md   — 12 skill directories (10 system + yolo-hardcore, yolo-full)
+ *   .claude/skills/{skill-slug}/SKILL.md   — generated command skills, including /board
  *   .claude/rules/*.md                     — orchestrator, teams, and routing rules
  */
 
@@ -72,8 +72,8 @@ module.exports = {
       paths.push(path.join(projectDir, '.claude', 'agents', slug, 'AGENT.md'));
     }
 
-    // 13 skills (11 system + 2 YOLO escalation)
-    const skillSlugs = ['go', 'party', 'dismiss', 'help', 'doctor', 'review', 'bugfix', 'feature', 'sprint', 'release', 'mvp', 'yolo-hardcore', 'yolo-full'];
+    // Generated command skills
+    const skillSlugs = ['go', 'party', 'dismiss', 'help', 'doctor', 'review', 'bugfix', 'feature', 'sprint', 'release', 'mvp', 'board', 'yolo-hardcore', 'yolo-full'];
     for (const slug of skillSlugs) {
       paths.push(path.join(projectDir, '.claude', 'skills', slug, 'SKILL.md'));
     }
@@ -130,7 +130,7 @@ module.exports = {
       fs.writeFileSync(path.join(agentDir, 'AGENT.md'), content, 'utf-8');
     }
 
-    // ── 2. Generate 13 SKILL.md files (11 system + 2 YOLO escalation) ─────────────────────────────────
+    // ── 2. Generate command SKILL.md files ─────────────────────────────────
 
     // 2a. /go — routing entry point
     {
@@ -241,7 +241,28 @@ module.exports = {
       fs.writeFileSync(path.join(dir, 'SKILL.md'), content, 'utf-8');
     }
 
-    // 2f-2k. Workflow shortcut skills
+    // 2f. /board — board execution engine
+    {
+      const boardSkill = (skills.specific || []).find(s => s.meta.name === 'board-execution' || (s.meta.trigger || '').includes('board'));
+      const dir = path.join(skillsDir, 'board');
+      fs.mkdirSync(dir, { recursive: true });
+      let content = '---\n';
+      content += 'name: board\n';
+      content += 'description: "Show current board status, resume execution, or re-prioritize tickets"\n';
+      content += 'user-invocable: true\n';
+      content += '---\n\n';
+      if (boardSkill) {
+        const prepared = prepareAgent(boardSkill, config);
+        content += prepared.content;
+      } else {
+        content += '# /board — Board Execution\n\n';
+        content += 'Read `_board.yaml`, identify ready tickets, respect WIP limits, and move tickets through implement → review → test → done.\n\n';
+      }
+      content += '\nApply to: $ARGUMENTS\n';
+      fs.writeFileSync(path.join(dir, 'SKILL.md'), content, 'utf-8');
+    }
+
+    // 2g-2l. Workflow shortcut skills
     const workflowShortcuts = {
       'review': 'code-review-pipeline',
       'bugfix': 'bug-fix',

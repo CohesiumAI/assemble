@@ -52,6 +52,7 @@ Before any action, assess the complexity of the request:
 
 **COMPLEX** — Multi-domain task, high risks, or ambitious user request.
 → Apply the Spec-Driven methodology (see section below).
+→ Uses Board Execution for the IMPLEMENT phase (see Phase 4).
 
 ## Spec-Driven Methodology (MANDATORY for COMPLEX tasks)
 
@@ -129,10 +130,21 @@ Delegate to the scrum agent. If no scrum agent is available, the PM agent handle
 Produce `tasks.md`: task breakdown, estimation, dependencies, priorities.
 → **User validation required before continuing** (skipped when `yolo: true`).
 
-### Phase 4 — IMPLEMENT (Development agents)
-Delegate to the appropriate specialist agents (dev, devops, security, etc.).
-Execute tasks according to the plan. Produce code + tests + deliverables.
-Each agent works on its designated tasks — do NOT use a single generalist agent for everything.
+### Phase 4 — IMPLEMENT (Board Execution)
+
+The implementation phase uses the Kanban board execution engine instead of linear step-by-step execution.
+
+1. **Board Generation** — Captain America transforms `tasks.md` into `_board.yaml` using the standardized ticket format. Each ticket has acceptance criteria inherited from the PM's spec, a pipeline defining which agents handle implement/review/test, and explicit dependencies.
+2. **Board Execution** — Jarvis executes the board following the `board-execution` skill:
+   - Identifies tickets ready for execution (dependencies resolved)
+   - Respects WIP limits for parallel execution
+   - Each ticket flows through: implement → review → test → done
+   - Agents receive per-ticket context injection (not the full board)
+   - Failed reviews/tests return tickets to in_progress with feedback
+3. **Board State** — `_board.yaml` is updated after every transition. It is the single source of truth for execution progress.
+4. **Completion** — When all tickets are `done`, Jarvis proceeds to Phase 5 — CLOSE.
+
+→ For MODERATE tasks (2-3 agents, clear scope), Jarvis MAY skip the board and execute linearly if there are fewer than 3 tickets with no dependencies between them.
 
 ### Phase 5 — CLOSE (Jarvis)
 Produce `_quality.md`: what was delivered, validated, remaining risks, lessons learned.

@@ -132,6 +132,12 @@ hidden_shortcuts:
     description: "Security audit (Security → Backend → DevOps → Legal)"
     visible: false
 
+  - name: /board
+    type: system
+    description: "Show current board status, resume execution, or re-prioritize tickets"
+    usage: "/board [status|resume|reprioritize]"
+    visible: false
+
 # ═══════════════════════════════════════════
 # INTERNAL SKILLS (28 — accessible via /go, not as standalone commands)
 # ═══════════════════════════════════════════

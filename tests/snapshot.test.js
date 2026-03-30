@@ -13,7 +13,7 @@
  *   4. Validation passes for all platforms (adapter.validate())
  *   5. --update mode preserves config and regenerates correctly
  *   6. Agent/workflow filtering works
- *   7. Claude Code produces exactly 13 SKILL.md + routing.md + compact CLAUDE.md
+ *   7. Claude Code produces the expected command SKILL.md set + routing.md + compact CLAUDE.md
  */
 
 const { execFileSync } = require('child_process');
@@ -311,21 +311,21 @@ console.log('\nTest 6: Agent/workflow filtering');
   cleanTmpDir();
 }
 
-// ── Test 7: Claude Code 10-command architecture ──────────────────────────────
+// ── Test 7: Claude Code command skill architecture ───────────────────────────
 
-console.log('\nTest 7: Claude Code 10-command architecture');
+console.log('\nTest 7: Claude Code command skill architecture');
 {
   const dir = createTmpDir();
   run(['--project', dir, '--platforms', 'claude-code', '--lang-team', 'english', '--lang-output', 'english']);
 
-  test('Exactly 13 SKILL.md directories', () => {
+  test('Exactly 14 SKILL.md directories', () => {
     const skillsDir = path.join(dir, '.claude', 'skills');
     const dirCount = countDirs(skillsDir);
-    assert(dirCount === 13, `Expected exactly 13 skill directories, got ${dirCount}`);
+    assert(dirCount === 14, `Expected exactly 14 skill directories, got ${dirCount}`);
   });
 
   test('Expected skill directories exist', () => {
-    const expectedSkills = ['go', 'party', 'dismiss', 'help', 'doctor', 'review', 'bugfix', 'feature', 'sprint', 'release', 'mvp', 'yolo-hardcore', 'yolo-full'];
+    const expectedSkills = ['go', 'party', 'dismiss', 'help', 'doctor', 'review', 'bugfix', 'feature', 'sprint', 'release', 'mvp', 'board', 'yolo-hardcore', 'yolo-full'];
     const skillsDir = path.join(dir, '.claude', 'skills');
     for (const slug of expectedSkills) {
       const skillMd = path.join(skillsDir, slug, 'SKILL.md');

@@ -110,6 +110,34 @@ Success metric: 70% of restaurant owners view this screen at least 1x/day within
 Acceptance criteria: display of occupancy % by service (lunch/dinner) updated every 5 min.
 ```
 
+**Ticket Format (for Board Execution):**
+When the Spec-Driven methodology is used and tickets need to be created for Board Execution, use this format for each ticket:
+```yaml
+- id: T-001
+  title: "API endpoint POST /users"
+  type: story  # story | task | bug | spike
+  story: "As a [user], I want [X] so that [Y]"
+  points: 5
+  priority: 1
+  acceptance_criteria:
+    - id: AC-001
+      given: "valid user data"
+      when: "POST /users is called"
+      then: "user is created, returns 201 with user object"
+    - id: AC-002
+      given: "duplicate email"
+      when: "POST /users is called"  
+      then: "returns 409 with DUPLICATE_EMAIL error"
+  depends_on: []
+  pipeline:
+    implement: [dev-backend]
+    review: [dev-fullstack]
+    test: [qa]
+  started_at: null
+  completed_at: null
+  artifacts: []
+```
+
 ## Typical Deliverables
 
 - Product vision statement
