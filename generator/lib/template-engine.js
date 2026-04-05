@@ -529,7 +529,7 @@ function renderRoutingRules(agents, workflows, config) {
   out += '**MANDATORY — Escalation Procedure:**\n';
   out += 'When @deadpool produces a YELLOW or RED verdict during a workflow or party session:\n';
   out += '1. Detect the verdict in Deadpool\'s `## Verdict` and `## Escalation` sections\n';
-  out += '2. Suggest to the user: "Deadpool has flagged critical concerns. Would you like Doctor Doom\'s strategic verdict? (`/doom` or `add @doctor-doom`)"\n';
+  out += '2. Suggest to the user: "Deadpool has flagged critical concerns. Would you like Doctor Doom\'s strategic verdict? (invoke @doctor-doom)"\n';
   out += '3. If user accepts → launch @doctor-doom with Deadpool\'s report + all relevant deliverables\n';
   out += '4. If both @deadpool AND @doctor-doom flag the same decision as critical → mark as **BLOCKED**\n';
   out += '5. A BLOCKED decision requires explicit user override to proceed\n\n';
@@ -689,10 +689,10 @@ function renderGovernanceRules(level) {
   out += '**Before production-facing steps** (deployment, release, data migration):\n';
   out += '1. Jarvis automatically invokes @doctor-doom as a sub-agent\n';
   out += '2. Doom receives all deliverables produced so far in the workflow\n';
-  out += '3. Doom produces `doom-verdict.md` with GO / CONDITIONAL / NO-GO verdict\n';
-  out += '4. If NO-GO → workflow halts, user is informed with blocking issues\n';
-  out += '5. If CONDITIONAL → mitigations are injected into the next step\'s context\n';
-  out += '6. If GO → workflow proceeds normally\n\n';
+  out += '3. Doom produces `doom-verdict.md` with APPROVED / APPROVED WITH CONDITIONS / REJECTED verdict\n';
+  out += '4. If REJECTED → workflow halts, user is informed with blocking issues\n';
+  out += '5. If APPROVED WITH CONDITIONS → mitigations are injected into the next step\'s context\n';
+  out += '6. If APPROVED → workflow proceeds normally\n\n';
   out += 'The Gate Keeper step is inserted by the orchestrator dynamically — it does NOT appear in workflow YAML files.\n\n';
 
   if (level === 'standard') {

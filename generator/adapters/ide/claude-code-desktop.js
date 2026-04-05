@@ -7,7 +7,7 @@
  *   - Agents are generated as /skills (slash commands) instead of @agents
  *   - CLAUDE.md is self-contained (no @imports — Desktop may not support them)
  *   - Rules embedded directly in CLAUDE.md
- *   - Same 10 system skills + 33 agent skills = 43 total skills
+ *   - Same 11 system skills + 33 agent skills = 44 total skills
  */
 
 const fs = require('fs');
@@ -57,8 +57,8 @@ module.exports = {
       path.join(projectDir, 'CLAUDE.md'),
     ];
 
-    // System skills (12 — includes yolo-hardcore and yolo-full)
-    const systemSkills = ['go', 'party', 'dismiss', 'help', 'review', 'bugfix', 'feature', 'sprint', 'release', 'mvp', 'yolo-hardcore', 'yolo-full'];
+    // System skills (13 — includes doom, yolo-hardcore and yolo-full)
+    const systemSkills = ['go', 'party', 'dismiss', 'help', 'doom', 'review', 'bugfix', 'feature', 'sprint', 'release', 'mvp', 'yolo-hardcore', 'yolo-full'];
     for (const slug of systemSkills) {
       paths.push(path.join(projectDir, '.claude', 'skills', slug, 'SKILL.md'));
     }
@@ -165,6 +165,31 @@ module.exports = {
       let content = '---\nname: help\ndescription: "Show the complete command catalog"\nuser-invocable: true\n---\n\n';
       content += renderCompactHelp(agents, workflows);
       content += '\n\n**Note (Desktop):** Agents are invoked via `/agent-name` (e.g., `/tony-stark`, `/professor-x`) instead of `@agent-name`.\n';
+      fs.writeFileSync(path.join(dir, 'SKILL.md'), content, 'utf-8');
+    }
+
+    // /doom — Doctor Doom strategic verdict
+    {
+      const doomSkill = (skills.specific || []).find(s =>
+        s.meta.name === 'doom-verdict' || (s.meta.trigger || '').includes('doom')
+      );
+      const dir = path.join(skillsDir, 'doom');
+      fs.mkdirSync(dir, { recursive: true });
+      let content = '---\nname: doom\ndescription: "Doctor Doom strategic verdict — critical decision analysis"\nuser-invocable: true\n---\n\n';
+      if (doomSkill) {
+        const prepared = prepareAgent(doomSkill, config);
+        content += prepared.content;
+      } else {
+        content += '# /doom — Doctor Doom Strategic Verdict\n\n';
+        content += 'Invoke @doctor-doom for a multi-dimensional analysis of a critical decision.\n\n';
+        content += '1. Invoke the `/doctor-doom` agent skill to adopt the Doctor Doom persona\n';
+        content += '2. Gather all available context (deliverables, reports, previous agent outputs)\n';
+        content += '3. Analyze across 6 dimensions: technical risk, business risk, security risk, irreversibility, blast radius, operational cost\n';
+        content += '4. Render verdict using Doom\'s format: APPROVED / APPROVED WITH CONDITIONS / REJECTED\n';
+        content += '5. If APPROVED WITH CONDITIONS: list specific mitigations\n';
+        content += '6. If REJECTED: provide alternative path\n\n';
+      }
+      content += '\nSubject: $ARGUMENTS\n';
       fs.writeFileSync(path.join(dir, 'SKILL.md'), content, 'utf-8');
     }
 

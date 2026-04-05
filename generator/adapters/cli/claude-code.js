@@ -283,11 +283,11 @@ module.exports = {
         content += 'Read and apply the agent definition from `.claude/agents/doctor-doom/AGENT.md`.\n\n';
         content += '1. Gather all available context (deliverables, reports, previous agent outputs)\n';
         content += '2. Analyze across 6 dimensions: technical risk, business risk, security risk, irreversibility, blast radius, operational cost\n';
-        content += '3. Render verdict: GO / CONDITIONAL / NO-GO\n';
-        content += '4. If CONDITIONAL: list specific mitigations\n';
-        content += '5. If NO-GO: provide alternative path\n\n';
-        content += 'Subject: $ARGUMENTS\n';
+        content += '3. Render verdict using Doom\'s format: APPROVED / APPROVED WITH CONDITIONS / REJECTED\n';
+        content += '4. If APPROVED WITH CONDITIONS: list specific mitigations\n';
+        content += '5. If REJECTED: provide alternative path\n\n';
       }
+      content += '\nSubject: $ARGUMENTS\n';
       fs.writeFileSync(path.join(dir, 'SKILL.md'), content, 'utf-8');
     }
 

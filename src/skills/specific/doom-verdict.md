@@ -17,7 +17,7 @@ Invoke Doctor Doom for a binding, multi-dimensional verdict on a critical decisi
 - When the stakes are too high for a standard challenge
 
 ## Execution
-1. Read the agent definition from `.claude/agents/doctor-doom/AGENT.md`
+1. Adopt the @doctor-doom agent persona (read the Doctor Doom agent definition for this platform)
 2. Gather all available context (current workflow deliverables, conversation history)
 3. Apply the 6-dimension analysis framework:
    - Technical risk
@@ -26,9 +26,9 @@ Invoke Doctor Doom for a binding, multi-dimensional verdict on a critical decisi
    - Irreversibility
    - Blast radius
    - Operational cost
-4. Render verdict: GO / CONDITIONAL / NO-GO
-5. If CONDITIONAL: list specific, verifiable mitigations
-6. If NO-GO: propose an alternative path with trade-offs
+4. Render verdict using Doom's format: APPROVED / APPROVED WITH CONDITIONS / REJECTED
+5. If APPROVED WITH CONDITIONS: list specific, verifiable mitigations
+6. If REJECTED: propose an alternative path with trade-offs
 
 ## Output
 Produce `doom-verdict.md` in the current workflow output directory (or display inline if no workflow is active).
