@@ -265,6 +265,7 @@ function renderCommandRegistry(agents, skills, workflows, governance = 'none', y
   out += '| `/sprint` | Sprint cycle (5 agents) |\n';
   out += '| `/release` | Release cycle (8 agents) |\n';
   out += '| `/mvp` | MVP launch (9 agents) |\n';
+  out += '| `/doom <subject>` | Doctor Doom strategic verdict — critical decision analysis |\n';
   out += '\n';
 
   // Agent access
@@ -525,6 +526,13 @@ function renderRoutingRules(agents, workflows, config) {
   out += '- The user explicitly requests `@doctor-doom` or `/doom`\n';
   out += '- A workflow is HIGH risk and touches production\n\n';
   out += 'When both @deadpool (RED) and @doctor-doom (REJECTED) flag the same proposal, the decision is **BLOCKED**.\n\n';
+  out += '**MANDATORY — Escalation Procedure:**\n';
+  out += 'When @deadpool produces a YELLOW or RED verdict during a workflow or party session:\n';
+  out += '1. Detect the verdict in Deadpool\'s `## Verdict` and `## Escalation` sections\n';
+  out += '2. Suggest to the user: "Deadpool has flagged critical concerns. Would you like Doctor Doom\'s strategic verdict? (`/doom` or `add @doctor-doom`)"\n';
+  out += '3. If user accepts → launch @doctor-doom with Deadpool\'s report + all relevant deliverables\n';
+  out += '4. If both @deadpool AND @doctor-doom flag the same decision as critical → mark as **BLOCKED**\n';
+  out += '5. A BLOCKED decision requires explicit user override to proceed\n\n';
 
   // Sub-Agent Delegation
   out += '## Sub-Agent Delegation\n\n';
@@ -581,6 +589,7 @@ function renderCompactHelp(agents, workflows) {
   out += '| `/sprint` | Sprint cycle |\n';
   out += '| `/release` | Release cycle |\n';
   out += '| `/mvp` | MVP launch |\n';
+  out += '| `/doom <subject>` | Doctor Doom strategic verdict |\n';
   out += '\n';
 
   // Agents grouped by team
@@ -673,6 +682,18 @@ function renderGovernanceRules(level) {
   out += '- **Risks remaining**: open risks, known limitations, technical debt introduced\n';
   out += '- **Lessons learned**: what worked well, what should be improved\n';
   out += '- **Metrics** (if measurable): lead time, number of steps, agents involved\n\n';
+
+  // Section 4: Gate Keeper — Doctor Doom
+  out += '## 4. Gate Keeper — Doctor Doom\n\n';
+  out += 'For HIGH risk workflows (/release, /hotfix, /mvp, /upgrade):\n\n';
+  out += '**Before production-facing steps** (deployment, release, data migration):\n';
+  out += '1. Jarvis automatically invokes @doctor-doom as a sub-agent\n';
+  out += '2. Doom receives all deliverables produced so far in the workflow\n';
+  out += '3. Doom produces `doom-verdict.md` with GO / CONDITIONAL / NO-GO verdict\n';
+  out += '4. If NO-GO → workflow halts, user is informed with blocking issues\n';
+  out += '5. If CONDITIONAL → mitigations are injected into the next step\'s context\n';
+  out += '6. If GO → workflow proceeds normally\n\n';
+  out += 'The Gate Keeper step is inserted by the orchestrator dynamically — it does NOT appear in workflow YAML files.\n\n';
 
   if (level === 'standard') {
     out += '## Standard Level Behavior\n\n';

@@ -73,7 +73,7 @@ module.exports = {
     }
 
     // Generated command skills
-    const skillSlugs = ['go', 'party', 'dismiss', 'help', 'doctor', 'review', 'bugfix', 'feature', 'sprint', 'release', 'mvp', 'board', 'yolo-hardcore', 'yolo-full'];
+    const skillSlugs = ['go', 'party', 'dismiss', 'help', 'doctor', 'doom', 'review', 'bugfix', 'feature', 'sprint', 'release', 'mvp', 'board', 'yolo-hardcore', 'yolo-full'];
     for (const slug of skillSlugs) {
       paths.push(path.join(projectDir, '.claude', 'skills', slug, 'SKILL.md'));
     }
@@ -259,6 +259,35 @@ module.exports = {
         content += 'Read `_board.yaml`, identify ready tickets, respect WIP limits, and move tickets through implement → review → test → done.\n\n';
       }
       content += '\nApply to: $ARGUMENTS\n';
+      fs.writeFileSync(path.join(dir, 'SKILL.md'), content, 'utf-8');
+    }
+
+    // 2f-bis. /doom — Doctor Doom strategic verdict
+    {
+      const doomSkill = (skills.specific || []).find(s =>
+        s.meta.name === 'doom-verdict' || (s.meta.trigger || '').includes('doom')
+      );
+      const dir = path.join(skillsDir, 'doom');
+      fs.mkdirSync(dir, { recursive: true });
+      let content = '---\n';
+      content += 'name: doom\n';
+      content += 'description: "Doctor Doom strategic verdict — critical decision analysis"\n';
+      content += 'user-invocable: true\n';
+      content += '---\n\n';
+      if (doomSkill) {
+        const prepared = prepareAgent(doomSkill, config);
+        content += prepared.content;
+      } else {
+        content += '# /doom — Doctor Doom Strategic Verdict\n\n';
+        content += 'Invoke Doctor Doom for a multi-dimensional analysis of a critical decision.\n\n';
+        content += 'Read and apply the agent definition from `.claude/agents/doctor-doom/AGENT.md`.\n\n';
+        content += '1. Gather all available context (deliverables, reports, previous agent outputs)\n';
+        content += '2. Analyze across 6 dimensions: technical risk, business risk, security risk, irreversibility, blast radius, operational cost\n';
+        content += '3. Render verdict: GO / CONDITIONAL / NO-GO\n';
+        content += '4. If CONDITIONAL: list specific mitigations\n';
+        content += '5. If NO-GO: provide alternative path\n\n';
+        content += 'Subject: $ARGUMENTS\n';
+      }
       fs.writeFileSync(path.join(dir, 'SKILL.md'), content, 'utf-8');
     }
 

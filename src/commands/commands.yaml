@@ -72,6 +72,12 @@ primary_commands:
     description: "MVP launch (9 agents: PM → Architect → UX → Brand → DB → Backend → Frontend → QA → DevOps)"
     category: shortcut
 
+  - name: /doom
+    type: system
+    description: "Doctor Doom strategic verdict — critical decision analysis"
+    usage: "/doom <subject>"
+    category: system
+
 # ═══════════════════════════════════════════
 # HIDDEN SHORTCUTS (work if typed, not in autocomplete)
 # ═══════════════════════════════════════════

@@ -318,14 +318,14 @@ console.log('\nTest 7: Claude Code command skill architecture');
   const dir = createTmpDir();
   run(['--project', dir, '--platforms', 'claude-code', '--lang-team', 'english', '--lang-output', 'english']);
 
-  test('Exactly 14 SKILL.md directories', () => {
+  test('Exactly 15 SKILL.md directories', () => {
     const skillsDir = path.join(dir, '.claude', 'skills');
     const dirCount = countDirs(skillsDir);
-    assert(dirCount === 14, `Expected exactly 14 skill directories, got ${dirCount}`);
+    assert(dirCount === 15, `Expected exactly 15 skill directories, got ${dirCount}`);
   });
 
   test('Expected skill directories exist', () => {
-    const expectedSkills = ['go', 'party', 'dismiss', 'help', 'doctor', 'review', 'bugfix', 'feature', 'sprint', 'release', 'mvp', 'board', 'yolo-hardcore', 'yolo-full'];
+    const expectedSkills = ['go', 'party', 'dismiss', 'help', 'doctor', 'doom', 'review', 'bugfix', 'feature', 'sprint', 'release', 'mvp', 'board', 'yolo-hardcore', 'yolo-full'];
     const skillsDir = path.join(dir, '.claude', 'skills');
     for (const slug of expectedSkills) {
       const skillMd = path.join(skillsDir, slug, 'SKILL.md');

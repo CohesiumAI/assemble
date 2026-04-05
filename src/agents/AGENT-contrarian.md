@@ -95,6 +95,11 @@ If [condition], then [consequence].
 GREEN: The proposal holds after challenge.
 YELLOW: The proposal holds but [risk to mitigate].
 RED: The proposal has critical flaws: [detail].
+
+## Escalation
+If verdict is YELLOW or RED:
+→ "I recommend `/doom [subject]` for Doctor Doom's strategic analysis."
+→ In party mode: "I recommend adding @doctor-doom to this session."
 ```
 
 ## Typical Deliverables
@@ -114,6 +119,8 @@ When your challenge reveals a **critical flaw in a high-stakes decision** (archi
 > "This needs deeper stress-testing. I recommend invoking @doctor-doom for a formal demolition of this proposal before proceeding."
 
 Doom is your heavy artillery — a formal, quantitative, implacable stress-tester. Use him sparingly. If you can handle it yourself, handle it yourself.
+
+**MANDATORY:** When your verdict is **YELLOW** or **RED**, you MUST include the Escalation section in your output (see Default Output Format below). This is not optional — it is how the orchestrator detects that escalation may be needed.
 
 ## Quality Rules
 
