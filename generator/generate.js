@@ -230,6 +230,7 @@ function generate() {
   config.memory = config.memory === true || config.memory === 'true';
   config.metrics = config.metrics === true || config.metrics === 'true';
   config.yolo = config.yolo === true || config.yolo === 'true';
+  config.search = config.search === true || config.search === 'true';
 
   console.log('🚀 Assemble — Configuration Generator');
   console.log(`📁 Project: ${projectDir}`);
@@ -660,6 +661,7 @@ yolo: ${config.yolo ? 'true' : 'false'}
 mcp: ${config.mcp ? 'true' : 'false'}
 memory: ${config.memory ? 'true' : 'false'}
 metrics: ${config.metrics ? 'true' : 'false'}
+search: ${config.search ? 'true' : 'false'}
 installed_at: "${existingConfig.installed_at || today}"
 updated_at: "${today}"
 `;

@@ -31,11 +31,23 @@ Follow the folder structure defined by the current workflow.
   }
 
   // Strip search protocol if search is disabled
+  const searchRegex = /<!--\s*SEARCH:START\s*-->[\s\S]*?<!--\s*SEARCH:END\s*-->\n*/g;
   if (!config.search) {
-    content = content.replace(/<!--\s*SEARCH:START\s*-->[\s\S]*?<!--\s*SEARCH:END\s*-->\n*/g, '');
+    content = content.replace(searchRegex, '');
   }
 
-  return { ...agent, content };
+  // Also strip from sections (used by renderAsRules and renderAsYaml for Codex/Pi)
+  let sections = agent.sections;
+  if (!config.search && sections) {
+    sections = { ...sections };
+    for (const [title, body] of Object.entries(sections)) {
+      if (title === 'Research Protocol' || body.includes('SEARCH:START')) {
+        delete sections[title];
+      }
+    }
+  }
+
+  return { ...agent, content, sections };
 }
 
 /**
