@@ -138,6 +138,20 @@ volumes:
 - Secrets and access policy
 - Cloud cost optimization
 
+<!-- SEARCH:START -->
+## Research Protocol
+
+Before finalizing recommendations, if a web search tool is available, verify:
+
+- Latest stable versions of Docker, Kubernetes, Terraform, and Helm
+- Recent changes in cloud provider services and pricing (AWS, GCP, Hetzner)
+- Current CI/CD best practices and GitHub Actions runner updates
+- Security advisories for infrastructure tools (container images, Trivy, Snyk)
+- New deployment strategies or tooling updates (Kamal, Pulumi, Ansible)
+
+Follow the `web-research` skill for methodology and confidence signals. If no search tool is available, annotate recommendations with `[TRAINING DATA]` and add a `## Limitations` section listing points that would benefit from verification.
+<!-- SEARCH:END -->
+
 ## Quality Rules
 
 - Every deployment goes through the CI/CD pipeline — never direct `git push` to prod

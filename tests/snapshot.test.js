@@ -1081,6 +1081,76 @@ console.log('\nTest 29: /go skill phase coherence');
   cleanTmpDir();
 }
 
+// ── Test 30: Web search feature (search: false) ────────────────────────────
+
+console.log('\nTest 30: Web search — search: false (default)');
+{
+  const dir = createTmpDir();
+  fs.mkdirSync(dir, { recursive: true });
+  const configContent = `version: "1.1.0-beta.3"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nsearch: false\ninstalled_at: "2026-03-19"\n`;
+  fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
+  run(['--project', dir, '--update']);
+
+  test('search: false — agent files do NOT contain Research Protocol', () => {
+    const agentsDir = path.join(dir, '.claude', 'agents');
+    const agentDirs = fs.readdirSync(agentsDir, { withFileTypes: true })
+      .filter(d => d.isDirectory()).map(d => d.name);
+    let found = false;
+    for (const agentDir of agentDirs) {
+      const agentMd = path.join(agentsDir, agentDir, 'AGENT.md');
+      if (!fs.existsSync(agentMd)) continue;
+      const content = fs.readFileSync(agentMd, 'utf-8');
+      if (content.includes('Research Protocol') || content.includes('SEARCH:START')) {
+        found = true;
+        break;
+      }
+    }
+    assert(!found, 'No agent should contain Research Protocol or SEARCH:START when search: false');
+  });
+
+  test('search: false — routing.md does NOT contain Web Search Policy', () => {
+    const routing = fs.readFileSync(path.join(dir, '.claude', 'rules', 'routing.md'), 'utf-8');
+    assert(!routing.includes('Web Search Policy'), 'routing.md should NOT contain Web Search Policy when search: false');
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 31: Web search feature (search: true) ─────────────────────────────
+
+console.log('\nTest 31: Web search — search: true');
+{
+  const dir = createTmpDir();
+  fs.mkdirSync(dir, { recursive: true });
+  const configContent = `version: "1.1.0-beta.3"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nsearch: true\ninstalled_at: "2026-03-19"\n`;
+  fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
+  run(['--project', dir, '--update']);
+
+  test('search: true — at least one agent contains Research Protocol', () => {
+    const agentsDir = path.join(dir, '.claude', 'agents');
+    const agentDirs = fs.readdirSync(agentsDir, { withFileTypes: true })
+      .filter(d => d.isDirectory()).map(d => d.name);
+    let found = false;
+    for (const agentDir of agentDirs) {
+      const agentMd = path.join(agentsDir, agentDir, 'AGENT.md');
+      if (!fs.existsSync(agentMd)) continue;
+      const content = fs.readFileSync(agentMd, 'utf-8');
+      if (content.includes('Research Protocol')) {
+        found = true;
+        break;
+      }
+    }
+    assert(found, 'At least one agent should contain Research Protocol when search: true');
+  });
+
+  test('search: true — routing.md contains Web Search', () => {
+    const routing = fs.readFileSync(path.join(dir, '.claude', 'rules', 'routing.md'), 'utf-8');
+    assert(routing.includes('Web Search'), 'routing.md should contain Web Search when search: true');
+  });
+
+  cleanTmpDir();
+}
+
 // ── Summary ──────────────────────────────────────────────────────────────────
 
 console.log('');

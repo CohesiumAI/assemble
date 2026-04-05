@@ -305,15 +305,15 @@ async function main() {
   }
 
   // 1. Team language
-  print('\n\x1b[1m\x1b[34m▸ 1/12 — Team language\x1b[0m\n');
+  print('\n\x1b[1m\x1b[34m▸ 1/13 — Team language\x1b[0m\n');
   const langTeam = await ask('Team language (english, français, deutsch...)', 'english');
 
   // 2. Output language
-  print('\n\x1b[1m\x1b[34m▸ 2/12 — Deliverable language\x1b[0m\n');
+  print('\n\x1b[1m\x1b[34m▸ 2/13 — Deliverable language\x1b[0m\n');
   const langOutput = await ask('Deliverable language', langTeam);
 
   // 3. Profile
-  print('\n\x1b[1m\x1b[34m▸ 3/12 — Team profile\x1b[0m\n');
+  print('\n\x1b[1m\x1b[34m▸ 3/13 — Team profile\x1b[0m\n');
   print('  1) startup   — Lean team, ship fast');
   print('  2) enterprise — Full team with strict governance');
   print('  3) agency     — Marketing & content focus');
@@ -327,7 +327,7 @@ async function main() {
   let platformSelections;
 
   async function selectPlatforms() {
-    print('\n\x1b[1m\x1b[34m▸ 4/12 — IDE/CLI selection\x1b[0m\n');
+    print('\n\x1b[1m\x1b[34m▸ 4/13 — IDE/CLI selection\x1b[0m\n');
 
     if (process.stdin.isTTY && typeof process.stdin.setRawMode === 'function') {
       rl.pause();
@@ -367,20 +367,26 @@ async function main() {
   await selectPlatforms();
 
   // 5. Directory
-  print('\n\x1b[1m\x1b[34m▸ 5/12 — Project directory\x1b[0m\n');
+  print('\n\x1b[1m\x1b[34m▸ 5/13 — Project directory\x1b[0m\n');
   const projectDir = path.resolve(await ask('Project directory', '.'));
 
   // 6. Output
-  print('\n\x1b[1m\x1b[34m▸ 6/12 — Output directory\x1b[0m\n');
+  print('\n\x1b[1m\x1b[34m▸ 6/13 — Output directory\x1b[0m\n');
   const outputDir = await ask('Deliverable output directory', './assemble-output');
 
   // 7. MCP Server
-  print('\n\x1b[1m\x1b[34m▸ 7/12 — MCP server\x1b[0m\n');
+  print('\n\x1b[1m\x1b[34m▸ 7/13 — MCP server\x1b[0m\n');
   const mcpChoice = await ask('Enable MCP server? (y/n)', 'n');
   const mcp = ['y', 'o'].includes(mcpChoice.toLowerCase());
 
-  // 8. Governance
-  print('\n\x1b[1m\x1b[34m▸ 8/12 — Governance level\x1b[0m\n');
+  // 8. Web search
+  print('\n\x1b[1m\x1b[34m▸ 8/13 — Web search\x1b[0m\n');
+  print('  Recommended — agents verify recommendations with current data.\n');
+  const searchChoice = await ask('Enable web search? (y/n)', 'n');
+  const search = ['y', 'o'].includes(searchChoice.toLowerCase());
+
+  // 9. Governance
+  print('\n\x1b[1m\x1b[34m▸ 9/13 — Governance level\x1b[0m\n');
   print('  1) none     — No governance overhead (default)');
   print('  2) standard — Decision gates + risk assessment');
   print('  3) strict   — Full audit trail + RBAC + NIST mapping\n');
@@ -389,27 +395,27 @@ async function main() {
   const govMap = { '1': 'none', '2': 'standard', '3': 'strict' };
   const governance = govMap[govChoice] || 'none';
 
-  // 9. YOLO mode
-  print('\n\x1b[1m\x1b[34m▸ 9/12 — YOLO mode (autonomous execution)\x1b[0m\n');
+  // 10. YOLO mode
+  print('\n\x1b[1m\x1b[34m▸ 10/13 — YOLO mode (autonomous execution)\x1b[0m\n');
   print('  When enabled, Jarvis executes workflows end-to-end without pausing.');
   print('  Stops only for: destructive prod actions, missing info, external side effects.\n');
   const yoloChoice = await ask('Enable YOLO mode? (y/n)', 'n');
   const yolo = ['y', 'o'].includes(yoloChoice.toLowerCase());
 
-  // 10. Cross-session memory
-  print('\n\x1b[1m\x1b[34m▸ 10/12 — Cross-session memory\x1b[0m\n');
+  // 11. Cross-session memory
+  print('\n\x1b[1m\x1b[34m▸ 11/13 — Cross-session memory\x1b[0m\n');
   const memoryChoice = await ask('Enable cross-session memory? (y/n)', 'n');
   const memory = ['y', 'o'].includes(memoryChoice.toLowerCase());
 
-  // 11. Metrics
-  print('\n\x1b[1m\x1b[34m▸ 11/12 — Workflow metrics\x1b[0m\n');
+  // 12. Metrics
+  print('\n\x1b[1m\x1b[34m▸ 12/13 — Workflow metrics\x1b[0m\n');
   const metricsChoice = await ask('Enable workflow metrics? (y/n)', 'n');
   const metrics = ['y', 'o'].includes(metricsChoice.toLowerCase());
 
-  // 12. Confirmation with edit loop
+  // 13. Confirmation with edit loop
   let confirmed = false;
   while (!confirmed) {
-    print('\n\x1b[1m\x1b[34m▸ 12/12 — Confirmation\x1b[0m\n');
+    print('\n\x1b[1m\x1b[34m▸ 13/13 — Confirmation\x1b[0m\n');
     print(`  Profile        : \x1b[1m${profile}\x1b[0m`);
     print(`  Team language  : \x1b[1m${langTeam}\x1b[0m`);
     print(`  Output language: \x1b[1m${langOutput}\x1b[0m`);
@@ -418,6 +424,7 @@ async function main() {
     print(`  Output         : \x1b[1m${outputDir}\x1b[0m`);
     print(`  YOLO mode      : \x1b[1m${yolo ? '\x1b[33myes — autonomous\x1b[0m' : 'no'}\x1b[0m`);
     print(`  MCP server     : \x1b[1m${mcp ? 'yes' : 'no'}\x1b[0m`);
+    print(`  Web search     : \x1b[1m${search ? 'yes' : 'no'}\x1b[0m`);
     print(`  Governance     : \x1b[1m${governance}\x1b[0m`);
     print(`  Memory         : \x1b[1m${memory ? 'yes' : 'no'}\x1b[0m`);
     print(`  Metrics        : \x1b[1m${metrics ? 'yes' : 'no'}\x1b[0m`);
@@ -464,6 +471,7 @@ async function main() {
   lines.push(`governance: "${governance}"`);
   lines.push(`yolo: ${yolo ? 'true' : 'false'}`);
   lines.push(`mcp: ${mcp ? 'true' : 'false'}`);
+  lines.push(`search: ${search ? 'true' : 'false'}`);
   lines.push(`memory: ${memory ? 'true' : 'false'}`);
   lines.push(`metrics: ${metrics ? 'true' : 'false'}`);
   lines.push(`installed_at: "${today}"`);

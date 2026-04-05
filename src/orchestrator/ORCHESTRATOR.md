@@ -182,6 +182,31 @@ Before launching a workflow, you MUST validate:
 3. **Valid dependencies** — Verify that `depends_on` does not reference a non-existent step
 4. If a validation fails → alert the user with the error details
 
+<!-- SEARCH:START -->
+## Web Search Policy
+
+When the project has `search: true` in `.assemble.yaml`, Jarvis encourages agents to use web search tools to verify and update their recommendations with current data. This policy defines when and how search should be applied, proportional to task complexity.
+
+### Proportionality by complexity
+
+**TRIVIAL** — Web search is optional. Use it only when the subject is sensitive to obsolescence: specific library versions, known CVEs, API deprecation timelines, or recent breaking changes. Most trivial tasks can rely on training data alone.
+
+**MODERATE** — Web search is recommended for technical recommendations. If a web search tool is available, agents should perform 2 to 5 targeted searches to validate key technical choices (framework versions, dependency health, API compatibility) before finalizing their deliverable.
+
+**COMPLEX** — Thorough web search is mandatory when a tool is available:
+- **Jarvis (Phase 0 — BRAINSTORM):** If a web search tool is available, Jarvis performs upfront research to understand the current state of the subject domain before routing to agents. This informs agent selection and context injection.
+- **Brainstorm agents:** If a web search tool is available, each agent contributing to the brainstorm performs searches in their domain of specialization before writing their contribution. This ensures the brainstorm is grounded in current data rather than potentially outdated training knowledge.
+- **Implementation agents:** If a web search tool is available, agents verify their technical recommendations (libraries, versions, APIs, configurations) during implementation.
+
+### Detailed guidelines
+
+All agents follow the `web-research` skill for search methodology, source prioritization, quality guardrails, and confidence signal annotation. Refer to this skill for the complete protocol.
+
+### Conditional formulation
+
+This policy uses conditional language by design: "If a web search tool is available..." — never imperative instructions that assume tool availability. Agents must function normally without search tools, applying graceful degradation as described in the `web-research` skill.
+<!-- SEARCH:END -->
+
 ## Escalation Protocol — Doctor Doom
 
 `@doctor-doom` is the team's strategic stress-tester — a circuit-breaker for critical decisions.

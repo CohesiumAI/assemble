@@ -455,6 +455,77 @@ test('handles YAML sequence format', () => {
   assert(result.agents[0] === 'pm', `first should be pm, got ${result.agents[0]}`);
 });
 
+// ─── renderSearchInstructions ───────────────────────────────────────────
+
+const { renderSearchInstructions } = require('../generator/lib/template-engine');
+
+console.log('\nrenderSearchInstructions()');
+
+test('search: false returns empty string', () => {
+  const out = renderSearchInstructions({ search: false });
+  assert(out === '', `should be empty, got: "${out}"`);
+});
+
+test('search: true returns non-empty string containing Web Search', () => {
+  const out = renderSearchInstructions({ search: true });
+  assert(out.length > 0, 'should be non-empty');
+  assert(out.includes('Web Search'), `should contain "Web Search", got: "${out.substring(0, 80)}..."`);
+});
+
+// ─── prepareAgent: search strip ─────────────────────────────────────────
+
+const { prepareAgent } = require('../generator/lib/template-engine');
+
+console.log('\nprepareAgent() — search strip');
+
+test('search: false strips content between SEARCH markers', () => {
+  const agent = {
+    meta: { name: 'test-agent', description: 'Test', marvel: 'Test' },
+    content: 'Before\n\n<!-- SEARCH:START -->\n## Research Protocol\n\nSearch stuff here.\n<!-- SEARCH:END -->\n\nAfter',
+    sections: {},
+    fileName: 'AGENT-test.md',
+  };
+  const config = { search: false, langue_equipe: 'english', output_dir: './assemble-output' };
+  const result = prepareAgent(agent, config);
+  assert(!result.content.includes('SEARCH:START'), 'should not contain SEARCH:START');
+  assert(!result.content.includes('Research Protocol'), 'should not contain Research Protocol');
+  assert(result.content.includes('Before'), 'should preserve content before markers');
+  assert(result.content.includes('After'), 'should preserve content after markers');
+});
+
+test('search: true preserves content between SEARCH markers', () => {
+  const agent = {
+    meta: { name: 'test-agent', description: 'Test', marvel: 'Test' },
+    content: 'Before\n\n<!-- SEARCH:START -->\n## Research Protocol\n\nSearch stuff here.\n<!-- SEARCH:END -->\n\nAfter',
+    sections: {},
+    fileName: 'AGENT-test.md',
+  };
+  const config = { search: true, langue_equipe: 'english', output_dir: './assemble-output' };
+  const result = prepareAgent(agent, config);
+  assert(result.content.includes('SEARCH:START'), 'should contain SEARCH:START');
+  assert(result.content.includes('Research Protocol'), 'should contain Research Protocol');
+  assert(result.content.includes('SEARCH:END'), 'should contain SEARCH:END');
+});
+
+// ─── renderRoutingRules: search section ─────────────────────────────────
+
+console.log('\nrenderRoutingRules() — search section');
+
+test('search: true includes Web Search Policy in routing rules', () => {
+  const out = renderRoutingRules([], [], { search: true });
+  assert(out.includes('Web Search'), 'should contain Web Search when search is true');
+});
+
+test('search: false does not include Web Search Policy in routing rules', () => {
+  const out = renderRoutingRules([], [], { search: false });
+  assert(!out.includes('Web Search Policy'), 'should not contain Web Search Policy when search is false');
+});
+
+test('no config.search does not include Web Search Policy', () => {
+  const out = renderRoutingRules([], [], {});
+  assert(!out.includes('Web Search Policy'), 'should not contain Web Search Policy when search is absent');
+});
+
 // ─── Summary ─────────────────────────────────────────────────────────────
 
 console.log('');

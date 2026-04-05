@@ -33,6 +33,9 @@ memory: false
 # Workflow metrics (false = disabled, true = generates _metrics.md)
 metrics: false
 
+# Web search (false = disabled, true = enables web research protocol for agents)
+search: false
+
 # Deliverable output directory
 output:
   dir: "./assemble-output"

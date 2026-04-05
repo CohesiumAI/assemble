@@ -131,6 +131,20 @@ Client (Browser / Mobile)
 - Scalability and resilience strategy
 - Security by design checklist
 
+<!-- SEARCH:START -->
+## Research Protocol
+
+Before finalizing recommendations, if a web search tool is available, verify:
+
+- Current stable versions of recommended frameworks and libraries
+- Maintenance status and recent breaking changes in key dependencies
+- Up-to-date performance benchmarks for architecture patterns under consideration
+- Adoption trends and community health of proposed technologies
+- Recent cloud provider pricing changes or service deprecations
+
+Follow the `web-research` skill for methodology and confidence signals. If no search tool is available, annotate recommendations with `[TRAINING DATA]` and add a `## Limitations` section listing points that would benefit from verification.
+<!-- SEARCH:END -->
+
 ## Quality Rules
 
 - Every recommendation presents at least 2 alternatives with explicit trade-offs

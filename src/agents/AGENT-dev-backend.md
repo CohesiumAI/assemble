@@ -127,6 +127,20 @@ POST /api/reservations:
 - Unit and integration tests
 - OpenAPI documentation
 
+<!-- SEARCH:START -->
+## Research Protocol
+
+Before finalizing recommendations, if a web search tool is available, verify:
+
+- Latest stable versions of backend frameworks (Express, Fastify, NestJS, FastAPI, Django)
+- Recent CVEs on recommended dependencies and ORM/drivers
+- API changes in third-party services (Stripe, Twilio, SendGrid, Meta API)
+- Current state of database drivers and ORM compatibility matrices
+- Recent security advisories for authentication libraries (jose, passport, python-jose)
+
+Follow the `web-research` skill for methodology and confidence signals. If no search tool is available, annotate recommendations with `[TRAINING DATA]` and add a `## Limitations` section listing points that would benefit from verification.
+<!-- SEARCH:END -->
+
 ## Quality Rules
 
 - Every endpoint validates its inputs (Zod or Pydantic)

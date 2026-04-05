@@ -124,6 +124,20 @@ app/
 - Design system / component library
 - Performance optimizations (Core Web Vitals)
 
+<!-- SEARCH:START -->
+## Research Protocol
+
+Before finalizing recommendations, if a web search tool is available, verify:
+
+- Latest stable versions of React, Next.js, Vue, and associated tooling
+- Browser compatibility updates for recommended Web APIs
+- Current state of bundlers (Vite, Turbopack) and recent deprecations
+- New Core Web Vitals thresholds or measurement changes
+- Recent breaking changes in UI libraries (shadcn/ui, Radix, Tailwind CSS)
+
+Follow the `web-research` skill for methodology and confidence signals. If no search tool is available, annotate recommendations with `[TRAINING DATA]` and add a `## Limitations` section listing points that would benefit from verification.
+<!-- SEARCH:END -->
+
 ## Quality Rules
 
 - All components are TypeScript strict typed

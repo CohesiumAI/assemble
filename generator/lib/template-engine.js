@@ -30,6 +30,11 @@ Follow the folder structure defined by the current workflow.
     content = content.trim() + '\n\n' + outputBlock;
   }
 
+  // Strip search protocol if search is disabled
+  if (!config.search) {
+    content = content.replace(/<!--\s*SEARCH:START\s*-->[\s\S]*?<!--\s*SEARCH:END\s*-->\n*/g, '');
+  }
+
   return { ...agent, content };
 }
 
@@ -387,6 +392,27 @@ function renderMetricsTemplate(config) {
 }
 
 /**
+ * Render web search instructions for routing.
+ * Injected into routing rules when config.search is enabled.
+ * @param {object} config
+ * @returns {string}
+ */
+function renderSearchInstructions(config) {
+  if (!config.search) return '';
+  return `\n## Web Search Policy\n\n` +
+    `This project has web search enabled. Agents can use the \`web-research\` skill to gather external information.\n\n` +
+    `**Proportionality rules — adapt search effort to task complexity:**\n` +
+    `- **TRIVIAL**: no search unless the agent lacks critical knowledge (quick lookup only)\n` +
+    `- **MODERATE**: targeted search to validate assumptions or fill knowledge gaps (1-3 queries)\n` +
+    `- **COMPLEX**: thorough research phase during BRAINSTORM — compare approaches, check latest docs, validate architecture choices\n\n` +
+    `**Guidelines:**\n` +
+    `- Always prefer project context and existing deliverables over external search\n` +
+    `- Cite sources when search results influence a decision\n` +
+    `- Do not search for information already available in the codebase or previous deliverables\n` +
+    `- Use the \`web-research\` skill for structured research tasks (multi-query, synthesis)\n\n`;
+}
+
+/**
  * Generate routing rules for Jarvis.
  * Contains identity, complexity assessment, domain→agent mapping, and methodology.
  * @param {Array} agents
@@ -559,10 +585,11 @@ function renderRoutingRules(agents, workflows, config) {
   out += '- `/dismiss` is the ONLY way to end a session\n';
   out += '- Say "add [agent]" to add agents mid-session, "who\'s here?" to check roster\n';
 
-  // Append memory instructions if enabled
+  // Append memory, metrics, and search instructions if enabled
   if (config) {
     out += renderMemoryInstructions(config);
     out += renderMetricsTemplate(config);
+    out += renderSearchInstructions(config);
   }
 
   return out;
@@ -789,5 +816,6 @@ module.exports = {
   renderGovernanceRules,
   renderMemoryInstructions,
   renderMetricsTemplate,
+  renderSearchInstructions,
   buildAgentLookup,
 };
