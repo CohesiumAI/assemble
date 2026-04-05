@@ -74,13 +74,13 @@ Use `/board` to inspect the board, resume execution, or re-prioritize tickets al
 
 ### Why Marvel names?
 
-It's a **prompt engineering trick**, not branding.
+It's a **prompt engineering decision**, not branding.
 
-LLMs have deep knowledge of Marvel characters. When the config says `@tony-stark` for architecture, the LLM activates a semantic network: inventive, systematic, pragmatic. `@hawkeye` in QA means precision, never misses. `@loki` in copywriting means language manipulation, persuasion.
+LLMs encode character knowledge as dense semantic networks. Marvel's universe is the most richly represented in model weights — more so than LOTR, DC, or any other fictional roster we tested. When the config says `@tony-stark`, the LLM activates *inventive, systematic, pragmatic* without a single line of behavioral instruction. `@hawkeye` means precision. `@loki` means persuasion. Each persona compresses hundreds of tokens of explicit guidance into one `@mention`.
 
-Each persona compresses hundreds of tokens of behavioral instructions into a single `@mention`. And the characters are teammates who know how to work together and always find a way to succeed — the LLM's weights know this too.
+We evaluated alternatives deliberately. Marvel won on three criteria: depth of encoding in LLM training data, breadth of distinct personality archetypes, and built-in team dynamics — these characters know how to collaborate under pressure, and the model weights carry that too.
 
-For humans: `@professor-x` is easier to remember than `@product-manager-agent`.
+For humans: `@professor-x` is also easier to remember than `@product-manager-agent`.
 
 ---
 
