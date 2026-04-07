@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="#quick-start"><img src="https://img.shields.io/badge/npx-cohesiumai--assemble-6366f1?style=flat-square" alt="npx cohesiumai-assemble" /></a>
-  <img src="https://img.shields.io/badge/version-1.1.0--beta.3-orange?style=flat-square" alt="v1.1.0-beta.3" />
+  <img src="https://img.shields.io/badge/version-1.1.1--beta.1-orange?style=flat-square" alt="v1.1.1-beta.1" />
   <img src="https://img.shields.io/badge/agents-34-8b5cf6?style=flat-square" alt="34 agents" />
   <img src="https://img.shields.io/badge/platforms-21-3b82f6?style=flat-square" alt="21 platforms" />
   <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License" />
@@ -20,7 +20,7 @@
 
 ---
 
-> **v1.1.0-beta.3** — This is a beta release. Core functionality is stable, but APIs and generated file formats may change before v1.0.0 stable. Feedback welcome via [GitHub Issues](https://github.com/CohesiumAI/assemble/issues).
+> **v1.1.1-beta.1** — New: opt-in **web search protocol** — agents verify recommendations with current data. Core functionality is stable, but APIs and generated file formats may change before v1.0.0 stable. Feedback welcome via [GitHub Issues](https://github.com/CohesiumAI/assemble/issues).
 
 Assemble turns your IDE into a structured team of 34 senior-level AI specialists — architect, backend, QA, security, product, marketing, and 28 others. You run one command. It generates native config files for Cursor, Claude Code, Copilot, Gemini CLI, and 17 other platforms. No runtime, no daemon, no SDK. Your LLM reads the configs and knows exactly who to be, how to think, and what to deliver.
 
@@ -71,6 +71,30 @@ For **COMPLEX** workflows, Phase 4 (**IMPLEMENT**) switches from a linear execut
 The `board-execution` engine runs dependency-ready tickets in parallel through a fixed pipeline: **implement → review → test → done**. It enforces WIP limits, resolves ticket dependencies automatically, and injects only ticket-specific context into each agent so execution stays focused and auditable.
 
 Use `/board` to inspect the board, resume execution, or re-prioritize tickets already in `_board.yaml`. Simple workflows — typically fewer than 3 tickets with no dependencies — stay in the standard linear mode.
+
+### Web Search Protocol — Agents that verify before they recommend
+
+LLMs work with frozen knowledge. An architect recommending a framework abandoned six months ago, a security expert missing last week's CVE, a SEO specialist advising based on an outdated algorithm — these are real risks when agents operate on training data alone.
+
+With `search: true` in `.assemble.yaml`, agents verify their recommendations against current data before finalizing them. The protocol is **proportional to complexity**:
+
+- **TRIVIAL** — Optional quick check for version-sensitive topics
+- **MODERATE** — Targeted verification (2-5 searches) for technical recommendations
+- **COMPLEX** — Deep research: Jarvis researches upfront to master the subject, then each agent in the brainstorm searches within their domain of expertise before contributing
+
+Nine domain-critical agents are equipped with domain-specific research directives: architect, backend, frontend, DevOps, security, SEO, content SEO, AI/ML, and legal. Each agent knows *what* to verify in their field — the architect checks framework versions and maintenance status, the security expert checks recent CVEs, the SEO specialist checks algorithm updates.
+
+**Quality guardrails** are built in: ignore libraries with < 100 GitHub stars or no activity in 12 months, cross-reference at least two sources for critical recommendations, prefer primary sources (official docs, GitHub, npm/PyPI) over blog posts.
+
+**Confidence signals** annotate every sensitive recommendation: `[VERIFIED 2026-04]` for web-verified data, `[TRAINING DATA]` for unverified knowledge, `[NEEDS VERIFICATION]` for points requiring manual check.
+
+**Graceful degradation**: when no search tool is available (some platforms don't expose web search), agents work normally but add a `## Limitations` section listing points that would benefit from verification. No fake results, no search theater.
+
+The web search protocol is **opt-in** (disabled by default) and recommended during installation. Enable it in `.assemble.yaml`:
+
+```yaml
+search: true    # Agents verify recommendations with current web data
+```
 
 ### Why Marvel names?
 
@@ -133,7 +157,8 @@ The interactive installer guides you through:
 3. Choosing your **target platforms** (Cursor, Claude Code, Copilot, etc.)
 4. Setting the **project** and **output directories**
 5. Enabling **MCP server** (opt-in)
-6. Selecting **governance level** (none, standard, strict)
+6. Enabling **web search** (recommended — agents verify recommendations with current data)
+7. Selecting **governance level** (none, standard, strict)
 
 ---
 
@@ -144,14 +169,14 @@ $ npx cohesiumai-assemble
 
 🦸 Assemble — AI Agent Orchestrator
 
-▸ 1/12 — Team language
+▸ 1/13 — Team language
   Team language: english
 
-▸ 3/12 — Team profile
+▸ 3/13 — Team profile
   1) startup   2) enterprise   3) agency   4) custom
   Profile: 4
 
-▸ 4/12 — IDE/CLI selection
+▸ 4/13 — IDE/CLI selection
   Your choice: 0    # → all 21 platforms
 
 ✅ Installation complete!
@@ -246,7 +271,7 @@ After installation, a `.assemble.yaml` file is created at the root of your proje
 
 ```yaml
 # Assemble — Project configuration
-version: "1.1.0-beta.3"
+version: "1.1.1-beta.1"
 profile: "custom"                 # startup | enterprise | agency | custom
 langue_equipe: "english"          # Language for agent-to-agent communication
 langue_output: "english"          # Language for produced deliverables
@@ -257,6 +282,7 @@ workflows: all                    # Activated workflows (all or list)
 governance: "none"                # none | standard | strict
 yolo: false                       # Non-interactive chaining (no validation gates)
 mcp: false                        # MCP server generation
+search: false                     # Web search protocol (agents verify with current data)
 memory: false                     # Cross-session _memory.md
 metrics: false                    # Workflow _metrics.md
 installed_at: "2026-03-19"
@@ -279,7 +305,7 @@ Profiles provide sensible defaults that can be overridden by explicit config:
 
 **Custom skills:** Use `npx cohesiumai-assemble import <path>` to copy skill files into `.assemble/skills/`. They're included in the next generation.
 
-For details on MCP server, cross-session memory, metrics, YOLO escalation levels, and governance, see [the full documentation →](docs/)
+For details on MCP server, web search, cross-session memory, metrics, YOLO escalation levels, and governance, see [the full documentation →](docs/)
 
 ---
 
@@ -303,7 +329,7 @@ For details on MCP server, cross-session memory, metrics, YOLO escalation levels
 | 14 | Documentation Sprint | `/docs` | Analyst, Architect, Fullstack, Copywriter, DevOps | Documentation inventory, writing, editing, and publishing |
 | 15 | Experimentation | `/experiment` | PM, Data, Fullstack, QA, Growth | A/B experiment from hypothesis to statistical decision |
 
-28 reusable skills (14 shared + 14 agent-specific) are also available. [See the full skills reference →](docs/SKILLS.md)
+29 reusable skills (15 shared + 14 agent-specific) are also available. [See the full skills reference →](docs/SKILLS.md)
 
 ---
 
@@ -314,7 +340,7 @@ assemble/
   src/
     agents/             # 34 agent definition files (AGENT-*.md)
     skills/
-      shared/           # 14 shared skills (multi-agent)
+      shared/           # 15 shared skills (multi-agent, includes web-research)
       specific/         # 15 agent-specific skills
         # includes board-execution.md for Kanban ticket orchestration
     workflows/          # 15 workflow definitions (YAML)
@@ -330,10 +356,10 @@ assemble/
       profiles.js       # Team profiles (startup, enterprise, agency)
       mcp-generator.js  # MCP server + config generator
       agents-md-generator.js  # Universal AGENTS.md generator
-      template-engine.js      # Template rendering (memory, metrics, governance strict)
+      template-engine.js      # Template rendering (memory, metrics, search, governance strict)
     adapters/           # 21 platform adapters (16 IDE + 5 CLI)
   bin/
-    cli.js              # Interactive installer (12-step wizard)
+    cli.js              # Interactive installer (13-step wizard)
     doctor.js           # Health check (npx cohesiumai-assemble doctor)
     diff.js             # Dry run diff (npx cohesiumai-assemble diff)
     ls.js               # List active config (npx cohesiumai-assemble ls)
