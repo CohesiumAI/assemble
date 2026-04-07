@@ -178,6 +178,7 @@ function printLogo() {
   print("");
   print(CB + "    Assemble" + R + " " + D + "by Cohesium AI" + R);
   print(D + "    Your 34-agent AI team" + R);
+  print(D + "    v" + PKG_VERSION + R);
   print("");
 }
 
@@ -206,18 +207,66 @@ async function runUpdate(projectDir) {
     process.exit(1);
   }
 
-  print('\n\x1b[1m🔄 Updating...\x1b[0m\n');
+  // Read existing config to detect version and missing options
+  const content = fs.readFileSync(configPath, 'utf-8');
+  let installedVersion = 'unknown';
+  for (const line of content.split('\n')) {
+    const m = line.match(/^version:\s*"?([^"]+)"?/);
+    if (m) installedVersion = m[1];
+  }
+
+  print(`\n\x1b[1m🔄 Updating...\x1b[0m`);
+  print(`\x1b[2m  ${installedVersion} → ${PKG_VERSION}\x1b[0m\n`);
   print('Preserved preferences from .assemble.yaml:');
 
-  const content = fs.readFileSync(configPath, 'utf-8');
   for (const line of content.split('\n')) {
-    for (const key of ['langue_equipe', 'langue_output', 'platforms', 'output_dir', 'installed_at']) {
+    for (const key of ['langue_equipe', 'langue_output', 'platforms', 'output_dir', 'governance', 'installed_at']) {
       if (line.startsWith(`${key}:`)) {
         print(`\x1b[32m  ${line.trim()}\x1b[0m`);
       }
     }
   }
   print('');
+
+  // Detect new options not yet in config and offer them
+  const newOptions = [];
+  if (!content.includes('search:')) {
+    newOptions.push('search');
+  }
+  if (!content.includes('memory:')) {
+    newOptions.push('memory');
+  }
+  if (!content.includes('metrics:')) {
+    newOptions.push('metrics');
+  }
+
+  const newValues = {};
+  if (newOptions.length > 0) {
+    print('\x1b[1m\x1b[33m  New options available in v' + PKG_VERSION + ':\x1b[0m\n');
+    for (const opt of newOptions) {
+      if (opt === 'search') {
+        print('  \x1b[36mWeb search\x1b[0m — Recommended. Agents verify recommendations with current data.');
+        const choice = await ask('  Enable web search? (y/n)', 'y');
+        newValues.search = ['y', 'o'].includes(choice.toLowerCase());
+      } else if (opt === 'memory') {
+        print('  \x1b[36mCross-session memory\x1b[0m — Persist context across sessions.');
+        const choice = await ask('  Enable memory? (y/n)', 'n');
+        newValues.memory = ['y', 'o'].includes(choice.toLowerCase());
+      } else if (opt === 'metrics') {
+        print('  \x1b[36mWorkflow metrics\x1b[0m — Track workflow execution metrics.');
+        const choice = await ask('  Enable metrics? (y/n)', 'n');
+        newValues.metrics = ['y', 'o'].includes(choice.toLowerCase());
+      }
+    }
+    print('');
+
+    // Append new options to the config file before regeneration
+    let updatedContent = content.trimEnd() + '\n';
+    for (const [key, val] of Object.entries(newValues)) {
+      updatedContent += `${key}: ${val ? 'true' : 'false'}\n`;
+    }
+    fs.writeFileSync(configPath, updatedContent, 'utf-8');
+  }
 
   const confirm = await ask('Confirm update?', 'Y');
   if (!['y', 'o'].includes(confirm.toLowerCase())) {
