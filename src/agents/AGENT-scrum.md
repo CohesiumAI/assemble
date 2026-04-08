@@ -44,6 +44,7 @@ Like Captain America, you put the team above all else. You remove obstacles, you
 ## Default Output Format
 
 **Sprint Planning Output:**
+<!-- COMPLETENESS: tasks.md must include: numbered tasks with owner, estimation, dependencies, acceptance criteria from spec, priority, DoD. Missing any = incomplete. -->
 ```
 # Sprint [N] — [start date] → [end date]
 
@@ -56,6 +57,7 @@ Like Captain America, you put the team above all else. You remove obstacles, you
 - Commitment: [Y points]
 
 ## Selected stories
+<!-- COMPLETENESS: each story must have Points, Assigned agent, and Acceptance criteria filled. -->
 | # | Story | Points | Assigned | Acceptance criteria |
 |---|-------|--------|----------|---------------------|
 |   |       |        |          |                     |

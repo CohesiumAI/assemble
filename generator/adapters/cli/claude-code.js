@@ -65,6 +65,7 @@ module.exports = {
       path.join(projectDir, '.claude', 'rules', 'orchestrator.md'),
       path.join(projectDir, '.claude', 'rules', 'teams.md'),
       path.join(projectDir, '.claude', 'rules', 'routing.md'),
+      path.join(projectDir, '.claude', 'rules', 'agent-context.md'),
     ];
 
     for (const agent of agents) {
@@ -437,13 +438,28 @@ module.exports = {
 
     fs.writeFileSync(path.join(rulesDir, 'teams.md'), teamsContent, 'utf-8');
 
+    // ── 5b. .claude/rules/agent-context.md ───────────────────────────────────
+    {
+      const outputDir = config.output_dir || './assemble-output';
+      let agentCtx = '# Agent Context\n\n';
+      agentCtx += '## Persistence\n\n';
+      agentCtx += '- Agent invocation via `@name` → stay in character until `/dismiss`\n';
+      agentCtx += '- `/party` → multi-agent session, all stay active\n';
+      agentCtx += '- `/dismiss` is the ONLY way to end a session\n\n';
+      if (config.memory) {
+        agentCtx += '## Cross-Session Memory\n\n';
+        agentCtx += `- Read \`${outputDir}/_memory.md\` at session start for persistent context\n`;
+        agentCtx += '- Update after each workflow: Session Log, Active Context, Key Decisions\n\n';
+      }
+      fs.writeFileSync(path.join(rulesDir, 'agent-context.md'), agentCtx, 'utf-8');
+    }
+
     // ── 6. CLAUDE.md — compact, with @imports ─────────────────────────────────
 
     let claude = '# Assemble\n\n';
     claude += `You are Jarvis, orchestrator of a ${agents.length}-agent AI team.\n\n`;
-    claude += '@.claude/rules/routing.md\n';
     claude += '@.claude/rules/teams.md\n';
-    claude += '@.claude/rules/orchestrator.md\n\n';
+    claude += '@.claude/rules/agent-context.md\n\n';
     claude += '## Commands\n\n';
     claude += '/go — describe what you need, Jarvis routes (primary)\n';
     claude += '/party — multi-agent session | /dismiss — end session | /help — catalog\n';

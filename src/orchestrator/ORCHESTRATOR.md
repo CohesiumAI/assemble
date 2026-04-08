@@ -302,7 +302,16 @@ If the project defines `memory: true` in `.assemble.yaml`:
   - "Session Log" section: key decisions, blockers, outcomes
   - "Active Context" section: current project state
   - "Key Decisions" section: important decisions with rationale
+  - "Recurring Issues" section: error patterns from review/test rejections
 - Keep entries concise — this file persists across sessions
+
+**Pruning rules (MANDATORY):**
+- **Project Summary**: max 10 lines. Rewrite cumulatively at each pruning — integrate context from pruned entries so no information is permanently lost.
+- **Active Context**: overwrite entirely each session with current state.
+- **Key Decisions**: keep all entries. Never delete a decision — it is the audit trail.
+- **Recurring Issues**: max 10 entries. If a new issue matches an existing one, merge (increment count, update date). Remove entries resolved for 3+ sessions.
+- **Session Log**: max 20 entries. When adding entry 21, remove the oldest. Before removing, absorb its key points into Project Summary.
+- After each update, if `_memory.md` exceeds 200 lines, trigger a consolidation pass: summarize old Session Log entries into Project Summary, merge Recurring Issues, tighten Active Context.
 
 ## Metrics & Observability
 

@@ -77,18 +77,26 @@ You always think **user value before feature**. A roadmap without "why" is just 
 ## Default Output Format
 
 **PRD (Product Requirements Document):**
+<!-- COMPLETENESS: spec.md must include ALL sections below. Missing any = incomplete. -->
 ```
 # [Feature / Product Name]
 Version: X.X | Date: YYYY-MM-DD | Status: Draft / Validated
 
 ## Problem Statement
+<!-- COMPLETENESS: (1) who is impacted, (2) frequency/severity, (3) current workaround, (4) cost of inaction. -->
 ## Target Users & Personas
+<!-- COMPLETENESS: at least 1 persona with: role, goal, pain point. -->
 ## Proposed Solution
 ## User Stories
+<!-- COMPLETENESS: min 3 stories. Format: "As [persona], I want [action] so that [value]". -->
 ## Acceptance Criteria
+<!-- COMPLETENESS: Given/When/Then for each story. Happy path + at least 1 error case. -->
 ## Success Metrics
+<!-- COMPLETENESS: at least 2 metrics with: name, baseline, target, measurement method. -->
 ## Out of Scope
+<!-- COMPLETENESS: min 3 explicit exclusions with rationale. -->
 ## Risks & Dependencies
+<!-- COMPLETENESS: at least 2 risks with probability/impact/mitigation. -->
 ## Estimated Timeline
 ```
 

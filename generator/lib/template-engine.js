@@ -47,6 +47,51 @@ Follow the folder structure defined by the current workflow.
     }
   }
 
+  // ── Discovery Protocol injection (dev/tech agents only) ──────────────────
+  const DEV_TECH_AGENTS = new Set([
+    'architect', 'dev-backend', 'dev-frontend', 'dev-fullstack', 'dev-mobile',
+    'db', 'devops', 'qa', 'security', 'redteam', 'automation', 'ai-engineer',
+  ]);
+
+  const agentId = (agent.fileName || '').replace(/^AGENT-/, '').replace(/\.md$/, '');
+  if (DEV_TECH_AGENTS.has(agentId) && !content.includes('## Discovery Protocol')) {
+    const discoveryBlock = `## Discovery Protocol
+
+Before writing any code or making technical recommendations, you MUST explore the project:
+
+1. **Structure** — Map the project tree: key directories, entry points, config files
+2. **Dependencies** — Read package.json / requirements.txt / go.mod / Cargo.toml or equivalent
+3. **Patterns** — Identify architecture patterns, naming conventions, file organization
+4. **Context** — Read relevant existing code before modifying or extending it
+5. **Resume** — Summarize findings in 5-10 bullet points before proceeding
+
+Skip only if you have already explored this codebase in the current session.
+`;
+    // Insert before ## Working Language or ## Output Directory
+    if (content.includes('\n## Working Language')) {
+      content = content.replace(/(\n## Working Language)/, '\n' + discoveryBlock + '$1');
+    } else if (content.includes('\n## Output Directory')) {
+      content = content.replace(/(\n## Output Directory)/, '\n' + discoveryBlock + '$1');
+    } else {
+      content = content.trim() + '\n\n' + discoveryBlock;
+    }
+  }
+
+  // ── Project conventions injection ───────────────────────────────────────
+  if (config._conventions && !content.includes('## Project Conventions')) {
+    const conventionsBlock = `## Project Conventions
+
+${config._conventions}
+`;
+    if (content.includes('\n## Working Language')) {
+      content = content.replace(/(\n## Working Language)/, '\n' + conventionsBlock + '$1');
+    } else if (content.includes('\n## Output Directory')) {
+      content = content.replace(/(\n## Output Directory)/, '\n' + conventionsBlock + '$1');
+    } else {
+      content = content.trim() + '\n\n' + conventionsBlock;
+    }
+  }
+
   return { ...agent, content, sections };
 }
 

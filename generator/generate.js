@@ -362,6 +362,15 @@ function generate() {
     }
   }
 
+  // Load project conventions from .assemble/conventions.md (optional)
+  const conventionsPath = path.join(projectDir, '.assemble', 'conventions.md');
+  if (fs.existsSync(conventionsPath)) {
+    config._conventions = normalizeLineEndings(
+      fs.readFileSync(conventionsPath, 'utf-8').replace(/^\uFEFF/, '')
+    ).trim();
+    console.log(`  ✓ Project conventions loaded from .assemble/conventions.md`);
+  }
+
   const commands = loadCommands(COMMANDS_FILE);
   console.log(`  ✓ Command registry loaded`);
 
@@ -539,17 +548,23 @@ function generate() {
   if (config.memory) {
     const memoryContent = `# Assemble — Cross-Session Memory
 
-## Purpose
-This file persists context across sessions. Jarvis and agents can read/write here.
-
-## Session Log
-<!-- Agents append key decisions, blockers, and outcomes here -->
+## Project Summary
+<!-- Cumulative project description. Max 10 lines. Rewritten by Jarvis at each pruning cycle
+     to integrate context from pruned entries. This is the long-term memory of the project. -->
 
 ## Active Context
-<!-- Current project state, recent decisions, open threads -->
+<!-- Current project state, recent decisions, open threads. Overwrite each session. -->
 
 ## Key Decisions
-<!-- Important decisions with rationale — survives across sessions -->
+<!-- Important decisions with rationale. Format: [date] decision — rationale. Keep all. -->
+
+## Recurring Issues
+<!-- Patterns that keep appearing. Max 10 entries. Format:
+     - [agent] issue description (occurrences: N, last: YYYY-MM-DD) -->
+
+## Session Log
+<!-- Append one entry per session. Max 20 entries. Oldest removed when exceeded.
+     Format: [YYYY-MM-DD] Summary — key outcomes, blockers, next steps -->
 `;
     const memoryPath = path.join(projectDir, config.output_dir || './assemble-output', '_memory.md');
     fs.mkdirSync(path.dirname(memoryPath), { recursive: true });

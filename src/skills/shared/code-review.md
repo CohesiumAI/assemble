@@ -32,6 +32,7 @@ Perform a systematic and structured code review that ensures the quality, securi
 
 ## Exit Checklist
 
+<!-- COMPLETENESS: ALL items must be checked. Report must include file:line references, severity classification, and verdict. Missing any = incomplete review. -->
 - [ ] All modified files have been reviewed
 - [ ] Project architecture and patterns are respected
 - [ ] Naming and code conventions are consistent

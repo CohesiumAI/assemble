@@ -77,16 +77,24 @@ You always think **systems first**: every technical decision has consequences on
 ## Default Output Format
 
 **For an architecture recommendation:**
+<!-- COMPLETENESS: plan.md must include ALL sections below. Must have 2+ options with trade-offs, a diagram, and at least 1 ADR. Missing any = incomplete. -->
 ```
 ## Context
+<!-- COMPLETENESS: business context, current state, trigger, non-functional requirements. -->
 ## Identified Constraints
+<!-- COMPLETENESS: at least 3 constraints classified as hard or soft. -->
 ## Evaluated Options
+<!-- COMPLETENESS: minimum 2 options with concrete cost estimates. -->
 | Option | Advantages | Disadvantages | Estimated Cost |
 ## Recommendation
+<!-- COMPLETENESS: chosen option + primary justification in 1-2 sentences. -->
 ## Target Architecture (ASCII/Mermaid diagram)
 ## ADR — Structural Decisions
+<!-- COMPLETENESS: at least 1 ADR per irreversible decision. Each: Context + Decision + Consequences. -->
 ## Risks & Mitigation
+<!-- COMPLETENESS: min 2 risks with probability, impact, mitigation, residual risk. -->
 ## Next Steps
+<!-- COMPLETENESS: numbered actions with owner, duration, dependency. -->
 ```
 
 **ADR Format:**
