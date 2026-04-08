@@ -23,7 +23,7 @@ function buildAgentResolver(platforms) {
   const platformPaths = {
     'claude-code': '.claude/agents/{slug}/AGENT.md',
     'cursor':      '.cursor/agents/{slug}.md',
-    'windsurf':    '.windsurf/rules/{slug}.md',
+    'windsurf':    '.windsurf/rules/agent-{slug}.md',
     'cline':       '.cline/agents/{slug}.md',
     'copilot':     '.github/instructions/{slug}.md',
     'kiro':        '.kiro/agents/{slug}.json',
@@ -275,7 +275,12 @@ await server.connect(transport);
   };
   fs.writeFileSync(path.join(mcpDir, 'mcp.json'), JSON.stringify(mcpConfig, null, 2), 'utf-8');
 
-  // 3. Generate mcp-package.json (for dependency installation)
+  // 3. Register in Windsurf global MCP config (if windsurf platform is active)
+  if (platforms.includes('windsurf')) {
+    _registerWindsurfMCP(projectDir, agents);
+  }
+
+  // 4. Generate mcp-package.json (for dependency installation)
   const mcpPackage = {
     name: 'assemble-mcp-server',
     version: config.version || PKG_VERSION,
@@ -295,6 +300,48 @@ await server.connect(transport);
       path.join(mcpDir, 'package.json'),
     ],
   };
+}
+
+/**
+ * Register Assemble MCP server in Windsurf's global mcp_config.json.
+ * Merges non-destructively — preserves existing MCP servers.
+ * @param {string} projectDir - Project root (used for absolute path in args)
+ * @param {Array} agents - Agent list (for description)
+ */
+function _registerWindsurfMCP(projectDir, agents) {
+  // Cross-platform homedir without require('os') — zero deps
+  const homedir = process.env.HOME || process.env.USERPROFILE;
+
+  // Windsurf MCP config location (cross-platform)
+  const windsurfConfigPath = path.join(homedir, '.codeium', 'windsurf', 'mcp_config.json');
+
+  if (!fs.existsSync(path.dirname(windsurfConfigPath))) {
+    // Windsurf not installed — skip silently
+    return;
+  }
+
+  let existing = { mcpServers: {} };
+  if (fs.existsSync(windsurfConfigPath)) {
+    try {
+      existing = JSON.parse(fs.readFileSync(windsurfConfigPath, 'utf-8'));
+      if (!existing.mcpServers) existing.mcpServers = {};
+    } catch {
+      // Corrupt config — back up and start fresh
+      fs.copyFileSync(windsurfConfigPath, windsurfConfigPath + '.bak');
+      existing = { mcpServers: {} };
+    }
+  }
+
+  // Only add/update the assemble entry — never touch other servers
+  const mcpServerPath = path.resolve(projectDir, '.assemble', 'mcp-server.js');
+  existing.mcpServers.assemble = {
+    command: 'node',
+    args: [mcpServerPath],
+    disabled: false,
+    env: {},
+  };
+
+  fs.writeFileSync(windsurfConfigPath, JSON.stringify(existing, null, 2), 'utf-8');
 }
 
 module.exports = { generateMCPServer };
