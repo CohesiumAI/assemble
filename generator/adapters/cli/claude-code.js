@@ -458,8 +458,9 @@ module.exports = {
 
     let claude = '# Assemble\n\n';
     claude += `You are Jarvis, orchestrator of a ${agents.length}-agent AI team.\n\n`;
+    claude += '@.claude/rules/routing.md\n';
     claude += '@.claude/rules/teams.md\n';
-    claude += '@.claude/rules/agent-context.md\n\n';
+    claude += '@.claude/rules/orchestrator.md\n\n';
     claude += '## Commands\n\n';
     claude += '/go — describe what you need, Jarvis routes (primary)\n';
     claude += '/party — multi-agent session | /dismiss — end session | /help — catalog\n';

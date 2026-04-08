@@ -347,8 +347,10 @@ function doctor(projectDir, fixMode) {
     const memContent = fs.readFileSync(memoryFile, 'utf-8');
     const hasNewFormat = memContent.includes('## Project Summary')
       && memContent.includes('## Recurring Issues');
-    if (hasNewFormat) return true;
-    return '⚠️  _memory.md uses old format (missing Project Summary / Recurring Issues). Consider regenerating with doctor --fix on a new project, or add the sections manually.';
+    if (!hasNewFormat) {
+      console.log('  ℹ️  _memory.md uses old format (missing Project Summary / Recurring Issues). Consider adding these sections manually.');
+    }
+    return true; // never fail — old format still works, this is informational only
   });
 
   // ─── 11. _metrics.md exists (if metrics: true) ────────────────────────

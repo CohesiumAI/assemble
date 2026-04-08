@@ -53,10 +53,14 @@ Follow the folder structure defined by the current workflow.
     'db', 'devops', 'qa', 'security', 'redteam', 'automation', 'ai-engineer',
   ]);
 
+  // Ensure sections is a mutable copy (may already be cloned above for search stripping)
+  if (sections === agent.sections) {
+    sections = sections ? { ...sections } : {};
+  }
+
   const agentId = (agent.fileName || '').replace(/^AGENT-/, '').replace(/\.md$/, '');
   if (DEV_TECH_AGENTS.has(agentId) && !content.includes('## Discovery Protocol')) {
-    const discoveryBlock = `## Discovery Protocol
-
+    const discoveryBody = `
 Before writing any code or making technical recommendations, you MUST explore the project:
 
 1. **Structure** — Map the project tree: key directories, entry points, config files
@@ -67,7 +71,8 @@ Before writing any code or making technical recommendations, you MUST explore th
 
 Skip only if you have already explored this codebase in the current session.
 `;
-    // Insert before ## Working Language or ## Output Directory
+    const discoveryBlock = `## Discovery Protocol\n${discoveryBody}`;
+    // Insert into content
     if (content.includes('\n## Working Language')) {
       content = content.replace(/(\n## Working Language)/, '\n' + discoveryBlock + '$1');
     } else if (content.includes('\n## Output Directory')) {
@@ -75,20 +80,26 @@ Skip only if you have already explored this codebase in the current session.
     } else {
       content = content.trim() + '\n\n' + discoveryBlock;
     }
+    // Also add to sections for renderAsRules/renderAsYaml (Codex, Pi)
+    if (sections && !sections['Discovery Protocol']) {
+      sections['Discovery Protocol'] = discoveryBody;
+    }
   }
 
   // ── Project conventions injection ───────────────────────────────────────
   if (config._conventions && !content.includes('## Project Conventions')) {
-    const conventionsBlock = `## Project Conventions
-
-${config._conventions}
-`;
+    const conventionsBody = '\n' + config._conventions + '\n';
+    const conventionsBlock = `## Project Conventions\n${conventionsBody}`;
     if (content.includes('\n## Working Language')) {
       content = content.replace(/(\n## Working Language)/, '\n' + conventionsBlock + '$1');
     } else if (content.includes('\n## Output Directory')) {
       content = content.replace(/(\n## Output Directory)/, '\n' + conventionsBlock + '$1');
     } else {
       content = content.trim() + '\n\n' + conventionsBlock;
+    }
+    // Also add to sections for renderAsRules/renderAsYaml
+    if (sections && !sections['Project Conventions']) {
+      sections['Project Conventions'] = conventionsBody;
     }
   }
 
