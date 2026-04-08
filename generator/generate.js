@@ -464,6 +464,19 @@ function generate() {
     console.log('');
   }
 
+  // ─── Pre-generation cleanup: remove broken Windsurf .yaml workflows ─────
+  // Handles the case where a previous (buggy) version wrote .yaml instead of .md
+  if (config.platforms.includes('windsurf')) {
+    const wfDir = path.join(projectDir, '.windsurf', 'workflows');
+    if (fs.existsSync(wfDir)) {
+      for (const f of fs.readdirSync(wfDir)) {
+        if (f.endsWith('.yaml') || f.endsWith('.yml')) {
+          fs.unlinkSync(path.join(wfDir, f));
+        }
+      }
+    }
+  }
+
   // Generate for each platform
   let successCount = 0;
   let errorCount = 0;

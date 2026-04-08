@@ -382,7 +382,66 @@ function doctor(projectDir, fixMode) {
     },
   });
 
-  // ─── 14. No orphaned platform files ───────────────────────────────────
+  // ─── 14. Windsurf workflows health (.md, frontmatter, system commands) ─
+
+  check('Windsurf workflow format', () => {
+    if (!configuredPlatforms.includes('windsurf')) return true;
+    const wfDir = path.join(projectDir, '.windsurf', 'workflows');
+    if (!fs.existsSync(wfDir)) return 'Missing .windsurf/workflows/';
+
+    const files = fs.readdirSync(wfDir);
+    const issues = [];
+
+    // Detect residual .yaml files (broken pre-fix install)
+    const yamlFiles = files.filter(f => f.endsWith('.yaml') || f.endsWith('.yml'));
+    if (yamlFiles.length > 0) {
+      issues.push(`${yamlFiles.length} residual .yaml file(s): ${yamlFiles.slice(0, 3).join(', ')}${yamlFiles.length > 3 ? '...' : ''}`);
+    }
+
+    // Check .md files have frontmatter
+    const mdFiles = files.filter(f => f.endsWith('.md'));
+    for (const f of mdFiles) {
+      const content = fs.readFileSync(path.join(wfDir, f), 'utf-8');
+      if (!content.startsWith('---\n') || !content.includes('description:')) {
+        issues.push(`${f}: missing frontmatter (description:)`);
+      }
+    }
+
+    // Check system commands exist
+    const required = ['go.md', 'party.md', 'dismiss.md', 'help.md', 'doom.md'];
+    const missing = required.filter(f => !files.includes(f));
+    if (missing.length > 0) {
+      issues.push(`Missing system commands: ${missing.join(', ')}`);
+    }
+
+    return issues.length === 0 ? true : issues.join('; ');
+  }, {
+    fixable: true,
+    fix: () => {
+      const wfDir = path.join(projectDir, '.windsurf', 'workflows');
+
+      // 1. Remove residual .yaml files
+      if (fs.existsSync(wfDir)) {
+        for (const f of fs.readdirSync(wfDir)) {
+          if (f.endsWith('.yaml') || f.endsWith('.yml')) {
+            fs.unlinkSync(path.join(wfDir, f));
+          }
+        }
+      }
+
+      // 2. Trigger full regeneration to rebuild correct .md files
+      const generatorPath = path.join(__dirname, '..', 'generator', 'generate.js');
+      if (fs.existsSync(generatorPath)) {
+        execFileSync(process.execPath, [
+          generatorPath, '--update', '--project', projectDir,
+        ], { stdio: 'pipe' });
+      } else {
+        throw new Error('generate.js not found');
+      }
+    },
+  });
+
+  // ─── 15. No orphaned platform files ───────────────────────────────────
 
   check('No orphaned platform files', () => {
     if (!configExists) return 'warn';
