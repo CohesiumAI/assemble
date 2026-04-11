@@ -143,10 +143,11 @@ for (const [dirName, name] of dirBasedIDEs) {
 // ═══ Other CLI Platforms ═══
 console.log('\n--- Other CLI Platforms ---');
 
-// Codex — AGENTS.md contains governance (but shared with Pi — need to check actual codex content)
-// Codex and Pi both write AGENTS.md, last one wins. Let's check the combined AGENTS.md
-check('Codex/Pi: AGENTS.md exists', fs.existsSync(path.join(dir, 'AGENTS.md')));
-check('Codex/Pi: AGENTS.md has Governance', fileContains(path.join(dir, 'AGENTS.md'), 'Governance'));
+// Codex — native files must exist even though AGENTS.md is shared with Pi
+check('Codex: AGENTS.md exists', fs.existsSync(path.join(dir, 'AGENTS.md')));
+check('Codex: .agents/skills/go/SKILL.md exists', fs.existsSync(path.join(dir, '.agents', 'skills', 'go', 'SKILL.md')));
+check('Codex: .codex/agents directory exists', fs.existsSync(path.join(dir, '.codex', 'agents')));
+check('Codex: tony-stark custom agent exists', fs.existsSync(path.join(dir, '.codex', 'agents', 'tony-stark.toml')));
 
 // Auggie
 check('Auggie: _commands.md exists', fs.existsSync(path.join(dir, '.augment', 'commands', '_commands.md')));

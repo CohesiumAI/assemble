@@ -3,7 +3,7 @@
 # The installer generates a per-project .assemble.yaml that overrides these values
 
 # NOTE: the generator reads the version from package.json at build time — this value is for reference only
-version: "1.1.0-beta.3"
+version: "1.1.2-beta.3"
 
 # Default languages
 i18n:
@@ -158,7 +158,7 @@ platforms:
       config_files: ["CLAUDE.md", ".claude/skills/*/SKILL.md", ".claude/rules/"]
       description: "Claude Code Desktop / VS Code (agents as skills, no @imports)"
     - name: codex
-      config_files: ["AGENTS.md"]
+      config_files: ["AGENTS.md", ".agents/skills/*/SKILL.md", ".codex/agents/*.toml"]
       description: "Codex CLI (OpenAI)"
     - name: gemini-cli
       config_files: ["GEMINI.md", ".gemini/agents/", ".gemini/skills/", ".gemini/workflows/"]

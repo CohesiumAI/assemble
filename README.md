@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="#quick-start"><img src="https://img.shields.io/badge/npx-cohesiumai--assemble-6366f1?style=flat-square" alt="npx cohesiumai-assemble" /></a>
-  <img src="https://img.shields.io/badge/version-1.1.1--beta.1-orange?style=flat-square" alt="v1.1.1-beta.1" />
+  <img src="https://img.shields.io/badge/version-1.1.2--beta.3-orange?style=flat-square" alt="v1.1.2-beta.3" />
   <img src="https://img.shields.io/badge/agents-34-8b5cf6?style=flat-square" alt="34 agents" />
   <img src="https://img.shields.io/badge/platforms-21-3b82f6?style=flat-square" alt="21 platforms" />
   <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License" />
@@ -20,7 +20,7 @@
 
 ---
 
-> **v1.1.1-beta.1** — New: opt-in **web search protocol** — agents verify recommendations with current data. Core functionality is stable, but APIs and generated file formats may change before v1.0.0 stable. Feedback welcome via [GitHub Issues](https://github.com/CohesiumAI/assemble/issues).
+> **v1.1.2-beta.3** — New: native **Codex support** now generates `AGENTS.md`, project skills, and Codex custom agents. Core functionality is stable, but APIs and generated file formats may change before v1.0.0 stable. Feedback welcome via [GitHub Issues](https://github.com/CohesiumAI/assemble/issues).
 
 Assemble turns your IDE into a structured team of 34 senior-level AI specialists — architect, backend, QA, security, product, marketing, and 28 others. You run one command. It generates native config files for Cursor, Claude Code, Copilot, Gemini CLI, and 17 other platforms. No runtime, no daemon, no SDK. Your LLM reads the configs and knows exactly who to be, how to think, and what to deliver.
 
@@ -271,7 +271,7 @@ After installation, a `.assemble.yaml` file is created at the root of your proje
 
 ```yaml
 # Assemble — Project configuration
-version: "1.1.1-beta.1"
+version: "1.1.2-beta.3"
 profile: "custom"                 # startup | enterprise | agency | custom
 langue_equipe: "english"          # Language for agent-to-agent communication
 langue_output: "english"          # Language for produced deliverables

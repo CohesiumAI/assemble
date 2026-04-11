@@ -169,6 +169,8 @@ const PLATFORM_EXPECTATIONS = {
   },
   codex: {
     files: ['AGENTS.md'],
+    dirs: ['.codex/agents', '.agents/skills'],
+    minFiles: 31,
   },
   pi: {
     files: ['AGENTS.md', 'SYSTEM.md'],
@@ -292,6 +294,47 @@ console.log('\nTest 5: Update mode');
     assert(configAfter.includes('français'), 'Config should still contain français');
     assert(configAfter.includes('claude-code'), 'Config should still contain claude-code');
     assert(configAfter.includes('updated_at'), 'Config should have updated_at');
+  });
+
+  cleanTmpDir();
+}
+
+{
+  const dir = createTmpDir();
+
+  test('--update repairs legacy codex installs that only had AGENTS.md', () => {
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'AGENTS.md'), '# Legacy Codex install\n', 'utf-8');
+    fs.writeFileSync(path.join(dir, '.assemble.yaml'), [
+      'version: "1.1.1-beta.1"',
+      'langue_equipe: "english"',
+      'langue_output: "english"',
+      'output_dir: "./assemble-output"',
+      'platforms: [codex]',
+      'agents: all',
+      'workflows: all',
+      'governance: "none"',
+      'installed_at: "2026-04-01"',
+      '',
+    ].join('\n'));
+
+    run(['--project', dir, '--update']);
+
+    assert(fs.existsSync(path.join(dir, '.agents', 'skills', 'go', 'SKILL.md')), 'Expected Codex $go skill after update');
+    assert(fs.existsSync(path.join(dir, '.codex', 'agents')), 'Expected .codex/agents after update');
+    const tomlCount = countFiles(path.join(dir, '.codex', 'agents'), '.toml');
+    assert(tomlCount >= 31, `Expected >= 31 Codex agent TOML files, got ${tomlCount}`);
+    const agentsMd = fs.readFileSync(path.join(dir, 'AGENTS.md'), 'utf-8');
+    assert(agentsMd.includes('$go'), 'Codex AGENTS.md should reference $go');
+    assert(agentsMd.includes('/skills'), 'Codex AGENTS.md should reference /skills');
+
+    const tonyToml = fs.readFileSync(path.join(dir, '.codex', 'agents', 'tony-stark.toml'), 'utf-8');
+    assert(!tonyToml.includes('@tony-stark'), 'Codex agent nicknames must not include @mentions');
+    assert(tonyToml.includes('"tony_stark"'), 'Codex agent TOML should include underscore alias');
+
+    const beastToml = fs.readFileSync(path.join(dir, '.codex', 'agents', 'beast.toml'), 'utf-8');
+    const nicknameLine = beastToml.split('\n').find(line => line.startsWith('nickname_candidates = ')) || '';
+    assert(nicknameLine === 'nickname_candidates = ["beast"]', `Expected deduplicated beast nicknames, got: ${nicknameLine}`);
   });
 
   cleanTmpDir();
@@ -777,6 +820,43 @@ console.log('\nTest 20: CLI doctor');
     } catch (e) {
       throw new Error('Doctor should exit 0 on valid install');
     }
+  });
+
+  cleanTmpDir();
+}
+
+{
+  const dir = createTmpDir();
+
+  test('assemble doctor detects and fixes legacy codex installs', () => {
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'AGENTS.md'), '# Legacy Codex install\n', 'utf-8');
+    fs.writeFileSync(path.join(dir, '.assemble.yaml'), [
+      'version: "1.1.1-beta.1"',
+      'langue_equipe: "english"',
+      'langue_output: "english"',
+      'output_dir: "./assemble-output"',
+      'platforms: [codex]',
+      'agents: all',
+      'workflows: all',
+      'governance: "none"',
+      'installed_at: "2026-04-01"',
+      '',
+    ].join('\n'));
+
+    const doctorPath = path.join(ROOT, 'bin', 'doctor.js');
+    let failed = false;
+    try {
+      execFileSync(process.execPath, [doctorPath, '--project', dir], { stdio: 'pipe', timeout: 30000 });
+    } catch (e) {
+      failed = true;
+    }
+    assert(failed, 'Doctor should fail on legacy Codex installs missing native files');
+
+    execFileSync(process.execPath, [doctorPath, '--project', dir, '--fix'], { stdio: 'pipe', timeout: 60000 });
+
+    assert(fs.existsSync(path.join(dir, '.agents', 'skills', 'go', 'SKILL.md')), 'Expected Codex $go skill after doctor --fix');
+    assert(fs.existsSync(path.join(dir, '.codex', 'agents')), 'Expected .codex/agents after doctor --fix');
   });
 
   cleanTmpDir();

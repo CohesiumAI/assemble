@@ -192,34 +192,43 @@ function doctor(projectDir, fixMode) {
 
     // Map each platform to at least one signature file/dir that should exist
     const platformSignatures = {
-      'cursor':             ['.cursorrules', '.cursor'],
-      'windsurf':           ['.windsurfrules', '.windsurf'],
-      'cline':              ['.clinerules', '.cline'],
-      'roocode':            ['.roomodes', '.roo'],
-      'copilot':            ['.github/copilot-instructions.md', '.github'],
-      'kiro':               ['.kiro'],
-      'trae':               ['.trae'],
-      'antigravity':        ['.antigravity'],
-      'codebuddy':          ['.codebuddy'],
-      'crush':              ['.crush'],
-      'iflow':              ['.iflow'],
-      'kilocoder':          ['.kilocoder'],
-      'opencode':           ['.opencode'],
-      'qwencoder':          ['.qwencoder'],
-      'rovodev':            ['.rovodev'],
-      'claude-code-desktop': ['.claude'],
-      'claude-code':        ['CLAUDE.md', '.claude'],
-      'codex':              ['AGENTS.md', 'codex.md'],
-      'gemini-cli':         ['GEMINI.md', '.gemini'],
-      'auggie':             ['.augment'],
-      'pi':                 ['SYSTEM.md'],
+      'cursor':             { any: ['.cursorrules', '.cursor'] },
+      'windsurf':           { any: ['.windsurfrules', '.windsurf'] },
+      'cline':              { any: ['.clinerules', '.cline'] },
+      'roocode':            { any: ['.roomodes', '.roo'] },
+      'copilot':            { any: ['.github/copilot-instructions.md', '.github'] },
+      'kiro':               { any: ['.kiro'] },
+      'trae':               { any: ['.trae'] },
+      'antigravity':        { any: ['.antigravity'] },
+      'codebuddy':          { any: ['.codebuddy'] },
+      'crush':              { any: ['.crush'] },
+      'iflow':              { any: ['.iflow'] },
+      'kilocoder':          { any: ['.kilocoder'] },
+      'opencode':           { any: ['.opencode'] },
+      'qwencoder':          { any: ['.qwencoder'] },
+      'rovodev':            { any: ['.rovodev'] },
+      'claude-code-desktop': { any: ['.claude'] },
+      'claude-code':        { any: ['CLAUDE.md', '.claude'] },
+      'codex':              { all: ['AGENTS.md', '.agents/skills', '.codex/agents'] },
+      'gemini-cli':         { any: ['GEMINI.md', '.gemini'] },
+      'auggie':             { any: ['.augment'] },
+      'pi':                 { any: ['SYSTEM.md'] },
     };
 
     const missing = [];
     for (const platform of configuredPlatforms) {
       const sigs = platformSignatures[platform];
       if (!sigs) continue;
-      const found = sigs.some(sig => fs.existsSync(path.join(projectDir, sig)));
+
+      if (Array.isArray(sigs.all)) {
+        const missingParts = sigs.all.filter(sig => !fs.existsSync(path.join(projectDir, sig)));
+        if (missingParts.length > 0) {
+          missing.push(`${platform} (${missingParts.join(', ')})`);
+        }
+        continue;
+      }
+
+      const found = (sigs.any || []).some(sig => fs.existsSync(path.join(projectDir, sig)));
       if (!found) missing.push(platform);
     }
 
@@ -483,7 +492,7 @@ function doctor(projectDir, fixMode) {
       'rovodev':            ['.rovodev'],
       'claude-code-desktop': [], // shares .claude with claude-code
       'claude-code':        ['CLAUDE.md'],
-      'codex':              ['AGENTS.md'],
+      'codex':              ['AGENTS.md', '.agents', '.codex'],
       'gemini-cli':         ['GEMINI.md', '.gemini'],
       'auggie':             ['.augment'],
       'pi':                 ['SYSTEM.md'],
@@ -508,7 +517,8 @@ function doctor(projectDir, fixMode) {
 
   check('Config version matches installed version', () => {
     if (!configExists) return 'warn';
-    const configVersion = config.version;
+    const freshConfig = loadConfig(configPath);
+    const configVersion = freshConfig.version;
     if (!configVersion) return 'warn';
 
     const pkgPath = path.join(__dirname, '..', 'package.json');
