@@ -7,10 +7,16 @@
  * .assemble-manifest.json entries, config.output_dir, and imported skill names.
  */
 
+const fs = require('fs');
 const path = require('path');
 
 /**
  * Resolve `target` relative to `projectDir` and check it stays inside it.
+ * NOTE: this is a purely LEXICAL check — it does not resolve symlinks or
+ * Windows junctions. Use it where the operation cannot follow a link out of
+ * the project (e.g. deleting a manifest entry: unlink removes the link itself,
+ * not its target). For operations that WRITE through a path — where a junction
+ * could redirect the write outside the project — use {@link isRealPathInside}.
  * @param {string} target - Path to resolve (relative or absolute)
  * @param {string} projectDir - Confinement root
  * @returns {boolean} true if the resolved path is inside (or equal to) projectDir
@@ -19,6 +25,35 @@ function isInsideProject(target, projectDir) {
   const root = path.resolve(projectDir);
   const resolved = path.resolve(root, target);
   return resolved === root || resolved.startsWith(root + path.sep);
+}
+
+/**
+ * Like {@link isInsideProject} but resolves symlinks / Windows junctions so a
+ * link inside the project pointing outside cannot smuggle a write out. The
+ * target may not exist yet, so we realpath the nearest existing ancestor and
+ * re-attach the remaining segments. Falls back to the lexical check when the
+ * project directory itself does not exist (nothing to bypass yet).
+ * @param {string} target
+ * @param {string} projectDir
+ * @returns {boolean}
+ */
+function isRealPathInside(target, projectDir) {
+  let realRoot;
+  try { realRoot = fs.realpathSync(path.resolve(projectDir)); }
+  catch (e) { return isInsideProject(target, projectDir); }
+
+  const resolved = path.resolve(realRoot, target);
+  let existing = resolved;
+  while (!fs.existsSync(existing)) {
+    const parent = path.dirname(existing);
+    if (parent === existing) break;
+    existing = parent;
+  }
+  let realExisting;
+  try { realExisting = fs.realpathSync(existing); } catch (e) { realExisting = existing; }
+  const rest = path.relative(existing, resolved);
+  const realFull = rest ? path.resolve(realExisting, rest) : realExisting;
+  return realFull === realRoot || realFull.startsWith(realRoot + path.sep);
 }
 
 /**
@@ -53,4 +88,4 @@ function safeSlug(name) {
   return slug;
 }
 
-module.exports = { isInsideProject, assertInsideProject, safeSlug };
+module.exports = { isInsideProject, isRealPathInside, assertInsideProject, safeSlug };

@@ -1249,6 +1249,41 @@ console.log('\nTest 31: Web search — search: true');
   cleanTmpDir();
 }
 
+// ── Test 31: unknown platform is dropped, not persisted (regression P2) ───────
+
+console.log('\nTest 31: partial unknown platform persists a clean config');
+{
+  const dir = createTmpDir();
+  const cfg = `version: "0.0.0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code, nottaplatform]\nagents: all\nworkflows: all\ngovernance: "none"\ninstalled_at: "2026-01-01"\n`;
+  fs.writeFileSync(path.join(dir, '.assemble.yaml'), cfg);
+  run(['--project', dir, '--update']); // must not throw: claude-code is valid
+
+  test('unknown platform is not written back to .assemble.yaml', () => {
+    const persisted = fs.readFileSync(path.join(dir, '.assemble.yaml'), 'utf-8');
+    const line = (persisted.match(/^platforms:.*$/m) || [''])[0];
+    assert(line.includes('claude-code'), `should keep the valid platform, got: ${line}`);
+    assert(!line.includes('nottaplatform'), `must drop the unknown platform, got: ${line}`);
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 32: allow_plugins as a quoted string is accepted (regression P3) ─────
+
+console.log('\nTest 32: allow_plugins: "true" (string) passes validation');
+{
+  const dir = createTmpDir();
+  const cfg = `version: "0.0.0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nallow_plugins: "true"\ninstalled_at: "2026-01-01"\n`;
+  fs.writeFileSync(path.join(dir, '.assemble.yaml'), cfg);
+
+  test('a quoted boolean does not fail schema validation', () => {
+    const ok = run(['--project', dir, '--update'], true);
+    assert(ok, 'generation should succeed with allow_plugins: "true"');
+  });
+
+  cleanTmpDir();
+}
+
 // ── Summary ──────────────────────────────────────────────────────────────────
 
 console.log('');

@@ -21,7 +21,7 @@ const { generateMCPServer } = require('./lib/mcp-generator');
 const { generateUniversalAgentsMd } = require('./lib/agents-md-generator');
 const { loadConfig: _loadConfig, DEFAULTS: _DEFAULTS } = require('./lib/config-loader');
 const { validateAll } = require('./lib/schema-validator');
-const { isInsideProject } = require('./lib/paths');
+const { isInsideProject, isRealPathInside } = require('./lib/paths');
 
 // ─── Default configuration ──────────────────────────────────────────────────
 
@@ -257,12 +257,15 @@ function generate() {
   config.metrics = config.metrics === true || config.metrics === 'true';
   config.yolo = config.yolo === true || config.yolo === 'true';
   config.search = config.search === true || config.search === 'true';
+  config.allow_plugins = config.allow_plugins === true || config.allow_plugins === 'true';
 
   // SECURITY: output_dir comes from a (possibly untrusted) config file. Reject any
   // value that resolves outside the project directory to prevent writing files
-  // (AGENTS.md, _memory.md, .gitkeep...) into arbitrary locations via "../".
-  if (config.output_dir && !isInsideProject(config.output_dir, projectDir)) {
-    console.error(`❌ Invalid output_dir "${config.output_dir}": must stay inside the project directory.`);
+  // (AGENTS.md, _memory.md, .gitkeep...) into arbitrary locations. isRealPathInside
+  // resolves symlinks / Windows junctions so a link inside the project pointing
+  // outside cannot smuggle the write out either.
+  if (config.output_dir && !isRealPathInside(config.output_dir, projectDir)) {
+    console.error(`❌ Invalid output_dir "${config.output_dir}": must stay inside the project directory (symlinks/junctions resolved).`);
     process.exit(1);
   }
 
@@ -442,19 +445,25 @@ function generate() {
   const preparedAgents = agents.map(a => prepareAgent(a, config));
 
   // Load adapters (built-in + opt-in plugins from .assemble/adapters/)
-  const allowPlugins = config.allow_plugins === true || config.allow_plugins === 'true';
-  const adapters = loadAdapters(projectDir, allowPlugins);
+  const adapters = loadAdapters(projectDir, config.allow_plugins);
   console.log(`  ✓ ${Object.keys(adapters).length} adapters available`);
   console.log('');
 
-  // Validate requested platforms against available adapters. If NONE are known,
-  // stop before writing any config/manifest so we never persist a broken install
-  // (which would make every subsequent --update fail in a loop).
+  // Validate requested platforms against available adapters.
+  // Drop unknown platforms from the EFFECTIVE (and later, persisted) set so we
+  // never write a poisoned .assemble.yaml that makes every subsequent --update
+  // fail in a loop. If none are known, stop before writing anything at all.
+  const unknownRequested = config.platforms.filter(p => !adapters[p]);
   const knownRequested = config.platforms.filter(p => adapters[p]);
   if (knownRequested.length === 0) {
     console.error(`❌ No known platform to generate. Requested: ${config.platforms.join(', ') || '(none)'}`);
     console.error(`   Run "node generate.js --help" to see the supported platforms.`);
     process.exit(1);
+  }
+  if (unknownRequested.length > 0) {
+    for (const p of unknownRequested) console.warn(`⚠️  Unknown platform "${p}" — dropped (not written to .assemble.yaml)`);
+    // From here on, only operate on (and persist) the known platforms.
+    config.platforms = knownRequested;
   }
 
   // ─── Clean up old generated files before regeneration ────────────────────

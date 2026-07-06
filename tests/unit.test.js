@@ -584,6 +584,43 @@ test('safeSlug drops leading dots', () => {
   assert(safeSlug('..') === '' && safeSlug('.hidden') === 'hidden', 'leading dots stripped');
 });
 
+console.log('\npaths — isRealPathInside() (symlink/junction aware)');
+
+const { isRealPathInside } = require('../generator/lib/paths');
+
+test('isRealPathInside accepts a normal subpath of a real dir', () => {
+  const proj = fs.mkdtempSync(path.join(os.tmpdir(), 'assemble-rp-'));
+  try { assert(isRealPathInside('sub/file.md', proj) === true, 'plain subpath should be inside'); }
+  finally { fs.rmSync(proj, { recursive: true, force: true }); }
+});
+
+test('isRealPathInside rejects a ../ escape', () => {
+  const proj = fs.mkdtempSync(path.join(os.tmpdir(), 'assemble-rp-'));
+  try { assert(isRealPathInside('../escape', proj) === false, 'traversal should be rejected'); }
+  finally { fs.rmSync(proj, { recursive: true, force: true }); }
+});
+
+test('isRealPathInside rejects a junction/symlink pointing outside the project', () => {
+  const base = fs.mkdtempSync(path.join(os.tmpdir(), 'assemble-rp-'));
+  const proj = path.join(base, 'proj');
+  const sibling = path.join(base, 'sibling');
+  fs.mkdirSync(proj); fs.mkdirSync(sibling);
+  let linkMade = false;
+  try {
+    // 'junction' on Windows works without admin; symlink 'dir' elsewhere
+    fs.symlinkSync(sibling, path.join(proj, 'outlink'), process.platform === 'win32' ? 'junction' : 'dir');
+    linkMade = true;
+  } catch (e) { /* unsupported (no privilege) — skip the assertion below */ }
+  try {
+    if (linkMade) {
+      assert(isRealPathInside('outlink', proj) === false, 'a link pointing outside must be rejected');
+      assert(isRealPathInside('outlink/AGENTS.md', proj) === false, 'writing through the link must be rejected');
+    } else {
+      console.log('     (skipped: symlink/junction creation not permitted here)');
+    }
+  } finally { fs.rmSync(base, { recursive: true, force: true }); }
+});
+
 // ─── Summary ─────────────────────────────────────────────────────────────
 
 console.log('');
