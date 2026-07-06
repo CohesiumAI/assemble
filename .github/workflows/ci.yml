@@ -11,10 +11,12 @@ permissions:
 
 jobs:
   test:
-    name: Test (Node ${{ matrix.node-version }})
-    runs-on: ubuntu-latest
+    name: Test (${{ matrix.os }}, Node ${{ matrix.node-version }})
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
+        os: [ubuntu-latest, windows-latest]
         node-version: [18, 22, 24]
 
     steps:
@@ -25,14 +27,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Run unit tests
-        run: node tests/unit.test.js
-
-      - name: Run snapshot tests
-        run: node tests/snapshot.test.js
-
-      - name: Run integration tests
-        run: node tests/integration-full.js
+      # Run the full suite via npm so the runner exercises the exact same chain
+      # (unit → snapshot → integration → coherence) on both Linux and Windows.
+      - name: Run tests
+        run: npm test
 
   lint:
     name: Lint
@@ -66,3 +64,27 @@ jobs:
 
       - name: Verify LICENSE file exists
         run: test -f LICENSE || (echo "LICENSE file missing" && exit 1)
+
+  installers:
+    name: Installer syntax checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Shell installer (bash -n)
+        run: bash -n install.sh
+
+      - name: Python installer (py_compile)
+        run: python3 -m py_compile install.py
+
+      - name: PowerShell installer (parse under pwsh)
+        shell: pwsh
+        run: |
+          $errors = $null
+          $content = Get-Content -Raw ./install.ps1
+          $null = [System.Management.Automation.PSParser]::Tokenize($content, [ref]$errors)
+          if ($errors.Count -gt 0) {
+            $errors | ForEach-Object { Write-Error "line $($_.Token.StartLine): $($_.Message)" }
+            exit 1
+          }
+          Write-Host "install.ps1 parses cleanly"
