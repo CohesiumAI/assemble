@@ -415,6 +415,7 @@ function renderCommandRegistry(agents, skills, workflows, governance = 'none', y
 
     if (governance === 'strict') {
       out += '\n**RBAC Notice:** This project uses strict governance. Sensitive agents (security, devops, finance, legal) require explicit user authorization before executing. All actions are logged to `_audit.md`.\n';
+      out += '\n> These governance controls are **prompt-level guardrails** — behavioral instructions the assistant is asked to follow, not mechanisms enforced by code. They reduce risk but do not technically prevent a non-compliant action.\n';
     }
   }
 
@@ -556,6 +557,7 @@ function renderRoutingRules(agents, workflows, config) {
   out += 'If the project has `governance: standard` or `governance: strict` in `.assemble.yaml`, load and apply rules from\n';
   out += '`.claude/rules/governance/governance.md` — decision gates, risk assessment, and quality checkpoints.\n';
   out += 'Strict adds: audit trail (`_audit.md`), RBAC for sensitive agents, NIST AI RMF mapping.\n';
+  out += 'These are prompt-level guardrails applied by the assistant, not code-enforced controls.\n';
   out += 'Default: no governance overhead.\n\n';
 
   // YOLO mode
@@ -805,6 +807,11 @@ function renderGovernanceRules(level) {
     out += '- Risk assessment is MANDATORY for ALL workflows\n';
     out += '- Quality checkpoint (_quality.md) is produced for ALL workflows\n';
     out += '- Post-mortem is REQUIRED at workflow completion\n\n';
+
+    out += '> **Enforcement model:** the controls below (audit trail, RBAC, NIST mapping) are\n';
+    out += '> **prompt-level guardrails** the assistant is instructed to follow. They are not\n';
+    out += '> enforced by code and cannot technically prevent a non-compliant action on their own.\n';
+    out += '> For hard enforcement, pair them with platform hooks (e.g. Claude Code PreToolUse).\n\n';
 
     out += '### Audit Trail\n\n';
     out += 'Every agent action MUST be logged to `_audit.md` with:\n';
