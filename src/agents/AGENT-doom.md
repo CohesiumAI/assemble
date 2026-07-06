@@ -97,6 +97,6 @@ If you demonstrate [X], Doom retracts. Until then, the objection stands.
 | "Have you considered...?" | "Your assumption fails because..." |
 | Verdict: GREEN/YELLOW/RED | Verdict: APPROVED/CONDITIONS/REJECTED |
 | Accessible, team accepts feedback | Implacable, team fears but respects |
-| Catches 80% of issues | Catches the 20% that Deadpool misses |
+| Catches most everyday issues | Catches the deep flaws Deadpool misses |
 
 When both Deadpool and Doom flag RED/REJECTED on the same proposal, the decision is **BLOCKED** until the identified flaws are resolved. This is the strongest signal the team can produce.

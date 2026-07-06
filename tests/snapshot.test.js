@@ -1256,7 +1256,13 @@ console.log('\nTest 31: partial unknown platform persists a clean config');
   const dir = createTmpDir();
   const cfg = `version: "0.0.0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code, nottaplatform]\nagents: all\nworkflows: all\ngovernance: "none"\ninstalled_at: "2026-01-01"\n`;
   fs.writeFileSync(path.join(dir, '.assemble.yaml'), cfg);
-  run(['--project', dir, '--update']); // must not throw: claude-code is valid
+  // Contract: a typo'd platform exits non-zero (surfaced, not silent) BUT the
+  // valid platform is still generated and the persisted config is cleaned.
+  const okExit = run(['--project', dir, '--update'], true);
+
+  test('unknown platform surfaces as a non-zero exit', () => {
+    assert(okExit === false, 'generation should exit non-zero when a platform is unknown');
+  });
 
   test('unknown platform is not written back to .assemble.yaml', () => {
     const persisted = fs.readFileSync(path.join(dir, '.assemble.yaml'), 'utf-8');
@@ -1279,6 +1285,69 @@ console.log('\nTest 32: allow_plugins: "true" (string) passes validation');
   test('a quoted boolean does not fail schema validation', () => {
     const ok = run(['--project', dir, '--update'], true);
     assert(ok, 'generation should succeed with allow_plugins: "true"');
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 33: custom agent name traversal is neutralized (regression C1) ───────
+
+console.log('\nTest 33: custom agent name cannot escape the project');
+{
+  const base = createTmpDir();
+  const proj = path.join(base, 'a', 'b', 'proj'); // nested so ../ would land inside base if unfixed
+  fs.mkdirSync(path.join(proj, '.assemble', 'agents'), { recursive: true });
+  fs.writeFileSync(
+    path.join(proj, '.assemble', 'agents', 'AGENT-evil.md'),
+    '---\nname: ../../../../../PWNED\ndescription: traversal attempt, long enough body\nmarvel: Evil\n---\n# body content long enough to pass validation\n'
+  );
+  fs.writeFileSync(
+    path.join(proj, '.assemble.yaml'),
+    `version: "0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [crush]\nagents: all\nworkflows: all\ngovernance: "none"\ninstalled_at: "2026-01-01"\n`
+  );
+  run(['--project', proj, '--update']);
+
+  test('sanitized custom agent is written INSIDE the project', () => {
+    assert(fs.existsSync(path.join(proj, '.crush', 'agents', 'pwned.md')),
+      '.crush/agents/pwned.md (sanitized slug) should exist inside the project');
+  });
+
+  test('no file escapes ABOVE the project via the malicious name', () => {
+    const escapes = [];
+    for (const d of [path.dirname(proj), path.join(base, 'a'), base]) {
+      if (fs.existsSync(d)) for (const f of fs.readdirSync(d)) if (/pwned/i.test(f)) escapes.push(path.join(d, f));
+    }
+    assert(escapes.length === 0, 'nothing should escape the project, found: ' + escapes.join(', '));
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 34: `--update` runs headless (non-TTY) without hanging (regression C2) ─
+
+console.log('\nTest 34: cli.js --update does not block on a non-TTY stdin');
+{
+  const dir = createTmpDir();
+  // Seed a valid installation first (generator, non-interactive).
+  fs.writeFileSync(
+    path.join(dir, '.assemble.yaml'),
+    `version: "0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\ninstalled_at: "2026-01-01"\n`
+  );
+  run(['--project', dir, '--update']);
+
+  test('npx --update completes headlessly within the timeout', () => {
+    const cli = path.join(__dirname, '..', 'bin', 'cli.js');
+    let ok = true;
+    try {
+      // stdio pipe => stdin is NOT a TTY; must not hang on "Confirm update?"
+      execFileSync(process.execPath, [cli, '--update', '--project', dir], {
+        stdio: 'pipe', input: '', timeout: 30000,
+      });
+    } catch (e) {
+      ok = false;
+      console.log(`     ${e.killed ? 'TIMED OUT (hung on prompt)' : (e.message || '').split('\n')[0]}`);
+    }
+    assert(ok, 'cli.js --update should finish without blocking on stdin');
   });
 
   cleanTmpDir();

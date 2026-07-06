@@ -48,6 +48,13 @@ const ALL_PLATFORMS = [...PLATFORMS.ide, ...PLATFORMS.cli];
 
 function ask(question, defaultVal = '') {
   const suffix = defaultVal ? ` [${defaultVal}]` : '';
+  // Non-interactive (CI, pipes): never block on stdin — take the default.
+  // This is what makes `--update` work headlessly instead of hanging on the
+  // "Confirm update?" prompt inside runUpdate().
+  if (!process.stdin.isTTY) {
+    print(`${question}${suffix} : ${defaultVal}  (auto: non-interactive)`);
+    return Promise.resolve(defaultVal);
+  }
   return new Promise(resolve => {
     rl.question(`${question}${suffix} : `, answer => {
       resolve(answer.trim() || defaultVal);

@@ -10,6 +10,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { safeSlug } = require('../../lib/paths');
 const {
   prepareAgent,
   renderOrchestrator,
@@ -35,9 +36,8 @@ module.exports = {
   },
 
   _marvelSlug(agent) {
-    return (agent.meta.name || this._agentId(agent))
-      .toLowerCase()
-      .replace(/\s+/g, '-');
+    // Path-safe: neutralizes traversal from an attacker-controlled custom agent name.
+    return safeSlug(agent.meta.name || this._agentId(agent));
   },
 
   _marvelDisplayName(agent) {

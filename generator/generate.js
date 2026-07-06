@@ -460,9 +460,13 @@ function generate() {
     console.error(`   Run "node generate.js --help" to see the supported platforms.`);
     process.exit(1);
   }
+  // Track unknown platforms as errors so a typo surfaces via a non-zero exit
+  // code, but drop them from the effective/persisted set so the written config
+  // stays valid and future --update runs are not wedged.
+  let droppedPlatformErrors = 0;
   if (unknownRequested.length > 0) {
     for (const p of unknownRequested) console.warn(`⚠️  Unknown platform "${p}" — dropped (not written to .assemble.yaml)`);
-    // From here on, only operate on (and persist) the known platforms.
+    droppedPlatformErrors = unknownRequested.length;
     config.platforms = knownRequested;
   }
 
@@ -777,14 +781,16 @@ updated_at: "${today}"
     console.log(`\n📄 .assemble.yaml created`);
   }
 
-  // Summary
+  // Summary. Unknown/dropped platforms count as errors so a typo is not silent,
+  // even though the valid platforms were generated and the config was cleaned.
+  const totalErrors = errorCount + droppedPlatformErrors;
   console.log(`\n${'═'.repeat(50)}`);
-  const statusIcon = successCount === 0 ? '❌' : (errorCount > 0 ? '⚠️ ' : '✅');
-  console.log(`${statusIcon} Generation complete: ${successCount} platforms OK, ${errorCount} errors`);
+  const statusIcon = successCount === 0 ? '❌' : (totalErrors > 0 ? '⚠️ ' : '✅');
+  console.log(`${statusIcon} Generation complete: ${successCount} platforms OK, ${totalErrors} errors`);
   console.log(`📂 Deliverables → ${outputPath}`);
   console.log(`${'═'.repeat(50)}`);
 
-  process.exit(errorCount > 0 ? 1 : 0);
+  process.exit(totalErrors > 0 ? 1 : 0);
 }
 
 // ─── Entry point ────────────────────────────────────────────────────────────

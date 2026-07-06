@@ -4,6 +4,7 @@
  */
 
 const { injectLanguage } = require('./i18n');
+const { safeSlug } = require('./paths');
 
 /**
  * Prepares an agent for generation by injecting language and output config
@@ -230,7 +231,10 @@ function agentId(agent) {
 
 /** Return the Marvel slug from meta.name (e.g. professor-x, tony-stark) */
 function marvelSlug(agent) {
-  return (agent.meta.name || agentId(agent)).toLowerCase().replace(/\s+/g, '-');
+  // safeSlug strips path separators / ".." so an attacker-controlled custom
+  // agent name (.assemble/agents/) cannot make an adapter write outside the
+  // project. It is a no-op on all legitimate names (e.g. "Tony Stark" -> tony-stark).
+  return safeSlug(agent.meta.name || agentId(agent));
 }
 
 /** Extract short Marvel display name: "Professor X (Charles Xavier) — ..." → "Professor X" */
@@ -239,17 +243,18 @@ function marvelDisplayName(agent) {
   return raw.split('—')[0].split('(')[0].trim();
 }
 
-/** Extract skill slug from trigger or name */
+/** Extract skill slug from trigger or name (path-safe) */
 function skillSlug(skill) {
   const trigger = (skill.meta.trigger || '').replace(/^\//, '');
-  return (trigger || skill.meta.name || (skill.fileName || '').replace('.md', ''))
-    .toLowerCase().replace(/\s+/g, '-');
+  // safeSlug neutralizes traversal from an attacker-controlled trigger/name
+  // (e.g. trigger "/../../x") — no-op on legitimate slugs like "code-review".
+  return safeSlug(trigger || skill.meta.name || (skill.fileName || '').replace('.md', ''));
 }
 
-/** Extract workflow slug from trigger in raw YAML */
+/** Extract workflow slug from trigger in raw YAML (path-safe) */
 function workflowSlug(workflow) {
   const triggerMatch = (workflow.raw || '').match(/trigger:\s*\/?([\w-]+)/);
-  return triggerMatch ? triggerMatch[1] : (workflow.fileName || '').replace(/\.(yaml|yml)$/, '');
+  return safeSlug(triggerMatch ? triggerMatch[1] : (workflow.fileName || '').replace(/\.(yaml|yml)$/, ''));
 }
 
 /** Extract a field value from raw YAML */
