@@ -968,17 +968,35 @@ module.exports = {
 };`;
   fs.writeFileSync(path.join(pluginDir, 'test-plugin.js'), pluginCode);
 
-  // Create config that uses the plugin adapter
-  const configContent = `version: "1.1.0-beta.3"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [test-plugin]\nagents: all\nworkflows: all\ngovernance: "none"\ninstalled_at: "2026-03-19"\n`;
+  // Create config that uses the plugin adapter.
+  // Plugin adapters run arbitrary code from the project dir, so they are opt-in:
+  // the config must set allow_plugins: true (security default is off).
+  const configContent = `version: "1.1.0-beta.3"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [test-plugin]\nagents: all\nworkflows: all\ngovernance: "none"\nallow_plugins: true\ninstalled_at: "2026-03-19"\n`;
   fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
 
   run(['--project', dir, '--update']);
+
+  const expectedAgentCount = fs.readdirSync(path.join(__dirname, '..', 'src', 'agents'))
+    .filter(f => /^AGENT-.*\.md$/.test(f)).length;
 
   test('Plugin adapter generates output', () => {
     const outputPath = path.join(dir, '.test-plugin', 'output.md');
     assert(fs.existsSync(outputPath), '.test-plugin/output.md should exist');
     const content = fs.readFileSync(outputPath, 'utf-8');
-    assert(content.includes('34 agents'), `Should contain 33 agents, got: ${content}`);
+    assert(content.includes(`${expectedAgentCount} agents`), `Should contain ${expectedAgentCount} agents, got: ${content}`);
+  });
+
+  test('Plugin adapter is ignored without allow_plugins', () => {
+    const dir2 = createTmpDir();
+    const pluginDir2 = path.join(dir2, '.assemble', 'adapters');
+    fs.mkdirSync(pluginDir2, { recursive: true });
+    fs.writeFileSync(path.join(pluginDir2, 'test-plugin.js'), pluginCode);
+    const cfg2 = `version: "1.1.0-beta.3"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [test-plugin]\nagents: all\nworkflows: all\ngovernance: "none"\ninstalled_at: "2026-03-19"\n`;
+    fs.writeFileSync(path.join(dir2, '.assemble.yaml'), cfg2);
+    let failed = false;
+    try { run(['--project', dir2, '--update']); } catch (e) { failed = true; }
+    assert(failed, 'generation should fail when the only platform is an un-opted-in plugin');
+    assert(!fs.existsSync(path.join(dir2, '.test-plugin', 'output.md')), 'plugin output must not be created');
   });
 
   cleanTmpDir();

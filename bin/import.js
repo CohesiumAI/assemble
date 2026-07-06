@@ -10,6 +10,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { safeSlug } = require('../generator/lib/paths');
 
 // Exported for direct invocation from cli.js
 module.exports = { importSkill };
@@ -44,7 +45,14 @@ function importSkill(filePath) {
     process.exit(1);
   }
 
-  const skillName = nameMatch[1].trim().toLowerCase().replace(/\s+/g, '-');
+  // SECURITY: the frontmatter "name" is attacker-controlled when importing a
+  // third-party skill. safeSlug() strips any directory component and traversal
+  // ("../../../x") so the write can only land inside .assemble/skills/.
+  const skillName = safeSlug(nameMatch[1]);
+  if (!skillName) {
+    console.error('❌ Invalid skill "name": produces an empty file name after sanitization.');
+    process.exit(1);
+  }
 
   // Create .assemble/skills/ directory
   const skillsDir = path.join(process.cwd(), '.assemble', 'skills');

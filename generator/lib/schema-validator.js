@@ -63,6 +63,8 @@ const CONFIG_SCHEMA = {
     mcp: 'boolean',
     memory: 'boolean',
     metrics: 'boolean',
+    search: 'boolean',
+    allow_plugins: 'boolean',
     installed_at: 'string',
     updated_at: 'string',
   },

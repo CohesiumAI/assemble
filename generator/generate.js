@@ -21,6 +21,7 @@ const { generateMCPServer } = require('./lib/mcp-generator');
 const { generateUniversalAgentsMd } = require('./lib/agents-md-generator');
 const { loadConfig: _loadConfig, DEFAULTS: _DEFAULTS } = require('./lib/config-loader');
 const { validateAll } = require('./lib/schema-validator');
+const { isInsideProject } = require('./lib/paths');
 
 // ─── Default configuration ──────────────────────────────────────────────────
 
@@ -38,7 +39,7 @@ const ADAPTERS_DIR = path.join(__dirname, 'adapters');
 
 // ─── Adapter loading ────────────────────────────────────────────────────────
 
-function loadAdapters(projectDir) {
+function loadAdapters(projectDir, allowPlugins = false) {
   const adapters = {};
 
   // Built-in adapters (from generator/adapters/{ide,cli}/)
@@ -60,10 +61,23 @@ function loadAdapters(projectDir) {
   }
 
   // Plugin adapters from .assemble/adapters/ (user-provided, override built-in if same name)
-  // Security: only .js files directly inside the plugin dir are loaded (no traversal).
+  //
+  // SECURITY: loading a plugin adapter runs `require()` on JavaScript that lives in the
+  // TARGET project directory — i.e. arbitrary code execution with the user's privileges.
+  // A hostile repo could ship a legitimately named `.assemble/adapters/cursor.js` and get
+  // it executed by the documented `npx cohesiumai-assemble --update` command. Because of
+  // that, plugin adapters are DISABLED by default and only loaded when the project config
+  // explicitly opts in with `allow_plugins: true` in .assemble.yaml.
   if (projectDir) {
     const pluginDir = path.resolve(projectDir, '.assemble', 'adapters');
-    if (fs.existsSync(pluginDir)) {
+    if (fs.existsSync(pluginDir) && !allowPlugins) {
+      const count = fs.readdirSync(pluginDir).filter(f => f.endsWith('.js')).length;
+      if (count > 0) {
+        console.warn(`⚠️  Ignoring ${count} plugin adapter(s) in .assemble/adapters/ (arbitrary code execution risk).`);
+        console.warn(`   Set "allow_plugins: true" in .assemble.yaml only if you trust this repository.`);
+      }
+    }
+    if (fs.existsSync(pluginDir) && allowPlugins) {
       for (const file of fs.readdirSync(pluginDir).filter(f => f.endsWith('.js'))) {
         // Path traversal guard: reject filenames containing path separators or ..
         if (file.includes('/') || file.includes('\\') || file.includes('..')) {
@@ -225,12 +239,32 @@ function generate() {
   if (args.output_dir) config.output_dir = args.output_dir;
   if (!config.governance) config.governance = 'none';
 
+  // Normalize platforms to an array. Guards against malformed YAML where the value
+  // isn't parsed as a list (e.g. an unclosed bracket "platforms: [claude-code"),
+  // which previously crashed with a raw "config.platforms.join is not a function".
+  if (typeof config.platforms === 'string') {
+    config.platforms = config.platforms
+      .replace(/^\[|\]$/g, '')
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
+  }
+  if (!Array.isArray(config.platforms)) config.platforms = [];
+
   // Normalize booleans once (in case they came as strings from YAML or CLI)
   config.mcp = config.mcp === true || config.mcp === 'true';
   config.memory = config.memory === true || config.memory === 'true';
   config.metrics = config.metrics === true || config.metrics === 'true';
   config.yolo = config.yolo === true || config.yolo === 'true';
   config.search = config.search === true || config.search === 'true';
+
+  // SECURITY: output_dir comes from a (possibly untrusted) config file. Reject any
+  // value that resolves outside the project directory to prevent writing files
+  // (AGENTS.md, _memory.md, .gitkeep...) into arbitrary locations via "../".
+  if (config.output_dir && !isInsideProject(config.output_dir, projectDir)) {
+    console.error(`❌ Invalid output_dir "${config.output_dir}": must stay inside the project directory.`);
+    process.exit(1);
+  }
 
   console.log('🚀 Assemble — Configuration Generator');
   console.log(`📁 Project: ${projectDir}`);
@@ -273,6 +307,15 @@ function generate() {
       ? config.agents
       : String(config.agents).split(/[\s,]+/).filter(Boolean);
     if (selectedIds.length > 0) {
+      const availableIds = agents.map(a =>
+        (a.fileName || '').replace(/^AGENT-/, '').replace(/\.md$/, '')
+      );
+      const unknown = selectedIds.filter(id => !availableIds.includes(id));
+      if (unknown.length > 0) {
+        console.error(`❌ Unknown agent id(s) in config: ${unknown.join(', ')}`);
+        console.error(`   Check for typos (ids use hyphens, e.g. "tony-stark" not "tony_stark").`);
+        process.exit(1);
+      }
       agents = agents.filter(a => {
         const id = (a.fileName || '').replace(/^AGENT-/, '').replace(/\.md$/, '');
         return selectedIds.includes(id);
@@ -398,10 +441,21 @@ function generate() {
   // Prepare agents (language + output injection)
   const preparedAgents = agents.map(a => prepareAgent(a, config));
 
-  // Load adapters (built-in + plugins from .assemble/adapters/)
-  const adapters = loadAdapters(projectDir);
+  // Load adapters (built-in + opt-in plugins from .assemble/adapters/)
+  const allowPlugins = config.allow_plugins === true || config.allow_plugins === 'true';
+  const adapters = loadAdapters(projectDir, allowPlugins);
   console.log(`  ✓ ${Object.keys(adapters).length} adapters available`);
   console.log('');
+
+  // Validate requested platforms against available adapters. If NONE are known,
+  // stop before writing any config/manifest so we never persist a broken install
+  // (which would make every subsequent --update fail in a loop).
+  const knownRequested = config.platforms.filter(p => adapters[p]);
+  if (knownRequested.length === 0) {
+    console.error(`❌ No known platform to generate. Requested: ${config.platforms.join(', ') || '(none)'}`);
+    console.error(`   Run "node generate.js --help" to see the supported platforms.`);
+    process.exit(1);
+  }
 
   // ─── Clean up old generated files before regeneration ────────────────────
   // Uses manifest-based cleanup: only removes files Assemble previously generated.
@@ -412,28 +466,42 @@ function generate() {
     if (fs.existsSync(manifestPath)) {
       try {
         const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
-        const removedDirs = new Set();
-        // Remove individual files first
+        let cleaned = 0;
+        // Remove individual files first.
+        // SECURITY: a hostile manifest could list "../victim.txt" to delete files
+        // outside the project. Skip any entry that escapes the project directory.
         for (const file of (manifest.files || [])) {
+          if (!isInsideProject(file, projectDir)) {
+            console.warn(`  ⚠️  Skipped manifest entry outside project: ${file}`);
+            continue;
+          }
           const fullPath = path.join(projectDir, file);
           if (fs.existsSync(fullPath)) {
             fs.unlinkSync(fullPath);
+            cleaned++;
           }
         }
-        // Remove directories that are now empty
-        for (const dir of (manifest.directories || [])) {
+        // Remove directories that are now empty, deepest first so parents can
+        // collapse once their children are gone.
+        const dirsDeepestFirst = [...(manifest.directories || [])].sort(
+          (a, b) => b.split('/').length - a.split('/').length
+        );
+        for (const dir of dirsDeepestFirst) {
+          if (!isInsideProject(dir, projectDir)) {
+            console.warn(`  ⚠️  Skipped manifest directory outside project: ${dir}`);
+            continue;
+          }
           const fullPath = path.join(projectDir, dir);
           if (fs.existsSync(fullPath)) {
             try {
               const entries = fs.readdirSync(fullPath);
               if (entries.length === 0) {
                 fs.rmdirSync(fullPath);
-                removedDirs.add(dir);
               }
             } catch (e) { /* skip */ }
           }
         }
-        console.log(`  ✓ ${(manifest.files || []).length} old files cleaned (manifest-based)`);
+        console.log(`  ✓ ${cleaned} old files cleaned (manifest-based)`);
       } catch (e) {
         console.warn(`  ⚠️  Could not read manifest, falling back to targeted cleanup`);
         // Fallback: only clean Assemble-specific dirs, NEVER .github or user dirs
@@ -702,7 +770,8 @@ updated_at: "${today}"
 
   // Summary
   console.log(`\n${'═'.repeat(50)}`);
-  console.log(`✅ Generation complete: ${successCount} platforms OK, ${errorCount} errors`);
+  const statusIcon = successCount === 0 ? '❌' : (errorCount > 0 ? '⚠️ ' : '✅');
+  console.log(`${statusIcon} Generation complete: ${successCount} platforms OK, ${errorCount} errors`);
   console.log(`📂 Deliverables → ${outputPath}`);
   console.log(`${'═'.repeat(50)}`);
 

@@ -526,6 +526,64 @@ test('no config.search does not include Web Search Policy', () => {
   assert(!out.includes('Web Search Policy'), 'should not contain Web Search Policy when search is absent');
 });
 
+// ─── paths: security confinement helpers ────────────────────────────────
+
+const { isInsideProject, assertInsideProject, safeSlug } = require('../generator/lib/paths');
+
+console.log('\npaths — isInsideProject()');
+
+test('accepts a relative path inside the project', () => {
+  assert(isInsideProject('assemble-output/AGENTS.md', '/project') === true, 'should be inside');
+});
+
+test('accepts the project root itself', () => {
+  assert(isInsideProject('.', '/project') === true, 'root should count as inside');
+});
+
+test('rejects a ../ traversal', () => {
+  assert(isInsideProject('../victim.txt', '/project') === false, 'traversal must be rejected');
+});
+
+test('rejects a deep ../ traversal', () => {
+  assert(isInsideProject('a/b/../../../etc/passwd', '/project') === false, 'deep traversal must be rejected');
+});
+
+test('rejects a sibling-directory prefix trick', () => {
+  // "/project-evil" starts with "/project" as a string but is NOT inside it
+  assert(isInsideProject('../project-evil/x', '/project') === false, 'sibling prefix must be rejected');
+});
+
+console.log('\npaths — assertInsideProject()');
+
+test('assertInsideProject throws on traversal', () => {
+  let threw = false;
+  try { assertInsideProject('../x', '/project', 'Manifest entry'); } catch (e) { threw = /escapes/.test(e.message); }
+  assert(threw, 'should throw for a path that escapes');
+});
+
+test('assertInsideProject returns the resolved path when safe', () => {
+  const r = assertInsideProject('sub/file.md', '/project');
+  assert(r.replace(/\\/g, '/').endsWith('/project/sub/file.md'), 'should return the resolved path');
+});
+
+console.log('\npaths — safeSlug()');
+
+test('safeSlug strips ../ traversal to a bare segment', () => {
+  assert(safeSlug('../../../etc/passwd') === 'passwd', `got "${safeSlug('../../../etc/passwd')}"`);
+});
+
+test('safeSlug removes path separators', () => {
+  assert(!safeSlug('a/b\\c').includes('/') && !safeSlug('a/b\\c').includes('\\'), 'no separators allowed');
+});
+
+test('safeSlug lowercases and hyphenates spaces', () => {
+  assert(safeSlug('My Skill Name') === 'my-skill-name', `got "${safeSlug('My Skill Name')}"`);
+});
+
+test('safeSlug drops leading dots', () => {
+  assert(safeSlug('..') === '' && safeSlug('.hidden') === 'hidden', 'leading dots stripped');
+});
+
 // ─── Summary ─────────────────────────────────────────────────────────────
 
 console.log('');
