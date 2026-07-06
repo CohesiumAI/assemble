@@ -1,6 +1,6 @@
 # Command Reference — 11 Commands
 
-> **11 primary commands** that expose the full power of 34 agents, 15 workflows, and 29 skills. Jarvis smart routing handles complexity assessment and agent selection.
+> **11 primary commands** that expose the full power of 34 agents, 15 workflows, and 32 skills (28 reusable + 4 system). Jarvis smart routing handles complexity assessment and agent selection.
 
 ---
 
@@ -11,7 +11,7 @@
 | System Commands | 5 | `/go`, `/party`, `/dismiss`, `/help`, `/doctor` |
 | Workflow Shortcuts | 6 | `/review`, `/bugfix`, `/feature`, `/sprint`, `/release`, `/mvp` |
 | Hidden Shortcuts | 10 | Work if typed, not in autocomplete |
-| Agent Access | 33 | Via `@marvel-name` mentions |
+| Agent Access | 34 | Via `@marvel-name` mentions |
 | **Total visible** | **11** | |
 
 ---
@@ -60,7 +60,7 @@ These commands work if typed directly but don't appear in autocomplete. They are
 
 ---
 
-## Agent Access (33)
+## Agent Access (34)
 
 All agents are accessible via `@marvel-name` mentions. Use `@tony-stark`, `@professor-x`, etc. directly in your prompt.
 
@@ -111,7 +111,7 @@ Two escalation levels beyond standard YOLO, activated **only by human command** 
 
 **Agents MUST refuse** to activate these modes. If asked, they explain the manual procedure.
 
-See the [README YOLO section](../README.md#yolo-mode--3-escalation-levels) for full details and risk matrix.
+See the [README](../README.md) for full details and the risk matrix.
 
 ---
 
@@ -199,4 +199,4 @@ Copies a skill file into `.assemble/skills/`. The skill must have YAML frontmatt
 
 ## Source File
 
-Commands are defined in `src/commands/commands.yaml` with structure: `primary_commands` (11), `hidden_shortcuts` (10), `internal_skills` (29), and `agents` (31 via @mention).
+Commands are defined in `src/commands/commands.yaml` with structure: `primary_commands` (11), `hidden_shortcuts` (10), `internal_skills`, and `agents` (34 via @mention).

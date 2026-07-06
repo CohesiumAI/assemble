@@ -1,8 +1,8 @@
 # Assemble — Command registry
-# Architecture: 10 primary commands + hidden shortcuts + internal skills + agents via @mention
+# Architecture: 12 primary commands + hidden shortcuts + internal skills + agents via @mention
 
 # ═══════════════════════════════════════════
-# PRIMARY COMMANDS (11 — visible in autocomplete)
+# PRIMARY COMMANDS (12 — visible in autocomplete)
 # ═══════════════════════════════════════════
 
 primary_commands:
@@ -39,7 +39,7 @@ primary_commands:
   - name: /review
     type: shortcut
     workflow: code-review-pipeline
-    description: "Code review pipeline (4 agents: Fullstack → QA → Security → Contrarian)"
+    description: "Code review pipeline (5 agents: Fullstack → QA → Security → Red Team → Contrarian)"
     category: shortcut
 
   - name: /bugfix
@@ -51,7 +51,7 @@ primary_commands:
   - name: /feature
     type: shortcut
     workflow: feature-development
-    description: "Feature development (5 agents: PM → Analyst → Architect → Dev → QA)"
+    description: "Feature development (6 agents: PM → Analyst → Architect → Backend → Frontend → QA)"
     category: shortcut
 
   - name: /sprint
@@ -135,7 +135,7 @@ hidden_shortcuts:
   - name: /security
     type: shortcut
     workflow: security-audit
-    description: "Security audit (Security → Backend → DevOps → Legal)"
+    description: "Security audit (Security → Red Team → Backend → DevOps → Legal)"
     visible: false
 
   - name: /board
@@ -145,7 +145,9 @@ hidden_shortcuts:
     visible: false
 
 # ═══════════════════════════════════════════
-# INTERNAL SKILLS (29 — accessible via /go, not as standalone commands)
+# INTERNAL SKILLS (28 listed here — accessible via /go, not as standalone commands)
+# Total skills shipped = 32: these 28 + web-research (shared) + 4 system skills
+# (board-execution, doctor, doom-verdict, party-mode) emitted directly by the generator.
 # ═══════════════════════════════════════════
 
 internal_skills:

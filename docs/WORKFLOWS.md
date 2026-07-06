@@ -13,16 +13,16 @@
 | 3 | Bug Fix | `/bugfix` | QA → Fullstack → QA | Structured bug fix from analysis to verification |
 | 4 | Code Review Pipeline | `/review` | Fullstack → QA → Security → Red Team → Contrarian | Multi-perspective code review with offensive testing |
 | 5 | Security Audit | `/security` | Security → Red Team → Backend → DevOps → Legal | Full security audit with red team pentest |
-| 6 | SEO Content Pipeline | `/seo-pipeline` | SEO → Content-SEO → Copywriter → GEO/AIO | Create SEO-optimized content end to end |
+| 6 | SEO Content Pipeline | `/seo` | SEO → Content-SEO → Copywriter → GEO/AIO | Create SEO-optimized content end to end |
 | 7 | Marketing Campaign | `/campaign` | Marketing → Finance → Brand → Copywriter → Ads + Social + PR → Growth | Multi-channel marketing campaign (8 steps) |
 | 8 | Sprint Cycle | `/sprint` | Scrum → PM → Fullstack → QA → DevOps | Complete agile sprint cycle |
-| 9 | Tech Debt Reduction | `/tech-debt` | Architect → Fullstack → QA → DevOps | Identify and reduce technical debt |
+| 9 | Tech Debt Reduction | `/refactor` | Architect → Fullstack → QA → DevOps | Identify and reduce technical debt |
 | 10 | Onboarding Project | `/onboard` | PM → Analyst → Architect → Scrum | New project kickoff and team setup |
 | 11 | Release Cycle | `/release` | Scrum → QA → Security → Legal → DevOps → Marketing → PR → CS | Full release cycle from validation to communication (8 steps) |
-| 12 | Hotfix | `/hotfix` | QA → Security → Fullstack → QA → DevOps | Emergency production fix with security check (NEW) |
-| 13 | Dependency Upgrade | `/upgrade-deps` | Architect → Security → Fullstack → QA → DevOps | Safe dependency upgrade pipeline (NEW) |
-| 14 | Doc Sprint | `/doc-sprint` | Analyst → Architect + Fullstack → Copywriter → DevOps | Focused documentation sprint (NEW) |
-| 15 | Experimentation | `/experiment-cycle` | PM → Data → Fullstack → QA → Growth | Design, build, and analyze experiments (NEW) |
+| 12 | Hotfix | `/hotfix` | QA → Security → Fullstack → QA → DevOps | Emergency production fix with security check |
+| 13 | Dependency Upgrade | `/upgrade` | Architect → Security → Fullstack → QA → DevOps | Safe dependency upgrade pipeline |
+| 14 | Doc Sprint | `/docs` | Analyst → Architect + Fullstack → Copywriter → DevOps | Focused documentation sprint |
+| 15 | Experimentation | `/experiment` | PM → Data → Fullstack → QA → Growth | Design, build, and analyze experiments |
 
 ---
 
@@ -62,20 +62,21 @@ The Jarvis orchestrator manages this chaining automatically:
 | 1 | `pm` | Define product vision, user stories, and MVP scope | — | `product-brief.md`, `user-stories.md` |
 | 2 | `architect` | Design the technical architecture for the MVP | product-brief | `architecture-decision.md`, `tech-stack.md` |
 | 3 | `ux` | Create wireframes for key screens | product-brief, user-stories | `wireframes.md`, `user-flows.md` |
-| 4 | `brand` | Establish brand guidelines and visual identity for the MVP | product-brief, wireframes | `brand-guidelines.md`, `visual-identity.md` |
+| 4 | `brand` | Define brand positioning, tone, and visual guidelines for the MVP | product-brief | `brand-positioning.md`, `voice-and-tone.md` |
 | 5 | `db` | Design the data schema | architecture-decision, user-stories | `schema.md`, `migrations.md` |
 | 6 | `dev-backend` | Develop the API and business logic | architecture-decision, tech-stack, schema | `api-spec.md`, `endpoints.md` |
-| 7 | `dev-frontend` | Develop the user interface | wireframes, user-flows, api-spec, brand-guidelines | `components.md`, `pages.md` |
+| 7 | `dev-frontend` | Develop the user interface | wireframes, user-flows, voice-and-tone, api-spec, endpoints | `components.md`, `pages.md` |
 | 8 | `qa` | Test the MVP end to end | api-spec, components, user-stories | `test-plan.md`, `test-report.md` |
 | 9 | `devops` | Set up CI/CD and deployment | tech-stack, test-report | `deployment-guide.md`, `ci-cd-config.md` |
 
 **Dependency graph:**
 ```
 PM(1) → Architect(2) → DB(5) → Backend(6) → Frontend(7) → QA(8) → DevOps(9)
-PM(1) → UX(3) → Brand(4) ────────────────────↗
+PM(1) → UX(3) ─────────────────────────────↗
+PM(1) → Brand(4) ──────────────────────────↗
 ```
 
-**Key deliverables:** Product brief, architecture decision, wireframes, brand guidelines, database schema, API spec, UI components, test report, deployment guide.
+**Key deliverables:** Product brief, architecture decision, wireframes, brand positioning, database schema, API spec, UI components, test report, deployment guide.
 
 ---
 
@@ -118,7 +119,7 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 
 **Description:** Multi-perspective code review pipeline with offensive security testing. Fullstack summarizes, QA evaluates quality, Security audits, Red Team attempts exploitation, and Contrarian challenges.
 
-**Output directory:** `{assemble_output}/code-review_{timestamp}/`
+**Output directory:** `{assemble_output}/review_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
@@ -136,7 +137,7 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 
 **Description:** Full security audit with red team pentest, remediation, infrastructure hardening, and regulatory compliance.
 
-**Output directory:** `{assemble_output}/security-audit_{timestamp}/`
+**Output directory:** `{assemble_output}/security_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
@@ -150,11 +151,11 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 
 ---
 
-### 6. SEO Content Pipeline (`/seo-pipeline`)
+### 6. SEO Content Pipeline (`/seo`)
 
 **Description:** End-to-end SEO content creation pipeline from keyword research to GEO/AIO optimization. Produces fully optimized content ready for publication.
 
-**Output directory:** `{assemble_output}/seo-content_{timestamp}/`
+**Output directory:** `{assemble_output}/seo_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
@@ -176,17 +177,17 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
 | 1 | `marketing` | Define campaign strategy and target audience | — | `campaign-strategy.md`, `target-audience.md` |
-| 2 | `finance` | Plan the budget and allocate resources | campaign-strategy, target-audience | `budget-plan.md`, `resource-allocation.md` |
+| 2 | `finance` | Validate the budget and define financial KPIs | campaign-strategy, target-audience | `campaign-budget.md`, `financial-kpis.md` |
 | 3 | `brand` | Establish brand guidelines and positioning | campaign-strategy, target-audience | `brand-guidelines.md`, `messaging.md` |
 | 4 | `copywriter` | Write text assets for all channels | brand-guidelines, messaging, target-audience | `copy-assets.md`, `tone-of-voice.md` |
-| 5 | `ads` | Configure advertising campaigns | campaign-strategy, target-audience, copy-assets, budget-plan | `ad-setup.md`, `media-plan.md` |
-| 5 | `social` | Plan the editorial calendar and social content | copy-assets, brand-guidelines, campaign-strategy | `social-calendar.md`, `content-plan.md` |
-| 5 | `pr` | Prepare press outreach and media relations | campaign-strategy, messaging, copy-assets | `press-kit.md`, `media-outreach.md` |
-| 6 | `growth` | Define growth metrics and experiments | ad-setup, social-calendar, press-kit, campaign-strategy | `growth-metrics.md`, `experiment-plan.md` |
+| 5 | `ads` | Configure advertising campaigns and allocate budget | campaign-strategy, target-audience, copy-assets, campaign-budget | `ad-setup.md`, `budget-allocation.md` |
+| 6 | `social` | Plan the editorial calendar and social content | copy-assets, brand-guidelines, campaign-strategy | `social-calendar.md`, `content-plan.md` |
+| 7 | `pr-comms` | Prepare the press release and earned media strategy | copy-assets, messaging, campaign-strategy | `press-release.md`, `media-plan.md` |
+| 8 | `growth` | Define growth metrics and experiments | ad-setup, budget-allocation, social-calendar, financial-kpis | `growth-metrics.md`, `experiment-plan.md` |
 
-> Steps 5 (Ads, Social, PR) run in parallel.
+> Steps 5, 6, and 7 (Ads, Social, PR) run in parallel after copywriting.
 
-**Key deliverables:** Campaign strategy, budget plan, brand guidelines, copy assets, ad setup, social calendar, press kit, growth metrics.
+**Key deliverables:** Campaign strategy, campaign budget, brand guidelines, copy assets, ad setup, social calendar, press release, growth metrics.
 
 ---
 
@@ -208,11 +209,11 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 
 ---
 
-### 9. Tech Debt Reduction (`/tech-debt`)
+### 9. Tech Debt Reduction (`/refactor`)
 
 **Description:** Identify and reduce technical debt systematically. Covers debt inventory, impact analysis, refactoring planning, regression validation, and deployment.
 
-**Output directory:** `{assemble_output}/tech-debt_{timestamp}/`
+**Output directory:** `{assemble_output}/refactor_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
@@ -253,87 +254,89 @@ PM(1) → UX(3) → Brand(4) ─────────────────
 | 1 | `scrum` | Prepare the release checklist and validate scope | — | `release-checklist.md`, `scope-validation.md` |
 | 2 | `qa` | Final validation and regression testing | release-checklist, scope-validation | `qa-sign-off.md`, `regression-results.md` |
 | 3 | `security` | Validate security compliance | qa-sign-off, regression-results, release-checklist | `security-clearance.md`, `final-audit.md` |
-| 4 | `legal` | Review legal and regulatory compliance | security-clearance, release-checklist | `legal-sign-off.md`, `compliance-notes.md` |
-| 5 | `devops` | Prepare the deployment runbook and rollback plan | security-clearance, legal-sign-off, qa-sign-off, release-checklist | `deploy-runbook.md`, `rollback-plan.md` |
-| 6 | `marketing` | Write the release announcement and public changelog | deploy-runbook, release-checklist, scope-validation | `announcement.md`, `changelog.md` |
-| 7 | `pr` | Prepare press outreach and media materials | announcement, changelog, scope-validation | `press-release.md`, `media-kit.md` |
-| 8 | `cs` | Prepare customer support materials and FAQ | announcement, changelog, release-checklist | `support-guide.md`, `faq.md` |
+| 4 | `legal` | Review legal and regulatory compliance | scope-validation, security-clearance | `compliance-sign-off.md`, `legal-notes.md` |
+| 5 | `devops` | Prepare the deployment runbook and rollback plan | security-clearance, compliance-sign-off, qa-sign-off | `deploy-runbook.md`, `rollback-plan.md` |
+| 6 | `marketing` | Write the release announcement and public changelog | deploy-runbook, scope-validation | `announcement.md`, `changelog.md` |
+| 7 | `pr-comms` | Prepare the press release and external communication plan | announcement, scope-validation | `press-release.md`, `comms-plan.md` |
+| 8 | `customer-success` | Prepare customer communication and post-release adoption plan | announcement, changelog | `customer-notification.md`, `adoption-plan.md` |
 
-**Key deliverables:** Release checklist, QA sign-off, security clearance, legal sign-off, deployment runbook, announcement, press release, support guide.
+> Steps 6 and 7 (Marketing, PR) run in parallel after deployment. Step 8 (Customer Success) also depends on step 6.
+
+**Key deliverables:** Release checklist, QA sign-off, security clearance, compliance sign-off, deployment runbook, announcement, press release, customer notification.
 
 ---
 
-### 12. Hotfix (`/hotfix`) — NEW
+### 12. Hotfix (`/hotfix`)
 
-**Description:** Emergency production fix with built-in security verification. QA reproduces the issue, Security assesses the risk, the fullstack developer implements the fix, QA validates, and DevOps deploys.
+**Description:** Emergency production fix with built-in security verification. QA reproduces the issue, Security assesses the risk, the fullstack developer implements the patch, QA validates, and DevOps deploys.
 
 **Output directory:** `{assemble_output}/hotfix_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
-| 1 | `qa` | Reproduce the production issue and assess impact | — | `incident-analysis.md`, `reproduction-steps.md` |
-| 2 | `security` | Evaluate whether the issue has security implications | incident-analysis, reproduction-steps | `security-assessment.md`, `risk-level.md` |
-| 3 | `dev-fullstack` | Implement the hotfix with minimal change scope | incident-analysis, reproduction-steps, security-assessment | `hotfix-implementation.md`, `change-scope.md` |
-| 4 | `qa` | Validate the fix with targeted and regression tests | hotfix-implementation, change-scope, incident-analysis | `validation-report.md`, `regression-results.md` |
-| 5 | `devops` | Deploy the hotfix to production with rollback plan | hotfix-implementation, validation-report, regression-results | `deployment-log.md`, `rollback-plan.md` |
+| 1 | `qa` | Diagnose the production incident and document reproduction | — | `incident-report.md`, `reproduction-steps.md` |
+| 2 | `security` | Evaluate the security impact and prioritize the fix | incident-report | `security-assessment.md`, `priority-level.md` |
+| 3 | `dev-fullstack` | Implement the minimal corrective patch | incident-report, reproduction-steps, priority-level | `hotfix-patch.md`, `rollback-plan.md` |
+| 4 | `qa` | Validate the patch with critical regression tests | hotfix-patch, reproduction-steps | `minimal-test-report.md`, `validation-status.md` |
+| 5 | `devops` | Deploy the hotfix with rollback ready and enhanced monitoring | hotfix-patch, rollback-plan, validation-status | `deployment-log.md`, `monitoring-checklist.md` |
 
-**Key deliverables:** Incident analysis, security assessment, hotfix implementation, validation report, deployment log.
+**Key deliverables:** Incident report, security assessment, hotfix patch, minimal test report, deployment log.
 
 ---
 
-### 13. Dependency Upgrade (`/upgrade-deps`) — NEW
+### 13. Dependency Upgrade (`/upgrade`)
 
-**Description:** Safe and structured dependency upgrade pipeline. The architect evaluates impact, Security checks for vulnerabilities, the fullstack developer applies updates, QA validates compatibility, and DevOps deploys.
+**Description:** Safe and structured dependency upgrade pipeline. The architect evaluates impact and breaking changes, Security checks for CVEs, the fullstack developer applies updates, QA validates compatibility, and DevOps deploys progressively.
 
-**Output directory:** `{assemble_output}/upgrade-deps_{timestamp}/`
+**Output directory:** `{assemble_output}/upgrade_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
-| 1 | `architect` | Analyze current dependencies and evaluate upgrade impact | — | `dependency-audit.md`, `upgrade-plan.md` |
-| 2 | `security` | Scan for CVEs and assess security risk of changes | dependency-audit, upgrade-plan | `cve-report.md`, `security-risk.md` |
-| 3 | `dev-fullstack` | Apply dependency upgrades and fix breaking changes | upgrade-plan, cve-report, security-risk | `upgrade-log.md`, `breaking-changes.md` |
-| 4 | `qa` | Run full test suite and validate compatibility | upgrade-log, breaking-changes | `test-results.md`, `compatibility-report.md` |
-| 5 | `devops` | Deploy upgraded dependencies with monitoring | upgrade-log, test-results, compatibility-report | `deployment-plan.md`, `monitoring-config.md` |
+| 1 | `architect` | Analyze dependencies, identify breaking changes, and assess risks | — | `dependency-audit.md`, `breaking-changes.md`, `risk-assessment.md` |
+| 2 | `security` | Check known CVEs and validate target versions | dependency-audit | `cve-report.md`, `version-recommendations.md` |
+| 3 | `dev-fullstack` | Apply updates and fix breaking changes | dependency-audit, breaking-changes, version-recommendations | `upgrade-log.md`, `migration-notes.md` |
+| 4 | `qa` | Run compatibility tests and validate absence of regressions | upgrade-log, migration-notes | `compatibility-report.md`, `regression-results.md` |
+| 5 | `devops` | Deploy progressively with performance metrics monitoring | upgrade-log, compatibility-report, regression-results | `rollout-plan.md`, `monitoring-dashboard.md` |
 
-**Key deliverables:** Dependency audit, CVE report, upgrade log, compatibility report, deployment plan.
+**Key deliverables:** Dependency audit, breaking changes, CVE report, upgrade log, compatibility report, rollout plan.
 
 ---
 
-### 14. Doc Sprint (`/doc-sprint`) — NEW
+### 14. Doc Sprint (`/docs`)
 
 **Description:** Focused documentation sprint to bring project documentation up to date. The analyst inventories existing docs, the architect and fullstack developer write technical content in parallel, the copywriter polishes and standardizes, and DevOps publishes.
 
-**Output directory:** `{assemble_output}/doc-sprint_{timestamp}/`
+**Output directory:** `{assemble_output}/docs_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
-| 1 | `analyst` | Inventory existing documentation and identify gaps | — | `doc-inventory.md`, `gap-analysis.md` |
-| 2a | `architect` | Write architecture and design documentation | doc-inventory, gap-analysis | `architecture-docs.md`, `adr-updates.md` |
-| 2b | `dev-fullstack` | Write API and implementation documentation | doc-inventory, gap-analysis | `api-docs.md`, `implementation-guides.md` |
-| 3 | `copywriter` | Edit, polish, and standardize all documentation | architecture-docs, api-docs, adr-updates, implementation-guides | `final-docs.md`, `style-guide.md` |
-| 4 | `devops` | Publish documentation and set up doc site | final-docs, style-guide | `published-docs.md`, `doc-site-config.md` |
+| 1 | `analyst` | Inventory existing documentation, identify gaps, and prioritize | — | `doc-inventory.md`, `gap-analysis.md`, `doc-plan.md` |
+| 2 | `architect` | Write or update architecture documentation (ADR, diagrams, stack) | doc-plan, gap-analysis | `architecture-docs.md`, `adr-index.md` |
+| 3 | `dev-fullstack` | Write or update technical documentation (API, README, contribution guides) | doc-plan, gap-analysis | `api-docs.md`, `readme-update.md`, `contributing-guide.md` |
+| 4 | `copywriter` | Edit, clarify, and harmonize the style of all documentation | architecture-docs, api-docs, readme-update | `edited-docs.md`, `style-notes.md` |
+| 5 | `devops` | Publish documentation and configure the docs CI/CD | edited-docs, api-docs | `docs-deployment.md`, `ci-docs-config.md` |
 
-> Steps 2a and 2b (Architect + Fullstack) run in parallel.
+> Steps 2 and 3 (Architect + Fullstack) run in parallel.
 
-**Key deliverables:** Documentation inventory, gap analysis, architecture docs, API docs, polished final docs, doc site configuration.
+**Key deliverables:** Documentation inventory, gap analysis, architecture docs, API docs, edited docs, docs deployment configuration.
 
 ---
 
-### 15. Experimentation (`/experiment-cycle`) — NEW
+### 15. Experimentation (`/experiment`)
 
-**Description:** Design, build, and analyze product experiments. The PM defines the hypothesis, Data designs the measurement framework, the fullstack developer implements the experiment, QA validates the setup, and Growth analyzes results.
+**Description:** Design, build, and analyze product experiments. The PM defines the hypothesis, Data sizes the sample and configures tracking, the fullstack developer implements the variants, QA validates the setup, and Growth analyzes results.
 
 **Output directory:** `{assemble_output}/experiment_{timestamp}/`
 
 | Step | Agent | Action | Inputs | Outputs |
 |------|-------|--------|--------|---------|
-| 1 | `pm` | Define the experiment hypothesis and success criteria | — | `experiment-brief.md`, `success-criteria.md` |
-| 2 | `data` | Design the measurement framework and analytics plan | experiment-brief, success-criteria | `measurement-plan.md`, `analytics-setup.md` |
-| 3 | `dev-fullstack` | Implement the experiment (feature flags, A/B setup) | experiment-brief, measurement-plan | `experiment-implementation.md`, `feature-flags.md` |
-| 4 | `qa` | Validate experiment setup and tracking accuracy | experiment-implementation, feature-flags, measurement-plan | `validation-report.md`, `tracking-audit.md` |
-| 5 | `growth` | Analyze results and recommend next steps | validation-report, measurement-plan, success-criteria | `results-analysis.md`, `recommendations.md` |
+| 1 | `pm` | Define the hypothesis, success metrics, and decision criteria | — | `hypothesis.md`, `success-metrics.md`, `decision-criteria.md` |
+| 2 | `data` | Calculate required sample size and configure analytics tracking | hypothesis, success-metrics | `sample-size.md`, `tracking-plan.md` |
+| 3 | `dev-fullstack` | Implement the variants via feature flags and instrument the code | hypothesis, tracking-plan | `implementation-spec.md`, `feature-flags.md` |
+| 4 | `qa` | Validate that variants work correctly and tracking is accurate | implementation-spec, feature-flags, tracking-plan | `variant-test-report.md`, `tracking-validation.md` |
+| 5 | `growth` | Analyze results, evaluate significance, and recommend the decision | hypothesis, decision-criteria, sample-size, tracking-validation | `experiment-results.md`, `decision-recommendation.md` |
 
-**Key deliverables:** Experiment brief, measurement plan, implementation details, tracking audit, results analysis and recommendations.
+**Key deliverables:** Hypothesis, success metrics, sample size, tracking plan, variant test report, experiment results and decision recommendation.
 
 ---
 
@@ -417,8 +420,8 @@ assemble-output/
       wireframes.md
       user-flows.md
     04-brand/
-      brand-guidelines.md
-      visual-identity.md
+      brand-positioning.md
+      voice-and-tone.md
     05-db/
       schema.md
       migrations.md

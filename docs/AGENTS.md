@@ -1,4 +1,4 @@
-# Agent Catalog — 33 Specialized Agents
+# Agent Catalog — 34 Specialized Agents
 
 > **34 agents** (30 specialists + 1 red team + 1 contrarian + 1 stress-tester + 1 orchestrator) organized into **9 teams**.
 

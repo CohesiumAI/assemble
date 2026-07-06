@@ -23,9 +23,9 @@
 | 13 | OpenCode | IDE | `.opencode/` |
 | 14 | QwenCoder | IDE | `.qwencoder/` |
 | 15 | Rovo Dev | IDE | `.rovo/` |
-| 16 | Claude Code Desktop | IDE | `CLAUDE.md` (self-contained) + `.claude/skills/*/SKILL.md` (43 — agents as skills) + `.claude/rules/` |
-| 17 | Claude Code (CLI) | CLI | `CLAUDE.md` (@imports) + `.claude/agents/*/AGENT.md` + `.claude/skills/*/SKILL.md` (13) + `.claude/rules/` |
-| 18 | Codex | CLI | `AGENTS.md` |
+| 16 | Claude Code Desktop | IDE | `CLAUDE.md` (self-contained) + `.claude/skills/*/SKILL.md` (47 — agents as skills) + `.claude/rules/` |
+| 17 | Claude Code (CLI) | CLI | `CLAUDE.md` (@imports) + `.claude/agents/*/AGENT.md` + `.claude/skills/*/SKILL.md` (15) + `.claude/rules/` |
+| 18 | Codex | CLI | `AGENTS.md` + `.agents/skills/*/SKILL.md` + `.codex/agents/*.toml` |
 | 19 | Gemini CLI | CLI | `GEMINI.md` + `.gemini/` |
 | 20 | Auggie | CLI | `.augment/commands/*.md` |
 | 21 | Pi | CLI | `AGENTS.md` + `SYSTEM.md` |
@@ -279,7 +279,7 @@
 | File / Directory | Content |
 |------------------|---------|
 | `CLAUDE.md` | Self-contained (no @imports), team roster with `/slug` syntax |
-| `.claude/skills/*/SKILL.md` | **43 skill directories**: 10 system + 33 agent skills (one per agent) |
+| `.claude/skills/*/SKILL.md` | **47 skill directories**: 13 system + 34 agent skills (one per agent) |
 | `.claude/rules/orchestrator.md` | Full orchestrator instructions |
 | `.claude/rules/governance/governance.md` | *(optional)* Governance rules when enabled |
 
@@ -302,8 +302,8 @@
 | File / Directory | Content |
 |------------------|---------|
 | `CLAUDE.md` | Compact entry point (< 30 lines) with @imports to rules |
-| `.claude/agents/*/AGENT.md` | One directory per agent (31), each containing an `AGENT.md` file |
-| `.claude/skills/*/SKILL.md` | 13 skill directories: go, party, dismiss, help, doctor, review, bugfix, feature, sprint, release, mvp, yolo-hardcore, yolo-full |
+| `.claude/agents/*/AGENT.md` | One directory per agent (34), each containing an `AGENT.md` file |
+| `.claude/skills/*/SKILL.md` | 15 skill directories: go, party, dismiss, help, doctor, doom, review, bugfix, feature, sprint, release, mvp, board, yolo-hardcore, yolo-full |
 | `.claude/rules/routing.md` | Jarvis routing intelligence: complexity assessment, domain→agent mapping, methodology |
 | `.claude/rules/orchestrator.md` | Full orchestrator instructions |
 | `.claude/rules/teams.md` | Agent roster with @mentions |
@@ -311,7 +311,7 @@
 
 **Format:** Markdown
 
-**Notes:** `CLAUDE.md` is kept under 30 lines to minimize permanent context token usage (~400 tokens/turn instead of ~1500). Agents are accessed via `@marvel-name` mentions. The 13 SKILL.md files cover: 5 system commands (`/go`, `/party`, `/dismiss`, `/help`, `/doctor`), 6 workflow shortcuts (`/review`, `/bugfix`, `/feature`, `/sprint`, `/release`, `/mvp`), and 2 YOLO escalation modes (`/yolo-hardcore`, `/yolo-full`). Hidden shortcuts like `/refactor`, `/hotfix`, `/upgrade` also work. Governance rules are loaded on-demand when enabled.
+**Notes:** `CLAUDE.md` is a compact entry point that `@imports` the rules files. The orchestration context injected per session (`CLAUDE.md` plus the five @-imported rules files — routing.md, teams.md, orchestrator.md, agent-context.md, governance.md) totals roughly 31 KB, or about **~7,800 tokens per session**. Agents are accessed via `@marvel-name` mentions. The 15 SKILL.md files cover: 6 system commands (`/go`, `/party`, `/dismiss`, `/help`, `/doctor`, `/doom`), 7 workflow/board shortcuts (`/review`, `/bugfix`, `/feature`, `/sprint`, `/release`, `/mvp`, `/board`), and 2 YOLO escalation modes (`/yolo-hardcore`, `/yolo-full`). Hidden shortcuts like `/refactor`, `/hotfix`, `/upgrade` also work. Governance rules are loaded on-demand when enabled.
 
 ---
 
@@ -323,11 +323,13 @@
 
 | File / Directory | Content |
 |------------------|---------|
-| `AGENTS.md` | Consolidated file: orchestrator, agent catalog, commands |
+| `AGENTS.md` | Persistent project instructions: orchestrator, agent catalog, commands |
+| `.agents/skills/*/SKILL.md` | Project-scoped skills (system skills + one per workflow) |
+| `.codex/agents/*.toml` | Project-scoped custom agents (one TOML file per agent) |
 
-**Format:** Compact Markdown
+**Format:** Markdown + TOML
 
-**Notes:** Everything is consolidated into `AGENTS.md` which contains the orchestrator, all agent definitions, and command references.
+**Notes:** `AGENTS.md` holds the orchestration rules and agent catalog. In addition, the adapter generates project-scoped skills under `.agents/skills/` (invoked with `$skill-name` or browsed via `/skills`) and custom Codex agents under `.codex/agents/` as TOML files, available to spawned Codex agent threads.
 
 ---
 
@@ -397,7 +399,7 @@ When `mcp: true` in `.assemble.yaml`, generates an MCP (Model Context Protocol) 
 
 | File | Purpose |
 |------|---------|
-| `mcp-server.js` | Standalone Node.js server with 31+ tools (one per agent + jarvis-route) |
+| `mcp-server.js` | Standalone Node.js server with 35 tools (one per agent + jarvis-route) |
 | `mcp.json` | Configuration for Claude Desktop / VS Code MCP integration |
 | `mcp-package.json` | Dependencies — run `cd .assemble && npm install` to set up |
 

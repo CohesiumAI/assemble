@@ -1,10 +1,10 @@
-# Skills Reference — 29 Reusable Skills
+# Skills Reference — 32 Skills
 
-> **29 skills**: 14 shared (multi-agent) + 15 specific (role-focused). Each skill provides a structured, repeatable process that agents can execute via its trigger command.
+> **32 skills**: 28 reusable + 4 system. Reusable skills break down as 15 shared (multi-agent) + 13 specific (role-focused). The 4 system skills (board-execution, doctor, doom-verdict, party-mode) power internal orchestration mechanics rather than domain work. Each skill provides a structured, repeatable process that agents can execute via its trigger command.
 
 ---
 
-## Shared Skills (14)
+## Shared Skills (15)
 
 Cross-functional skills available to multiple agents. Any agent that owns a skill can execute it through the corresponding trigger command.
 
@@ -18,7 +18,7 @@ Cross-functional skills available to multiple agents. Any agent that owns a skil
 | 4 | `/benchmark` | Competitive Analysis | Competitive benchmarking with positioning analysis, strengths/weaknesses, and strategic recommendations | analyst, marketing, growth, pm |
 | 5 | `/brief` | Content Brief | Create structured content briefs with keyword research, search intent, and editorial guidelines | content-seo, copywriter, storytelling, social |
 | 6 | `/db` | Database Query | Optimize and design database queries and schemas with indexing, execution plans, and migrations | db, dev-backend, dev-fullstack, data |
-| 7 | `/doc` | Documentation | Generate technical and functional documentation including READMEs, ADRs, API docs, and user guides | all agents (31) |
+| 7 | `/doc` | Documentation | Generate technical and functional documentation including READMEs, ADRs, API docs, and user guides | all agents (34) |
 | 8 | `/git` | Git Workflow | Manage Git workflows including branching strategy, commit conventions, PRs, and merge processes | dev-backend, dev-frontend, dev-fullstack, dev-mobile, devops, scrum |
 | 9 | `/monitor` | Monitoring | Set up monitoring and observability with metrics, logs, traces, alerting, and dashboards | devops, data, dev-backend |
 | 10 | `/perf` | Performance Audit | Performance audit covering Core Web Vitals, query optimization, load analysis, and profiling | dev-frontend, dev-backend, devops, data |
@@ -26,6 +26,7 @@ Cross-functional skills available to multiple agents. Any agent that owns a skil
 | 12 | `/sec-check` | Security Check | Security verification against OWASP Top 10, vulnerability analysis, hardening, and secrets management | security, dev-backend, devops, architect |
 | 13 | `/seo` | SEO Audit | Technical and on-page SEO audit covering crawlability, Core Web Vitals, structured data, and internal linking | seo, content-seo, geo-aio, dev-frontend |
 | 14 | `/test` | Testing | Test strategy and execution for unit, integration, and e2e tests with coverage analysis | dev-backend, dev-frontend, dev-fullstack, dev-mobile, qa |
+| 15 | `/research` | Web Research | Verify recommendations against current web data with confidence signals and quality guardrails | all agents |
 
 ---
 
@@ -264,9 +265,23 @@ Cross-functional skills available to multiple agents. Any agent that owns a skil
 
 ---
 
-## Specific Skills (15)
+#### 15. Web Research (`/research`)
 
-Role-focused skills tied to a primary agent. Each provides a specialized process for a specific domain.
+**Description:** Web research protocol for verifying and updating agent recommendations with current data. Agents ground their advice in the latest versions, CVEs, API changes, market data, and legal evolutions instead of relying solely on training data. Includes quality guardrails (ignore low-signal libraries, cross-reference sources, prefer primary sources) and confidence signals (`[VERIFIED]`, `[TRAINING DATA]`, `[NEEDS VERIFICATION]`).
+
+**Agents:** all agents (activated when `search: true` and a web search tool is available)
+
+**When to use:**
+- Recommending a technology, library, or version
+- Checking CVEs, deprecated APIs, or breaking changes
+- Verifying evolving market, legal, or SEO data
+- Confirming third-party service status or competitive intelligence
+
+---
+
+## Specific Skills (17)
+
+Skills tied to a primary agent (13 role-focused) plus 4 system skills (board-execution, doctor, doom-verdict, party-mode) that power orchestration mechanics. Each provides a specialized process for a specific domain or system function.
 
 ### Summary Table
 
@@ -285,8 +300,10 @@ Role-focused skills tied to a primary agent. Each provides a specialized process
 | 11 | `/test-plan` | QA Test Plan | Create a comprehensive test plan with strategies, coverage matrices, and acceptance criteria | qa |
 | 12 | `/sprint-plan` | Sprint Planning | Facilitate agile sprint planning with estimation, prioritization, and ceremony setup | scrum |
 | 13 | `/wireframe` | UX Wireframe | Create wireframes and interactive prototypes with information architecture | ux |
-| 14 | `/party` | Party Mode | Persistent collaborative multi-agent session with Jarvis facilitation | all |
-| 15 | `/board` | Board Execution | Kanban board execution engine — manages ticket lifecycle through implement → review → test → done pipeline with parallel execution and dependency resolution | scrum (primary), all dev agents |
+| 14 | `/party` | Party Mode *(system)* | Persistent collaborative multi-agent session with Jarvis facilitation | all |
+| 15 | `/board` | Board Execution *(system)* | Kanban board execution engine — manages ticket lifecycle through implement → review → test → done pipeline with parallel execution and dependency resolution | scrum (primary), all dev agents |
+| 16 | `/doctor` | Doctor *(system)* | Health check and auto-repair — diagnoses and fixes Assemble installation issues | jarvis |
+| 17 | `/doom` | Doom Verdict *(system)* | Doctor Doom strategic verdict — formal demolition and quantitative risk analysis of critical decisions | doom |
 
 ---
 
@@ -500,11 +517,37 @@ Role-focused skills tied to a primary agent. Each provides a specialized process
 
 ---
 
+#### 16. Doctor (`/doctor`) — *system*
+
+**Primary agent:** jarvis
+
+**Description:** Health check and auto-repair for the Assemble installation. Diagnoses configuration, generated platform files, and directory structure, then repairs fixable issues (regeneration, missing directories, governance/memory/metrics files).
+
+**When to use:**
+- After installation or configuration changes
+- When generated files appear out of sync with `.assemble.yaml`
+- To validate the environment before running workflows
+
+---
+
+#### 17. Doom Verdict (`/doom`) — *system*
+
+**Primary agent:** doom
+
+**Description:** Doctor Doom's strategic verdict. Formal demolition of an irreversible decision with quantitative risk analysis and a verdict (APPROVED / APPROVED WITH CONDITIONS / REJECTED). Invoked as a circuit-breaker for high-stakes choices or when Deadpool escalates.
+
+**When to use:**
+- Before an irreversible architecture, pricing, or production decision
+- When Deadpool flags a RED verdict and recommends escalation
+- As the Gate Keeper step in HIGH-risk workflows
+
+---
+
 ## File Structure
 
 ```
 src/skills/
-  shared/               # 14 shared skills
+  shared/               # 15 shared skills
     api-design.md
     ci-cd.md
     code-review.md
@@ -519,21 +562,25 @@ src/skills/
     security-check.md
     seo-audit.md
     testing.md
-  specific/             # 15 specific skills
+    web-research.md
+  specific/             # 17 specific skills (13 role-focused + 4 system)
     ad-campaign-setup.md
     automation-workflow.md
     backend-api-scaffold.md
+    board-execution.md      # system
     db-migration.md
     devops-pipeline.md
+    doctor.md               # system
+    doom-verdict.md         # system
     frontend-component.md
     growth-experiment.md
     legal-compliance-check.md
     mobile-screen.md
+    party-mode.md           # system
     pentest-scan.md
     qa-test-plan.md
     sprint-planning.md
     ux-wireframe.md
-    board-execution.md
 ```
 
 ## Skill File Structure

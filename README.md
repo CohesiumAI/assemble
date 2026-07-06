@@ -20,7 +20,7 @@
 
 ---
 
-> **v1.1.2-beta.3** — New: native **Codex support** now generates `AGENTS.md`, project skills, and Codex custom agents. Core functionality is stable, but APIs and generated file formats may change before v1.0.0 stable. Feedback welcome via [GitHub Issues](https://github.com/CohesiumAI/assemble/issues).
+> **v1.1.2-beta.3** — New: native **Codex support** now generates `AGENTS.md`, project skills, and Codex custom agents. This is a beta release; generated file formats may still change between minor versions. Feedback welcome via [GitHub Issues](https://github.com/CohesiumAI/assemble/issues).
 
 Assemble turns your IDE into a structured team of 34 senior-level AI specialists — architect, backend, QA, security, product, marketing, and 28 others. You run one command. It generates native config files for Cursor, Claude Code, Copilot, Gemini CLI, and 17 other platforms. No runtime, no daemon, no SDK. Your LLM reads the configs and knows exactly who to be, how to think, and what to deliver.
 
@@ -36,7 +36,7 @@ I needed specialists, not assistants. I needed a team that would challenge my bl
 
 So I built one.
 
-A client project quoted at 2 days turned into 10 days of failed attempts with generic AI. With Assemble's structured team, it took 30 minutes. That was the moment I knew this wasn't just a personal tool — it was a category.
+A client project that dragged on for days of failed attempts with generic AI came together quickly once a structured team was driving it. That was the moment I knew this wasn't just a personal tool — it was a category.
 
 Assemble exists because one person with the right team structure can outperform a department that wings it.
 
@@ -180,7 +180,7 @@ $ npx cohesiumai-assemble
   Your choice: 0    # → all 21 platforms
 
 ✅ Installation complete!
-  164+ tests passing | 21 platforms | 34 agents
+  200+ tests passing | 21 platforms | 34 agents
 ```
 
 ---
@@ -191,7 +191,7 @@ LLMs are trained to be helpful. In practice, that means they agree too easily �
 
 Assemble breaks this by design with a **two-tier defense against groupthink**:
 
-**Deadpool (@deadpool)** is a permanent contrarian embedded in every workflow. Not optional. Not a suggestion. He challenges assumptions, flags cognitive biases, and forces other agents to prove their reasoning. In our testing, this structural dissent reduced hallucination-driven errors by **65%**.
+**Deadpool (@deadpool)** is a permanent contrarian embedded in every workflow. Not optional. Not a suggestion. He challenges assumptions, flags cognitive biases, and forces other agents to prove their reasoning. This structural dissent counters the consensus-driven errors that surface when agents validate each other too readily.
 
 **Doctor Doom (@doctor-doom)** is the escalation. Summoned only for irreversible, high-stakes decisions — production deploys, architectural pivots, financial commitments. Every objection is quantified. Every risk is mapped to its failure chain. When both Deadpool and Doom flag the same proposal, the decision is **blocked** until the flaws are resolved.
 
@@ -202,7 +202,7 @@ Other frameworks assume agents will naturally check each other. They won't. Cons
 | **Presence** | Every workflow | Summoned for crises |
 | **Approach** | Intuitive, qualitative | Formal, quantitative |
 | **Style** | "Have you considered...?" | "Your assumption fails because..." |
-| **Catches** | 80% of issues | The 20% Deadpool misses |
+| **Catches** | Everyday assumptions and biases | The rare, high-stakes flaws Deadpool misses |
 | **Verdict** | GREEN / YELLOW / RED | APPROVED / CONDITIONS / REJECTED |
 
 > **Why this matters:** Most multi-agent frameworks assume agents will naturally check each other. They don't. LLMs are trained to be helpful and agreeable — put five of them in a room and they'll enthusiastically agree on a terrible plan. Deadpool breaks this pattern by design, not by accident.
@@ -313,7 +313,7 @@ For details on MCP server, web search, cross-session memory, metrics, YOLO escal
 
 | # | Workflow | Trigger | Agent Chain | Description |
 |---|----------|---------|-------------|-------------|
-| 1 | MVP Launch | `/mvp` | PM, Architect, UX, DB, Backend, Frontend, QA, DevOps | Full MVP from product vision to deployment |
+| 1 | MVP Launch | `/mvp` | PM, Architect, UX, Brand, DB, Backend, Frontend, QA, DevOps | Full MVP from product vision to deployment |
 | 2 | Feature Development | `/feature` | PM, Analyst, Architect, Backend, Frontend, QA | End-to-end feature from spec to validation |
 | 3 | Bug Fix | `/bugfix` | QA, Dev, QA | Structured bug analysis, fix, and regression test |
 | 4 | Code Review Pipeline | `/review` | Fullstack, QA, Security, Red Team, Contrarian | Multi-perspective code review with offensive testing |
@@ -329,7 +329,7 @@ For details on MCP server, web search, cross-session memory, metrics, YOLO escal
 | 14 | Documentation Sprint | `/docs` | Analyst, Architect, Fullstack, Copywriter, DevOps | Documentation inventory, writing, editing, and publishing |
 | 15 | Experimentation | `/experiment` | PM, Data, Fullstack, QA, Growth | A/B experiment from hypothesis to statistical decision |
 
-29 reusable skills (15 shared + 14 agent-specific) are also available. [See the full skills reference →](docs/SKILLS.md)
+32 skills (28 reusable + 4 system) are also available. [See the full skills reference →](docs/SKILLS.md)
 
 ---
 
@@ -341,8 +341,8 @@ assemble/
     agents/             # 34 agent definition files (AGENT-*.md)
     skills/
       shared/           # 15 shared skills (multi-agent, includes web-research)
-      specific/         # 15 agent-specific skills
-        # includes board-execution.md for Kanban ticket orchestration
+      specific/         # 17 specific skills (13 agent-specific + 4 system:
+        # board-execution, doctor, doom-verdict, party-mode)
     workflows/          # 15 workflow definitions (YAML)
     orchestrator/       # ORCHESTRATOR.md (Jarvis)
     config/
@@ -412,7 +412,7 @@ You type /go <request>
 | Document | Contents |
 |----------|----------|
 | [Agent Catalog](docs/AGENTS.md) | Complete catalog of all 34 agents with roles, skills, and workflows |
-| [Skills Reference](docs/SKILLS.md) | 28 skills (14 shared + 14 specific) with detailed processes |
+| [Skills Reference](docs/SKILLS.md) | 32 skills (28 reusable + 4 system) with detailed processes |
 | [Workflow Guide](docs/WORKFLOWS.md) | 15 workflows with agent chains, inputs/outputs, and dependency graphs |
 | [Board Execution Guide](docs/BOARD.md) | `_board.yaml` format, ticket lifecycle, WIP limits, and dependency rules |
 | [Platform Support](docs/PLATFORMS.md) | Platform-specific setup guides and file structure details |
@@ -431,6 +431,12 @@ You type /go <request>
 7. Submit a pull request
 
 Agent definitions live in `src/agents/`, skills in `src/skills/`, and workflows in `src/workflows/`. The generator in `generator/` transforms these source files into platform-specific configurations.
+
+---
+
+## Trademarks & Disclaimer
+
+Marvel character names are used solely as memorable persona labels for AI agents. Assemble is an independent open-source project and is **not affiliated with, endorsed by, or sponsored by** Marvel Characters, Inc. or The Walt Disney Company. All character names are trademarks of their respective owners.
 
 ---
 

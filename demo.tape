@@ -9,7 +9,7 @@ Set Height 500
 Set Shell "bash"
 Set Theme "Catppuccin Mocha"
 
-Type "npx create-assemble" Enter
+Type "npx cohesiumai-assemble" Enter
 Sleep 2s
 Type "english" Enter
 Sleep 500ms
