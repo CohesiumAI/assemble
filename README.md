@@ -434,12 +434,6 @@ Agent definitions live in `src/agents/`, skills in `src/skills/`, and workflows 
 
 ---
 
-## Trademarks & Disclaimer
-
-Marvel character names are used solely as memorable persona labels for AI agents. Assemble is an independent open-source project and is **not affiliated with, endorsed by, or sponsored by** Marvel Characters, Inc. or The Walt Disney Company. All character names are trademarks of their respective owners.
-
----
-
 ## License
 
 MIT — An open-source project by [Cohesium AI](https://cohesium.ai)
