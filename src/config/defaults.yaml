@@ -1,6 +1,11 @@
 # Assemble — Default configuration
 # This file defines the system default values
 # The installer generates a per-project .assemble.yaml that overrides these values
+#
+# ⚠️  REFERENCE ONLY — this file is NOT loaded at runtime. The effective defaults
+#     live in generator/lib/config-loader.js (DEFAULTS) and the platform registry
+#     in generator/lib/schema-validator.js (VALID_PLATFORMS). Editing this file has
+#     NO effect; it documents the intended defaults for humans. Keep it in sync.
 
 # NOTE: the generator reads the version from package.json at build time — this value is for reference only
 version: "1.1.2-beta.3"

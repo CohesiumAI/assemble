@@ -1,6 +1,11 @@
 # Assemble — Team definitions
 # Teams group agents by functional domain
 # Accessible via /team-<group> to display a subgroup
+#
+# ⚠️  REFERENCE ONLY — this file is NOT consumed by the generator.
+#     The authoritative team→agent mapping lives in generator/lib/template-engine.js
+#     (renderCompactHelp). Editing this file has NO effect on generated output.
+#     Kept for documentation/human reference; keep it in sync with the code mapping.
 
 teams:
   dev:
