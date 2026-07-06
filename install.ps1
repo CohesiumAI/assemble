@@ -175,7 +175,10 @@ if ($platformChoice -eq "0") {
 Write-Step "4/8 — Target project directory"
 Write-Host "Where is your project located?"
 $projectDir = Read-Prompt "Project directory" "."
-$projectDir = (Resolve-Path $projectDir -ErrorAction SilentlyContinue)?.Path
+# Note: avoid the null-conditional operator (?.) — it is PowerShell 7+ only and
+# fails to PARSE under Windows PowerShell 5.1 (the default Windows shell).
+$resolved = Resolve-Path $projectDir -ErrorAction SilentlyContinue
+$projectDir = if ($resolved) { $resolved.Path } else { $null }
 if (-not $projectDir) {
     $projectDir = [System.IO.Path]::GetFullPath((Read-Prompt "Project directory" "."))
     New-Item -ItemType Directory -Force -Path $projectDir | Out-Null
@@ -190,7 +193,7 @@ Write-Color "  ✓ Output: $projectDir/$outputDir" Green
 
 # 6. Agents
 Write-Step "6/8 — Agents to install"
-$agentChoice = Read-Prompt "Install all 31 agents? [Y/n]" "Y"
+$agentChoice = Read-Prompt "Install all 34 agents? [Y/n]" "Y"
 $selectedAgents = if ($agentChoice -match "^[YyOo]$") { "all" } else { "custom" }
 Write-Color "  ✓ Agents: $selectedAgents" Green
 

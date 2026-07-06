@@ -300,8 +300,43 @@ async function runUpdate(projectDir) {
   rl.close();
 }
 
+function printHelp() {
+  print(`Assemble — AI Agent Orchestrator (v${PKG_VERSION})
+
+Usage:
+  npx cohesiumai-assemble [command] [options]
+
+Commands:
+  (none)            Interactive installer (wizard)
+  doctor            Diagnose and repair an installation
+  diff              Preview files that would change on regeneration
+  ls                List the current configuration
+  import <file>     Import a skill file into .assemble/skills/
+
+Options:
+  --update, -u      Update an existing installation (reads .assemble.yaml)
+  --project <dir>   Target project directory (default: current)
+  --help, -h        Show this help
+  --version, -v     Show the version
+
+Docs: https://github.com/CohesiumAI/assemble`);
+}
+
 async function main() {
   const fs = require('fs');
+
+  // ─── Help / version — must never fall through to the interactive wizard ──
+  const argv = process.argv.slice(2);
+  if (argv.includes('--help') || argv.includes('-h')) {
+    printHelp();
+    rl.close();
+    return;
+  }
+  if (argv.includes('--version') || argv.includes('-v')) {
+    print(PKG_VERSION);
+    rl.close();
+    return;
+  }
 
   // ─── Subcommand routing (before --update check to avoid conflicts) ───────
   const subcommand = process.argv[2];
@@ -340,6 +375,16 @@ async function main() {
     const dir = projIdx >= 0 ? path.resolve(process.argv[projIdx + 1]) : path.resolve('.');
     await runUpdate(dir);
     return;
+  }
+
+  // Non-interactive environments (CI, pipes) can't answer the wizard prompts —
+  // bail out with guidance instead of blocking forever on stdin.
+  if (!process.stdin.isTTY) {
+    print('⚠️  Non-interactive terminal detected — the wizard needs a TTY.');
+    print('   • To update an existing install:  npx cohesiumai-assemble --update');
+    print('   • To generate directly with flags: node generator/generate.js --platforms <list> --project <dir>');
+    rl.close();
+    process.exit(1);
   }
 
   if (fs.existsSync('.assemble.yaml') || fs.existsSync('.cohesium.yaml')) {

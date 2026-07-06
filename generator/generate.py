@@ -35,7 +35,7 @@ def main():
         print("Install it from: https://nodejs.org/")
         print("")
         print("The Python generator has been replaced by the Node.js generator")
-        print("to ensure consistent output across all 20 platforms.")
+        print("to ensure consistent output across all 21 platforms.")
         sys.exit(1)
 
     if not GENERATOR_JS.exists():

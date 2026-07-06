@@ -3,7 +3,7 @@
 # Assemble — Interactive Installer (Bash)
 # Configures and deploys the agent system in your project
 #
-# Recommended: npx create-assemble (safer, no piping remote code)
+# Recommended: npx cohesiumai-assemble (safer, no piping remote code)
 # Alternative: Download, inspect, then run:
 #   curl -fsSL <URL> -o install.sh && cat install.sh && bash install.sh
 # ═══════════════════════════════════════════════════════════════════════
@@ -248,7 +248,7 @@ success "Output: $PROJECT_DIR/$OUTPUT_DIR"
 # ─── Step 7: Agent selection ────────────────────────────────────────
 
 step "6/8 — Agents to install"
-echo "Do you want to install all 31 agents?"
+echo "Do you want to install all 34 agents?"
 echo ""
 echo "  1) All agents (recommended)"
 echo "  2) Custom selection"
@@ -258,7 +258,7 @@ AGENT_CHOICE=${AGENT_CHOICE:-1}
 
 if [ "$AGENT_CHOICE" = "1" ]; then
     SELECTED_AGENTS="all"
-    success "All 31 agents will be installed"
+    success "All 34 agents will be installed"
 else
     echo ""
     echo "Select agents (space-separated numbers):"

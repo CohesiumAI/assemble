@@ -98,13 +98,24 @@ def run_update(project_dir="."):
     generator_js = SCRIPT_DIR / "generator" / "generate.js"
     generator_py = SCRIPT_DIR / "generator" / "generate.py"
 
-    if generator_py.exists():
-        subprocess.run([sys.executable, str(generator_py), "--update", "--project", abs_project])
-    elif generator_js.exists() and shutil.which("node"):
-        subprocess.run(["node", str(generator_js), "--update", "--project", abs_project])
+    # The generator always requires Node (generate.py is only a thin wrapper).
+    if not shutil.which("node"):
+        print(colored("  ✗ Node.js >= 18 is required to run the generator.", "red"))
+        print("    Install Node.js from https://nodejs.org and re-run.")
+        sys.exit(1)
+
+    if generator_js.exists():
+        result = subprocess.run(["node", str(generator_js), "--update", "--project", abs_project])
+    elif generator_py.exists():
+        result = subprocess.run([sys.executable, str(generator_py), "--update", "--project", abs_project])
     else:
         print(colored("  ✗ No generator available.", "red"))
         sys.exit(1)
+
+    # Do not claim success if the generator failed.
+    if result.returncode != 0:
+        print(colored("   ✗ Update failed (generator exited with an error).", "red"))
+        sys.exit(result.returncode)
 
     print()
     print(colored("═" * 55, "cyan"))
@@ -199,7 +210,7 @@ def main():
 
     # 6. Agents
     step("6/8 — Agents to install")
-    agent_choice = prompt("Install all 31 agents? [Y/n]", "Y")
+    agent_choice = prompt("Install all 34 agents? [Y/n]", "Y")
     selected_agents = "all" if agent_choice.lower() in ("y", "o", "") else "custom"
     print(colored(f"  ✓ Agents: {selected_agents}", "green"))
 
@@ -234,29 +245,31 @@ def main():
 
     platforms_str = ",".join(selected_platforms)
 
-    if generator_py.exists():
-        cmd = [
-            sys.executable, str(generator_py),
-            "--project", project_dir,
-            "--platforms", platforms_str,
-            "--lang-team", langue_equipe,
-            "--lang-output", langue_output,
-            "--output-dir", output_dir,
-        ]
-        subprocess.run(cmd)
-    elif generator_js.exists() and shutil.which("node"):
-        cmd = [
-            "node", str(generator_js),
-            "--project", project_dir,
-            "--platforms", platforms_str,
-            "--lang-team", langue_equipe,
-            "--lang-output", langue_output,
-            "--output-dir", output_dir,
-        ]
-        subprocess.run(cmd)
+    # The generator always requires Node (generate.py is only a thin wrapper).
+    if not shutil.which("node"):
+        print(colored("  ✗ Node.js >= 18 is required to run the generator.", "red"))
+        print("    Install Node.js from https://nodejs.org and re-run.")
+        sys.exit(1)
+
+    common_args = [
+        "--project", project_dir,
+        "--platforms", platforms_str,
+        "--lang-team", langue_equipe,
+        "--lang-output", langue_output,
+        "--output-dir", output_dir,
+    ]
+    if generator_js.exists():
+        result = subprocess.run(["node", str(generator_js)] + common_args)
+    elif generator_py.exists():
+        result = subprocess.run([sys.executable, str(generator_py)] + common_args)
     else:
         print(colored("  ✗ No generator available.", "red"))
         sys.exit(1)
+
+    # Do not claim success if the generator failed.
+    if result.returncode != 0:
+        print(colored("   ✗ Installation failed (generator exited with an error).", "red"))
+        sys.exit(result.returncode)
 
     print()
     print(colored("═" * 55, "cyan"))
