@@ -113,8 +113,8 @@ console.log('\nTest 5: MCP package file name is canonical');
 console.log('\nTest 6: release version is coherent');
 {
   const pkgVersion = require(path.join(ROOT, 'package.json')).version;
-  const expectedVersion = ['1.1.2', 'beta.4'].join('-');
-  const previousVersion = ['1.1.2', 'beta.3'].join('-');
+  const expectedVersion = ['1.1.2', 'beta.5'].join('-');
+  const previousVersion = ['1.1.2', 'beta.4'].join('-');
   const versionFiles = [
     'README.md',
     path.join('src', 'config', 'defaults.yaml'),
@@ -163,12 +163,13 @@ console.log('\nTest 7: community documents and example are coherent');
 console.log('\nTest 8: release workflow has defensive publication gates');
 {
   const workflow = fs.readFileSync(path.join(ROOT, '.github', 'workflows', 'publish.yml'), 'utf-8');
-  assert(workflow.includes("tags:\n      - 'v*'"), 'release workflow triggers from v* tags');
+  assert(/tags:\r?\n\s+- 'v\*'/.test(workflow), 'release workflow triggers from v* tags');
   assert(workflow.includes('workflow_dispatch:') && workflow.includes("github.event_name == 'push'"), 'manual dispatch cannot reach the publish job');
   assert(workflow.includes('TAG_VERSION') && workflow.includes('package version'), 'tag version is checked against package.json');
   assert(workflow.indexOf('npm test') < workflow.indexOf('npm pack'), 'tests run before npm pack');
   assert(workflow.indexOf('npm pack') < workflow.indexOf('npm publish'), 'npm pack runs before npm publish');
   assert(workflow.includes('--tag beta'), 'npm publication uses the beta dist-tag');
+  assert(workflow.includes('npm publish "./$PACKAGE_FILE"'), 'npm publication treats the generated archive as a local path');
   assert(workflow.includes('gh release view') && workflow.includes('gh release create') && workflow.includes('--clobber'), 'GitHub Release creation is idempotent');
   assert(workflow.includes('contents: read') && workflow.includes('contents: write') && workflow.includes('id-token: write'), 'workflow permissions are explicit per job');
 }

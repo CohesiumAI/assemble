@@ -102,7 +102,7 @@ jobs:
           if [ "$PUBLISHED" = "$VERSION" ]; then
             echo "$PACKAGE_NAME@$VERSION is already published; skipping npm publish."
           else
-            npm publish "$PACKAGE_FILE" --tag beta --access public --provenance
+            npm publish "./$PACKAGE_FILE" --tag beta --access public --provenance
           fi
 
       - name: Create or update GitHub Release
