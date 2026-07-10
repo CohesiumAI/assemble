@@ -21,7 +21,13 @@ const { generateMCPServer } = require('./lib/mcp-generator');
 const { generateUniversalAgentsMd } = require('./lib/agents-md-generator');
 const { loadConfig: _loadConfig, DEFAULTS: _DEFAULTS } = require('./lib/config-loader');
 const { validateAll } = require('./lib/schema-validator');
-const { isInsideProject, isRealPathInside } = require('./lib/paths');
+const {
+  assertSafePath,
+  assertSafePaths,
+  safeUnlinkSync,
+  safeRemoveEmptyDirSync,
+  safeRemoveTreeSync,
+} = require('./lib/paths');
 
 // ─── Default configuration ──────────────────────────────────────────────────
 
@@ -66,15 +72,15 @@ function loadAdapters(projectDir, allowPlugins = false) {
   // TARGET project directory — i.e. arbitrary code execution with the user's privileges.
   // A hostile repo could ship a legitimately named `.assemble/adapters/cursor.js` and get
   // it executed by the documented `npx cohesiumai-assemble --update` command. Because of
-  // that, plugin adapters are DISABLED by default and only loaded when the project config
-  // explicitly opts in with `allow_plugins: true` in .assemble.yaml.
+  // that, plugin adapters are DISABLED by default and can be loaded only when
+  // the user passes --allow-plugins for the current command invocation.
   if (projectDir) {
     const pluginDir = path.resolve(projectDir, '.assemble', 'adapters');
     if (fs.existsSync(pluginDir) && !allowPlugins) {
       const count = fs.readdirSync(pluginDir).filter(f => f.endsWith('.js')).length;
       if (count > 0) {
         console.warn(`⚠️  Ignoring ${count} plugin adapter(s) in .assemble/adapters/ (arbitrary code execution risk).`);
-        console.warn(`   Set "allow_plugins: true" in .assemble.yaml only if you trust this repository.`);
+        console.warn('   Re-run with --allow-plugins only if you trust this repository.');
       }
     }
     if (fs.existsSync(pluginDir) && allowPlugins) {
@@ -92,10 +98,10 @@ function loadAdapters(projectDir, allowPlugins = false) {
         }
         try {
           const adapter = require(resolvedPath);
-          if (adapter.name && typeof adapter.generate === 'function') {
+          if (adapter.name && typeof adapter.generate === 'function' && typeof adapter.getOutputPaths === 'function') {
             adapters[adapter.name] = adapter;
           } else {
-            console.warn(`⚠️  Plugin adapter ${file}: missing name or generate() — skipped`);
+            console.warn(`⚠️  Plugin adapter ${file}: missing name, generate(), or getOutputPaths() — skipped`);
           }
         } catch (err) {
           console.warn(`⚠️  Plugin adapter ${file}: ${err.message}`);
@@ -147,6 +153,12 @@ function parseArgs() {
       case '--validate':
         parsed.validateOnly = true;
         break;
+      case '--allow-plugins':
+        parsed.allowPlugins = true;
+        break;
+      case '--register-windsurf-mcp':
+        parsed.registerWindsurfMcp = true;
+        break;
       case '--help':
       case '-h':
         printHelp();
@@ -177,6 +189,8 @@ Options:
   --output-dir, -o <path>  Deliverable output directory
   --update, -u             Update an existing installation (reads .assemble.yaml)
   --validate               Validate generated files without regenerating
+  --allow-plugins          Load trusted local JavaScript adapters for this run only
+  --register-windsurf-mcp  Register the local MCP server in the Windsurf user profile
   --help, -h               Show this help
 
 Supported platforms (21):
@@ -200,6 +214,17 @@ function generate() {
 
   const projectDir = path.resolve(args.projectDir || '.');
   const configPath = args.configPath || path.join(projectDir, '.assemble.yaml');
+  const canonicalConfigPath = path.join(projectDir, '.assemble.yaml');
+  const manifestPath = path.join(projectDir, '.assemble-manifest.json');
+
+  // Validate the two persistent generator outputs before any migration or
+  // cleanup can mutate the target project.
+  try {
+    assertSafePaths([canonicalConfigPath, manifestPath], projectDir, 'Core generator output');
+  } catch (error) {
+    console.error(`❌ Unsafe generator output path: ${error.message}`);
+    process.exit(1);
+  }
 
   // ─── Update mode: read existing .assemble.yaml ─────────────────────────
   if (args.update) {
@@ -212,8 +237,9 @@ function generate() {
         .replace(/cohesium-output/g, 'assemble-output')
         .replace(/Cohesium AI/g, 'Assemble')
         .replace(/cohesium\.yaml/g, 'assemble.yaml');
+      assertSafePath(configPath, projectDir, 'Migrated configuration');
       fs.writeFileSync(configPath, legacyContent, 'utf-8');
-      fs.unlinkSync(legacyConfigPath);
+      safeUnlinkSync(legacyConfigPath, projectDir, 'Legacy configuration');
       console.log('  ✓ Config migrated successfully');
     }
 
@@ -257,15 +283,53 @@ function generate() {
   config.metrics = config.metrics === true || config.metrics === 'true';
   config.yolo = config.yolo === true || config.yolo === 'true';
   config.search = config.search === true || config.search === 'true';
-  config.allow_plugins = config.allow_plugins === true || config.allow_plugins === 'true';
+  // SECURITY: these permissions must never be granted by repository-controlled
+  // configuration. Keep compatibility with old files by accepting the key but
+  // ignoring it visibly; only per-invocation CLI flags can enable the effects.
+  if (Object.prototype.hasOwnProperty.call(config, 'allow_plugins')) {
+    console.warn('⚠️  Ignoring allow_plugins from .assemble.yaml; use --allow-plugins for this run only.');
+    delete config.allow_plugins;
+  }
+  if (Object.prototype.hasOwnProperty.call(config, 'register_windsurf_mcp')) {
+    console.warn('⚠️  Ignoring register_windsurf_mcp from .assemble.yaml; use --register-windsurf-mcp for this run only.');
+    delete config.register_windsurf_mcp;
+  }
+  config._allowPlugins = args.allowPlugins === true;
+  config._registerWindsurfMcp = args.registerWindsurfMcp === true;
 
   // SECURITY: output_dir comes from a (possibly untrusted) config file. Reject any
-  // value that resolves outside the project directory to prevent writing files
-  // (AGENTS.md, _memory.md, .gitkeep...) into arbitrary locations. isRealPathInside
-  // resolves symlinks / Windows junctions so a link inside the project pointing
-  // outside cannot smuggle the write out either.
-  if (config.output_dir && !isRealPathInside(config.output_dir, projectDir)) {
-    console.error(`❌ Invalid output_dir "${config.output_dir}": must stay inside the project directory (symlinks/junctions resolved).`);
+  // value that resolves outside the project directory, or through any link or
+  // junction, before any generated output is mutated.
+  try {
+    assertSafePath(config.output_dir, projectDir, 'Output directory');
+  } catch (error) {
+    console.error(`❌ Invalid output_dir "${config.output_dir}": ${error.message}`);
+    process.exit(1);
+  }
+
+  const outputPath = path.resolve(projectDir, config.output_dir);
+  const crossPlatformOutputs = [
+    canonicalConfigPath,
+    manifestPath,
+    outputPath,
+    path.join(outputPath, '.gitkeep'),
+    path.join(outputPath, 'AGENTS.md'),
+  ];
+  if (config.memory) crossPlatformOutputs.push(path.join(outputPath, '_memory.md'));
+  if (config.metrics) crossPlatformOutputs.push(path.join(outputPath, '_metrics.md'));
+  if (config.governance === 'strict') crossPlatformOutputs.push(path.join(outputPath, '_audit.md'));
+  if (config.mcp) {
+    crossPlatformOutputs.push(
+      path.join(projectDir, '.assemble'),
+      path.join(projectDir, '.assemble', 'mcp-server.js'),
+      path.join(projectDir, '.assemble', 'mcp.json'),
+      path.join(projectDir, '.assemble', 'package.json')
+    );
+  }
+  try {
+    assertSafePaths(crossPlatformOutputs, projectDir, 'Cross-platform output');
+  } catch (error) {
+    console.error(`❌ Unsafe cross-platform output path: ${error.message}`);
     process.exit(1);
   }
 
@@ -444,8 +508,8 @@ function generate() {
   // Prepare agents (language + output injection)
   const preparedAgents = agents.map(a => prepareAgent(a, config));
 
-  // Load adapters (built-in + opt-in plugins from .assemble/adapters/)
-  const adapters = loadAdapters(projectDir, config.allow_plugins);
+  // Load adapters (built-in + command-line opt-in plugins from .assemble/adapters/)
+  const adapters = loadAdapters(projectDir, config._allowPlugins);
   console.log(`  ✓ ${Object.keys(adapters).length} adapters available`);
   console.log('');
 
@@ -470,53 +534,75 @@ function generate() {
     config.platforms = knownRequested;
   }
 
+  // Ask every selected adapter for its complete mutation plan and validate all
+  // plans before the first cleanup or generation write. getOutputPaths() is a
+  // mandatory adapter contract because it is the security preflight boundary.
+  const generationContext = {
+    agents: preparedAgents,
+    skills,
+    workflows,
+    commands,
+    orchestrator: orchestrator ? prepareAgent(orchestrator, config) : null,
+    config,
+  };
+  const adapterOutputPaths = new Map();
+  try {
+    for (const platformName of config.platforms) {
+      const adapter = adapters[platformName];
+      if (!adapter || typeof adapter.getOutputPaths !== 'function') {
+        throw new Error(`Adapter "${platformName}" does not expose getOutputPaths()`);
+      }
+      const plannedPaths = adapter.getOutputPaths(projectDir, generationContext);
+      if (!Array.isArray(plannedPaths) || plannedPaths.length === 0) {
+        throw new Error(`Adapter "${platformName}" returned an empty or invalid output plan`);
+      }
+      assertSafePaths(plannedPaths, projectDir, `Adapter "${platformName}" output`);
+      adapterOutputPaths.set(platformName, plannedPaths);
+    }
+  } catch (error) {
+    console.error(`❌ Adapter output preflight failed: ${error.message}`);
+    process.exit(1);
+  }
+
   // ─── Clean up old generated files before regeneration ────────────────────
   // Uses manifest-based cleanup: only removes files Assemble previously generated.
   // This prevents destroying user files like .github/workflows/, CODEOWNERS, etc.
   if (args.update) {
     console.log('🧹 Cleaning old generated files...');
-    const manifestPath = path.join(projectDir, '.assemble-manifest.json');
     if (fs.existsSync(manifestPath)) {
+      let manifest;
       try {
-        const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+        manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+      } catch (error) {
+        console.warn(`  ⚠️  Could not read manifest, falling back to targeted cleanup`);
+      }
+
+      if (manifest) {
+        const files = Array.isArray(manifest.files) ? manifest.files : [];
+        const directories = Array.isArray(manifest.directories) ? manifest.directories : [];
+        try {
+          // Validate the complete cleanup plan before deleting its first entry.
+          assertSafePaths(files, projectDir, 'Manifest file');
+          assertSafePaths(directories, projectDir, 'Manifest directory');
+        } catch (error) {
+          console.error(`❌ Unsafe manifest cleanup refused: ${error.message}`);
+          process.exit(1);
+        }
+
         let cleaned = 0;
-        // Remove individual files first.
-        // SECURITY: a hostile manifest could list "../victim.txt" to delete files
-        // outside the project. Skip any entry that escapes the project directory.
-        for (const file of (manifest.files || [])) {
-          if (!isInsideProject(file, projectDir)) {
-            console.warn(`  ⚠️  Skipped manifest entry outside project: ${file}`);
-            continue;
-          }
-          const fullPath = path.join(projectDir, file);
-          if (fs.existsSync(fullPath)) {
-            fs.unlinkSync(fullPath);
-            cleaned++;
-          }
+        for (const file of files) {
+          if (safeUnlinkSync(file, projectDir, `Manifest file "${file}"`)) cleaned++;
         }
         // Remove directories that are now empty, deepest first so parents can
         // collapse once their children are gone.
-        const dirsDeepestFirst = [...(manifest.directories || [])].sort(
+        const dirsDeepestFirst = [...directories].sort(
           (a, b) => b.split('/').length - a.split('/').length
         );
         for (const dir of dirsDeepestFirst) {
-          if (!isInsideProject(dir, projectDir)) {
-            console.warn(`  ⚠️  Skipped manifest directory outside project: ${dir}`);
-            continue;
-          }
-          const fullPath = path.join(projectDir, dir);
-          if (fs.existsSync(fullPath)) {
-            try {
-              const entries = fs.readdirSync(fullPath);
-              if (entries.length === 0) {
-                fs.rmdirSync(fullPath);
-              }
-            } catch (e) { /* skip */ }
-          }
+          safeRemoveEmptyDirSync(dir, projectDir, `Manifest directory "${dir}"`);
         }
         console.log(`  ✓ ${cleaned} old files cleaned (manifest-based)`);
-      } catch (e) {
-        console.warn(`  ⚠️  Could not read manifest, falling back to targeted cleanup`);
+      } else {
         // Fallback: only clean Assemble-specific dirs, NEVER .github or user dirs
         const safeDirs = [
           '.cursor/agents', '.cursor/skills', '.cursor/workflows',
@@ -536,16 +622,15 @@ function generate() {
           'CLAUDE.md', 'GEMINI.md', 'SYSTEM.md',
         ];
         // Note: AGENTS.md is NOT in safe list because Codex/Pi share it with user content
-        for (const dir of safeDirs) {
-          const fullPath = path.join(projectDir, dir);
-          if (fs.existsSync(fullPath)) {
-            fs.rmSync(fullPath, { recursive: true, force: true });
-          }
+        try {
+          assertSafePaths(safeDirs, projectDir, 'Fallback cleanup directory');
+          assertSafePaths(safeFiles, projectDir, 'Fallback cleanup file');
+        } catch (error) {
+          console.error(`❌ Unsafe fallback cleanup refused: ${error.message}`);
+          process.exit(1);
         }
-        for (const file of safeFiles) {
-          const fullPath = path.join(projectDir, file);
-          if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
-        }
+        for (const dir of safeDirs) safeRemoveTreeSync(dir, projectDir, `Fallback directory "${dir}"`);
+        for (const file of safeFiles) safeUnlinkSync(file, projectDir, `Fallback file "${file}"`);
         console.log('  ✓ Old files removed (targeted fallback)');
       }
     } else {
@@ -559,10 +644,17 @@ function generate() {
   if (config.platforms.includes('windsurf')) {
     const wfDir = path.join(projectDir, '.windsurf', 'workflows');
     if (fs.existsSync(wfDir)) {
-      for (const f of fs.readdirSync(wfDir)) {
-        if (f.endsWith('.yaml') || f.endsWith('.yml')) {
-          fs.unlinkSync(path.join(wfDir, f));
+      const legacyWorkflows = fs.readdirSync(wfDir)
+        .filter(f => f.endsWith('.yaml') || f.endsWith('.yml'))
+        .map(f => path.join(wfDir, f));
+      try {
+        assertSafePaths(legacyWorkflows, projectDir, 'Legacy Windsurf workflow');
+        for (const legacyWorkflow of legacyWorkflows) {
+          safeUnlinkSync(legacyWorkflow, projectDir, 'Legacy Windsurf workflow');
         }
+      } catch (error) {
+        console.error(`❌ Unsafe Windsurf cleanup refused: ${error.message}`);
+        process.exit(1);
       }
     }
   }
@@ -582,14 +674,9 @@ function generate() {
     console.log(`🔧 Generating for ${adapter.displayName || platformName}...`);
 
     try {
-      adapter.generate(projectDir, {
-        agents: preparedAgents,
-        skills,
-        workflows,
-        commands,
-        orchestrator: orchestrator ? prepareAgent(orchestrator, config) : null,
-        config
-      });
+      // Revalidate immediately before the adapter mutates the filesystem.
+      assertSafePaths(adapterOutputPaths.get(platformName), projectDir, `Adapter "${platformName}" output`);
+      adapter.generate(projectDir, generationContext);
 
       const validation = adapter.validate(projectDir);
       if (validation.valid) {
@@ -607,8 +694,9 @@ function generate() {
   }
 
   // ─── Create output directory for deliverables ──────────────────────────
-  const outputPath = path.resolve(projectDir, config.output_dir);
+  assertSafePaths([outputPath, path.join(outputPath, '.gitkeep')], projectDir, 'Deliverable output');
   fs.mkdirSync(outputPath, { recursive: true });
+  assertSafePath(path.join(outputPath, '.gitkeep'), projectDir, 'Deliverable marker');
   fs.writeFileSync(
     path.join(outputPath, '.gitkeep'),
     '# This folder contains deliverables produced by Assemble by Cohesium AI agents\n'
@@ -648,8 +736,10 @@ function generate() {
      Format: [YYYY-MM-DD] Summary — key outcomes, blockers, next steps -->
 `;
     const memoryPath = path.join(projectDir, config.output_dir || './assemble-output', '_memory.md');
+    assertSafePath(memoryPath, projectDir, 'Cross-session memory');
     fs.mkdirSync(path.dirname(memoryPath), { recursive: true });
     if (!fs.existsSync(memoryPath)) {
+      assertSafePath(memoryPath, projectDir, 'Cross-session memory');
       fs.writeFileSync(memoryPath, memoryContent, 'utf-8');
       console.log('🧠 Cross-session _memory.md created');
     }
@@ -676,8 +766,10 @@ Track workflow execution metrics for observability and continuous improvement.
 <!-- Weekly/monthly summaries appended by Jarvis -->
 `;
     const metricsPath = path.join(projectDir, config.output_dir || './assemble-output', '_metrics.md');
+    assertSafePath(metricsPath, projectDir, 'Workflow metrics');
     fs.mkdirSync(path.dirname(metricsPath), { recursive: true });
     if (!fs.existsSync(metricsPath)) {
+      assertSafePath(metricsPath, projectDir, 'Workflow metrics');
       fs.writeFileSync(metricsPath, metricsContent, 'utf-8');
       console.log('📊 Workflow _metrics.md created');
     }
@@ -702,6 +794,7 @@ Log of all agent actions for governance compliance. Required by \`governance: st
 `;
     const auditPath = path.join(outputPath, '_audit.md');
     if (!fs.existsSync(auditPath)) {
+      assertSafePath(auditPath, projectDir, 'Audit trail');
       fs.writeFileSync(auditPath, auditContent, 'utf-8');
       console.log('📋 Audit trail _audit.md created (governance: strict)');
     }
@@ -711,7 +804,9 @@ Log of all agent actions for governance compliance. Required by \`governance: st
   {
     const agentsMdContent = generateUniversalAgentsMd(preparedAgents, workflows, config);
     const agentsMdPath = path.join(projectDir, config.output_dir || './assemble-output', 'AGENTS.md');
+    assertSafePath(agentsMdPath, projectDir, 'Universal AGENTS.md');
     fs.mkdirSync(path.dirname(agentsMdPath), { recursive: true });
+    assertSafePath(agentsMdPath, projectDir, 'Universal AGENTS.md');
     fs.writeFileSync(agentsMdPath, agentsMdContent, 'utf-8');
   }
 
@@ -722,7 +817,7 @@ Log of all agent actions for governance compliance. Required by \`governance: st
     for (const platformName of config.platforms) {
       const adapter = adapters[platformName];
       if (!adapter || !adapter.getOutputPaths) continue;
-      const paths = adapter.getOutputPaths(projectDir, { agents: preparedAgents, skills, workflows, config });
+      const paths = adapterOutputPaths.get(platformName) || [];
       for (const p of paths) {
         // Normalize to forward slashes for cross-platform manifest consistency
         const rel = path.relative(projectDir, p).replace(/\\/g, '/');
@@ -742,15 +837,16 @@ Log of all agent actions for governance compliance. Required by \`governance: st
       files: manifestFiles,
       directories: [...manifestDirs].sort(),
     };
+    assertSafePath(manifestPath, projectDir, 'Generated-files manifest');
     fs.writeFileSync(
-      path.join(projectDir, '.assemble-manifest.json'),
+      manifestPath,
       JSON.stringify(manifest, null, 2),
       'utf-8'
     );
   }
 
   // Update or create .assemble.yaml
-  const assembleConfigPath = path.join(projectDir, '.assemble.yaml');
+  const assembleConfigPath = canonicalConfigPath;
   const existingConfig = fs.existsSync(assembleConfigPath) ? loadConfig(assembleConfigPath) : {};
   const today = new Date().toISOString().split('T')[0];
   const assembleConfig = `# Assemble — Project configuration
@@ -774,6 +870,7 @@ search: ${config.search ? 'true' : 'false'}
 installed_at: "${existingConfig.installed_at || today}"
 updated_at: "${today}"
 `;
+  assertSafePath(assembleConfigPath, projectDir, 'Project configuration');
   fs.writeFileSync(assembleConfigPath, assembleConfig);
   if (args.update) {
     console.log(`\n📄 .assemble.yaml updated (${today})`);

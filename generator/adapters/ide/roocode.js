@@ -13,7 +13,7 @@ module.exports = {
   displayName: 'Roo Code',
   type: 'ide',
 
-  getOutputPaths(projectDir, { agents = [], skills = {}, workflows = [] } = {}) {
+  getOutputPaths(projectDir, { agents = [], skills = {}, workflows = [], orchestrator } = {}) {
     const paths = [path.join(projectDir, '.roomodes')];
     for (const agent of agents) {
       paths.push(path.join(projectDir, '.roo', `rules-${marvelSlug(agent)}.md`));
@@ -25,6 +25,8 @@ module.exports = {
     for (const workflow of workflows) {
       paths.push(path.join(projectDir, '.roo', `rules-workflow-${workflowSlug(workflow)}.md`));
     }
+    if (orchestrator) paths.push(path.join(projectDir, '.roo', 'rules-orchestrator.md'));
+    paths.push(path.join(projectDir, '.roo', 'rules-commands.md'));
     return paths;
   },
 

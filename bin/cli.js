@@ -8,6 +8,7 @@
 const readline = require('readline');
 const path = require('path');
 const { execFileSync } = require('child_process');
+const { assertSafePath, safeUnlinkSync } = require('../generator/lib/paths');
 
 const PKG_VERSION = require('../package.json').version;
 
@@ -189,11 +190,19 @@ function printLogo() {
   print("");
 }
 
-async function runUpdate(projectDir) {
+function generatorRuntimeFlags(options = {}) {
+  const flags = [];
+  if (options.allowPlugins) flags.push('--allow-plugins');
+  if (options.registerWindsurfMcp) flags.push('--register-windsurf-mcp');
+  return flags;
+}
+
+async function runUpdate(projectDir, runtimeOptions = {}) {
   const fs = require('fs');
   printLogo();
   const configPath = path.join(projectDir, '.assemble.yaml');
   const legacyPath = path.join(projectDir, '.cohesium.yaml');
+  assertSafePath(configPath, projectDir, 'Project configuration');
 
   // Migration: rename old .cohesium.yaml → .assemble.yaml
   if (!fs.existsSync(configPath) && fs.existsSync(legacyPath)) {
@@ -203,8 +212,9 @@ async function runUpdate(projectDir) {
       .replace(/cohesium-output/g, 'assemble-output')
       .replace(/Cohesium AI/g, 'Assemble')
       .replace(/cohesium\.yaml/g, 'assemble.yaml');
+    assertSafePath(configPath, projectDir, 'Project configuration');
     fs.writeFileSync(configPath, content, 'utf-8');
-    fs.unlinkSync(legacyPath);
+    safeUnlinkSync(legacyPath, projectDir, 'Legacy project configuration');
     print('\x1b[32m  ✓ Config migrated\x1b[0m');
   }
 
@@ -272,6 +282,7 @@ async function runUpdate(projectDir) {
     for (const [key, val] of Object.entries(newValues)) {
       updatedContent += `${key}: ${val ? 'true' : 'false'}\n`;
     }
+    assertSafePath(configPath, projectDir, 'Project configuration');
     fs.writeFileSync(configPath, updatedContent, 'utf-8');
   }
 
@@ -286,7 +297,9 @@ async function runUpdate(projectDir) {
 
   const generatorPath = path.join(__dirname, '..', 'generator', 'generate.js');
   try {
-    execFileSync(process.execPath, [generatorPath, '--update', '--project', projectDir], { stdio: 'inherit' });
+    execFileSync(process.execPath, [
+      generatorPath, '--update', '--project', projectDir, ...generatorRuntimeFlags(runtimeOptions),
+    ], { stdio: 'inherit' });
   } catch (err) {
     print('\x1b[31m  ✗ Error during update\x1b[0m');
     rl.close();
@@ -323,6 +336,8 @@ Commands:
 Options:
   --update, -u      Update an existing installation (reads .assemble.yaml)
   --project <dir>   Target project directory (default: current)
+  --allow-plugins   Load trusted local JavaScript adapters for this run only
+  --register-windsurf-mcp  Register the local MCP server in the Windsurf user profile
   --help, -h        Show this help
   --version, -v     Show the version
 
@@ -334,6 +349,10 @@ async function main() {
 
   // ─── Help / version — must never fall through to the interactive wizard ──
   const argv = process.argv.slice(2);
+  const runtimeOptions = {
+    allowPlugins: argv.includes('--allow-plugins'),
+    registerWindsurfMcp: argv.includes('--register-windsurf-mcp'),
+  };
   if (argv.includes('--help') || argv.includes('-h')) {
     printHelp();
     rl.close();
@@ -380,7 +399,7 @@ async function main() {
   if (process.argv.includes('--update') || process.argv.includes('-u')) {
     const projIdx = process.argv.indexOf('--project');
     const dir = projIdx >= 0 ? path.resolve(process.argv[projIdx + 1]) : path.resolve('.');
-    await runUpdate(dir);
+    await runUpdate(dir, runtimeOptions);
     return;
   }
 
@@ -400,7 +419,7 @@ async function main() {
     print('  2) New installation\n');
     const choice = await ask('Your choice', '1');
     if (choice === '1') {
-      await runUpdate(path.resolve('.'));
+      await runUpdate(path.resolve('.'), runtimeOptions);
       return;
     }
   }
@@ -579,7 +598,9 @@ async function main() {
   lines.push(`updated_at: "${today}"`);
   lines.push('');
   const configContent = lines.join('\n');
-  fs.writeFileSync(path.join(projectDir, '.assemble.yaml'), configContent, 'utf-8');
+  const configPath = path.join(projectDir, '.assemble.yaml');
+  assertSafePath(configPath, projectDir, 'Project configuration');
+  fs.writeFileSync(configPath, configContent, 'utf-8');
 
   const generatorPath = path.join(__dirname, '..', 'generator', 'generate.js');
 
@@ -588,6 +609,7 @@ async function main() {
       generatorPath,
       '--update',
       '--project', projectDir,
+      ...generatorRuntimeFlags(runtimeOptions),
     ], { stdio: 'inherit' });
   } catch (err) {
     print('\x1b[31m  ✗ Error during generation\x1b[0m');

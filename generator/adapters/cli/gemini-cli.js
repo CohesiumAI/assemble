@@ -13,7 +13,7 @@ module.exports = {
   displayName: 'Gemini CLI',
   type: 'cli',
 
-  getOutputPaths(projectDir, { agents = [], skills = {}, workflows = [] } = {}) {
+  getOutputPaths(projectDir, { agents = [], skills = {}, workflows = [], orchestrator } = {}) {
     const paths = [path.join(projectDir, 'GEMINI.md')];
     for (const agent of agents) {
       paths.push(path.join(projectDir, '.gemini', 'agents', `${marvelSlug(agent)}.md`));
@@ -25,6 +25,7 @@ module.exports = {
     for (const workflow of workflows) {
       paths.push(path.join(projectDir, '.gemini', 'workflows', `${workflowSlug(workflow)}.md`));
     }
+    if (orchestrator) paths.push(path.join(projectDir, '.gemini', 'orchestrator.md'));
     return paths;
   },
 

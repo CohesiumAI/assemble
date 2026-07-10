@@ -1,0 +1,14 @@
+version: "1.1.2-beta.4"
+profile: "startup"
+langue_equipe: "english"
+langue_output: "english"
+output_dir: "./assemble-output"
+platforms: [cursor, codex]
+workflows: all
+governance: "none"
+yolo: false
+mcp: false
+memory: false
+metrics: false
+search: false
+allow_plugins: false

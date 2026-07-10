@@ -528,7 +528,7 @@ test('no config.search does not include Web Search Policy', () => {
 
 // ─── paths: security confinement helpers ────────────────────────────────
 
-const { isInsideProject, assertInsideProject, safeSlug } = require('../generator/lib/paths');
+const { isInsideProject, assertInsideProject, assertSafePath, safeSlug } = require('../generator/lib/paths');
 
 console.log('\npaths — isInsideProject()');
 
@@ -619,6 +619,30 @@ test('isRealPathInside rejects a junction/symlink pointing outside the project',
       console.log('     (skipped: symlink/junction creation not permitted here)');
     }
   } finally { fs.rmSync(base, { recursive: true, force: true }); }
+});
+
+test('assertSafePath rejects final and intermediate junctions/symlinks descriptively', () => {
+  const base = fs.mkdtempSync(path.join(os.tmpdir(), 'assemble-safe-path-'));
+  const project = path.join(base, 'project');
+  const outside = path.join(base, 'outside');
+  fs.mkdirSync(project); fs.mkdirSync(outside);
+  let linkMade = false;
+  try {
+    fs.symlinkSync(outside, path.join(project, 'linked'), process.platform === 'win32' ? 'junction' : 'dir');
+    linkMade = true;
+  } catch (error) {
+    console.log(`     (skipped: link creation unavailable: ${error.code || error.message})`);
+  }
+  try {
+    if (!linkMade) return;
+    for (const target of ['linked', path.join('linked', 'child.md')]) {
+      let message = '';
+      try { assertSafePath(target, project, 'Test output'); } catch (error) { message = error.message; }
+      assert(/symbolic link or junction/.test(message), `expected descriptive link refusal for ${target}, got: ${message}`);
+    }
+  } finally {
+    fs.rmSync(base, { recursive: true, force: true });
+  }
 });
 
 // ─── Summary ─────────────────────────────────────────────────────────────

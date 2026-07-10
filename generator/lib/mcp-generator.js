@@ -9,6 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 const { agentId, marvelSlug, marvelDisplayName } = require('./template-engine');
+const { assertSafePath, assertSafePaths } = require('./paths');
 
 const PKG_VERSION = require('../../package.json').version;
 
@@ -65,6 +66,12 @@ function buildAgentResolver(platforms) {
  */
 function generateMCPServer(projectDir, { agents = [], workflows = [], config = {} }) {
   const mcpDir = path.join(projectDir, '.assemble');
+  const localFiles = [
+    path.join(mcpDir, 'mcp-server.js'),
+    path.join(mcpDir, 'mcp.json'),
+    path.join(mcpDir, 'package.json'),
+  ];
+  assertSafePaths([mcpDir, ...localFiles], projectDir, 'MCP local output');
   fs.mkdirSync(mcpDir, { recursive: true });
 
   const platforms = config.platforms || [];
@@ -119,7 +126,7 @@ const PROJECT_ROOT = resolve(dirname(__filename), '..');
 
 const server = new McpServer({
   name: "assemble",
-  version: "${config.version || PKG_VERSION}",
+  version: "${PKG_VERSION}",
   description: "Assemble — ${agents.length}-agent AI team orchestrator by Cohesium AI",
 });
 
@@ -261,7 +268,8 @@ const transport = new StdioServerTransport();
 await server.connect(transport);
 `;
 
-  fs.writeFileSync(path.join(mcpDir, 'mcp-server.js'), serverContent, 'utf-8');
+  assertSafePath(localFiles[0], projectDir, 'MCP server');
+  fs.writeFileSync(localFiles[0], serverContent, 'utf-8');
 
   // 2. Generate mcp.json (Claude Desktop / VS Code config)
   const mcpConfig = {
@@ -273,17 +281,13 @@ await server.connect(transport);
       },
     },
   };
-  fs.writeFileSync(path.join(mcpDir, 'mcp.json'), JSON.stringify(mcpConfig, null, 2), 'utf-8');
+  assertSafePath(localFiles[1], projectDir, 'MCP configuration');
+  fs.writeFileSync(localFiles[1], JSON.stringify(mcpConfig, null, 2), 'utf-8');
 
-  // 3. Register in Windsurf global MCP config (if windsurf platform is active)
-  if (platforms.includes('windsurf')) {
-    _registerWindsurfMCP(projectDir, agents);
-  }
-
-  // 4. Generate mcp-package.json (for dependency installation)
+  // 3. Generate the canonical package.json before any best-effort integration.
   const mcpPackage = {
     name: 'assemble-mcp-server',
-    version: config.version || PKG_VERSION,
+    version: PKG_VERSION,
     type: 'module',
     description: 'MCP server for Assemble AI agent team',
     main: 'mcp-server.js',
@@ -291,14 +295,22 @@ await server.connect(transport);
       '@modelcontextprotocol/sdk': '^1.0.0',
     },
   };
-  fs.writeFileSync(path.join(mcpDir, 'package.json'), JSON.stringify(mcpPackage, null, 2), 'utf-8');
+  assertSafePath(localFiles[2], projectDir, 'MCP package');
+  fs.writeFileSync(localFiles[2], JSON.stringify(mcpPackage, null, 2), 'utf-8');
+
+  // 4. A user-profile mutation requires separate, per-run consent. Windsurf
+  // may be absent, locked down, or have a malformed global config; none of
+  // those conditions should make the project-local MCP incomplete.
+  if (config._registerWindsurfMcp === true && platforms.includes('windsurf')) {
+    try {
+      _registerWindsurfMCP(projectDir, agents);
+    } catch (error) {
+      console.warn(`  ⚠️  Windsurf global MCP registration skipped: ${error.message}`);
+    }
+  }
 
   return {
-    files: [
-      path.join(mcpDir, 'mcp-server.js'),
-      path.join(mcpDir, 'mcp.json'),
-      path.join(mcpDir, 'package.json'),
-    ],
+    files: localFiles,
   };
 }
 

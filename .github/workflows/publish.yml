@@ -1,59 +1,119 @@
-name: Publish to npm
+name: Release beta
 
 on:
   push:
-    branches: [main]
-    paths:
-      - 'package.json'
-      - 'bin/**'
-      - 'generator/**'
-      - 'src/**'
+    tags:
+      - 'v*'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
-  publish:
+  validate:
+    name: Validate and pack
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      package_name: ${{ steps.version.outputs.package_name }}
     steps:
-      - uses: actions/checkout@v4
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '24'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Check if version changed
+      - name: Validate package version and tag
         id: version
+        shell: bash
         run: |
-          LOCAL_VERSION=$(node -p "require('./package.json').version")
-          NPM_VERSION=$(npm view cohesiumai-assemble version 2>/dev/null || echo "0.0.0")
-          echo "local=$LOCAL_VERSION" >> $GITHUB_OUTPUT
-          echo "npm=$NPM_VERSION" >> $GITHUB_OUTPUT
-          if [ "$LOCAL_VERSION" != "$NPM_VERSION" ]; then
-            echo "changed=true" >> $GITHUB_OUTPUT
+          VERSION=$(node -p "require('./package.json').version")
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          case "$VERSION" in
+            *-beta.*) ;;
+            *) echo "Only beta versions may use this workflow: $VERSION" >&2; exit 1 ;;
+          esac
+          if [ "${GITHUB_EVENT_NAME}" = "push" ]; then
+            TAG_VERSION="${GITHUB_REF_NAME#v}"
+            if [ "$TAG_VERSION" != "$VERSION" ]; then
+              echo "Tag $GITHUB_REF_NAME does not match package version $VERSION" >&2
+              exit 1
+            fi
           else
-            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "workflow_dispatch is validation-only; no publication will run."
           fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "package_name=$PACKAGE_NAME" >> "$GITHUB_OUTPUT"
 
-      - name: Run tests
-        if: steps.version.outputs.changed == 'true'
+      - name: Run full test suite
         run: npm test
 
-      - name: Publish to npm
-        if: steps.version.outputs.changed == 'true'
+      - name: Build npm package
+        id: pack
+        shell: bash
         run: |
-          VERSION="${{ steps.version.outputs.local }}"
-          if [[ "$VERSION" == *"beta"* ]] || [[ "$VERSION" == *"alpha"* ]] || [[ "$VERSION" == *"rc"* ]]; then
-            npm publish --tag beta
-          else
-            npm publish
-          fi
+          mkdir -p dist
+          npm pack --pack-destination dist
+          PACKAGE_FILE=$(find dist -maxdepth 1 -name '*.tgz' -print -quit)
+          test -n "$PACKAGE_FILE"
+          echo "package_file=$PACKAGE_FILE" >> "$GITHUB_OUTPUT"
+
+      - name: Upload validated package
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: npm-package-${{ steps.version.outputs.version }}
+          path: ${{ steps.pack.outputs.package_file }}
+          if-no-files-found: error
+
+  publish:
+    name: Publish npm and GitHub release
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Download validated package
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: npm-package-${{ needs.validate.outputs.version }}
+          path: dist
+
+      - name: Publish beta package once
+        shell: bash
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          VERSION="${{ needs.validate.outputs.version }}"
+          PACKAGE_NAME="${{ needs.validate.outputs.package_name }}"
+          PACKAGE_FILE=$(find dist -maxdepth 1 -name '*.tgz' -print -quit)
+          PUBLISHED=$(npm view "$PACKAGE_NAME@$VERSION" version 2>/dev/null || true)
+          if [ "$PUBLISHED" = "$VERSION" ]; then
+            echo "$PACKAGE_NAME@$VERSION is already published; skipping npm publish."
+          else
+            npm publish "$PACKAGE_FILE" --tag beta --access public --provenance
+          fi
 
-      - name: Skip (version unchanged)
-        if: steps.version.outputs.changed == 'false'
-        run: echo "Version ${{ steps.version.outputs.local }} already published, skipping"
+      - name: Create or update GitHub Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="$GITHUB_REF_NAME"
+          PACKAGE_FILE=$(find dist -maxdepth 1 -name '*.tgz' -print -quit)
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$PACKAGE_FILE" --clobber
+          else
+            gh release create "$TAG" "$PACKAGE_FILE" --verify-tag --title "Assemble $TAG" --notes-file CHANGELOG.md
+          fi

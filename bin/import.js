@@ -10,7 +10,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { safeSlug } = require('../generator/lib/paths');
+const { assertSafePath, assertSafePaths, safeSlug } = require('../generator/lib/paths');
 
 // Exported for direct invocation from cli.js
 module.exports = { importSkill };
@@ -55,11 +55,18 @@ function importSkill(filePath) {
   }
 
   // Create .assemble/skills/ directory
-  const skillsDir = path.join(process.cwd(), '.assemble', 'skills');
+  const projectDir = process.cwd();
+  const skillsDir = path.join(projectDir, '.assemble', 'skills');
+  const destPath = path.join(skillsDir, `${skillName}.md`);
+  try {
+    assertSafePaths([skillsDir, destPath], projectDir, 'Imported skill output');
+  } catch (error) {
+    throw new Error(`Skill import refused: ${error.message}`);
+  }
   fs.mkdirSync(skillsDir, { recursive: true });
 
   // Copy the file
-  const destPath = path.join(skillsDir, `${skillName}.md`);
+  assertSafePath(destPath, projectDir, 'Imported skill output');
   fs.writeFileSync(destPath, content, 'utf-8');
 
   console.log(`✅ Skill "${skillName}" imported to .assemble/skills/${skillName}.md`);

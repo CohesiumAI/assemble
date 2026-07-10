@@ -13,7 +13,7 @@ module.exports = {
   displayName: 'Kiro',
   type: 'ide',
 
-  getOutputPaths(projectDir, { agents = [], skills = {}, workflows = [] } = {}) {
+  getOutputPaths(projectDir, { agents = [], skills = {}, workflows = [], orchestrator } = {}) {
     const paths = [];
     for (const agent of agents) {
       paths.push(path.join(projectDir, '.kiro', 'agents', `${marvelSlug(agent)}.json`));
@@ -25,6 +25,9 @@ module.exports = {
     for (const workflow of workflows) {
       paths.push(path.join(projectDir, '.kiro', 'steering', `workflow-${workflowSlug(workflow)}.md`));
     }
+    if (orchestrator) paths.push(path.join(projectDir, '.kiro', 'steering', 'orchestrator.md'));
+    paths.push(path.join(projectDir, '.kiro', 'steering', 'teams.md'));
+    paths.push(path.join(projectDir, '.kiro', 'steering', 'commands.md'));
     return paths;
   },
 

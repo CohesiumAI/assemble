@@ -14,6 +14,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
+const { assertSafePath, assertSafePaths, safeUnlinkSync } = require('../generator/lib/paths');
 
 // ─── All 21 supported platforms ────────────────────────────────────────────
 
@@ -180,6 +181,7 @@ function doctor(projectDir, fixMode) {
   }, {
     fixable: true,
     fix: () => {
+      assertSafePath(resolvedOutputDir, projectDir, 'Doctor output directory');
       fs.mkdirSync(resolvedOutputDir, { recursive: true });
     },
   });
@@ -300,9 +302,10 @@ function doctor(projectDir, fixMode) {
     fixable: true,
     fix: () => {
       const govDir = path.join(projectDir, '.claude', 'rules', 'governance');
+      const govFile = path.join(govDir, 'governance.md');
+      assertSafePaths([govDir, govFile], projectDir, 'Doctor governance output');
       fs.mkdirSync(govDir, { recursive: true });
       // Create a minimal governance file if none exists
-      const govFile = path.join(govDir, 'governance.md');
       if (!fs.existsSync(govFile)) {
         const content = [
           '# Governance Rules',
@@ -326,6 +329,7 @@ function doctor(projectDir, fixMode) {
           '| HIGH | Risk assessment + rollback plan + explicit approval |',
           '',
         ].join('\n');
+        assertSafePath(govFile, projectDir, 'Doctor governance output');
         fs.writeFileSync(govFile, content, 'utf-8');
       }
     },
@@ -340,9 +344,11 @@ function doctor(projectDir, fixMode) {
   }, {
     fixable: true,
     fix: () => {
-      fs.mkdirSync(resolvedOutputDir, { recursive: true });
       const memoryFile = path.join(resolvedOutputDir, '_memory.md');
+      assertSafePaths([resolvedOutputDir, memoryFile], projectDir, 'Doctor memory output');
+      fs.mkdirSync(resolvedOutputDir, { recursive: true });
       if (!fs.existsSync(memoryFile)) {
+        assertSafePath(memoryFile, projectDir, 'Doctor memory output');
         fs.writeFileSync(memoryFile, MEMORY_TEMPLATE, 'utf-8');
       }
     },
@@ -371,9 +377,11 @@ function doctor(projectDir, fixMode) {
   }, {
     fixable: true,
     fix: () => {
-      fs.mkdirSync(resolvedOutputDir, { recursive: true });
       const metricsFile = path.join(resolvedOutputDir, '_metrics.md');
+      assertSafePaths([resolvedOutputDir, metricsFile], projectDir, 'Doctor metrics output');
+      fs.mkdirSync(resolvedOutputDir, { recursive: true });
       if (!fs.existsSync(metricsFile)) {
+        assertSafePath(metricsFile, projectDir, 'Doctor metrics output');
         fs.writeFileSync(metricsFile, METRICS_TEMPLATE, 'utf-8');
       }
     },
@@ -390,6 +398,7 @@ function doctor(projectDir, fixMode) {
     fixable: true,
     fix: () => {
       const dir = path.join(projectDir, '.assemble', 'agents');
+      assertSafePath(dir, projectDir, 'Doctor custom agents directory');
       fs.mkdirSync(dir, { recursive: true });
     },
   });
@@ -405,6 +414,7 @@ function doctor(projectDir, fixMode) {
     fixable: true,
     fix: () => {
       const dir = path.join(projectDir, '.assemble', 'skills');
+      assertSafePath(dir, projectDir, 'Doctor custom skills directory');
       fs.mkdirSync(dir, { recursive: true });
     },
   });
@@ -449,10 +459,12 @@ function doctor(projectDir, fixMode) {
 
       // 1. Remove residual .yaml files
       if (fs.existsSync(wfDir)) {
-        for (const f of fs.readdirSync(wfDir)) {
-          if (f.endsWith('.yaml') || f.endsWith('.yml')) {
-            fs.unlinkSync(path.join(wfDir, f));
-          }
+        const legacyWorkflows = fs.readdirSync(wfDir)
+          .filter(f => f.endsWith('.yaml') || f.endsWith('.yml'))
+          .map(f => path.join(wfDir, f));
+        assertSafePaths(legacyWorkflows, projectDir, 'Doctor Windsurf cleanup');
+        for (const legacyWorkflow of legacyWorkflows) {
+          safeUnlinkSync(legacyWorkflow, projectDir, 'Doctor Windsurf cleanup');
         }
       }
 

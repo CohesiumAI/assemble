@@ -401,9 +401,11 @@ When `mcp: true` in `.assemble.yaml`, generates an MCP (Model Context Protocol) 
 |------|---------|
 | `mcp-server.js` | Standalone Node.js server with 35 tools (one per agent + jarvis-route) |
 | `mcp.json` | Configuration for Claude Desktop / VS Code MCP integration |
-| `mcp-package.json` | Dependencies — run `cd .assemble && npm install` to set up |
+| `package.json` | Dependencies — run `cd .assemble && npm install` to set up |
 
 The MCP server uses stdio transport and exposes each agent as an `invoke-{slug}` tool.
+
+Generation is project-local by default, including when `windsurf` is selected. To register the local server in a trusted Windsurf user profile, pass `--register-windsurf-mcp` for that command; this side effect is never read from or saved to `.assemble.yaml`.
 
 ### Cross-Session Memory (opt-in)
 

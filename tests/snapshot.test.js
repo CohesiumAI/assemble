@@ -54,6 +54,16 @@ function run(args, expectFail = false) {
   }
 }
 
+function makeDirectoryLink(target, linkPath) {
+  try {
+    fs.symlinkSync(target, linkPath, process.platform === 'win32' ? 'junction' : 'dir');
+    return true;
+  } catch (error) {
+    console.log(`     (skipped: link creation unavailable: ${error.code || error.message})`);
+    return false;
+  }
+}
+
 function countFiles(dir, ext) {
   if (!fs.existsSync(dir)) return 0;
   let count = 0;
@@ -968,35 +978,30 @@ module.exports = {
 };`;
   fs.writeFileSync(path.join(pluginDir, 'test-plugin.js'), pluginCode);
 
-  // Create config that uses the plugin adapter.
-  // Plugin adapters run arbitrary code from the project dir, so they are opt-in:
-  // the config must set allow_plugins: true (security default is off).
+  // This hostile project configuration must never be enough to execute the
+  // JavaScript adapter it carries; only the command-line flag can opt in.
   const configContent = `version: "1.1.0-beta.3"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [test-plugin]\nagents: all\nworkflows: all\ngovernance: "none"\nallow_plugins: true\ninstalled_at: "2026-03-19"\n`;
   fs.writeFileSync(path.join(dir, '.assemble.yaml'), configContent);
-
-  run(['--project', dir, '--update']);
 
   const expectedAgentCount = fs.readdirSync(path.join(__dirname, '..', 'src', 'agents'))
     .filter(f => /^AGENT-.*\.md$/.test(f)).length;
 
-  test('Plugin adapter generates output', () => {
+  test('hostile allow_plugins config cannot load a local adapter without the CLI flag', () => {
+    const result = run(['--project', dir, '--update'], true);
+    assert(result === false, 'generation should fail when the only plugin is not command-line approved');
+    assert(!fs.existsSync(path.join(dir, '.test-plugin', 'output.md')), 'plugin code must not create output without the CLI flag');
+  });
+
+  test('explicit --allow-plugins loads the trusted local adapter for this run only', () => {
+    execFileSync(process.execPath, [
+      path.join(ROOT, 'bin', 'cli.js'), '--update', '--project', dir, '--allow-plugins',
+    ], { stdio: 'pipe', input: '', timeout: 30000 });
     const outputPath = path.join(dir, '.test-plugin', 'output.md');
     assert(fs.existsSync(outputPath), '.test-plugin/output.md should exist');
     const content = fs.readFileSync(outputPath, 'utf-8');
     assert(content.includes(`${expectedAgentCount} agents`), `Should contain ${expectedAgentCount} agents, got: ${content}`);
-  });
-
-  test('Plugin adapter is ignored without allow_plugins', () => {
-    const dir2 = createTmpDir();
-    const pluginDir2 = path.join(dir2, '.assemble', 'adapters');
-    fs.mkdirSync(pluginDir2, { recursive: true });
-    fs.writeFileSync(path.join(pluginDir2, 'test-plugin.js'), pluginCode);
-    const cfg2 = `version: "1.1.0-beta.3"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [test-plugin]\nagents: all\nworkflows: all\ngovernance: "none"\ninstalled_at: "2026-03-19"\n`;
-    fs.writeFileSync(path.join(dir2, '.assemble.yaml'), cfg2);
-    let failed = false;
-    try { run(['--project', dir2, '--update']); } catch (e) { failed = true; }
-    assert(failed, 'generation should fail when the only platform is an un-opted-in plugin');
-    assert(!fs.existsSync(path.join(dir2, '.test-plugin', 'output.md')), 'plugin output must not be created');
+    const persisted = fs.readFileSync(path.join(dir, '.assemble.yaml'), 'utf-8');
+    assert(!persisted.includes('allow_plugins'), 'the command-line consent must not be persisted in .assemble.yaml');
   });
 
   cleanTmpDir();
@@ -1274,17 +1279,19 @@ console.log('\nTest 31: partial unknown platform persists a clean config');
   cleanTmpDir();
 }
 
-// ── Test 32: allow_plugins as a quoted string is accepted (regression P3) ─────
+// ── Test 32: allow_plugins config is ignored but migration remains compatible ──
 
-console.log('\nTest 32: allow_plugins: "true" (string) passes validation');
+console.log('\nTest 32: allow_plugins config is ignored and removed on regeneration');
 {
   const dir = createTmpDir();
   const cfg = `version: "0.0.0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [claude-code]\nagents: all\nworkflows: all\ngovernance: "none"\nallow_plugins: "true"\ninstalled_at: "2026-01-01"\n`;
   fs.writeFileSync(path.join(dir, '.assemble.yaml'), cfg);
 
-  test('a quoted boolean does not fail schema validation', () => {
+  test('a quoted legacy value does not fail generation or grant consent', () => {
     const ok = run(['--project', dir, '--update'], true);
-    assert(ok, 'generation should succeed with allow_plugins: "true"');
+    assert(ok, 'generation should succeed with an ignored allow_plugins value');
+    const persisted = fs.readFileSync(path.join(dir, '.assemble.yaml'), 'utf-8');
+    assert(!persisted.includes('allow_plugins'), 'ignored config consent should be removed when config is regenerated');
   });
 
   cleanTmpDir();
@@ -1348,6 +1355,152 @@ console.log('\nTest 34: cli.js --update does not block on a non-TTY stdin');
       console.log(`     ${e.killed ? 'TIMED OUT (hung on prompt)' : (e.message || '').split('\n')[0]}`);
     }
     assert(ok, 'cli.js --update should finish without blocking on stdin');
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 35: manifest cleanup rejects a linked intermediate ancestor ────────
+
+console.log('\nTest 35: manifest cleanup refuses an intermediate link');
+{
+  const base = createTmpDir();
+  const project = path.join(base, 'project');
+  const outside = path.join(base, 'outside');
+  fs.mkdirSync(project); fs.mkdirSync(outside);
+  const sentinel = path.join(outside, 'sentinel.txt');
+  fs.writeFileSync(sentinel, 'unchanged');
+  const linked = makeDirectoryLink(outside, path.join(project, 'linked'));
+  fs.writeFileSync(path.join(project, '.assemble.yaml'), `version: "0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [cursor]\nagents: all\nworkflows: all\ngovernance: "none"\ninstalled_at: "2026-01-01"\n`);
+  fs.writeFileSync(path.join(project, '.assemble-manifest.json'), JSON.stringify({ files: ['linked/sentinel.txt'], directories: ['linked'] }));
+
+  test('linked manifest ancestor fails before cleanup or regeneration', () => {
+    if (!linked) return;
+    const ok = run(['--project', project, '--update'], true);
+    assert(ok === false, 'generation should refuse the linked manifest path');
+    assert(fs.readFileSync(sentinel, 'utf-8') === 'unchanged', 'external sentinel must remain unchanged');
+    assert(!fs.existsSync(path.join(project, '.cursorrules')), 'adapter output must not be created after cleanup refusal');
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 36: adapter preflight rejects a linked output ancestor ─────────────
+
+console.log('\nTest 36: adapter output preflight refuses a linked ancestor');
+{
+  const base = createTmpDir();
+  const project = path.join(base, 'project');
+  const outside = path.join(base, 'outside');
+  fs.mkdirSync(project); fs.mkdirSync(outside);
+  const sentinel = path.join(outside, 'sentinel.txt');
+  fs.writeFileSync(sentinel, 'unchanged');
+  const linked = makeDirectoryLink(outside, path.join(project, '.cursor'));
+  fs.writeFileSync(path.join(project, '.assemble.yaml'), `version: "0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [cursor]\nagents: all\nworkflows: all\ngovernance: "none"\ninstalled_at: "2026-01-01"\n`);
+
+  test('cursor generation fails before its first output write', () => {
+    if (!linked) return;
+    const ok = run(['--project', project, '--update'], true);
+    assert(ok === false, 'generation should refuse linked adapter outputs');
+    assert(fs.readFileSync(sentinel, 'utf-8') === 'unchanged', 'external sentinel must remain unchanged');
+    assert(!fs.existsSync(path.join(project, '.cursorrules')), 'preflight must run before the first adapter write');
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 37: skill import rejects a linked .assemble/skills directory ───────
+
+console.log('\nTest 37: skill import refuses a linked skills directory');
+{
+  const base = createTmpDir();
+  const project = path.join(base, 'project');
+  const outside = path.join(base, 'outside');
+  fs.mkdirSync(path.join(project, '.assemble'), { recursive: true });
+  fs.mkdirSync(outside);
+  const sentinel = path.join(outside, 'sentinel.txt');
+  fs.writeFileSync(sentinel, 'unchanged');
+  const linked = makeDirectoryLink(outside, path.join(project, '.assemble', 'skills'));
+  const source = path.join(base, 'safe-skill.md');
+  fs.writeFileSync(source, '---\nname: safe-skill\ndescription: "Test skill"\n---\n\n# Safe skill\n');
+
+  test('import fails without copying through the link', () => {
+    if (!linked) return;
+    let failedImport = false;
+    try {
+      execFileSync(process.execPath, [path.join(ROOT, 'bin', 'import.js'), source], { cwd: project, stdio: 'pipe' });
+    } catch { failedImport = true; }
+    assert(failedImport, 'import should reject the linked skills directory');
+    assert(fs.readFileSync(sentinel, 'utf-8') === 'unchanged', 'external sentinel must remain unchanged');
+    assert(!fs.existsSync(path.join(outside, 'safe-skill.md')), 'no imported file may be created outside the project');
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 38: MCP local output rejects a linked .assemble directory ──────────
+
+console.log('\nTest 38: MCP generation refuses a linked .assemble directory');
+{
+  const base = createTmpDir();
+  const project = path.join(base, 'project');
+  const outside = path.join(base, 'outside');
+  fs.mkdirSync(project); fs.mkdirSync(outside);
+  const sentinel = path.join(outside, 'sentinel.txt');
+  fs.writeFileSync(sentinel, 'unchanged');
+  const linked = makeDirectoryLink(outside, path.join(project, '.assemble'));
+  fs.writeFileSync(path.join(project, '.assemble.yaml'), `version: "0"\nlangue_equipe: "english"\nlangue_output: "english"\noutput_dir: "./assemble-output"\nplatforms: [cursor]\nagents: all\nworkflows: all\ngovernance: "none"\nmcp: true\ninstalled_at: "2026-01-01"\n`);
+
+  test('MCP preflight fails before any local or adapter write', () => {
+    if (!linked) return;
+    const ok = run(['--project', project, '--update'], true);
+    assert(ok === false, 'generation should reject a linked .assemble directory');
+    assert(fs.readFileSync(sentinel, 'utf-8') === 'unchanged', 'external sentinel must remain unchanged');
+    assert(!fs.existsSync(path.join(outside, 'mcp-server.js')), 'MCP server must not be written outside the project');
+    assert(!fs.existsSync(path.join(project, '.cursorrules')), 'cross-platform preflight must precede adapter writes');
+  });
+
+  cleanTmpDir();
+}
+
+// ── Test 39: Windsurf global failure leaves the local MCP complete ──────────
+
+console.log('\nTest 39: Windsurf global registration is best-effort');
+{
+  const base = createTmpDir();
+  const project = path.join(base, 'project');
+  const fakeHome = path.join(base, 'home');
+  fs.mkdirSync(project); fs.mkdirSync(path.join(fakeHome, '.codeium'), { recursive: true });
+  // A file where Windsurf expects a directory deterministically makes global
+  // registration fail without modifying a real user profile.
+  fs.writeFileSync(path.join(fakeHome, '.codeium', 'windsurf'), 'not a directory');
+
+  test('all three canonical local files exist after the global failure', () => {
+    const oldHome = process.env.HOME;
+    const oldUserProfile = process.env.USERPROFILE;
+    const oldWarn = console.warn;
+    const warnings = [];
+    try {
+      process.env.HOME = fakeHome;
+      process.env.USERPROFILE = fakeHome;
+      console.warn = message => warnings.push(String(message));
+      const { generateMCPServer } = require('../generator/lib/mcp-generator');
+      generateMCPServer(project, { agents: [], workflows: [], config: { platforms: ['windsurf'] } });
+      assert(warnings.length === 0, 'no global registration warning without the explicit flag');
+      generateMCPServer(project, {
+        agents: [], workflows: [], config: { platforms: ['windsurf'], _registerWindsurfMcp: true },
+      });
+    } finally {
+      console.warn = oldWarn;
+      if (oldHome === undefined) delete process.env.HOME; else process.env.HOME = oldHome;
+      if (oldUserProfile === undefined) delete process.env.USERPROFILE; else process.env.USERPROFILE = oldUserProfile;
+    }
+
+    const localNames = ['mcp-server.js', 'mcp.json', 'package.json'];
+    for (const name of localNames) assert(fs.existsSync(path.join(project, '.assemble', name)), `${name} should exist locally`);
+    const localPackage = JSON.parse(fs.readFileSync(path.join(project, '.assemble', 'package.json'), 'utf-8'));
+    assert(localPackage.version === require('../package.json').version, 'local MCP package must use the canonical project version');
+    assert(warnings.some(warning => warning.includes('Windsurf global MCP registration skipped')), 'global failure should produce a warning');
   });
 
   cleanTmpDir();

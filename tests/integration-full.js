@@ -9,6 +9,14 @@ const os = require('os');
 const { execFileSync } = require('child_process');
 
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'assemble-full-'));
+const userProfileDir = fs.mkdtempSync(path.join(os.tmpdir(), 'assemble-profile-'));
+const windsurfProfileDir = path.join(userProfileDir, '.codeium', 'windsurf');
+const windsurfGlobalConfig = path.join(windsurfProfileDir, 'mcp_config.json');
+const isolatedEnv = {
+  ...process.env,
+  HOME: userProfileDir,
+  USERPROFILE: userProfileDir,
+};
 const ROOT = path.resolve(__dirname, '..');
 const GENERATOR = path.join(ROOT, 'generator', 'generate.js');
 
@@ -24,30 +32,58 @@ governance: "strict"
 mcp: true
 memory: true
 metrics: true
+register_windsurf_mcp: true
 installed_at: "2026-03-19"
 `;
 
-fs.writeFileSync(path.join(dir, '.assemble.yaml'), config);
+function listFiles(root) {
+  const files = [];
+  for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+    const full = path.join(root, entry.name);
+    if (entry.isDirectory()) files.push(...listFiles(full));
+    else files.push(full);
+  }
+  return files;
+}
 
 try {
-  execFileSync(process.execPath, [GENERATOR, '--update', '--project', dir], { stdio: 'pipe', timeout: 60000 });
-  console.log('=== GENERATION: OK (exit 0) ===\n');
-} catch (e) {
-  console.log('=== GENERATION: FAILED ===');
-  console.log(e.stderr ? e.stderr.toString() : e.message);
-  process.exit(1);
-}
+  fs.mkdirSync(windsurfProfileDir, { recursive: true });
+  fs.writeFileSync(path.join(dir, '.assemble.yaml'), config);
 
-let passed = 0, failed = 0;
-function check(name, ok, detail) {
-  console.log((ok ? '  ✅' : '  ❌') + ' ' + name + (detail ? ' — ' + detail : ''));
-  if (ok) passed++; else failed++;
-}
+  function runGenerator(extraArgs = []) {
+    execFileSync(process.execPath, [GENERATOR, '--update', '--project', dir, ...extraArgs], {
+      stdio: 'pipe',
+      timeout: 60000,
+      env: isolatedEnv,
+    });
+  }
 
-function fileContains(filePath, text) {
-  if (!fs.existsSync(filePath)) return false;
-  return fs.readFileSync(filePath, 'utf-8').includes(text);
-}
+  let localMcpWithoutRegistration = false;
+  let globalConfigWithoutRegistration = false;
+  let registrationSettingPersisted = true;
+  try {
+    runGenerator();
+    localMcpWithoutRegistration = fs.existsSync(path.join(dir, '.assemble', 'mcp-server.js'));
+    globalConfigWithoutRegistration = fs.existsSync(windsurfGlobalConfig);
+    registrationSettingPersisted = fs.readFileSync(path.join(dir, '.assemble.yaml'), 'utf-8').includes('register_windsurf_mcp');
+    runGenerator(['--register-windsurf-mcp']);
+    console.log('=== GENERATION: OK (exit 0) ===\n');
+  } catch (e) {
+    console.log('=== GENERATION: FAILED ===');
+    console.log(e.stderr ? e.stderr.toString() : e.message);
+    throw e;
+  }
+
+  let passed = 0, failed = 0;
+  function check(name, ok, detail) {
+    console.log((ok ? '  ✅' : '  ❌') + ' ' + name + (detail ? ' — ' + detail : ''));
+    if (ok) passed++; else failed++;
+  }
+
+  function fileContains(filePath, text) {
+    if (!fs.existsSync(filePath)) return false;
+    return fs.readFileSync(filePath, 'utf-8').includes(text);
+  }
 
 // ═══ MCP ═══
 console.log('--- MCP ---');
@@ -60,6 +96,21 @@ check('mcp.json uses forward slashes', (() => {
 })());
 check('mcp-server.js has invoke- tools', fileContains(path.join(dir, '.assemble', 'mcp-server.js'), 'invoke-'));
 check('mcp-server.js has jarvis-route', fileContains(path.join(dir, '.assemble', 'mcp-server.js'), 'jarvis-route'));
+check('MCP local files are generated without the registration flag', localMcpWithoutRegistration);
+check('Windsurf: no global config is written without the registration flag', !globalConfigWithoutRegistration);
+check('Windsurf registration setting is not persisted in .assemble.yaml', !registrationSettingPersisted);
+check('Windsurf: isolated global config exists', fs.existsSync(windsurfGlobalConfig));
+check('Windsurf: HOME and USERPROFILE use the temporary fixture', isolatedEnv.HOME === userProfileDir && isolatedEnv.USERPROFILE === userProfileDir);
+check('Windsurf: global config points to the temporary project MCP server', (() => {
+  const globalConfig = JSON.parse(fs.readFileSync(windsurfGlobalConfig, 'utf-8'));
+  return globalConfig.mcpServers
+    && globalConfig.mcpServers.assemble
+    && globalConfig.mcpServers.assemble.args[0] === path.join(dir, '.assemble', 'mcp-server.js');
+})());
+check('Windsurf: fixture contains the only global config created', (() => {
+  const files = listFiles(userProfileDir).map(file => path.relative(userProfileDir, file).replace(/\\/g, '/'));
+  return files.length === 1 && files[0] === '.codeium/windsurf/mcp_config.json';
+})());
 
 // ═══ Memory & Metrics & AGENTS.md ═══
 console.log('\n--- Memory / Metrics / AGENTS.md ---');
@@ -168,5 +219,8 @@ console.log('\n═════════════════════�
 console.log(`  Integration test: ${passed} passed, ${failed} failed`);
 console.log('═══════════════════════════════════════════════════════\n');
 
-fs.rmSync(dir, { recursive: true, force: true });
-process.exit(failed > 0 ? 1 : 0);
+  process.exitCode = failed > 0 ? 1 : 0;
+} finally {
+  fs.rmSync(dir, { recursive: true, force: true });
+  fs.rmSync(userProfileDir, { recursive: true, force: true });
+}

@@ -80,7 +80,7 @@ function diff(projectDir) {
     [config.output_dir || './assemble-output', 'AGENTS.md'],
   ];
   if (config.mcp === true) {
-    crossPlatform.push(['.assemble', 'mcp-server.js'], ['.assemble', 'mcp.json'], ['.assemble', 'mcp-package.json']);
+    crossPlatform.push(['.assemble', 'mcp-server.js'], ['.assemble', 'mcp.json'], ['.assemble', 'package.json']);
   }
   if (config.memory === true) {
     crossPlatform.push([config.output_dir || './assemble-output', '_memory.md']);

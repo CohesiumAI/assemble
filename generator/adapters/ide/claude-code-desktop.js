@@ -52,7 +52,7 @@ module.exports = {
     return match ? match[1].trim() : '';
   },
 
-  getOutputPaths(projectDir, { agents = [], workflows = [], config = {} } = {}) {
+  getOutputPaths(projectDir, { agents = [], workflows = [], orchestrator, config = {} } = {}) {
     const paths = [
       path.join(projectDir, 'CLAUDE.md'),
     ];
@@ -73,6 +73,7 @@ module.exports = {
     if (config.governance && config.governance !== 'none') {
       paths.push(path.join(projectDir, '.claude', 'rules', 'governance', 'governance.md'));
     }
+    if (orchestrator) paths.push(path.join(projectDir, '.claude', 'rules', 'orchestrator.md'));
 
     return paths;
   },

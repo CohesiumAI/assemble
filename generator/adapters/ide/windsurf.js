@@ -14,7 +14,7 @@ module.exports = {
   displayName: 'Windsurf',
   type: 'ide',
 
-  getOutputPaths(projectDir, { agents = [], skills = {}, workflows = [] } = {}) {
+  getOutputPaths(projectDir, { agents = [], skills = {}, workflows = [], orchestrator } = {}) {
     const paths = [path.join(projectDir, '.windsurfrules')];
     for (const agent of agents) {
       paths.push(path.join(projectDir, '.windsurf', 'rules', `agent-${marvelSlug(agent)}.md`));
@@ -30,6 +30,8 @@ module.exports = {
     for (const slug of ['go', 'party', 'dismiss', 'help', 'doom', 'yolo-hardcore', 'yolo-full']) {
       paths.push(path.join(projectDir, '.windsurf', 'workflows', `${slug}.md`));
     }
+    paths.push(path.join(projectDir, '.windsurf', 'rules', 'commands.md'));
+    if (orchestrator) paths.push(path.join(projectDir, '.windsurf', 'rules', 'orchestrator.md'));
     return paths;
   },
 

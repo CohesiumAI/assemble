@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="#quick-start"><img src="https://img.shields.io/badge/npx-cohesiumai--assemble-6366f1?style=flat-square" alt="npx cohesiumai-assemble" /></a>
-  <img src="https://img.shields.io/badge/version-1.1.2--beta.3-orange?style=flat-square" alt="v1.1.2-beta.3" />
+  <img src="https://img.shields.io/badge/version-1.1.2--beta.4-orange?style=flat-square" alt="v1.1.2-beta.4" />
   <img src="https://img.shields.io/badge/agents-34-8b5cf6?style=flat-square" alt="34 agents" />
   <img src="https://img.shields.io/badge/platforms-21-3b82f6?style=flat-square" alt="21 platforms" />
   <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License" />
@@ -20,7 +20,9 @@
 
 ---
 
-> **v1.1.2-beta.3** — New: native **Codex support** now generates `AGENTS.md`, project skills, and Codex custom agents. This is a beta release; generated file formats may still change between minor versions. Feedback welcome via [GitHub Issues](https://github.com/CohesiumAI/assemble/issues).
+> **v1.1.2-beta.4** — Security hardening: generated writes and cleanup now reject linked path components, and local MCP setup completes before optional Windsurf registration. This is a beta release; generated file formats may still change between minor versions. See the [changelog](CHANGELOG.md) before upgrading.
+
+[Changelog](CHANGELOG.md) · [Security policy](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [Examples](examples/) · [Release process](docs/RELEASING.md)
 
 Assemble turns your IDE into a structured team of 34 senior-level AI specialists — architect, backend, QA, security, product, marketing, and 28 others. You run one command. It generates native config files for Cursor, Claude Code, Copilot, Gemini CLI, and 17 other platforms. No runtime, no daemon, no SDK. Your LLM reads the configs and knows exactly who to be, how to think, and what to deliver.
 
@@ -271,7 +273,7 @@ After installation, a `.assemble.yaml` file is created at the root of your proje
 
 ```yaml
 # Assemble — Project configuration
-version: "1.1.2-beta.3"
+version: "1.1.2-beta.4"
 profile: "custom"                 # startup | enterprise | agency | custom
 langue_equipe: "english"          # Language for agent-to-agent communication
 langue_output: "english"          # Language for produced deliverables
@@ -281,7 +283,7 @@ agents: all                       # Activated agents (all or list)
 workflows: all                    # Activated workflows (all or list)
 governance: "none"                # none | standard | strict
 yolo: false                       # Non-interactive chaining (no validation gates)
-mcp: false                        # MCP server generation
+mcp: false                        # Local MCP server generation only
 search: false                     # Web search protocol (agents verify with current data)
 memory: false                     # Cross-session _memory.md
 metrics: false                    # Workflow _metrics.md
@@ -304,6 +306,10 @@ Profiles provide sensible defaults that can be overridden by explicit config:
 **Custom agents:** Drop `AGENT-*.md` files in `.assemble/agents/` — they're auto-discovered and merged during generation. Same slug overrides built-in.
 
 **Custom skills:** Use `npx cohesiumai-assemble import <path>` to copy skill files into `.assemble/skills/`. They're included in the next generation.
+
+**Custom JavaScript adapters:** A project cannot enable these from `.assemble.yaml`. Load adapters from `.assemble/adapters/` only for a trusted project and only for the current command: `npx cohesiumai-assemble --update --allow-plugins`.
+
+**Windsurf MCP registration:** `mcp: true` generates project-local files only. Writing to the Windsurf user profile is a separate, explicit action: `npx cohesiumai-assemble --update --register-windsurf-mcp`.
 
 For details on MCP server, web search, cross-session memory, metrics, YOLO escalation levels, and governance, see [the full documentation →](docs/)
 
@@ -417,20 +423,14 @@ You type /go <request>
 | [Board Execution Guide](docs/BOARD.md) | `_board.yaml` format, ticket lifecycle, WIP limits, and dependency rules |
 | [Platform Support](docs/PLATFORMS.md) | Platform-specific setup guides and file structure details |
 | [Command Reference](docs/COMMANDS.md) | Full reference for 11 commands + hidden shortcuts |
+| [Release Process](docs/RELEASING.md) | Validation, tag matching, npm beta publication, and GitHub Release creation |
+| [Examples](examples/) | Minimal configurations that can be verified in an isolated project |
 
 ---
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/my-feature`)
-3. Follow the existing file naming conventions (`AGENT-*.md`, `*.yaml`)
-4. Test your changes by running the generator: `npm run generate`
-5. Validate the output: `npm run validate`
-6. Run `npm test` to execute the full test suite
-7. Submit a pull request
-
-Agent definitions live in `src/agents/`, skills in `src/skills/`, and workflows in `src/workflows/`. The generator in `generator/` transforms these source files into platform-specific configurations.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for local setup, test requirements, and pull request guidance. Security reports must follow the private process in [SECURITY.md](SECURITY.md).
 
 ---
 
