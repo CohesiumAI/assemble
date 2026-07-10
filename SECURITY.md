@@ -6,7 +6,7 @@ Security fixes are applied to the latest published beta. Older beta releases are
 
 | Version | Supported |
 |---|---|
-| 1.1.2-beta.5 | Yes |
+| 1.1.2-beta.6 | Yes |
 | Earlier betas | No |
 
 ## Report a vulnerability privately

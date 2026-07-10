@@ -113,8 +113,8 @@ console.log('\nTest 5: MCP package file name is canonical');
 console.log('\nTest 6: release version is coherent');
 {
   const pkgVersion = require(path.join(ROOT, 'package.json')).version;
-  const expectedVersion = ['1.1.2', 'beta.5'].join('-');
-  const previousVersion = ['1.1.2', 'beta.4'].join('-');
+  const expectedVersion = ['1.1.2', 'beta.6'].join('-');
+  const previousVersion = ['1.1.2', 'beta.5'].join('-');
   const versionFiles = [
     'README.md',
     path.join('src', 'config', 'defaults.yaml'),
@@ -122,6 +122,8 @@ console.log('\nTest 6: release version is coherent');
     'CHANGELOG.md',
   ];
   assert(pkgVersion === expectedVersion, `package version is ${expectedVersion}`);
+  const pkg = require(path.join(ROOT, 'package.json'));
+  assert(pkg.repository && pkg.repository.url === 'https://github.com/CohesiumAI/assemble', 'package repository URL matches the provenance repository');
   for (const relative of versionFiles) {
     assert(fs.readFileSync(path.join(ROOT, relative), 'utf-8').includes(expectedVersion), `${relative} contains ${expectedVersion}`);
   }

@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="#quick-start"><img src="https://img.shields.io/badge/npx-cohesiumai--assemble-6366f1?style=flat-square" alt="npx cohesiumai-assemble" /></a>
-  <img src="https://img.shields.io/badge/version-1.1.2--beta.5-orange?style=flat-square" alt="v1.1.2-beta.5" />
+  <img src="https://img.shields.io/badge/version-1.1.2--beta.6-orange?style=flat-square" alt="v1.1.2-beta.6" />
   <img src="https://img.shields.io/badge/agents-34-8b5cf6?style=flat-square" alt="34 agents" />
   <img src="https://img.shields.io/badge/platforms-21-3b82f6?style=flat-square" alt="21 platforms" />
   <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License" />
@@ -20,7 +20,7 @@
 
 ---
 
-> **v1.1.2-beta.5** — Security hardening: generated writes and cleanup now reject linked path components, and local MCP setup completes before optional Windsurf registration. This is a beta release; generated file formats may still change between minor versions. See the [changelog](CHANGELOG.md) before upgrading.
+> **v1.1.2-beta.6** — Security hardening: generated writes and cleanup now reject linked path components, and local MCP setup completes before optional Windsurf registration. This is a beta release; generated file formats may still change between minor versions. See the [changelog](CHANGELOG.md) before upgrading.
 
 [Changelog](CHANGELOG.md) · [Security policy](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [Examples](examples/) · [Release process](docs/RELEASING.md)
 
@@ -273,7 +273,7 @@ After installation, a `.assemble.yaml` file is created at the root of your proje
 
 ```yaml
 # Assemble — Project configuration
-version: "1.1.2-beta.5"
+version: "1.1.2-beta.6"
 profile: "custom"                 # startup | enterprise | agency | custom
 langue_equipe: "english"          # Language for agent-to-agent communication
 langue_output: "english"          # Language for produced deliverables
